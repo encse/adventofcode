@@ -31,7 +31,7 @@ def unparse(tag):
     elif tag.name == 'span':
         yield  unparse_list('', tag)
     elif tag.name == 's':
-        yield  unparse_list('', tag)
+        yield  '~~' + unparse_list('', tag) + '~~'
     elif tag.name == 'ul':
         for li in tag:
             for unparsed in unparse (li):
