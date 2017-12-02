@@ -39,11 +39,16 @@ def unparse(tag):
     elif tag.name == 'li':
         yield  ' - ' + unparse_list('', tag) 
     elif tag.name == 'pre':
-        yield  '```\n' 
+        yield  '```\n'
+        freshLine = True
         for item in tag:
             for unparsed in unparse (item):
+                freshLine = unparsed[-1] == '\n'
                 yield unparsed
-        yield  '```\n' 
+        if freshLine:
+            yield  '```\n'
+        else:
+            yield  '\n```\n'
         
     elif tag.name == 'a':
         yield '['+unparse_list('', tag)+']('+tag.get('href')+')'
