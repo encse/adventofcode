@@ -19,4 +19,5 @@ case object Solution extends App {
 
   println(partOne(input))
   println(partTwo(input))
+
 }
