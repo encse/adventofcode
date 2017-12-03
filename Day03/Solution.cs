@@ -50,8 +50,7 @@ namespace AdventOfCode2017.Day03 {
                     for (var step = 0; step < edgeLength; step++) {
                         yield return (x, y);
 
-                        x += dx;
-                        y -= dy;
+                        (x, y) = (x + dx, y - dy);
                     }
                     (dx, dy) = (-dy, dx);
                 }
