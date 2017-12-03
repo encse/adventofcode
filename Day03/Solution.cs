@@ -8,18 +8,21 @@ namespace AdventOfCode2017.Day03 {
     class Solution : Solver {
 
         public void Solve(string input) {
-            Console.WriteLine(PartOne(input));
-            Console.WriteLine(PartTwo(input));
+            var targetValue = int.Parse(input);
+            Console.WriteLine(PartOne(targetValue));
+            Console.WriteLine(PartTwo(targetValue));
         }
 
-        int PartOne(string input) {
-            var targetValue = int.Parse(input);
+        int PartOne(int targetValue) {
             var (x, y) = SpiralCoordinates().ElementAt(targetValue - 1);
             return Math.Abs(x) + Math.Abs(y);
         }
 
-        int PartTwo(string input) {
-            var targetValue = int.Parse(input);
+        int PartTwo(int targetValue) {
+            return SpiralSums().First(v => v > targetValue);
+        }
+
+        IEnumerable<int> SpiralSums() {
             var mem = new int[1000, 1000];
             Action<int, int, int> setMem = (x, y, t) => mem[x + 500, y + 500] = t;
             Func<int, int, int> getMem = (x, y) => mem[x + 500, y + 500];
@@ -34,12 +37,8 @@ namespace AdventOfCode2017.Day03 {
                 ).Sum();
 
                 setMem(x, y, v);
-
-                if (v > targetValue) {
-                    return v;
-                }
+                yield return v;
             }
-            throw new Exception("never");
         }
 
         IEnumerable<(int, int)> SpiralCoordinates() {
