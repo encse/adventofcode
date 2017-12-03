@@ -18,9 +18,8 @@ namespace AdventOfCode2017.Day03 {
             return Math.Abs(x) + Math.Abs(y);
         }
 
-        int PartTwo(int num) {
-            return SpiralSums().First(v => v > num);
-        }
+        int PartTwo(int num) =>
+            SpiralSums().First(v => v > num);
 
         IEnumerable<(int, int)> SpiralCoordinates() {
             var (x, y) = (0, 0);
@@ -41,18 +40,16 @@ namespace AdventOfCode2017.Day03 {
             var mem = new Dictionary<(int, int), int>();
             mem[(0, 0)] = 1;
 
-            foreach (var (x, y) in SpiralCoordinates()) {
-                var v = (
-                    from dx in new[] { -1, 0, 1 }
-                    from dy in new[] { -1, 0, 1 }
-                    let key = (x + dx, y + dy)
-                    where mem.ContainsKey(key)
-                    select mem[key]
-                ).Sum();
-
-                mem[(x, y)] = v;
+            foreach (var coord in SpiralCoordinates()) {
+                var v = (from coordT in Window(coord) where mem.ContainsKey(coordT) select mem[coordT]).Sum();
+                mem[coord] = v;
                 yield return v;
             }
         }
+
+        IEnumerable<(int, int)> Window((int x, int y) coord) =>
+             from dx in new[] { -1, 0, 1 }
+             from dy in new[] { -1, 0, 1 }
+             select (coord.x + dx, coord.y + dy);
     }
 }
