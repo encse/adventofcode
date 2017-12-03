@@ -41,9 +41,9 @@ namespace AdventOfCode2017.Day03 {
             mem[(0, 0)] = 1;
 
             foreach (var coord in SpiralCoordinates()) {
-                var v = (from coordT in Window(coord) where mem.ContainsKey(coordT) select mem[coordT]).Sum();
-                mem[coord] = v;
-                yield return v;
+                var sum = (from coordT in Window(coord) where mem.ContainsKey(coordT) select mem[coordT]).Sum();
+                mem[coord] = sum;
+                yield return sum;
             }
         }
 
