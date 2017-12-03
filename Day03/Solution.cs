@@ -13,13 +13,13 @@ namespace AdventOfCode2017.Day03 {
             Console.WriteLine(PartTwo(targetValue));
         }
 
-        int PartOne(int targetValue) {
-            var (x, y) = SpiralCoordinates().ElementAt(targetValue - 1);
+        int PartOne(int input) {
+            var (x, y) = SpiralCoordinates().ElementAt(input - 1);
             return Math.Abs(x) + Math.Abs(y);
         }
 
-        int PartTwo(int targetValue) {
-            return SpiralSums().First(v => v > targetValue);
+        int PartTwo(int input) {
+            return SpiralSums().First(v => v > input);
         }
 
         IEnumerable<int> SpiralSums() {
@@ -42,22 +42,19 @@ namespace AdventOfCode2017.Day03 {
         }
 
         IEnumerable<(int, int)> SpiralCoordinates() {
-            var (edgeLength, nextEdgeLength) = (1, 1);
             var (x, y) = (0, 0);
             var (dx, dy) = (1, 0);
-            var stepsOnEdge = 0;
 
-            while (true) {
-                yield return (x, y);
+            for (var edgeLength = 1; ; edgeLength++) {
+                for (var run = 0; run < 2; run++) {
+                    for (var step = 0; step < edgeLength; step++) {
+                        yield return (x, y);
 
-                if (stepsOnEdge == edgeLength) {
+                        x += dx;
+                        y -= dy;
+                    }
                     (dx, dy) = (-dy, dx);
-                    (edgeLength, nextEdgeLength) = (nextEdgeLength, nextEdgeLength + (nextEdgeLength == edgeLength ? 1 : 0));
-                    stepsOnEdge = 0;
                 }
-                x += dx;
-                y -= dy;
-                stepsOnEdge += 1;
             }
         }
     }
