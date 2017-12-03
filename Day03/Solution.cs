@@ -23,20 +23,19 @@ namespace AdventOfCode2017.Day03 {
         }
 
         IEnumerable<int> SpiralSums() {
-            var mem = new int[1000, 1000];
-            Action<int, int, int> setMem = (x, y, t) => mem[x + 500, y + 500] = t;
-            Func<int, int, int> getMem = (x, y) => mem[x + 500, y + 500];
-
-            setMem(0, 0, 1);
+            var mem = new Dictionary<(int, int), int>();
+            mem[(0, 0)] = 1;
 
             foreach (var (x, y) in SpiralCoordinates()) {
                 var v = (
                     from dx in new[] { -1, 0, 1 }
                     from dy in new[] { -1, 0, 1 }
-                    select getMem(x + dx, y + dy)
+                    let key = (x + dx, y + dy)
+                    where mem.ContainsKey(key)
+                    select mem[key]
                 ).Sum();
 
-                setMem(x, y, v);
+                mem[(x, y)] = v;
                 yield return v;
             }
         }
@@ -49,7 +48,6 @@ namespace AdventOfCode2017.Day03 {
                 for (var run = 0; run < 2; run++) {
                     for (var step = 0; step < edgeLength; step++) {
                         yield return (x, y);
-
                         (x, y) = (x + dx, y - dy);
                     }
                     (dx, dy) = (-dy, dx);
