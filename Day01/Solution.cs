@@ -11,13 +11,9 @@ namespace AdventOfCode2017.Day01 {
             Console.WriteLine(PartTwo(input));
         }
 
-        int PartOne(string input) {
-            return InverseCaptcha(input, 1);
-        }
+        int PartOne(string input) => InverseCaptcha(input, 1);
 
-        int PartTwo(string input) {
-            return InverseCaptcha(input, input.Length / 2);
-        }
+        int PartTwo(string input) => InverseCaptcha(input, input.Length / 2);
 
         int InverseCaptcha(string input, int skip) {
             return (
