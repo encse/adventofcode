@@ -28,12 +28,14 @@ namespace AdventOfCode2017.Day03
             Func<int, int, int> getMem = (x, y) => mem[x + 500, y + 500];
 
             setMem(0, 0, 1);
-            foreach (var (x, y) in Coordinates().Skip(1))
+
+            foreach (var (x, y) in Coordinates())
             {
-                var v = getMem(x + 1, y - 1) + getMem(x + 1, y) + getMem(x + 1, y + 1) +
-                        getMem(x - 1, y - 1) + getMem(x - 1, y) + getMem(x - 1, y + 1) +
-                        getMem(x, y - 1) + getMem(x, y + 1);
-                        
+                  var v = (
+                        from dx in new []{ -1, 0, 1 }
+                        from dy in new []{ -1, 0, 1 }
+                        select getMem(x + dx, y + dy)
+                    ).Sum();
                 setMem(x, y, v);
 
                 if (v > targetValue)
