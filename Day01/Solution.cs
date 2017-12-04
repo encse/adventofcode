@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 
 namespace AdventOfCode2017.Day01 {
