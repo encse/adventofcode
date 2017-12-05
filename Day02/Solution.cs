@@ -1,11 +1,10 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 
 namespace AdventOfCode2017.Day02 {
 
     class Solution : Solver {
-        
+
         public void Solve(string input) {
             Console.WriteLine(PartOne(input));
             Console.WriteLine(PartTwo(input));

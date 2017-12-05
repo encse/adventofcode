@@ -12,7 +12,7 @@ namespace AdventOfCode2017
     {
         static void Main()
         {
-            RunSolver(new Day04.Solution());
+            RunSolver(new Day05.Solution());
         }
 
         static void RunSolver(Solver solver)
