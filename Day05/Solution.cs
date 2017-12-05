@@ -15,17 +15,17 @@ namespace AdventOfCode2017.Day05 {
 
         int PartTwo(string input) => GetStepCount(input, x => x < 3 ? x + 1 : x - 1);
 
-        int GetStepCount(string input, Func<int, int> process) {
-            var numbers = input.Split('\n').Select(x => int.Parse(x)).ToArray();
+        int GetStepCount(string input, Func<int, int> update) {
+            var numbers = input.Split('\n').Select(int.Parse).ToArray();
             var i = 0;
-            var step = 0;
+            var stepCount = 0;
             while (i < numbers.Length && i >= 0) {
                 var jmp = numbers[i];
-                numbers[i] = process(numbers[i]);
+                numbers[i] = update(numbers[i]);
                 i += jmp;
-                step++;
+                stepCount++;
             }
-            return step;
+            return stepCount;
         }
     }
 }
