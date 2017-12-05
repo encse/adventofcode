@@ -11,27 +11,16 @@ namespace AdventOfCode2017.Day04 {
             Console.WriteLine(PartTwo(input));
         }
 
-        int PartOne(string input) =>
-            ValidLineCount(input, word => word);
+        int PartOne(string lines) =>
+            ValidLineCount(lines, word => word);
 
-        int PartTwo(string input) =>
-            ValidLineCount(input, word => string.Concat(word.OrderBy(ch => ch)));
+        int PartTwo(string lines) =>
+            ValidLineCount(lines, word => string.Concat(word.OrderBy(ch => ch)));
 
-        int ValidLineCount(string input, Func<string, string> normalizer) =>
-            input.Split('\n').Where(IsValid(normalizer)).Count();
+        int ValidLineCount(string lines, Func<string, string> normalizer) =>
+            lines.Split('\n').Where(line => IsValidLine(line.Split(' '), normalizer)).Count();
 
-        Func<string, bool> IsValid(Func<string, string> normalizer) {
-            return (string line) => {
-                var seen = new HashSet<string>();
-                foreach (var word in line.Split(' ')) {
-                    var normalized = normalizer(word);
-                    if (seen.Contains(normalized)) {
-                        return false;
-                    }
-                    seen.Add(normalized);
-                }
-                return true;
-            };
-        }
+        bool IsValidLine(string[] words, Func<string, string> normalizer) =>
+            words.Select(normalizer).Distinct().Count() == words.Count();
     }
 }

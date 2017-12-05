@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import requests
 from bs4 import BeautifulSoup
 import sys
@@ -58,4 +59,4 @@ def unparse(tag):
 print 'original source: [{0}]({0})'.format(url)
 
 for article in soup.findAll("article"):
-    print unparse_list('', article)
+    print unparse_list('', article).encode('utf-8')
