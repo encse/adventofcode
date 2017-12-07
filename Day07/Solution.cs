@@ -9,87 +9,75 @@ namespace AdventOfCode2017.Day07 {
         public string Id;
         public string[] Children;
         public int Weight;
-        public int RecursiveWeight = -1;
+        public int TreeWeight = -1;
     }
+
+    class Tree : Dictionary<string, Node> { }
 
     class Solution : Solver {
 
         public void Solve(string input) {
-            var nodes = new Dictionary<string, Node>();
-            foreach(var line in input.Split('\n')) {
+            var tree = new Tree();
+            foreach (var line in input.Split('\n')) {
                 var parts = Regex.Match(line, @"(?<id>[a-z]+) \((?<weight>[0-9]+)\)( -> (?<children>.*))?");
 
-                nodes.Add(
+                tree.Add(
                     parts.Groups["id"].Value,
                     new Node {
                         Id = parts.Groups["id"].Value,
                         Weight = int.Parse(parts.Groups["weight"].Value),
-                        Children = string.IsNullOrEmpty(parts.Groups["children"].Value) 
-                            ? new string[0] 
+                        Children = string.IsNullOrEmpty(parts.Groups["children"].Value)
+                            ? new string[0]
                             : Regex.Split(parts.Groups["children"].Value, ", "),
                     });
             }
 
-            Console.WriteLine(PartOne(nodes));
-            Console.WriteLine(PartTwo(nodes));
+            Console.WriteLine(PartOne(tree));
+            Console.WriteLine(PartTwo(tree));
         }
 
-        string PartOne(Dictionary<string, Node> nodes) => Root(nodes).Id;
-        int PartTwo(Dictionary<string, Node> nodes) {
-            var root = Root(nodes);
-            ComputeRecursiveWeights(root, nodes);
-            return PartTwoRecursive(root, nodes);
+        string PartOne(Tree tree) => Root(tree).Id;
+
+        int PartTwo(Tree tree) {
+            var root = Root(tree);
+            ComputeTreeWeights(root, tree);
+            var bogusChild = BogusChild(root, tree);
+            var desiredWeight = tree[root.Children.First(childId => childId != bogusChild.Id)].TreeWeight;
+            return Fix(bogusChild, desiredWeight, tree);
         }
 
-        int PartTwoRecursive(Node node, Dictionary<string, Node> nodes) {
-            var w = 
+        Node Root(Tree tree) =>
+            tree.Values.First(node => !tree.Values.Any(nodeParent => nodeParent.Children.Contains(node.Id)));
+
+        int ComputeTreeWeights(Node node, Tree tree) {
+            node.TreeWeight = node.Weight + node.Children.Select(childId => ComputeTreeWeights(tree[childId], tree)).Sum();
+            return node.TreeWeight;
+        }
+
+        Node BogusChild(Node node, Tree tree) {
+            var w =
                 (from childId in node.Children
-                let child = nodes[childId]
-                group child by child.RecursiveWeight into g 
-                orderby g.Count()
-                select g).ToArray();
+                 let child = tree[childId]
+                 group child by child.TreeWeight into childrenByTreeWeight
+                 orderby childrenByTreeWeight.Count()
+                 select childrenByTreeWeight).ToArray();
 
-            var desiredWeight = w[1].Key;
-            var bogusChild = w[0].Single();
-            return Fix(bogusChild, desiredWeight, nodes);
+            return w.Length == 1 ? null : w[0].Single();
         }
 
-        int Fix(Node node, int desiredWeight, Dictionary<string, Node> nodes){
-            if (node.Children.Length == 0) {
-                return desiredWeight;
-            } else if (node.Children.Length == 1) {
-                var childrenWeightSum = node.RecursiveWeight - node.Weight;
-                // desiredWeight = node.Weight + childrenWeightSum;
-                if (desiredWeight - childrenWeightSum < 0) {
-                    return Fix(nodes[node.Children.Single()], desiredWeight - node.Weight, nodes);
-                } else {
-                    return desiredWeight - childrenWeightSum;
-                }
+        int Fix(Node node, int desiredWeight, Tree tree) {
+            if (node.Children.Length < 2) {
+                throw new NotImplementedException();
+            } 
+
+            var bogusChild = BogusChild(node, tree);
+
+            if (bogusChild == null) {
+                return desiredWeight - node.TreeWeight + node.Weight;
             } else {
-                var childrenWeightSum = node.RecursiveWeight - node.Weight;
-                var w = 
-                    (from childId in node.Children
-                    let child = nodes[childId]
-                    group child by child.RecursiveWeight into g 
-                    orderby g.Count()
-                    select g).ToArray();
-                if (w.Length == 1){
-                    return desiredWeight - childrenWeightSum;
-                } else {
-                    var bogusChild = w[0].Single();
-                    desiredWeight = desiredWeight - node.Weight - childrenWeightSum + bogusChild.RecursiveWeight;
-                    return Fix(bogusChild, desiredWeight, nodes);
-                }
+                desiredWeight = desiredWeight - node.TreeWeight + bogusChild.TreeWeight;
+                return Fix(bogusChild, desiredWeight, tree);
             }
-        }
-
-        Node Root(Dictionary<string, Node> nodes) => 
-            nodes.Values.First(node => !nodes.Values.Any(nodeParent => nodeParent.Children.Contains(node.Id)));
-
-        
-        int ComputeRecursiveWeights(Node node, Dictionary<string, Node> nodes) {
-            node.RecursiveWeight = node.Weight + node.Children.Select(childId => ComputeRecursiveWeights(nodes[childId], nodes)).Sum();
-            return node.RecursiveWeight;
         }
     }
 }
