@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 
 namespace AdventOfCode2017
 {
@@ -12,7 +13,7 @@ namespace AdventOfCode2017
     {
         static void Main()
         {
-            RunSolver(new Day09.Solution());
+            RunSolver(new Day10.Solution());
         }
 
         static void RunSolver(Solver solver)
