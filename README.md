@@ -2,11 +2,11 @@
 
 My C# solutions to http://adventofcode.com/2017 using .NET Core 2.0.
 
-Dependencies
+## Dependencies
 
 This library is based on .NET Core 2.0. It should work on Windows, Linux and OS X.
 
-Running
+## Running
 
 To run the project:
 
