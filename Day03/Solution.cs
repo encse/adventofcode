@@ -6,6 +6,10 @@ namespace AdventOfCode2017.Day03 {
 
     class Solution : Solver {
 
+        public string GetName() { 
+            return "Spiral Memory"; 
+        }
+        
         public void Solve(string input) {
             var num = int.Parse(input);
             Console.WriteLine(PartOne(num));

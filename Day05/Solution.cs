@@ -6,6 +6,10 @@ namespace AdventOfCode2017.Day05 {
 
     class Solution : Solver {
 
+        public string GetName() { 
+            return "A Maze of Twisty Trampolines, All Alike"; 
+        }
+        
         public void Solve(string input) {
             Console.WriteLine(PartOne(input));
             Console.WriteLine(PartTwo(input));

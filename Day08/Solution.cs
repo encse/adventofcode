@@ -7,6 +7,10 @@ namespace AdventOfCode2017.Day08 {
 
     class Solution : Solver {
 
+        public string GetName() { 
+            return "I Heard You Like Registers"; 
+        }
+
         public void Solve(string input) {
             Console.WriteLine(PartOne(input));
             Console.WriteLine(PartTwo(input));
