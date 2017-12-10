@@ -6,6 +6,10 @@ namespace AdventOfCode2017.Day06 {
 
     class Solution : Solver {
 
+        public string GetName() { 
+            return "Memory Reallocation"; 
+        }
+
         public void Solve(string input) {
             Console.WriteLine(PartOne(input.Split('\t').Select(int.Parse).ToList()));
             Console.WriteLine(PartTwo(input.Split('\t').Select(int.Parse).ToList()));

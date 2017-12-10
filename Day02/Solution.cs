@@ -5,6 +5,9 @@ namespace AdventOfCode2017.Day02 {
 
     class Solution : Solver {
 
+        public string GetName() { 
+            return "Corruption Checksum"; 
+        }
         public void Solve(string input) {
             Console.WriteLine(PartOne(input));
             Console.WriteLine(PartTwo(input));

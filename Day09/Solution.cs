@@ -7,6 +7,10 @@ namespace AdventOfCode2017.Day09 {
 
     class Solution : Solver {
 
+        public string GetName() { 
+            return "Stream Processing"; 
+        }
+
         public void Solve(string input) {
             Console.WriteLine(PartOne(input));
             Console.WriteLine(PartTwo(input));
