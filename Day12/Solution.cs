@@ -22,7 +22,7 @@ namespace AdventOfCode2017.Day12 {
             Console.WriteLine(PartTwo(input));
         }
 
-        int PartOne(string input) => GetPartitions(input).Where(x => x.Contains("0")).Single().Count();
+        int PartOne(string input) => GetPartitions(input).Single(x => x.Contains("0")).Count();
         int PartTwo(string input) => GetPartitions(input).Count();
 
         IEnumerable<HashSet<string>> GetPartitions(string input) {
