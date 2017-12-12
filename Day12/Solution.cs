@@ -59,8 +59,7 @@ namespace AdventOfCode2017.Day12 {
             return (
                 from line in input.Split('\n')
                 let parts = Regex.Split(line, " <-> ")
-                select
-                    new Node() {
+                select new Node() {
                         Id = parts[0],
                         Neighbours = new List<string>(Regex.Split(parts[1], ", "))
                     }
