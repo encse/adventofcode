@@ -25,11 +25,10 @@ namespace AdventOfCode2017.Day13 {
 
         int PartOne( Layers layers) => Severities(layers, 0).Sum();
 
-        int PartTwo( Layers layers) => 
+        int PartTwo(Layers layers) =>
             Enumerable
             .Range(0, int.MaxValue)
-            .Where(n => !Severities(layers, n).Any())
-            .First();
+            .First(n => !Severities(layers, n).Any());
 
         Layers Parse(string input) =>
             new Layers(
