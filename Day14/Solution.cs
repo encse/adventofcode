@@ -7,9 +7,7 @@ namespace AdventOfCode2017.Day14 {
 
     class Solution : Solver {
 
-        public string GetName() { 
-            return "Disk Defragmentation"; 
-        }
+        public string GetName() => "Disk Defragmentation";
 
         public void Solve(string input) {
             Console.WriteLine(PartOne(input));
@@ -21,8 +19,8 @@ namespace AdventOfCode2017.Day14 {
         int PartTwo(string input) {
             var mtx = Extract(input).Select(row => row.ToCharArray()).ToArray();
             var regions = 0;
-            for (int irow = 0; irow < mtx.Count();irow++) {
-                for (int icol = 0; icol < mtx[0].Count();icol++) {
+            for (int irow = 0; irow < mtx.Count(); irow++) {
+                for (int icol = 0; icol < mtx[0].Count(); icol++) {
                     if (mtx[irow][icol] == '#') {
                         regions++;
                         Fill(mtx, (irow, icol));
@@ -37,7 +35,7 @@ namespace AdventOfCode2017.Day14 {
             var ccol = mtx[0].Count();
             var crow = mtx.Count();
             q.Enqueue(startCell);
-            while(q.Any()){
+            while (q.Any()) {
                 var (irowCurrent, icolCurrent) = q.Dequeue();
                 mtx[irowCurrent][icolCurrent] = ' ';
 
@@ -50,7 +48,7 @@ namespace AdventOfCode2017.Day14 {
                     where icolNeighbour >= 0 && icolNeighbour < ccol && irowNeighbour >= 0 && irowNeighbour < crow && mtx[irowNeighbour][icolNeighbour] == '#'
                     select (irowNeighbour, icolNeighbour);
 
-                foreach(var neighbourCell in neighbourCells){
+                foreach (var neighbourCell in neighbourCells) {
                     q.Enqueue(neighbourCell);
                 }
             }
@@ -74,7 +72,7 @@ namespace AdventOfCode2017.Day14 {
         }
 
         int[] KnotHash(string input) {
-            var suffix = new [] { 17, 31, 73, 47, 23 };
+            var suffix = new[] { 17, 31, 73, 47, 23 };
             var chars = input.ToCharArray().Select(b => (int)b).Concat(suffix);
             var output = Enumerable.Range(0, 256).ToArray();
 
