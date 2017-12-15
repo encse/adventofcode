@@ -13,9 +13,7 @@ namespace AdventOfCode2017.Day13 {
 
     class Solution : Solver {
 
-        public string GetName() {
-            return "Packet Scanners";
-        }
+        public string GetName() => "Packet Scanners";
 
         public void Solve(string input) {
             var layers = Parse(input);

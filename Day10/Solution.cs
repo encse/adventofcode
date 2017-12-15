@@ -7,9 +7,7 @@ namespace AdventOfCode2017.Day10 {
 
     class Solution : Solver {
 
-        public string GetName() { 
-            return "Knot Hash"; 
-        }
+        public string GetName() => "Knot Hash"; 
 
         public void Solve(string input) {
             Console.WriteLine(PartOne(input));
