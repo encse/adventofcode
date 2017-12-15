@@ -7,9 +7,7 @@ namespace AdventOfCode2017.Day11 {
 
     class Solution : Solver {
 
-        public string GetName() {
-            return "Hex Ed";
-        }
+        public string GetName() => "Hex Ed";
 
         public void Solve(string input) {
             Console.WriteLine(PartOne(input));

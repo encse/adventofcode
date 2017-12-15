@@ -6,9 +6,7 @@ namespace AdventOfCode2017.Day04 {
 
     class Solution : Solver {
 
-        public string GetName() { 
-            return "High-Entropy Passphrases"; 
-        }
+        public string GetName() => "High-Entropy Passphrases"; 
 
         public void Solve(string input) {
             Console.WriteLine(PartOne(input));

@@ -5,9 +5,7 @@ namespace AdventOfCode2017.Day01 {
 
     class Solution : Solver {
 
-        public string GetName() { 
-            return "Inverse Captcha"; 
-        }
+        public string GetName() => "Inverse Captcha"; 
         
         public void Solve(string input) {
             Console.WriteLine(PartOne(input));

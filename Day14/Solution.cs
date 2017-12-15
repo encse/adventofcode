@@ -35,6 +35,7 @@ namespace AdventOfCode2017.Day14 {
             var ccol = mtx[0].Count();
             var crow = mtx.Count();
             q.Enqueue(startCell);
+
             while (q.Any()) {
                 var (irowCurrent, icolCurrent) = q.Dequeue();
                 mtx[irowCurrent][icolCurrent] = ' ';
@@ -43,9 +44,16 @@ namespace AdventOfCode2017.Day14 {
                     from drow in new[] { -1, 0, 1 }
                     from dcol in new[] { -1, 0, 1 }
                     where Math.Abs(drow) + Math.Abs(dcol) == 1
+
                     let icolNeighbour = icolCurrent + dcol
                     let irowNeighbour = irowCurrent + drow
-                    where icolNeighbour >= 0 && icolNeighbour < ccol && irowNeighbour >= 0 && irowNeighbour < crow && mtx[irowNeighbour][icolNeighbour] == '#'
+
+                    where icolNeighbour >= 0 && 
+                        icolNeighbour < ccol && 
+                        irowNeighbour >= 0 && 
+                        irowNeighbour < crow && 
+                        mtx[irowNeighbour][icolNeighbour] == '#'
+                        
                     select (irowNeighbour, icolNeighbour);
 
                 foreach (var neighbourCell in neighbourCells) {
@@ -56,7 +64,7 @@ namespace AdventOfCode2017.Day14 {
 
         IEnumerable<string> Extract(string input) {
             for (var irow = 0; irow < 128; irow++) {
-                string row = "";
+                var row = "";
                 foreach (var n in KnotHash(input + "-" + irow)) {
                     var m = n;
                     for (var bit = 0; bit < 8; bit++) {

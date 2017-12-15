@@ -13,9 +13,7 @@ namespace AdventOfCode2017.Day12 {
 
     class Solution : Solver {
 
-        public string GetName() {
-            return "Digital Plumber";
-        }
+        public string GetName() => "Digital Plumber";
 
         public void Solve(string input) {
             Console.WriteLine(PartOne(input));

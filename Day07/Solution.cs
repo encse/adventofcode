@@ -16,9 +16,7 @@ namespace AdventOfCode2017.Day07 {
 
     class Solution : Solver {
 
-        public string GetName() { 
-            return "Recursive Circus"; 
-        }
+        public string GetName() => "Recursive Circus"; 
 
         public void Solve(string input) {
             var tree = new Tree();
