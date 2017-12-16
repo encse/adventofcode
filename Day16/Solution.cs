@@ -9,6 +9,8 @@ namespace AdventOfCode2017.Day16 {
 
     class Solution : Solver {
 
+        const string startState = "abcdefghijklmnop";
+
         public string GetName() => "???";
 
         public void Solve(string input) {
@@ -17,42 +19,51 @@ namespace AdventOfCode2017.Day16 {
         }
 
         string PartOne(string input) {
-            return Step(input, "abcdefghijklmnop");
-        }
-
-        string Step(string input, string orderT) {
-            var order = orderT.ToList();
-            var rxSpin = Parser(new Regex("s([0-9]+)"), m => int.Parse(m.Groups[1].Value));
-            var rxExchange = Parser(new Regex("x([0-9]+)/([0-9]+)"), m => (int.Parse(m.Groups[1].Value), int.Parse(m.Groups[2].Value)));
-            var rxPartner = Parser(new Regex("p([a-z])/([a-z])"), m => (m.Groups[1].Value[0], m.Groups[2].Value[0]));
-
-            foreach (var stm in input.Split(',')) {
-                if (rxSpin(stm) is var n && n.HasValue) {
-                    order = order.Skip(order.Count - n.Value).Concat(order.Take(order.Count - n.Value)).ToList();
-                } else if (rxExchange(stm) is var p && p.HasValue) {
-                    (order[p.Value.Item1], order[p.Value.Item2]) = (order[p.Value.Item2], order[p.Value.Item1]);
-                } else if (rxPartner(stm) is var e && e.HasValue) {
-                    var (idx1, idx2) = (order.IndexOf(e.Value.Item1), order.IndexOf(e.Value.Item2));
-                    order[idx1] = e.Value.Item2;
-                    order[idx2] = e.Value.Item1;
-                }
-            }
-            return string.Join("", order);
+            return Step(input, startState);
         }
 
         string PartTwo(string input) {
             var mod = Mod(input);
 
-            var state = "abcdefghijklmnop";
+            var state = startState;
             for (int i = 0; i < 1000000000 % mod; i++) {
                 state = Step(input, state);
             }
             return state;
         }
 
+        string Step(string input, string orderT) {
+            var order = orderT.ToList();
+            var spin = Move("s([0-9]+)", m => {
+                    int n = int.Parse(m[0]);
+                    order = order.Skip(order.Count - n).Concat(order.Take(order.Count - n)).ToList();
+                });
+
+            var exchange = Move("x([0-9]+)/([0-9]+)", m => {
+                    int idx1 = int.Parse(m[0]);
+                    int idx2 = int.Parse(m[1]);
+                    (order[idx1], order[idx2]) = (order[idx2], order[idx1]);
+                });
+
+            var partner = Move("p([a-z])/([a-z])", m => {
+                    var (c1, c2) = (m[0].Single(), m[1].Single());
+                    var (idx1, idx2) = (order.IndexOf(c1), order.IndexOf(c2));
+                    order[idx1] = c2;
+                    order[idx2] = c1;
+                });
+
+            foreach (var stm in input.Split(',')) {
+                spin(stm);
+                exchange(stm);
+                partner(stm);
+            }
+            
+            return string.Join("", order);
+        }
+
         int Mod(string input) {
             var seen = new HashSet<string>();
-            var state = "abcdefghijklmnop";
+            var state = startState;
             seen.Add(state);
             for (int i = 0; i < 1000000000; i++) {
                 state = Step(input, state);
@@ -62,14 +73,15 @@ namespace AdventOfCode2017.Day16 {
             }
             return 1000000000;
         }
-
-        Func<string, T?> Parser<T>(Regex r, Func<Match, T> p) where T : struct {
+        Func<string, bool> Move(string pattern, Action<string[]> a) {
+            var rx = new Regex(pattern);
             return (string stm) => {
-                var match = r.Match(stm);
+                var match = rx.Match(stm);
                 if (match.Success) {
-                    return new Nullable<T>(p(match));
+                    a(match.Groups.Cast<Group>().Skip(1).Select(g => g.Value).ToArray());
+                    return true;
                 } else {
-                    return null;
+                    return false;
                 }
             };
         }
