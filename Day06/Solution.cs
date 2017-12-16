@@ -8,9 +8,9 @@ namespace AdventOfCode2017.Day06 {
 
         public string GetName() => "Memory Reallocation"; 
 
-        public void Solve(string input) {
-            Console.WriteLine(PartOne(input.Split('\t').Select(int.Parse).ToList()));
-            Console.WriteLine(PartTwo(input.Split('\t').Select(int.Parse).ToList()));
+        public IEnumerable<object> Solve(string input) {
+            yield return PartOne(input.Split('\t').Select(int.Parse).ToList());
+            yield return PartTwo(input.Split('\t').Select(int.Parse).ToList());
         }
 
         int PartOne(List<int> numbers) => GetStepCount(numbers);

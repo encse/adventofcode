@@ -15,10 +15,10 @@ namespace AdventOfCode2017.Day13 {
 
         public string GetName() => "Packet Scanners";
 
-        public void Solve(string input) {
+        public IEnumerable<object> Solve(string input) {
             var layers = Parse(input);
-            Console.WriteLine(PartOne(layers));
-            Console.WriteLine(PartTwo(layers));
+            yield return PartOne(layers);
+            yield return PartTwo(layers);
         }
 
         int PartOne( Layers layers) => Severities(layers, 0).Sum();

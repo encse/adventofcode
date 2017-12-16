@@ -8,10 +8,10 @@ namespace AdventOfCode2017.Day03 {
 
         public string GetName() => "Spiral Memory"; 
         
-        public void Solve(string input) {
+        public IEnumerable<object> Solve(string input) {
             var num = int.Parse(input);
-            Console.WriteLine(PartOne(num));
-            Console.WriteLine(PartTwo(num));
+            yield return PartOne(num);
+            yield return PartTwo(num);
         }
 
         int PartOne(int num) {

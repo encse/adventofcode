@@ -18,7 +18,7 @@ namespace AdventOfCode2017.Day07 {
 
         public string GetName() => "Recursive Circus"; 
 
-        public void Solve(string input) {
+        public IEnumerable<object> Solve(string input) {
             var tree = new Tree();
             foreach (var line in input.Split('\n')) {
                 var parts = Regex.Match(line, @"(?<id>[a-z]+) \((?<weight>[0-9]+)\)( -> (?<children>.*))?");
@@ -34,8 +34,8 @@ namespace AdventOfCode2017.Day07 {
                     });
             }
 
-            Console.WriteLine(PartOne(tree));
-            Console.WriteLine(PartTwo(tree));
+            yield return PartOne(tree);
+            yield return PartTwo(tree);
         }
 
         string PartOne(Tree tree) => Root(tree).Id;

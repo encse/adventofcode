@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace AdventOfCode2017.Day01 {
 
@@ -7,9 +8,9 @@ namespace AdventOfCode2017.Day01 {
 
         public string GetName() => "Inverse Captcha"; 
         
-        public void Solve(string input) {
-            Console.WriteLine(PartOne(input));
-            Console.WriteLine(PartTwo(input));
+        public IEnumerable<object> Solve(string input) {
+            yield return PartOne(input);
+            yield return PartTwo(input);
         }
 
         int PartOne(string input) => InverseCaptcha(input, 1);

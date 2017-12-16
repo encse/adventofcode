@@ -1,12 +1,13 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace AdventOfCode2017 {
     interface Solver {
         string GetName();
-        void Solve(string input);
+        IEnumerable<object> Solve(string input);
     }
 
     class Runner {
@@ -74,7 +75,12 @@ namespace AdventOfCode2017 {
             Console.WriteLine();
             foreach (var file in Directory.EnumerateFiles(name)) {
                 if (file.EndsWith(".in")) {
-                    solver.Solve(File.ReadAllText(file));
+                    var dt = DateTime.Now;
+                    foreach(var line in solver.Solve(File.ReadAllText(file))){
+                        var now = DateTime.Now;
+                        Console.WriteLine($"{line} ({(now - dt).TotalMilliseconds}ms)");
+                        dt = now;
+                    }
                 }
             }
         }

@@ -9,18 +9,19 @@ namespace AdventOfCode2017.Day16 {
 
     class Solution : Solver {
 
-        public string GetName() => "???";
+        public string GetName() => "Permutation Promenade";
 
-        public void Solve(string input) {
-            Console.WriteLine(PartOne(input));
-            Console.WriteLine(PartTwo(input));
+        public IEnumerable<object> Solve(string input) {
+            var step = ParseStep(input);
+            var startState = "abcdefghijklmnop";
+
+            yield return PartOne(step, startState);
+            yield return PartTwo(step, startState);
         }
 
-        string PartOne(string input) => Parse(input)("abcdefghijklmnop");
+        string PartOne(Func<string, string> step, string startState) => step(startState);
 
-        string PartTwo(string input) {
-            var startState = "abcdefghijklmnop";
-            var step = Parse(input);
+        string PartTwo(Func<string, string> step, string startState) {
             var mod = Mod(step, startState);
 
             var state = startState;
@@ -31,29 +32,26 @@ namespace AdventOfCode2017.Day16 {
         }
 
         int Mod(Func<string, string> step, string startState) {
-            var seen = new HashSet<string>();
             var state = startState;
-            seen.Add(state);
-            for (int i = 0; i < 1000000000; i++) {
+            for (int i = 0; ; i++) {
                 state = step(state);
-                if (seen.Contains(state)) {
+                if (startState == state) {
                     return i + 1;
                 }
             }
-            return 1000000000;
         }
 
-        Func<string, string> Parse(string input) {
-            var moves =
+        Func<string, string> ParseStep(string input) {
+            var moves = (
                 from stm in input.Split(',')
                 select
-                    Move(stm, "s([0-9]+)", m => {
+                    ParseMove(stm, "s([0-9]+)", m => {
                         int n = int.Parse(m[0]);
                         return (order) => {
                             return order.Skip(order.Count - n).Concat(order.Take(order.Count - n)).ToList();
                         };
                     }) ??
-                    Move(stm, "x([0-9]+)/([0-9]+)", m => {
+                    ParseMove(stm, "x([0-9]+)/([0-9]+)", m => {
                         int idx1 = int.Parse(m[0]);
                         int idx2 = int.Parse(m[1]);
                         return (order) => {
@@ -61,7 +59,7 @@ namespace AdventOfCode2017.Day16 {
                             return order;
                         };
                     }) ??
-                    Move(stm, "p([a-z])/([a-z])", m => {
+                    ParseMove(stm, "p([a-z])/([a-z])", m => {
                         var (c1, c2) = (m[0].Single(), m[1].Single());
                         return order => {
                             var (idx1, idx2) = (order.IndexOf(c1), order.IndexOf(c2));
@@ -70,7 +68,8 @@ namespace AdventOfCode2017.Day16 {
                             return order;
                         };
                     }) ??
-                    throw new Exception("Cannot parse " + stm);
+                    throw new Exception("Cannot parse " + stm)
+            ).ToArray();
 
             return startOrder => {
                 var order = startOrder.ToList();
@@ -81,7 +80,7 @@ namespace AdventOfCode2017.Day16 {
             };
         }
 
-         Func<List<char>, List<char>> Move(string stm, string pattern, Func<string[], Func<List<char>, List<char>>> a) {
+         Func<List<char>, List<char>> ParseMove(string stm, string pattern, Func<string[], Func<List<char>, List<char>>> a) {
             var match = Regex.Match(stm , pattern);
             if (match.Success) {
                 return a(match.Groups.Cast<Group>().Skip(1).Select(g => g.Value).ToArray());

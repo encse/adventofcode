@@ -15,9 +15,9 @@ namespace AdventOfCode2017.Day12 {
 
         public string GetName() => "Digital Plumber";
 
-        public void Solve(string input) {
-            Console.WriteLine(PartOne(input));
-            Console.WriteLine(PartTwo(input));
+        public IEnumerable<object> Solve(string input) {
+            yield return PartOne(input);
+            yield return PartTwo(input);
         }
 
         int PartOne(string input) => GetPartitions(input).Single(x => x.Contains("0")).Count();

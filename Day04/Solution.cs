@@ -8,9 +8,9 @@ namespace AdventOfCode2017.Day04 {
 
         public string GetName() => "High-Entropy Passphrases"; 
 
-        public void Solve(string input) {
-            Console.WriteLine(PartOne(input));
-            Console.WriteLine(PartTwo(input));
+        public IEnumerable<object> Solve(string input) {
+            yield return PartOne(input);
+            yield return PartTwo(input);
         }
 
         int PartOne(string lines) =>
