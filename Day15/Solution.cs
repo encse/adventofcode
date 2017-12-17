@@ -25,7 +25,7 @@ namespace AdventOfCode2017.Day15 {
         IEnumerable<(long, long)> Combine((IEnumerable<long> a, IEnumerable<long> b) items) =>
             Enumerable.Zip(items.a, items.b, (a, b) => (a, b));
 
-        int MatchCount(IEnumerable<(long a, long b)> items) => 
+        int MatchCount(IEnumerable<(long a, long b)> items) =>
             items.Count(item => (item.a & 0xffff) == (item.b & 0xffff));
 
         (IEnumerable<long> a, IEnumerable<long> b) ParseGenerators(string input) {
@@ -40,7 +40,7 @@ namespace AdventOfCode2017.Day15 {
             var mod = 2147483647;
 
             long state = start;
-            while(true){
+            while (true) {
                 state = (state * mul) % mod;
                 yield return state;
             }
