@@ -1,4 +1,4 @@
-original source: [http://adventofcode.com/2017/day/17](http://adventofcode.com/2017/day/17)
+original source: [https://adventofcode.com//2017/day/17](https://adventofcode.com//2017/day/17)
 ## --- Day 17: Spinlock ---
 Suddenly, whirling in the distance, you notice what looks like a massive, pixelated hurricane: a deadly [spinlock](https://en.wikipedia.org/wiki/Spinlock). This spinlock isn't just consuming computing power, but memory, too; vast, digital mountains are being ripped from the ground and consumed by the vortex.
 
