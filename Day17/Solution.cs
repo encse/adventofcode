@@ -7,7 +7,7 @@ namespace AdventOfCode2017.Day17 {
 
     class Solution : Solver {
 
-        public string GetName() => "???";
+        public string GetName() => "Spinlock";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);
