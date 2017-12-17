@@ -5,7 +5,7 @@ My C# solutions to http://adventofcode.com/2017 using .NET Core 2.0.
 ## Dependencies
 
 - This library is based on `.NET Core 2.0`. It should work on Windows, Linux and OS X.
-- `HtmlAgilityPack.NetCore` is used for scaffolding.
+- `HtmlAgilityPack.NetCore` is used for problem download.
 
 ## Running
 
