@@ -48,12 +48,12 @@ namespace AdventOfCode2017.Day14 {
                     let icolNeighbour = icolCurrent + dcol
                     let irowNeighbour = irowCurrent + drow
 
-                    where icolNeighbour >= 0 && 
-                        icolNeighbour < ccol && 
-                        irowNeighbour >= 0 && 
-                        irowNeighbour < crow && 
+                    where icolNeighbour >= 0 &&
+                        icolNeighbour < ccol &&
+                        irowNeighbour >= 0 &&
+                        irowNeighbour < crow &&
                         mtx[irowNeighbour][icolNeighbour] == '#'
-                        
+
                     select (irowNeighbour, icolNeighbour);
 
                 foreach (var neighbourCell in neighbourCells) {

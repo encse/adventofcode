@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 
-namespace AdventOfCode2017.Day00 {
+namespace AdventOfCode2017.Day17 {
 
     class Solution : Solver {
 
@@ -15,11 +15,29 @@ namespace AdventOfCode2017.Day00 {
         }
 
         int PartOne(string input) {
-            return 0;
+            var step = int.Parse(input);
+            var nums = new List<int>() { 0 };
+            var pos = 0;
+            for (int i = 1; i < 2018; i++) {
+                pos = (pos + step) % nums.Count + 1;
+                nums.Insert(pos, i);
+            }
+            return nums[(pos + 1) % nums.Count];
         }
 
-        string PartTwo(string input) {
-            return "";
+        int PartTwo(string input) {
+            var step = int.Parse(input);
+            var pos = 0;
+            var numsCount = 1;
+            var res = 0;
+            for (int i = 1; i < 50000001; i++) {
+                pos = (pos + step) % numsCount + 1;
+                if (pos == 1) {
+                    res = i;
+                }
+                numsCount++;
+            }
+            return res;
         }
     }
 }
