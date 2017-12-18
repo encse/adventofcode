@@ -27,7 +27,7 @@ namespace AdventOfCode2017 {
                     tSolver = tSolvers.Where(x => x.FullName.Contains($"Day{day.ToString("00")}")).First();
                     return () => Runner.RunSolver(Activator.CreateInstance(tSolver) as Solver);
                 }) ??
-                Command(args, Args(), m => {
+                Command(args, Args("last"), m => {
                     tSolver = tSolvers.Last();
                     return () => Runner.RunSolver(Activator.CreateInstance(tSolver) as Solver);
                 }) ??
@@ -37,7 +37,7 @@ namespace AdventOfCode2017 {
                     Console.WriteLine("Commands:");
                     Console.WriteLine($"  run update [day]  Prepares a folder for the given day, updates the input, the readme and creates a solution template.");
                     Console.WriteLine($"  run [day]         Solve the problem of the day");
-                    Console.WriteLine($"  run               Solve the problem of the last day");
+                    Console.WriteLine($"  run last          Solve the problem of the last day");
                 });
 
             action();
