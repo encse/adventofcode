@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Language.Extensions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using System.CodeDom.Compiler;
 
 namespace AdventOfCode2017.Templates {
 
@@ -20,6 +21,8 @@ namespace AdventOfCode2017.Templates {
 
         string GenerateSolutionTemplate(SolutionTemplateModel model);
         string GenerateProjectReadme(ProjectReadmeModel model);
+        string GenerateSplashScreen(SplashScreenModel model);
+        
     }
 
     class TemplateEngine {
@@ -102,6 +105,7 @@ namespace AdventOfCode2017.Templates {
     }
 
     public class SplashScreenModel {
+        public IEnumerable<CalendarToken> Calendar { get; set; }
     }
 
     public abstract class BaseTemplate<TModel> {
@@ -120,6 +124,9 @@ namespace AdventOfCode2017.Templates {
             return sb.ToString();
         }
 
+        public string ToLiteral(string input) {
+            return input.Replace("\n", "\\n");
+        }
         public async virtual Task ExecuteAsync() {
             await Task.Yield(); // whatever, we just need something that compiles...
         }
