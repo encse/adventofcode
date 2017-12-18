@@ -16,17 +16,14 @@ namespace AdventOfCode2017 {
 
                     Console.Write("           ");
                     
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("");
-                        
                         Console.ForegroundColor = ConsoleColor.Gray;
-                        Console.Write(".-----------------------------------------------.\n");
+                        Console.Write(".-----------------------------------------------.");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("       \n");
                         
                             Console.Write("           ");
                             
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("");
-                        
                         Console.ForegroundColor = ConsoleColor.Gray;
                         Console.Write("|");
                         
@@ -34,13 +31,19 @@ namespace AdventOfCode2017 {
                         Console.Write("                                               ");
                         
                         Console.ForegroundColor = ConsoleColor.Gray;
-                        Console.Write("|\n");
+                        Console.Write("|");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("  ");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("25");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("\n");
                         
                             Console.Write("           ");
                             
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("");
-                        
                         Console.ForegroundColor = ConsoleColor.Gray;
                         Console.Write("|");
                         
@@ -48,13 +51,19 @@ namespace AdventOfCode2017 {
                         Console.Write("                                               ");
                         
                         Console.ForegroundColor = ConsoleColor.Gray;
-                        Console.Write("|\n");
+                        Console.Write("|");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("  ");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("24");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("\n");
                         
                             Console.Write("           ");
                             
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("");
-                        
                         Console.ForegroundColor = ConsoleColor.Gray;
                         Console.Write("|");
                         
@@ -62,13 +71,19 @@ namespace AdventOfCode2017 {
                         Console.Write("                                               ");
                         
                         Console.ForegroundColor = ConsoleColor.Gray;
-                        Console.Write("|\n");
+                        Console.Write("|");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("  ");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("23");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("\n");
                         
                             Console.Write("           ");
                             
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("");
-                        
                         Console.ForegroundColor = ConsoleColor.Gray;
                         Console.Write("|");
                         
@@ -76,13 +91,19 @@ namespace AdventOfCode2017 {
                         Console.Write("                                               ");
                         
                         Console.ForegroundColor = ConsoleColor.Gray;
-                        Console.Write("|\n");
+                        Console.Write("|");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("  ");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("22");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("\n");
                         
                             Console.Write("           ");
                             
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("");
-                        
                         Console.ForegroundColor = ConsoleColor.Gray;
                         Console.Write("|");
                         
@@ -90,13 +111,19 @@ namespace AdventOfCode2017 {
                         Console.Write("                                               ");
                         
                         Console.ForegroundColor = ConsoleColor.Gray;
-                        Console.Write("|\n");
+                        Console.Write("|");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("  ");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("21");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("\n");
                         
                             Console.Write("           ");
                             
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("");
-                        
                         Console.ForegroundColor = ConsoleColor.Gray;
                         Console.Write("|");
                         
@@ -104,432 +131,259 @@ namespace AdventOfCode2017 {
                         Console.Write("                                               ");
                         
                         Console.ForegroundColor = ConsoleColor.Gray;
-                        Console.Write("|\n");
+                        Console.Write("|");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("  ");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("20");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("\n");
                         
                             Console.Write("           ");
                             
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("");
-                        
                         Console.ForegroundColor = ConsoleColor.Gray;
                         Console.Write("|");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("                                         ");
+                        Console.Write("              ");
                         
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.Write("*");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("     ");
-                        
-                        Console.ForegroundColor = ConsoleColor.Gray;
-                        Console.Write("|\n");
-                        
-                            Console.Write("           ");
-                            
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("");
-                        
-                        Console.ForegroundColor = ConsoleColor.Gray;
-                        Console.Write("|");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("                                         ");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("└───");
-                        
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.Write("*");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write(" ");
-                        
-                        Console.ForegroundColor = ConsoleColor.Gray;
-                        Console.Write("|\n");
-                        
-                            Console.Write("           ");
-                            
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("");
-                        
-                        Console.ForegroundColor = ConsoleColor.Gray;
-                        Console.Write("|");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
                         Console.Write("                                ");
                         
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.Write("|");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("  ");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("19");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("\n");
+                        
+                            Console.Write("           ");
+                            
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.Write("|");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("              ");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("└─┐");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("                      ");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("┌─────");
+                        
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.Write("*");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("─────┬───");
-                        
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.Write("|(");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("─┘");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
                         Console.Write(" ");
-                        
-                        Console.ForegroundColor = ConsoleColor.Gray;
-                        Console.Write("|\n");
-                        
-                            Console.Write("           ");
-                            
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("");
                         
                         Console.ForegroundColor = ConsoleColor.Gray;
                         Console.Write("|");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write(" ");
+                        Console.Write("  ");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("┌─────────┬┴┴┴┬────────");
+                        Console.Write("18");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" ");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("\n");
+                        
+                            Console.Write("           ");
+                            
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.Write("|");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("                ");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("└──────────────");
+                        
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        Console.Write("┤[]├");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("────┘");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("────┤");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" ");
+                        
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.Write("|");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("  ");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("17");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" ");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("\n");
+                        
+                            Console.Write("           ");
+                            
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.Write("|");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("                     ");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("──────────────────┘o───┘");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" ");
+                        
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.Write("|");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("  ");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("16");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" ");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("\n");
+                        
+                            Console.Write("           ");
+                            
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.Write("|");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("                     ");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("└──────────────────");
                         
                         Console.ForegroundColor = ConsoleColor.Magenta;
                         Console.Write("oTo");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("─────┘o────┘┌────");
+                        Console.Write("──");
                         
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.Write("*");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("┐");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
                         Console.Write(" ");
-                        
-                        Console.ForegroundColor = ConsoleColor.Gray;
-                        Console.Write("|\n");
-                        
-                            Console.Write("           ");
-                            
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("");
                         
                         Console.ForegroundColor = ConsoleColor.Gray;
                         Console.Write("|");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write(" ");
+                        Console.Write("  ");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("└─┐┌──────┤  1├───────────────────────┘");
+                        Console.Write("15");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" ");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
                         
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.Write("*");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("───┘│");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write(" ");
-                        
-                        Console.ForegroundColor = ConsoleColor.Gray;
-                        Console.Write("|\n");
+                        Console.Write("\n");
                         
                             Console.Write("           ");
                             
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("");
-                        
                         Console.ForegroundColor = ConsoleColor.Gray;
                         Console.Write("|");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write(" ");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("┌─┘└────┐");
+                        Console.Write("       ");
                         
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.Write("*");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("┤ A0├────────┬┴┴┴┬───");
-                        
-                        Console.ForegroundColor = ConsoleColor.Cyan;
-                        Console.Write("┤[]├");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("────┘o─┬─┘");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write(" ");
-                        
-                        Console.ForegroundColor = ConsoleColor.Gray;
-                        Console.Write("|\n");
-                        
-                            Console.Write("           ");
-                            
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("");
-                        
-                        Console.ForegroundColor = ConsoleColor.Gray;
-                        Console.Write("|");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write(" ");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("└───┐┌──┘└┤ P7├┬┴┴┴┴┴┬─┤   ├────");
+                        Console.Write("─");
                         
                         Console.ForegroundColor = ConsoleColor.White;
                         Console.Write("∧∧∧");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("──────");
+                        Console.Write("─────────");
                         
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.Write("*");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("└─o");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write(" ");
-                        
-                        Console.ForegroundColor = ConsoleColor.Gray;
-                        Console.Write("|\n");
-                        
-                            Console.Write("           ");
-                            
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("");
-                        
-                        Console.ForegroundColor = ConsoleColor.Gray;
-                        Console.Write("|");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write(" ");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("┌───┘└───┐┤ L1├┤     ├─┤  1├");
-                        
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.Write("*");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("───────────┐└──┐");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write(" ");
-                        
-                        Console.ForegroundColor = ConsoleColor.Gray;
-                        Console.Write("|\n");
-                        
-                            Console.Write("           ");
-                            
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("");
-                        
-                        Console.ForegroundColor = ConsoleColor.Gray;
-                        Console.Write("|");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write(" ");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("└────────┴┴┬┬┬┴┤     ├─┤  2├└─────");
-                        
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.Write("*");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("o───┐└───┤");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write(" ");
-                        
-                        Console.ForegroundColor = ConsoleColor.Gray;
-                        Console.Write("|\n");
-                        
-                            Console.Write("           ");
-                            
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("");
-                        
-                        Console.ForegroundColor = ConsoleColor.Gray;
-                        Console.Write("|");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write(" ");
-                        
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.Write("*");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("────");
-                        
-                        Console.ForegroundColor = ConsoleColor.White;
-                        Console.Write("∧∧∧");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("───────┤ 3141├o┤  v├──────┘┌───┴───o│");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write(" ");
-                        
-                        Console.ForegroundColor = ConsoleColor.Gray;
-                        Console.Write("|\n");
-                        
-                            Console.Write("           ");
-                            
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("");
-                        
-                        Console.ForegroundColor = ConsoleColor.Gray;
-                        Console.Write("|");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write(" ");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("└────────");
-                        
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.Write("*");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("┌────┤ 5926├─┴┬┬┬┴┬─────┐└────────┘");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write(" ");
-                        
-                        Console.ForegroundColor = ConsoleColor.Gray;
-                        Console.Write("|\n");
-                        
-                            Console.Write("           ");
-                            
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("");
-                        
-                        Console.ForegroundColor = ConsoleColor.Gray;
-                        Console.Write("|");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write(" ");
-                        
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.Write("*");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("────────┘└────┴┬┬┬┬┬┴─────┐└────o└──");
-                        
-                        Console.ForegroundColor = ConsoleColor.Cyan;
-                        Console.Write("┤[]├");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("───┐");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write(" ");
-                        
-                        Console.ForegroundColor = ConsoleColor.Gray;
-                        Console.Write("|\n");
-                        
-                            Console.Write("           ");
-                            
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("");
-                        
-                        Console.ForegroundColor = ConsoleColor.Gray;
-                        Console.Write("|");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write(" ");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("├────────────");
-                        
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.Write("*");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("o───┴─┘o─────┴─────");
-                        
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.Write("|(");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("─────────┘");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write(" ");
-                        
-                        Console.ForegroundColor = ConsoleColor.Gray;
-                        Console.Write("|\n");
-                        
-                            Console.Write("           ");
-                            
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("");
-                        
-                        Console.ForegroundColor = ConsoleColor.Gray;
-                        Console.Write("|");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write(" ");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("│o─────┬────┐└─────┬────");
-                        
-                        Console.ForegroundColor = ConsoleColor.Cyan;
-                        Console.Write("┤[]├");
+                        Console.ForegroundColor = ConsoleColor.Magenta;
+                        Console.Write("oTo");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
                         Console.Write("────────────────");
                         
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.Write("*");
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.Write("∧∧∧");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("──┤");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
                         Console.Write(" ");
-                        
-                        Console.ForegroundColor = ConsoleColor.Gray;
-                        Console.Write("|\n");
-                        
-                            Console.Write("           ");
-                            
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("");
                         
                         Console.ForegroundColor = ConsoleColor.Gray;
                         Console.Write("|");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write(" ");
+                        Console.Write("  ");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("└──────┘o───┘");
-                        
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.Write("*");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("────┐└───────────┐o─┬──o┌─────┤");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write(" ");
-                        
-                        Console.ForegroundColor = ConsoleColor.Gray;
-                        Console.Write("|\n");
-                        
-                            Console.Write("           ");
-                            
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("");
-                        
-                        Console.ForegroundColor = ConsoleColor.Gray;
-                        Console.Write("|");
+                        Console.Write("14");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
                         Console.Write(" ");
@@ -537,115 +391,627 @@ namespace AdventOfCode2017 {
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.Write("*");
                         
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("──────");
-                        
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.Write("|(");
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("────┘o───┴──┐┌─o┌───┬o│┌─┘┌──┘o────┤");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write(" ");
-                        
-                        Console.ForegroundColor = ConsoleColor.Gray;
-                        Console.Write("|\n");
+                        Console.Write("\n");
                         
                             Console.Write("           ");
                             
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.Write("|");
+                        
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("");
+                        Console.Write("       ");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("└────────────────────");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("o──────┐┌──");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkCyan;
+                        Console.Write("┤|├");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("──┘");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" ");
                         
                         Console.ForegroundColor = ConsoleColor.Gray;
                         Console.Write("|");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write(" ");
+                        Console.Write("  ");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("└────────");
+                        Console.Write("13");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" ");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("\n");
+                        
+                            Console.Write("           ");
+                            
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.Write("|");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("                            ");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("└────");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("┌─┘└┬───┐o─┐");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" ");
+                        
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.Write("|");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("  ");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("12");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" ");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("\n");
+                        
+                            Console.Write("           ");
+                            
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.Write("|");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("            ");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("┌──────────");
+                        
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        Console.Write("┤[]├");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("──");
+                        
+                        Console.ForegroundColor = ConsoleColor.Magenta;
+                        Console.Write("oTo");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("─┘└───┘┌");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("o┴──┘");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" ");
+                        
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.Write("|");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("  ");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("11");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" ");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("\n");
+                        
+                            Console.Write("           ");
+                            
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.Write("|");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("            ");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("└──");
                         
                         Console.ForegroundColor = ConsoleColor.White;
                         Console.Write("∧∧∧");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("──────────┐┌─");
+                        
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        Console.Write("┤[]├");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("────┘└────");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" ");
+                        
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.Write("|");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("  ");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("10");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" ");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("\n");
+                        
+                            Console.Write("           ");
+                            
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.Write("|");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("                ");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("┌───────────┘│");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
                         Console.Write("───────");
-                        
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.Write("*");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("V│└──┴──┐└─┘└─┐└───────┐=");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write(" ");
-                        
-                        Console.ForegroundColor = ConsoleColor.Gray;
-                        Console.Write("|\n");
-                        
-                            Console.Write("           ");
-                            
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("");
-                        
-                        Console.ForegroundColor = ConsoleColor.Gray;
-                        Console.Write("|");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write(" ");
-                        
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.Write("*");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("──────────────────┘└┴─────┐└─────┴─────o┌┐└┐");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write(" ");
-                        
-                        Console.ForegroundColor = ConsoleColor.Gray;
-                        Console.Write("|\n");
-                        
-                            Console.Write("           ");
-                            
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("");
-                        
-                        Console.ForegroundColor = ConsoleColor.Gray;
-                        Console.Write("|");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write(" ");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("└──────────────");
                         
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.Write("[─]");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("────");
-                        
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.Write("*");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("o───┴─────────────┘└─┘");
+                        Console.Write("────┤");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
                         Console.Write(" ");
                         
                         Console.ForegroundColor = ConsoleColor.Gray;
-                        Console.Write("|\n");
+                        Console.Write("|");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("  ");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" 9");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" ");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("\n");
                         
                             Console.Write("           ");
                             
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.Write("|");
+                        
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("");
+                        Console.Write("                ");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("└────");
+                        
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write("[─]");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("─────┘└──────");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("┌──────┘");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" ");
                         
                         Console.ForegroundColor = ConsoleColor.Gray;
-                        Console.Write("'-----------------------------------------------'\n");
+                        Console.Write("|");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("  ");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" 8");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" ");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("\n");
+                        
+                            Console.Write("           ");
+                            
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.Write("|");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" ");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("──────────────────");
+                        
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write("[─]");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("──");
+                        
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.Write("|(");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("──────────┘│o─────┐");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" ");
+                        
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.Write("|");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("  ");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" 7");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" ");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("\n");
+                        
+                            Console.Write("           ");
+                            
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.Write("|");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" ");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("├────────────────");
+                        
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        Console.Write("┤[]├");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("────────");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("o┬o┌───┘┌─────┤");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" ");
+                        
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.Write("|");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("  ");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" 6");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" ");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("\n");
+                        
+                            Console.Write("           ");
+                            
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.Write("|");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" ");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("└────┐┌──");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkCyan;
+                        Console.Write("┤|├");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("───o");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("────────────┘V├─┘o───┴───┐┌┘");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" ");
+                        
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.Write("|");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("  ");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" 5");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" ");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("\n");
+                        
+                            Console.Write("           ");
+                            
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.Write("|");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" ");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("┌───o└┤");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("───");
+                        
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write("[─]");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("──┘o────────┬───┴┴──────────┘└┐");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" ");
+                        
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.Write("|");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("  ");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" 4");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" ");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("\n");
+                        
+                            Console.Write("           ");
+                            
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.Write("|");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" ");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("└─────┘└─────────────────┐└o┌─────");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("o┬──o┌───┘");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" ");
+                        
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.Write("|");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("  ");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" 3");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" ");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("\n");
+                        
+                            Console.Write("           ");
+                            
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.Write("|");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" ");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("─────────────");
+                        
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        Console.Write("┤[]├");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("──────┐└──┴────o└┐├───┘┌──┐");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" ");
+                        
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.Write("|");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("  ");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" 2");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" ");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("\n");
+                        
+                            Console.Write("           ");
+                            
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.Write("|");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" ");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("└──────");
+                        
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write("[─]");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("────────────");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("o┴──────────┘└────┘o─┘");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" ");
+                        
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.Write("|");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("  ");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" 1");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" ");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("\n");
+                        
+                            Console.Write("           ");
+                            
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.Write("'-----------------------------------------------'");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("       \n");
                         
                             Console.Write("           ");
                             

@@ -14,11 +14,11 @@ using AdventOfCode2017.Templates;
 
 namespace AdventOfCode2017 {
 
-    public class CalendarToken{
+    public class CalendarToken {
         public string Style { get; set; }
         public string Text { get; set; }
     }
-    
+
     class CalendarParser {
 
         public IEnumerable<CalendarToken> Parse(string html) {
@@ -27,22 +27,30 @@ namespace AdventOfCode2017 {
 
             var calendar = document.DocumentNode.SelectSingleNode("//*[contains(@class,'calendar')]");
 
-            foreach (var line in calendar.ChildNodes) {
-                if (line.SelectNodes(".//i") != null) {
-                    string lastStyle = null;
-                    var text = "";
-                    foreach (var col in line.SelectNodes(".//i")) {
-                        var style = col.ParentNode.Attributes["class"]?.Value;
-                        if (style != lastStyle) {
-                            yield return new CalendarToken { Style = lastStyle, Text = text };
-                            text = "";
-                        }
-                        lastStyle = style;
-                        text += col.InnerText;
-                    }
-                    yield return new CalendarToken { Style = lastStyle, Text = text + "\n" };
-                }
+
+            foreach (var script in calendar.SelectNodes(".//script").ToList()) {
+                script.Remove();
             }
+
+            string lastStyle = null;
+            var text = "";
+            foreach (var textNode in calendar.SelectNodes(".//text()")) {
+                var style =
+                    textNode.ParentNode.Attributes["class"]?.Value ??
+                    textNode.ParentNode.ParentNode.Attributes["class"]?.Value;
+
+                if (style != lastStyle && text != "") {
+                    yield return new CalendarToken { Style = lastStyle, Text = text };
+                    text = "";
+                }
+                lastStyle = style;
+                text += textNode.InnerText;
+            }
+            
+            if (text != "") {
+                yield return new CalendarToken { Style = lastStyle, Text = text };
+            }
+
         }
     }
 }
