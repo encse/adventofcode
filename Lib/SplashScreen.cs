@@ -148,13 +148,13 @@ namespace AdventOfCode2017 {
                         Console.Write("|");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("              ");
+                        Console.Write("                                   ");
                         
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.Write("*");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("                                ");
+                        Console.Write("           ");
                         
                         Console.ForegroundColor = ConsoleColor.Gray;
                         Console.Write("|");
@@ -174,22 +174,16 @@ namespace AdventOfCode2017 {
                         Console.Write("|");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("              ");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("└─┐");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("                      ");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("┌─────");
+                        Console.Write("                         ");
                         
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.Write("*");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write(" ");
+                        Console.Write("────────┐└┐");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("          ");
                         
                         Console.ForegroundColor = ConsoleColor.Gray;
                         Console.Write("|");
@@ -218,22 +212,25 @@ namespace AdventOfCode2017 {
                         Console.Write("|");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("                ");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("└──────────────");
-                        
-                        Console.ForegroundColor = ConsoleColor.Cyan;
-                        Console.Write("┤[]├");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("────┘");
+                        Console.Write("        ");
                         
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.Write("*");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("────┤");
+                        Console.Write("────┐");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("  ");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("┌───");
+                        
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        Console.Write("┤[]├");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("─┘o──┬┴┴┴┐└┐└────────┐");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
                         Console.Write(" ");
@@ -265,13 +262,22 @@ namespace AdventOfCode2017 {
                         Console.Write("|");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("                     ");
+                        Console.Write(" ");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("┌──────┘┌");
                         
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.Write("*");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("──────────────────┘o───┘");
+                        Console.Write("o─┴──┘┌─────┬────┬┤   ├o└─");
+                        
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write("[─]");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("────┬┘");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
                         Console.Write(" ");
@@ -303,19 +309,16 @@ namespace AdventOfCode2017 {
                         Console.Write("|");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("                     ");
+                        Console.Write(" ");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("└──────────────────");
-                        
-                        Console.ForegroundColor = ConsoleColor.Magenta;
-                        Console.Write("oTo");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("──");
+                        Console.Write("├───────┘└───");
                         
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("o─┴────o└──┐o┘┤ NG├┬o┌───────┘V");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
                         Console.Write(" ");
@@ -347,31 +350,28 @@ namespace AdventOfCode2017 {
                         Console.Write("|");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("       ");
+                        Console.Write(" ");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("│┌──────────┐└───");
+                        
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.Write("|(");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("─────");
                         
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.Write("*");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("─");
-                        
-                        Console.ForegroundColor = ConsoleColor.White;
-                        Console.Write("∧∧∧");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("─────────");
+                        Console.Write("└──┤ AA├└─┴───");
                         
                         Console.ForegroundColor = ConsoleColor.Magenta;
                         Console.Write("oTo");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("────────────────");
-                        
-                        Console.ForegroundColor = ConsoleColor.White;
-                        Console.Write("∧∧∧");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("──┤");
+                        Console.Write("──┘");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
                         Console.Write(" ");
@@ -403,22 +403,19 @@ namespace AdventOfCode2017 {
                         Console.Write("|");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("       ");
+                        Console.Write(" ");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("└────────────────────");
+                        Console.Write("│└─┐o──┐┌───┴─────o┌────┘┌──┤ NT├───");
+                        
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        Console.Write("┤[]├");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("────");
                         
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.Write("*");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("o──────┐┌──");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkCyan;
-                        Console.Write("┤|├");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("──┘");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
                         Console.Write(" ");
@@ -450,16 +447,22 @@ namespace AdventOfCode2017 {
                         Console.Write("|");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("                            ");
+                        Console.Write(" ");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("└────");
+                        Console.Write("└─┐└┐┌─┘│┌─o┌───┬──┘┌───┐└──┤ DE├──o");
                         
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.Write("*");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("┌─┘└┬───┐o─┐");
+                        Console.Write("───");
+                        
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.Write("∧∧∧");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("─┘");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
                         Console.Write(" ");
@@ -491,28 +494,19 @@ namespace AdventOfCode2017 {
                         Console.Write("|");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("            ");
+                        Console.Write(" ");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("┌──────────");
+                        Console.Write("o─┴─┘└──┴┘┌┴┴┴┴┴┤┌──┘o┐┌┴o┌─┴┬┬┬┴───┘┌─");
                         
                         Console.ForegroundColor = ConsoleColor.Cyan;
                         Console.Write("┤[]├");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("──");
-                        
-                        Console.ForegroundColor = ConsoleColor.Magenta;
-                        Console.Write("oTo");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("─┘└───┘┌");
+                        Console.Write("─");
                         
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.Write("*");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("o┴──┘");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
                         Console.Write(" ");
@@ -544,25 +538,16 @@ namespace AdventOfCode2017 {
                         Console.Write("|");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("            ");
+                        Console.Write(" ");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("└──");
-                        
-                        Console.ForegroundColor = ConsoleColor.White;
-                        Console.Write("∧∧∧");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("──────────┐┌─");
-                        
-                        Console.ForegroundColor = ConsoleColor.Cyan;
-                        Console.Write("┤[]├");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("────┘└────");
+                        Console.Write("┌─────────┤     ├┘┌───┤└──┘┌─o└──────┴o");
                         
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.Write("*");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("────┤");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
                         Console.Write(" ");
@@ -594,22 +579,16 @@ namespace AdventOfCode2017 {
                         Console.Write("|");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("                ");
+                        Console.Write(" ");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("┌───────────┘│");
+                        Console.Write("├─────────┤     ├─┴┐┌o│o───┴────┐");
                         
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.Write("*");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("───────");
-                        
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.Write("[─]");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("────┤");
+                        Console.Write("─────┘o───┘");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
                         Console.Write(" ");
@@ -641,22 +620,13 @@ namespace AdventOfCode2017 {
                         Console.Write("|");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("                ");
+                        Console.Write(" ");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("└────");
-                        
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.Write("[─]");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("─────┘└──────");
+                        Console.Write("│o┬───────┤  v17├──┘└─┴─────────┘└──────────");
                         
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.Write("*");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("┌──────┘");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
                         Console.Write(" ");
@@ -690,23 +660,29 @@ namespace AdventOfCode2017 {
                         Console.ForegroundColor = ConsoleColor.DarkGray;
                         Console.Write(" ");
                         
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("└─┘o──┬──┐├┬┬┬┬┬┤");
+                        
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.Write("*");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("──────────────────");
+                        Console.Write("─");
                         
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.Write("[─]");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("──");
-                        
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.Write("|(");
+                        Console.ForegroundColor = ConsoleColor.Magenta;
+                        Console.Write("oTo");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("──────────┘│o─────┐");
+                        Console.Write("──────────┐┌─");
+                        
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        Console.Write("┤[]├");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkCyan;
+                        Console.Write("┤|├");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("──┘");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
                         Console.Write(" ");
@@ -741,19 +717,13 @@ namespace AdventOfCode2017 {
                         Console.Write(" ");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("├────────────────");
-                        
-                        Console.ForegroundColor = ConsoleColor.Cyan;
-                        Console.Write("┤[]├");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("────────");
+                        Console.Write("┌─────┘┌─┘└──┬──┘└───────");
                         
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.Write("*");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("o┬o┌───┘┌─────┤");
+                        Console.Write("┌────o│└──────────┐");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
                         Console.Write(" ");
@@ -788,19 +758,19 @@ namespace AdventOfCode2017 {
                         Console.Write(" ");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("└────┐┌──");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkCyan;
-                        Console.Write("┤|├");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("───o");
+                        Console.Write("└┐o────┘┌────┘");
                         
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.Write("*");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("────────────┘V├─┘o───┴───┐┌┘");
+                        Console.Write("──────────┘└───┬┐│┌────");
+                        
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.Write("|(");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("──┐┌┘");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
                         Console.Write(" ");
@@ -835,19 +805,13 @@ namespace AdventOfCode2017 {
                         Console.Write(" ");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("┌───o└┤");
+                        Console.Write("┌┘┌─────┘┌───o└──────────────┐=└┴┘┌──────");
                         
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.Write("*");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("───");
-                        
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.Write("[─]");
-                        
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("──┘o────────┬───┴┴──────────┘└┐");
+                        Console.Write("│└┐");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
                         Console.Write(" ");
@@ -882,13 +846,13 @@ namespace AdventOfCode2017 {
                         Console.Write(" ");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("└─────┘└─────────────────┐└o┌─────");
+                        Console.Write("└┐└─────┐└┬───┬──────┐o──┬──o└────┴o");
                         
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.Write("*");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("o┬──o┌───┘");
+                        Console.Write("────┘└─┘");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
                         Console.Write(" ");
@@ -922,17 +886,20 @@ namespace AdventOfCode2017 {
                         Console.ForegroundColor = ConsoleColor.DarkGray;
                         Console.Write(" ");
                         
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("┌┴─────o└┐└──o└─┐┌───┴───┘");
+                        
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.Write("*");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("─────────────");
+                        Console.Write("──");
                         
-                        Console.ForegroundColor = ConsoleColor.Cyan;
-                        Console.Write("┤[]├");
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.Write("|(");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("──────┐└──┴────o└┐├───┘┌──┐");
+                        Console.Write("────┐└───────┐");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
                         Console.Write(" ");
@@ -967,19 +934,25 @@ namespace AdventOfCode2017 {
                         Console.Write(" ");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("└──────");
+                        Console.Write("└────────┴───");
                         
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.Write("[─]");
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.Write("|(");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("────────────");
+                        Console.Write("─┘└───o");
                         
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.Write("*");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("o┴──────────┘└────┘o─┘");
+                        Console.Write("───┘o───");
+                        
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.Write("|(");
+                        
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("──┴────────┘");
                         
                         Console.ForegroundColor = ConsoleColor.DarkGray;
                         Console.Write(" ");
