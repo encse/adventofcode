@@ -19,8 +19,7 @@ namespace AdventOfCode2017.Templates {
     public interface Generator {
 
         string GenerateSolutionTemplate(SolutionModel model);
-      //  string GenerateReadme();
-      //  string GenerateSplashScreen();
+        string GenerateReadmeTemplate(ReadmeModel model);
     }
 
     class TemplateEngine {

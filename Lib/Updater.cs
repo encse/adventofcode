@@ -37,10 +37,11 @@ namespace AdventOfCode2017 {
                 cookieContainer.Add(baseAddress, new Cookie("session", System.Environment.GetEnvironmentVariable("SESSION")));
 
                 await UpdateSplashScreen(client);
-                title = await UpdateReadme(client, day);
+                title = await UpdateReadmeForDay(client, day);
                 await UpdateInput(client, day);
             }
 
+            UpdateProjectReadme();
             UpdateSolutionTemplate(day, title);
         }
         
@@ -61,7 +62,7 @@ namespace AdventOfCode2017 {
 
         }
 
-        async Task<string> UpdateReadme(HttpClient client, int day) {
+        async Task<string> UpdateReadmeForDay(HttpClient client, int day) {
             var response = await Download(client, $"2017/day/{day}");
         
             var md = ToMarkDown(response, client.BaseAddress + $"/2017/day/{day}");
@@ -75,6 +76,11 @@ namespace AdventOfCode2017 {
             if (!File.Exists(solution)) {
                 WriteFile(solution, generator.GenerateSolutionTemplate(new SolutionModel { Day = day, Title = title }));
             }
+        }
+
+        void UpdateProjectReadme() {
+            var file = Path.Combine("README.md");
+            WriteFile(file, generator.GenerateReadmeTemplate(new ReadmeModel { }));
         }
 
         async Task UpdateInput(HttpClient client, int day) {
