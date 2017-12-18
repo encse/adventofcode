@@ -36,10 +36,10 @@ namespace AdventOfCode2017 {
                 client.BaseAddress = baseAddress;
                 cookieContainer.Add(baseAddress, new Cookie("session", System.Environment.GetEnvironmentVariable("SESSION")));
 
-                var html = await Download(client, $"2017");
-                UpdateProjectReadme(html);
-
-                var document = new HtmlDocument();
+                var calendarTokens = await CalendarTokens(client);
+                UpdateProjectReadme(calendarTokens);
+                UpdateSplashScreen(calendarTokens);
+                
                 title = await UpdateReadmeForDay(client, day);
                 await UpdateInput(client, day);
             }
@@ -52,6 +52,11 @@ namespace AdventOfCode2017 {
             var response = await client.GetAsync(path);
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsStringAsync();
+        }
+
+        async Task<IEnumerable<CalendarToken>> CalendarTokens(HttpClient client) {
+            var html = await Download(client, "2017");
+            return new CalendarParser().Parse(html);
         }
 
         async Task<string> UpdateReadmeForDay(HttpClient client, int day) {
@@ -70,11 +75,19 @@ namespace AdventOfCode2017 {
             }
         }
 
-        void UpdateProjectReadme(string html) {
+        void UpdateProjectReadme(IEnumerable<CalendarToken> calendarTokens) {
             var file = Path.Combine("README.md");
 
             WriteFile(file, generator.GenerateProjectReadme(new ProjectReadmeModel { 
-                Calendar = string.Join("", new CalendarParser().Parse(html).Select(x => x.text))
+                Calendar = string.Join("", calendarTokens.Select(x => x.Text))
+            }));
+        }
+
+        void UpdateSplashScreen(IEnumerable<CalendarToken> calendarTokens) {
+            var file = Path.Combine(Path.Combine("lib", "SplashScreen.cs"));
+
+            WriteFile(file, generator.GenerateSplashScreen(new SplashScreenModel { 
+                Calendar = calendarTokens
             }));
         }
 
