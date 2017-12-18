@@ -35,6 +35,7 @@ namespace AdventOfCode2017 {
                 client.BaseAddress = baseAddress;
                 cookieContainer.Add(baseAddress, new Cookie("session", System.Environment.GetEnvironmentVariable("SESSION")));
 
+                await UpdateSplashScreen(client);
                 title = await UpdateReadme(client, day);
                 await UpdateInput(client, day);
             }
@@ -62,14 +63,22 @@ namespace AdventOfCode2017 {
             return await response.Content.ReadAsStringAsync();
         }
 
+        static async Task UpdateSplashScreen(HttpClient client) {
+             var response = await Download(client, $"2017");
+
+            var document = new HtmlDocument();
+            document.LoadHtml(response);
+            var node = document.DocumentNode.SelectSingleNode("//*[contains(@class,'calendar')]");
+            WriteFile("splashscreen.in", node.OuterHtml);
+
+        }
+
         static async Task<string> UpdateReadme(HttpClient client, int day) {
             var response = await Download(client, $"2017/day/{day}");
         
             var md = ToMarkDown(response, client.BaseAddress + $"/2017/day/{day}");
             var fileTo = Path.Combine(Dir(day), "README.md");
-            Console.WriteLine($"Updating {fileTo}");
-            File.WriteAllText(fileTo, md.content);
-            
+            WriteFile(fileTo, md.content);
             return md.title;
         }
 
@@ -81,16 +90,19 @@ namespace AdventOfCode2017 {
                 .Replace("Day00", $"Day{day.ToString("00")}")
                 .Replace("???", title);
             if (st != stOld) {
-                Console.WriteLine($"Updating solution template {solution}");
-                File.WriteAllText(solution, st);
+                WriteFile(solution, st);
             }
         }
 
         static async Task UpdateInput(HttpClient client, int day) {
             var response = await Download(client, $"2017/day/{day}/input");
             var inputFile = Path.Combine(Dir(day), "input.in");
-            Console.WriteLine($"Creating test input {inputFile}");
-            File.WriteAllText(inputFile, response);
+            WriteFile(inputFile, response);
+        }
+
+        static void WriteFile(string file, string content) {
+            Console.WriteLine($"Writing {file}");
+            File.WriteAllText(file, content);
         }
 
         static string Dir(int day) => $"Day{day.ToString("00")}";

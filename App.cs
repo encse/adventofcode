@@ -8,14 +8,14 @@ using System.Text.RegularExpressions;
 namespace AdventOfCode2017 {
 
     class App {
-        
+
         static void Main(string[] args) {
-            SplashScreen();
-            
+            SplashScreen.Show();
+
             Type tSolver = null;
-                var tSolvers = Assembly.GetEntryAssembly().GetTypes()
-                    .Where(t => t.GetTypeInfo().IsClass && typeof(Solver).IsAssignableFrom(t))
-                    .OrderBy(t => t.FullName);
+            var tSolvers = Assembly.GetEntryAssembly().GetTypes()
+                .Where(t => t.GetTypeInfo().IsClass && typeof(Solver).IsAssignableFrom(t))
+                .OrderBy(t => t.FullName);
 
             var action =
                 Command(args, Args("update", "[0-9]+"), m => {
@@ -58,44 +58,9 @@ namespace AdventOfCode2017 {
             }
         }
 
-        static string[] Args(params string[] regex){
+        static string[] Args(params string[] regex) {
             return regex;
         }
-        static void SplashScreen(){
-             Console.WriteLine(
-                string.Join("\n", @"
-                                        *             ,
-                                                    _/^\_
-                                                   <     >
-                                  *                 /.-.\         *
-                                           *        `/&\`                   *
-                                                   ,@.*;@,
-                                                  /_o.I %_\    *
-                                     *           (`'--:o(_@;
-                                                /`;--.,__ `')             *
-                                               ;@`o % O,*`'`&\ 
-                                         *    (`'--)_@ ;o %'()\      *
-                                              /`;--._`''--._O'@;
-                                             /&*,()~o`;-.,_ `""`)
-                                 *          /`,@ ;+& () o*`;-';\
-                                           (`""""--.,_0 +% @' &()\
-                                           /-.,_    ``''--....-'`)  *
-                                     *     /@%;o`:;'--,.__   __.'\
-                                          ;*,&(); @ % &^;~`""`o;@();         *
-                                          /(); o^~; & ().o@*&`;&%O\
-                                          `""=""==""""==,,,.,=""==""===""`
-                                       __.----.(\-''#####---...___...-----._
-                                     '`         \)_`""""""""""`
-                                             .--' ')
-                                           o(  )_-\
-                                             `""""""` `
-                   
-                      _      _             _          __    ___         _       ___ __  _ ____ 
-                     /_\  __| |_ _____ _ _| |_   ___ / _|  / __|___  __| |___  |_  )  \/ |__  |
-                    / _ \/ _` \ V / -_) ' \  _| / _ \  _| | (__/ _ \/ _` / -_)  / / () | | / / 
-                   /_/ \_\__,_|\_/\___|_||_\__| \___/_|    \___\___/\__,_\___| /___\__/|_|/_/  
-                   "
-                .Split('\n').Skip(1).Select(x => x.Substring(19))));
-        }
+        
     }
 }
