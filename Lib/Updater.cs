@@ -36,12 +36,14 @@ namespace AdventOfCode2017 {
                 client.BaseAddress = baseAddress;
                 cookieContainer.Add(baseAddress, new Cookie("session", System.Environment.GetEnvironmentVariable("SESSION")));
 
-                await UpdateSplashScreen(client);
+                var html = await Download(client, $"2017");
+                UpdateProjectReadme(html);
+
+                var document = new HtmlDocument();
                 title = await UpdateReadmeForDay(client, day);
                 await UpdateInput(client, day);
             }
 
-            UpdateProjectReadme();
             UpdateSolutionTemplate(day, title);
         }
         
@@ -50,16 +52,6 @@ namespace AdventOfCode2017 {
             var response = await client.GetAsync(path);
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsStringAsync();
-        }
-
-        async Task UpdateSplashScreen(HttpClient client) {
-             var response = await Download(client, $"2017");
-
-            var document = new HtmlDocument();
-            document.LoadHtml(response);
-            var node = document.DocumentNode.SelectSingleNode("//*[contains(@class,'calendar')]");
-            WriteFile("splashscreen.in", node.OuterHtml);
-
         }
 
         async Task<string> UpdateReadmeForDay(HttpClient client, int day) {
@@ -74,13 +66,16 @@ namespace AdventOfCode2017 {
         void UpdateSolutionTemplate(int day, string title) {
             var solution = Path.Combine(Dir(day),"Solution.cs");
             if (!File.Exists(solution)) {
-                WriteFile(solution, generator.GenerateSolutionTemplate(new SolutionModel { Day = day, Title = title }));
+                WriteFile(solution, generator.GenerateSolutionTemplate(new SolutionTemplateModel { Day = day, Title = title }));
             }
         }
 
-        void UpdateProjectReadme() {
+        void UpdateProjectReadme(string html) {
             var file = Path.Combine("README.md");
-            WriteFile(file, generator.GenerateReadmeTemplate(new ReadmeModel { }));
+
+            WriteFile(file, generator.GenerateProjectReadme(new ProjectReadmeModel { 
+                Calendar = string.Join("", new CalendarParser().Parse(html).Select(x => x.text))
+            }));
         }
 
         async Task UpdateInput(HttpClient client, int day) {

@@ -18,8 +18,8 @@ namespace AdventOfCode2017.Templates {
 
     public interface Generator {
 
-        string GenerateSolutionTemplate(SolutionModel model);
-        string GenerateReadmeTemplate(ReadmeModel model);
+        string GenerateSolutionTemplate(SolutionTemplateModel model);
+        string GenerateProjectReadme(ProjectReadmeModel model);
     }
 
     class TemplateEngine {
@@ -27,9 +27,7 @@ namespace AdventOfCode2017.Templates {
         public Generator Load(string templateFolder) {
 
             string classNameFromFileName(string fileName) {
-                var res = Path.GetFileNameWithoutExtension(fileName);
-                res = res.Substring(0, 1).ToUpper() + res.Substring(1);
-                return res;
+                return Path.GetFileNameWithoutExtension(fileName);
             }
 
             var engine = RazorEngine.Create(b => {
@@ -54,7 +52,7 @@ namespace AdventOfCode2017.Templates {
 
             var generatorFunctions = string.Join("\n", 
                 from x in nameAndContent
-                select $@"public string Generate{x.name}Template({x.name}Model model) {{
+                select $@"public string Generate{x.name}({x.name}Model model) {{
                     var template = new {x.name}();
                     template.Model = model;
                     template.ExecuteAsync().Wait();
@@ -94,12 +92,13 @@ namespace AdventOfCode2017.Templates {
         }
     }
 
-    public class SolutionModel {
+    public class SolutionTemplateModel {
         public string Title { get; set; }
         public int Day { get; set; }
     }
 
-    public class ReadmeModel {
+    public class ProjectReadmeModel {
+        public string Calendar { get; set; }
     }
 
     public class SplashScreenModel {
