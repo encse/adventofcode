@@ -6,6 +6,7 @@ My C# solutions to http://adventofcode.com/2017 using .NET Core 2.0.
 
 - This library is based on `.NET Core 2.0`. It should work on Windows, Linux and OS X.
 - `HtmlAgilityPack.NetCore` is used for problem download.
+- `Microsoft.AspNetCore.Razor.Language` and `Microsoft.CodeAnalysis.CSharp` for razor template generation.
 
 ## Running
 
