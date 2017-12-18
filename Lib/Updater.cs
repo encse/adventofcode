@@ -24,6 +24,9 @@ namespace AdventOfCode2017 {
             }
 
             var dir = $"Day{day.ToString("00")}";
+            if (!Directory.Exists(dir)) {
+                Directory.CreateDirectory(dir);
+            }
             var title = "???";
 
             var cookieContainer = new CookieContainer();
