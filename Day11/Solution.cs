@@ -25,12 +25,12 @@ namespace AdventOfCode2017.Day11 {
             var (x, y, z) = (0, 0, 0);
             foreach (var dir in input.Split(',')) {
                 switch (dir) {
-                    case "n":  (x, y, z) = (x, y + 1, z - 1); break;
-                    case "ne": (x, y, z) = (x + 1, y, z - 1); break;
-                    case "se": (x, y, z) = (x + 1, y - 1, z); break;
-                    case "s":  (x, y, z) = (x, y - 1, z + 1); break;
-                    case "sw": (x, y, z) = (x - 1, y, z + 1); break;
-                    case "nw": (x, y, z) = (x - 1, y + 1, z); break;
+                    case "n":  (x, y, z) = (x + 0, y + 1, z - 1); break;
+                    case "ne": (x, y, z) = (x + 1, y + 0, z - 1); break;
+                    case "se": (x, y, z) = (x + 1, y - 1, z + 0); break;
+                    case "s":  (x, y, z) = (x + 0, y - 1, z + 1); break;
+                    case "sw": (x, y, z) = (x - 1, y + 0, z + 1); break;
+                    case "nw": (x, y, z) = (x - 1, y + 1, z + 0); break;
                     default: throw new ArgumentException(dir);
                 }
                 yield return (x, y, z);
