@@ -20,7 +20,7 @@ namespace AdventOfCode2017 {
             var action =
                 Command(args, Args("update", "[0-9]+"), m => {
                     var day = int.Parse(m[1]);
-                    return () => Updater.Update(day).Wait();
+                    return () => new Updater().Update(day).Wait();
                 }) ??
                 Command(args, Args("[0-9]+"), m => {
                     var day = int.Parse(m[0]);

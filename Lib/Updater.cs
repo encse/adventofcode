@@ -10,19 +10,20 @@ using System.Threading.Tasks;
 using HtmlAgilityPack;
 using System.Text;
 using System.Text.RegularExpressions;
+using AdventOfCode2017.Templates;
 
 namespace AdventOfCode2017 {
 
     class Updater {
 
-        public static async Task Update(int day) {
+        Generator generator = new TemplateEngine().Load(Path.Combine("lib", "templates"));
+
+        public async Task Update(int day) {
             if (!System.Environment.GetEnvironmentVariables().Contains("SESSION")) {
                 throw new Exception("Specify SESSION environment variable");
             }
 
             var dir = $"Day{day.ToString("00")}";
-            CopyDirectory("Day00", dir);
-
             var title = "???";
 
             var cookieContainer = new CookieContainer();
@@ -42,28 +43,15 @@ namespace AdventOfCode2017 {
 
             UpdateSolutionTemplate(day, title);
         }
-
-        static void CopyDirectory(string from, string to) {
-            if (!Directory.Exists(to)) {
-                Console.WriteLine($"Creating directory {to}");
-                Directory.CreateDirectory(to);
-            }
-            foreach (string newPath in Directory.GetFiles(from, "*.*", SearchOption.AllDirectories)) {
-                var fileTo = newPath.Replace(from, to);
-                if (!File.Exists(fileTo)) {
-                    Console.WriteLine($"Copying {fileTo}");
-                    File.Copy(newPath, fileTo, false);
-                } 
-            }
-        }
-        static async Task<string> Download(HttpClient client, string path) {
+        
+        async Task<string> Download(HttpClient client, string path) {
             Console.WriteLine($"Downloading {client.BaseAddress + path}");
             var response = await client.GetAsync(path);
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsStringAsync();
         }
 
-        static async Task UpdateSplashScreen(HttpClient client) {
+        async Task UpdateSplashScreen(HttpClient client) {
              var response = await Download(client, $"2017");
 
             var document = new HtmlDocument();
@@ -73,7 +61,7 @@ namespace AdventOfCode2017 {
 
         }
 
-        static async Task<string> UpdateReadme(HttpClient client, int day) {
+        async Task<string> UpdateReadme(HttpClient client, int day) {
             var response = await Download(client, $"2017/day/{day}");
         
             var md = ToMarkDown(response, client.BaseAddress + $"/2017/day/{day}");
@@ -82,32 +70,27 @@ namespace AdventOfCode2017 {
             return md.title;
         }
 
-        static void UpdateSolutionTemplate(int day, string title) {
+        void UpdateSolutionTemplate(int day, string title) {
             var solution = Path.Combine(Dir(day),"Solution.cs");
-            var stOld = File.ReadAllText(solution);
-
-            var st = stOld
-                .Replace("Day00", $"Day{day.ToString("00")}")
-                .Replace("???", title);
-            if (st != stOld) {
-                WriteFile(solution, st);
+            if (!File.Exists(solution)) {
+                WriteFile(solution, generator.GenerateSolutionTemplate(new SolutionModel { Day = day, Title = title }));
             }
         }
 
-        static async Task UpdateInput(HttpClient client, int day) {
+        async Task UpdateInput(HttpClient client, int day) {
             var response = await Download(client, $"2017/day/{day}/input");
             var inputFile = Path.Combine(Dir(day), "input.in");
             WriteFile(inputFile, response);
         }
 
-        static void WriteFile(string file, string content) {
+        void WriteFile(string file, string content) {
             Console.WriteLine($"Writing {file}");
             File.WriteAllText(file, content);
         }
 
-        static string Dir(int day) => $"Day{day.ToString("00")}";
+        string Dir(int day) => $"Day{day.ToString("00")}";
 
-        static (string title, string content) ToMarkDown(string input, string url) {
+        (string title, string content) ToMarkDown(string input, string url) {
             var document = new HtmlDocument();
             document.LoadHtml(input);
             var st = $"original source: [{url}]({url})\n";
@@ -123,11 +106,11 @@ namespace AdventOfCode2017 {
             return (title, st);
         }
 
-        static string UnparseList(string sep, HtmlNode node) {
+        string UnparseList(string sep, HtmlNode node) {
             return string.Join(sep, node.ChildNodes.SelectMany(Unparse));
         }
 
-        static IEnumerable<string> Unparse(HtmlNode node) {
+        IEnumerable<string> Unparse(HtmlNode node) {
             switch (node.Name) {
                 case "h2":
                     yield return "## " + UnparseList("", node) + "\n";
