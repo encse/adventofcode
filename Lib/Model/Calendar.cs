@@ -21,8 +21,10 @@ namespace AdventOfCode2017.Model {
 
             var calendar = document.DocumentNode.SelectSingleNode("//*[contains(@class,'calendar')]");
 
-            foreach (var script in calendar.SelectNodes(".//script").ToList()) {
-                script.Remove();
+            if (calendar.SelectNodes(".//script") != null) {
+                foreach (var script in calendar.SelectNodes(".//script").ToList()) {
+                    script.Remove();
+                }
             }
 
             var lines = new List<List<CalendarToken>>();
