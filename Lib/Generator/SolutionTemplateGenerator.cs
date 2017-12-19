@@ -2,21 +2,22 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Text;
+using AdventOfCode2017.Model;
 
 namespace AdventOfCode2017.Generator {
 
     public class SolutionTemplateGenerator {
-        public string Generate(string title, int day) {
+        public string Generate(Problem problem) {
             return $@"using System;
                  |using System.Collections.Generic;
                  |using System.Collections.Immutable;
                  |using System.Linq;
                  |
-                 |namespace AdventOfCode2017.Day{day.ToString("00")} {{
+                 |namespace AdventOfCode2017.Day{problem.Day.ToString("00")} {{
                  |
                  |    class Solution : Solver {{
                  |
-                 |        public string GetName() => ""{title}"";
+                 |        public string GetName() => ""{problem.Title}"";
                  |
                  |        public IEnumerable<object> Solve(string input) {{
                  |            yield return PartOne(input);

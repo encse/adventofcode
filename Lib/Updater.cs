@@ -49,7 +49,7 @@ namespace AdventOfCode2017 {
                 UpdateSolutionTemplate(problem);
             }
         }
-        
+
         async Task<string> Download(HttpClient client, string path) {
             Console.WriteLine($"Downloading {client.BaseAddress + path}");
             var response = await client.GetAsync(path);
@@ -81,25 +81,19 @@ namespace AdventOfCode2017 {
         }
 
         void UpdateSolutionTemplate(Problem problem) {
-            var solution = Path.Combine(Dir(problem.Day),"Solution.cs");
+            var solution = Path.Combine(Dir(problem.Day), "Solution.cs");
             if (!File.Exists(solution)) {
-                WriteFile(solution, new SolutionTemplateGenerator().Generate(problem.Title, problem.Day));
+                WriteFile(solution, new SolutionTemplateGenerator().Generate(problem));
             }
         }
 
         void UpdateProjectReadme(Calendar calendar) {
             var file = Path.Combine("README.md");
-
-            WriteFile(file, new ProjectReadmeGenerator().Generate(
-                string.Join("\n",
-                    from line in calendar.Lines
-                    select string.Join("", from token in line select token.Text))
-            ));
+            WriteFile(file, new ProjectReadmeGenerator().Generate(calendar));
         }
 
         void UpdateSplashScreen(Calendar calendar) {
             var file = Path.Combine(Path.Combine("lib", "SplashScreen.cs"));
-            
             WriteFile(file, new SplashScreenGenerator().Generate(calendar));
         }
 

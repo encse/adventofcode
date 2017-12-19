@@ -1,14 +1,20 @@
 using System.Linq;
 using System.Text.RegularExpressions;
+using AdventOfCode2017.Model;
 
 namespace AdventOfCode2017.Generator {
     
     public class ProjectReadmeGenerator {
-        public string Generate(string Calendar) {
+        public string Generate(Calendar calendar) {
+            var calendarLines =
+                string.Join("\n",
+                    from line in calendar.Lines
+                    select string.Join("", from token in line select token.Text));
+                    
             return $@"
                > # Advent of Code 2017
                > ```
-               > {Calendar}
+               > {calendarLines}
                > ```
                > C# solutions to http://adventofcode.com/2017 using .NET Core 2.0.
                > 
