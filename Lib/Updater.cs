@@ -93,7 +93,7 @@ namespace AdventOfCode2017 {
         }
 
         void UpdateSplashScreen(Calendar calendar) {
-            var file = Path.Combine(Path.Combine("lib", "SplashScreen.cs"));
+            var file = Path.Combine(Path.Combine("Lib", "SplashScreen.cs"));
             WriteFile(file, new SplashScreenGenerator().Generate(calendar));
         }
 
