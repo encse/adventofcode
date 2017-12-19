@@ -62,17 +62,32 @@ namespace AdventOfCode2017.Generator {
             foreach (var line in calendar.Lines) {
                 sb.AppendLine($@"Console.Write(""           "");");
 
+                string lastColor = null;
+                var text = "";
                 foreach (var token in line) {
                     var consoleColor = token.Style != null && theme.TryGetValue(token.Style, out var themeColor)
                         ? themeColor
                         : "ConsoleColor.DarkGray";
 
-                    var tokenLiteral = token.Text;
+                    if (string.IsNullOrWhiteSpace(token.Text)) {
+                        consoleColor = lastColor;
+                    }
 
-                    sb.AppendLine($@"Console.ForegroundColor = {consoleColor};");
-                    sb.AppendLine($@"Console.Write(""{tokenLiteral}"");");
+                    if (text != "" && lastColor != consoleColor) {
+                        if (!string.IsNullOrWhiteSpace(text)) {
+                            sb.AppendLine($@"Console.ForegroundColor = {lastColor};");
+                        }
+                        sb.AppendLine($@"Console.Write(""{text}"");");
+                        text = "";
+                    }
+                    text += token.Text;
+                    lastColor = consoleColor;
                 }
-                sb.AppendLine($@"Console.WriteLine();");
+
+                if (!string.IsNullOrWhiteSpace(text)) {
+                    sb.AppendLine($@"Console.ForegroundColor = {lastColor};");
+                }
+                sb.AppendLine($@"Console.WriteLine(""{text}"");");
             }
             return sb.ToString();
         }

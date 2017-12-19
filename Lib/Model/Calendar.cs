@@ -40,10 +40,9 @@ namespace AdventOfCode2017.Model {
                     textNode.ParentNode.Attributes["class"]?.Value ??
                     textNode.ParentNode.ParentNode.Attributes["class"]?.Value;
 
-
                 if (textNode.InnerText.EndsWith("\n")) {
-                    line.Add(new CalendarToken { 
-                        Style = style, 
+                    line.Add(new CalendarToken {
+                        Style = style,
                         Text = textNode.InnerText.Replace("\n", "")
                     });
                     line = new List<CalendarToken>();

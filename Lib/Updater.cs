@@ -91,7 +91,9 @@ namespace AdventOfCode2017 {
             var file = Path.Combine("README.md");
 
             WriteFile(file, new ProjectReadmeGenerator().Generate(
-                string.Join("", from line in calendar.Lines from token in line select token.Text)
+                string.Join("\n",
+                    from line in calendar.Lines
+                    select string.Join("", from token in line select token.Text))
             ));
         }
 
