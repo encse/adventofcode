@@ -18,38 +18,44 @@ namespace AdventOfCode2017.Model {
         public string Text { get; set; }
     }
 
-    class CalendarParser {
+    public class Calendar {
+        public IReadOnlyList<IReadOnlyList<CalendarToken>> Lines { get; private set; }
 
-        public IEnumerable<CalendarToken> Parse(string html) {
+        public static Calendar Parse(string html) {
             var document = new HtmlAgilityPack.HtmlDocument();
             document.LoadHtml(html);
 
             var calendar = document.DocumentNode.SelectSingleNode("//*[contains(@class,'calendar')]");
 
-
             foreach (var script in calendar.SelectNodes(".//script").ToList()) {
                 script.Remove();
             }
 
-            string lastStyle = null;
-            var text = "";
+            var lines = new List<List<CalendarToken>>();
+            var line = new List<CalendarToken>();
+            lines.Add(line);
+
             foreach (var textNode in calendar.SelectNodes(".//text()")) {
                 var style =
                     textNode.ParentNode.Attributes["class"]?.Value ??
                     textNode.ParentNode.ParentNode.Attributes["class"]?.Value;
 
-                if (style != lastStyle && text != "") {
-                    yield return new CalendarToken { Style = lastStyle, Text = text };
-                    text = "";
+
+                if (textNode.InnerText.EndsWith("\n")) {
+                    line.Add(new CalendarToken { 
+                        Style = style, 
+                        Text = textNode.InnerText.Replace("\n", "")
+                    });
+                    line = new List<CalendarToken>();
+                    lines.Add(line);
+                } else if (textNode.InnerText.Contains("\n")) {
+                    throw new NotImplementedException("Not supported 'new line inside'");
+                } else {
+                    line.Add(new CalendarToken { Style = style, Text = textNode.InnerText });
                 }
-                lastStyle = style;
-                text += textNode.InnerText;
-            }
-            
-            if (text != "") {
-                yield return new CalendarToken { Style = lastStyle, Text = text };
             }
 
+            return new Calendar { Lines = lines };
         }
     }
 }

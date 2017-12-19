@@ -22,31 +22,32 @@ namespace AdventOfCode2017 {
                 throw new Exception("Specify SESSION environment variable");
             }
 
-            var dir = $"Day{day.ToString("00")}";
-            if (!Directory.Exists(dir)) {
-                Directory.CreateDirectory(dir);
-            }
-            var title = "???";
-
             var cookieContainer = new CookieContainer();
             using (var client = new HttpClient(
-                new HttpClientHandler {
-                    CookieContainer = cookieContainer,
-                    AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
-                })) {
+                                    new HttpClientHandler {
+                                        CookieContainer = cookieContainer,
+                                        AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
+                                    })
+            ) {
+
                 var baseAddress = new Uri("https://adventofcode.com/");
                 client.BaseAddress = baseAddress;
                 cookieContainer.Add(baseAddress, new Cookie("session", System.Environment.GetEnvironmentVariable("SESSION")));
 
-                var calendarTokens = await CalendarTokens(client);
-                UpdateProjectReadme(calendarTokens);
-                UpdateSplashScreen(calendarTokens);
-                
-                title = await UpdateReadmeForDay(client, day);
-                await UpdateInput(client, day);
-            }
+                var calendar = await DownloadCalendar(client);
+                var problem = await DownloadProblem(client, day);
 
-            UpdateSolutionTemplate(day, title);
+                var dir = Dir(day);
+                if (!Directory.Exists(dir)) {
+                    Directory.CreateDirectory(dir);
+                }
+
+                UpdateProjectReadme(calendar);
+                UpdateSplashScreen(calendar);
+                UpdateReadmeForDay(problem);
+                UpdateInput(problem);
+                UpdateSolutionTemplate(problem);
+            }
         }
         
         async Task<string> Download(HttpClient client, string path) {
@@ -56,47 +57,6 @@ namespace AdventOfCode2017 {
             return await response.Content.ReadAsStringAsync();
         }
 
-        async Task<IEnumerable<CalendarToken>> CalendarTokens(HttpClient client) {
-            var html = await Download(client, "2017");
-            return new CalendarParser().Parse(html);
-        }
-
-        async Task<string> UpdateReadmeForDay(HttpClient client, int day) {
-            var response = await Download(client, $"2017/day/{day}");
-        
-            var md = ToMarkDown(response, client.BaseAddress + $"/2017/day/{day}");
-            var fileTo = Path.Combine(Dir(day), "README.md");
-            WriteFile(fileTo, md.content);
-            return md.title;
-        }
-
-        void UpdateSolutionTemplate(int day, string title) {
-            var solution = Path.Combine(Dir(day),"Solution.cs");
-            if (!File.Exists(solution)) {
-                WriteFile(solution, new SolutionTemplateGenerator().Generate(title, day));
-            }
-        }
-
-        void UpdateProjectReadme(IEnumerable<CalendarToken> calendarTokens) {
-            var file = Path.Combine("README.md");
-
-            WriteFile(file, new ProjectReadmeGenerator().Generate(
-                string.Join("", calendarTokens.Select(x => x.Text))
-            ));
-        }
-
-        void UpdateSplashScreen(IEnumerable<CalendarToken> calendarTokens) {
-            var file = Path.Combine(Path.Combine("lib", "SplashScreen.cs"));
-
-            WriteFile(file, new SplashScreenGenerator().Generate(calendarTokens));
-        }
-
-        async Task UpdateInput(HttpClient client, int day) {
-            var response = await Download(client, $"2017/day/{day}/input");
-            var inputFile = Path.Combine(Dir(day), "input.in");
-            WriteFile(inputFile, response);
-        }
-
         void WriteFile(string file, string content) {
             Console.WriteLine($"Writing {file}");
             File.WriteAllText(file, content);
@@ -104,82 +64,47 @@ namespace AdventOfCode2017 {
 
         string Dir(int day) => $"Day{day.ToString("00")}";
 
-        (string title, string content) ToMarkDown(string input, string url) {
-            var document = new HtmlDocument();
-            document.LoadHtml(input);
-            var st = $"original source: [{url}]({url})\n";
-            foreach (var article in document.DocumentNode.SelectNodes("//article")) {
-                st += UnparseList("", article) + "\n";
-            }
-            var title = HtmlEntity.DeEntitize(document.DocumentNode.SelectNodes("//h2").First().InnerText);
-
-            var match = Regex.Match(title, ".*: (.*) ---");
-            if (match.Success) {
-                title = match.Groups[1].Value;
-            }
-            return (title, st);
+        async Task<Calendar> DownloadCalendar(HttpClient client) {
+            var html = await Download(client, "2017");
+            return Calendar.Parse(html);
         }
 
-        string UnparseList(string sep, HtmlNode node) {
-            return string.Join(sep, node.ChildNodes.SelectMany(Unparse));
+        async Task<Problem> DownloadProblem(HttpClient client, int day) {
+            var problemStatement = await Download(client, $"2017/day/{day}");
+            var input = await Download(client, $"2017/day/{day}/input");
+            return Problem.Parse(day, client.BaseAddress + $"/2017/day/{day}", problemStatement, input);
         }
 
-        IEnumerable<string> Unparse(HtmlNode node) {
-            switch (node.Name) {
-                case "h2":
-                    yield return "## " + UnparseList("", node) + "\n";
-                    break;
-                case "p":
-                    yield return UnparseList("", node) + "\n";
-                    break;
-                case "em":
-                    yield return "*" + UnparseList("", node) + "*";
-                    break;
-                case "code":
-                    if (node.ParentNode.Name == "pre") {
-                        yield return UnparseList("", node);
-                    } else {
-                        yield return "`" + UnparseList("", node) + "`";
-                    }
-                    break;
-                case "span":
-                    yield return UnparseList("", node);
-                    break;
-                case "s":
-                    yield return "~~" + UnparseList("", node) + "~~";
-                    break;
-                case "ul":
-                    foreach (var unparsed in node.ChildNodes.SelectMany(Unparse)) {
-                        yield return unparsed;
-                    }
-                    break;
-                case "li":
-                    yield return " - " + UnparseList("", node);
-                    break;
-                case "pre":
-                    yield return "```\n";
-                    var freshLine = true;
-                    foreach (var item in node.ChildNodes) {
-                        foreach (var unparsed in Unparse(item)) {
-                            freshLine = unparsed[unparsed.Length - 1] == '\n';
-                            yield return unparsed;
-                        }
-                    }
-                    if (freshLine) {
-                        yield return "```\n";
-                    } else {
-                        yield return "\n```\n";
-                    }
-                    break;
-                case "a":
-                    yield return "[" + UnparseList("", node) + "](" + node.Attributes["href"].Value + ")";
-                    break;
-                case "#text":
-                    yield return HtmlEntity.DeEntitize(node.InnerText);
-                    break;
-                default:
-                    throw new NotImplementedException(node.InnerHtml);
+        void UpdateReadmeForDay(Problem problem) {
+            var fileTo = Path.Combine(Dir(problem.Day), "README.md");
+            WriteFile(fileTo, problem.ContentMd);
+        }
+
+        void UpdateSolutionTemplate(Problem problem) {
+            var solution = Path.Combine(Dir(problem.Day),"Solution.cs");
+            if (!File.Exists(solution)) {
+                WriteFile(solution, new SolutionTemplateGenerator().Generate(problem.Title, problem.Day));
             }
         }
+
+        void UpdateProjectReadme(Calendar calendar) {
+            var file = Path.Combine("README.md");
+
+            WriteFile(file, new ProjectReadmeGenerator().Generate(
+                string.Join("", from line in calendar.Lines from token in line select token.Text)
+            ));
+        }
+
+        void UpdateSplashScreen(Calendar calendar) {
+            var file = Path.Combine(Path.Combine("lib", "SplashScreen.cs"));
+            
+            WriteFile(file, new SplashScreenGenerator().Generate(calendar));
+        }
+
+        void UpdateInput(Problem problem) {
+            var inputFile = Path.Combine(Dir(problem.Day), "input.in");
+            WriteFile(inputFile, problem.Input);
+        }
+
     }
 }
