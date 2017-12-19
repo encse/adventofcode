@@ -10,13 +10,12 @@ using System.Threading.Tasks;
 using HtmlAgilityPack;
 using System.Text;
 using System.Text.RegularExpressions;
-using AdventOfCode2017.Templates;
+using AdventOfCode2017.Generator;
+using AdventOfCode2017.Model;
 
 namespace AdventOfCode2017 {
 
     class Updater {
-
-        Generator generator = new TemplateEngine().Load(Path.Combine("lib", "templates"));
 
         public async Task Update(int day) {
             if (!System.Environment.GetEnvironmentVariables().Contains("SESSION")) {
@@ -74,24 +73,22 @@ namespace AdventOfCode2017 {
         void UpdateSolutionTemplate(int day, string title) {
             var solution = Path.Combine(Dir(day),"Solution.cs");
             if (!File.Exists(solution)) {
-                WriteFile(solution, generator.GenerateSolutionTemplate(new SolutionTemplateModel { Day = day, Title = title }));
+                WriteFile(solution, new SolutionTemplateGenerator().Generate(title, day));
             }
         }
 
         void UpdateProjectReadme(IEnumerable<CalendarToken> calendarTokens) {
             var file = Path.Combine("README.md");
 
-            WriteFile(file, generator.GenerateProjectReadme(new ProjectReadmeModel { 
-                Calendar = string.Join("", calendarTokens.Select(x => x.Text))
-            }));
+            WriteFile(file, new ProjectReadmeGenerator().Generate(
+                string.Join("", calendarTokens.Select(x => x.Text))
+            ));
         }
 
         void UpdateSplashScreen(IEnumerable<CalendarToken> calendarTokens) {
             var file = Path.Combine(Path.Combine("lib", "SplashScreen.cs"));
 
-            WriteFile(file, generator.GenerateSplashScreen(new SplashScreenModel { 
-                Calendar = calendarTokens
-            }));
+            WriteFile(file, new SplashScreenGenerator().Generate(calendarTokens));
         }
 
         async Task UpdateInput(HttpClient client, int day) {
