@@ -10,9 +10,8 @@ using System.Threading.Tasks;
 using HtmlAgilityPack;
 using System.Text;
 using System.Text.RegularExpressions;
-using AdventOfCode2017.Templates;
 
-namespace AdventOfCode2017 {
+namespace AdventOfCode2017.Model {
 
     public class CalendarToken {
         public string Style { get; set; }
