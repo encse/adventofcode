@@ -7,7 +7,7 @@ using AdventOfCode2017.Model;
 namespace AdventOfCode2017.Generator {
     
     public class SplashScreenGenerator {
-        public string Generate(IEnumerable<CalendarToken> calendar) {
+        public string Generate(Calendar calendar) {
             string calendarPrinter = CalendarPrinter(calendar);
             return $@"
                 |using System;
@@ -42,7 +42,7 @@ namespace AdventOfCode2017.Generator {
                 |}}".StripMargin();
         }
 
-        private string CalendarPrinter(IEnumerable<CalendarToken> calendar){
+        private string CalendarPrinter(Calendar calendar){
             StringBuilder sb = new StringBuilder();
 
             var theme = new Dictionary<string, string>() {
@@ -59,21 +59,20 @@ namespace AdventOfCode2017.Generator {
                 ["calendar-ornament3"] = "ConsoleColor.DarkCyan",
             };
 
-            var tab = "           ";
-            
-            sb.AppendLine($@"Console.Write(""{tab}"");");
-            foreach (var token in calendar) {
-                var consoleColor = token.Style != null && theme.TryGetValue(token.Style, out var themeColor)
-                    ? themeColor
-                    : "ConsoleColor.DarkGray";
+            foreach (var line in calendar.Lines) {
+                sb.AppendLine($@"Console.Write(""           "");");
 
-                var tokenLiteral = token.Text.Replace("\n", "\\n");
-                
-                sb.AppendLine($@"Console.ForegroundColor = {consoleColor};");
-                sb.AppendLine($@"Console.Write(""{tokenLiteral}"");");
-                if (token.Text.EndsWith("\n")) {
-                    sb.AppendLine($@"Console.Write(""{tab}"");");
+                foreach (var token in line) {
+                    var consoleColor = token.Style != null && theme.TryGetValue(token.Style, out var themeColor)
+                        ? themeColor
+                        : "ConsoleColor.DarkGray";
+
+                    var tokenLiteral = token.Text;
+
+                    sb.AppendLine($@"Console.ForegroundColor = {consoleColor};");
+                    sb.AppendLine($@"Console.Write(""{tokenLiteral}"");");
                 }
+                sb.AppendLine($@"Console.WriteLine();");
             }
             return sb.ToString();
         }
