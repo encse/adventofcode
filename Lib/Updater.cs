@@ -76,14 +76,14 @@ namespace AdventOfCode2017 {
         }
 
         void UpdateReadmeForDay(Problem problem) {
-            var fileTo = Path.Combine(Dir(problem.Day), "README.md");
-            WriteFile(fileTo, problem.ContentMd);
+            var file = Path.Combine(Dir(problem.Day), "README.md");
+            WriteFile(file, problem.ContentMd);
         }
 
         void UpdateSolutionTemplate(Problem problem) {
-            var solution = Path.Combine(Dir(problem.Day), "Solution.cs");
-            if (!File.Exists(solution)) {
-                WriteFile(solution, new SolutionTemplateGenerator().Generate(problem));
+            var file = Path.Combine(Dir(problem.Day), "Solution.cs");
+            if (!File.Exists(file)) {
+                WriteFile(file, new SolutionTemplateGenerator().Generate(problem));
             }
         }
 
@@ -98,8 +98,8 @@ namespace AdventOfCode2017 {
         }
 
         void UpdateInput(Problem problem) {
-            var inputFile = Path.Combine(Dir(problem.Day), "input.in");
-            WriteFile(inputFile, problem.Input);
+            var file = Path.Combine(Dir(problem.Day), "input.in");
+            WriteFile(file, problem.Input);
         }
 
     }
