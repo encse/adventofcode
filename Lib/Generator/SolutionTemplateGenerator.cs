@@ -7,13 +7,12 @@ namespace AdventOfCode2017.Generator {
 
     public class SolutionTemplateGenerator {
         public string Generate(string title, int day) {
-            return $@"
-                 |using System;
+            return $@"using System;
                  |using System.Collections.Generic;
                  |using System.Collections.Immutable;
                  |using System.Linq;
                  |
-                 |namespace AdventOfCode2017.Day{day.ToString("00")})) {{
+                 |namespace AdventOfCode2017.Day{day.ToString("00")} {{
                  |
                  |    class Solution : Solver {{
                  |
@@ -29,7 +28,7 @@ namespace AdventOfCode2017.Generator {
                  |        }}
                  |
                  |        string PartTwo(string input) {{
-                 |            return "";
+                 |            return """";
                  |        }}
                  |    }}
                  |}}".StripMargin();

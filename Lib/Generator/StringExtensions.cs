@@ -4,10 +4,10 @@ using System.Text.RegularExpressions;
 namespace AdventOfCode2017.Generator {
 
     public static class StringExtensions {
-        public static string StripMargin(this string st) {
+        public static string StripMargin(this string st, string margin = "|") {
             return string.Join("\n",
                 from line in st.Split('\n')
-                select Regex.Replace(line, @"^\s*\|", "")
+                select Regex.Replace(line, @"^\s*"+Regex.Escape(margin), "")
             );
         }
 
