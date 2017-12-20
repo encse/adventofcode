@@ -2,9 +2,9 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Text;
-using AdventOfCode2017.Model;
+using AdventOfCode.Model;
 
-namespace AdventOfCode2017.Generator {
+namespace AdventOfCode.Generator {
 
     public class SolutionTemplateGenerator {
         public string Generate(Problem problem) {

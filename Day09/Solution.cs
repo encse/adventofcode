@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace AdventOfCode2017.Day09 {
+namespace AdventOfCode.Day09 {
 
     class Solution : Solver {
 

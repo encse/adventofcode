@@ -4,7 +4,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace AdventOfCode2017.Day12 {
+namespace AdventOfCode.Day12 {
 
     class Node {
         public string Id;

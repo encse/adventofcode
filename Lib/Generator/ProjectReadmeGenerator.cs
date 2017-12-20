@@ -1,8 +1,8 @@
 using System.Linq;
 using System.Text.RegularExpressions;
-using AdventOfCode2017.Model;
+using AdventOfCode.Model;
 
-namespace AdventOfCode2017.Generator {
+namespace AdventOfCode.Generator {
     
     public class ProjectReadmeGenerator {
         public string Generate(Calendar calendar) {
@@ -12,11 +12,11 @@ namespace AdventOfCode2017.Generator {
                     select string.Join("", from token in line select token.Text));
                     
             return $@"
-               > # Advent of Code 2017
+               > # Advent of Code {calendar.Year}
                > ```
                > {calendarLines}
                > ```
-               > C# solutions to http://adventofcode.com/2017 using .NET Core 2.0.
+               > C# solutions to http://adventofcode.com/{calendar.Year} using .NET Core 2.0.
                > 
                > ## Dependencies
                > 

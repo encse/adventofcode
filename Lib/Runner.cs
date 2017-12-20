@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
-namespace AdventOfCode2017 {
+namespace AdventOfCode {
     interface Solver {
         string GetName();
         IEnumerable<object> Solve(string input);

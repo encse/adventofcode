@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 
 
-namespace AdventOfCode2017.Day16 {
+namespace AdventOfCode.Day16 {
 
     class Solution : Solver {
 

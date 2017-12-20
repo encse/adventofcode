@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AdventOfCode2017.Day05 {
+namespace AdventOfCode.Day05 {
 
     class Solution : Solver {
 

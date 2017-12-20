@@ -4,7 +4,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace AdventOfCode2017.Day18 {
+namespace AdventOfCode.Day18 {
 
     class Solution : Solver {
 

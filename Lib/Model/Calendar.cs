@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using HtmlAgilityPack;
 using System.Text;
 
-namespace AdventOfCode2017.Model {
+namespace AdventOfCode.Model {
 
     public class CalendarToken {
         public string Style { get; set; }
@@ -13,9 +13,11 @@ namespace AdventOfCode2017.Model {
     }
 
     public class Calendar {
+        public int Year;
+
         public IReadOnlyList<IReadOnlyList<CalendarToken>> Lines { get; private set; }
 
-        public static Calendar Parse(string html) {
+        public static Calendar Parse(int year, string html) {
             var document = new HtmlAgilityPack.HtmlDocument();
             document.LoadHtml(html);
 
@@ -36,21 +38,28 @@ namespace AdventOfCode2017.Model {
                     textNode.ParentNode.Attributes["class"]?.Value ??
                     textNode.ParentNode.ParentNode.Attributes["class"]?.Value;
 
-                if (textNode.InnerText.EndsWith("\n")) {
+                var i = 0;
+                while (i < textNode.InnerText.Length) {
+                    var iNext = textNode.InnerText.IndexOf("\n", i);
+                    if (iNext == -1) {
+                        iNext = textNode.InnerText.Length;
+                    }
+
                     line.Add(new CalendarToken {
                         Style = style,
-                        Text = textNode.InnerText.Replace("\n", "")
+                        Text = HtmlEntity.DeEntitize(textNode.InnerText.Substring(i, iNext - i))
                     });
-                    line = new List<CalendarToken>();
-                    lines.Add(line);
-                } else if (textNode.InnerText.Contains("\n")) {
-                    throw new NotImplementedException("Not supported 'new line inside'");
-                } else {
-                    line.Add(new CalendarToken { Style = style, Text = textNode.InnerText });
+
+                    if (iNext < textNode.InnerText.Length) {
+                        line = new List<CalendarToken>();
+                        lines.Add(line);
+                    }
+                    i = iNext + 1;
                 }
             }
 
-            return new Calendar { Lines = lines };
+
+            return new Calendar { Year = year, Lines = lines };
         }
     }
 }
