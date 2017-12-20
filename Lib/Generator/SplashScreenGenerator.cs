@@ -42,8 +42,7 @@ namespace AdventOfCode2017.Generator {
                 |}}".StripMargin();
         }
 
-        private string CalendarPrinter(Calendar calendar){
-            StringBuilder sb = new StringBuilder();
+        private string CalendarPrinter(Calendar calendar) {
 
             var theme = new Dictionary<string, string>() {
                 ["calendar-edge"] = "ConsoleColor.Gray",
@@ -59,37 +58,55 @@ namespace AdventOfCode2017.Generator {
                 ["calendar-ornament3"] = "ConsoleColor.DarkCyan",
             };
 
-            foreach (var line in calendar.Lines) {
-                sb.AppendLine($@"Console.Write(""           "");");
+            var lines = calendar.Lines.Select(line =>
+                new[] { new CalendarToken { Text = "           " } }.Concat(line));
 
-                string lastColor = null;
-                var text = "";
+            var bw = new BufferWriter();
+            foreach (var line in lines) {
                 foreach (var token in line) {
                     var consoleColor = token.Style != null && theme.TryGetValue(token.Style, out var themeColor)
                         ? themeColor
                         : "ConsoleColor.DarkGray";
 
-                    if (string.IsNullOrWhiteSpace(token.Text)) {
-                        consoleColor = lastColor;
-                    }
-
-                    if (text != "" && lastColor != consoleColor) {
-                        if (!string.IsNullOrWhiteSpace(text)) {
-                            sb.AppendLine($@"Console.ForegroundColor = {lastColor};");
-                        }
-                        sb.AppendLine($@"Console.Write(""{text}"");");
-                        text = "";
-                    }
-                    text += token.Text;
-                    lastColor = consoleColor;
+                    bw.Write(consoleColor, token.Text);
                 }
 
-                if (!string.IsNullOrWhiteSpace(text)) {
-                    sb.AppendLine($@"Console.ForegroundColor = {lastColor};");
-                }
-                sb.AppendLine($@"Console.WriteLine(""{text}"");");
+                bw.Write(null, "\n");
             }
-            return sb.ToString();
+            return bw.GetContent();
+        }
+
+        class BufferWriter {
+            StringBuilder sb = new StringBuilder();
+            string currentColor = null;
+            string bufferColor = null;
+            string buffer = "";
+
+            public void Write(string color, string text) {
+                if (!string.IsNullOrWhiteSpace(text)) {
+                    if (color != bufferColor && !string.IsNullOrWhiteSpace(buffer)) {
+                        Flush();
+                    }
+                    bufferColor = color;
+                }
+                buffer += text.Replace("\n", "\\n");
+            }
+
+            private void Flush() {
+                if (!string.IsNullOrWhiteSpace(buffer)) {
+                    if (currentColor != bufferColor) {
+                        sb.AppendLine($@"Console.ForegroundColor = {bufferColor};");
+                        currentColor = bufferColor;
+                    }
+                }
+                sb.AppendLine($@"Console.Write(""{buffer}"");");
+                buffer = "";
+            }
+
+            public string GetContent() {
+                Flush();
+                return sb.ToString();
+            }
         }
     }
 }
