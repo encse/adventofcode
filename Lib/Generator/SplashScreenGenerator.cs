@@ -51,11 +51,13 @@ namespace AdventOfCode2017.Generator {
                 ["calendar-ornament4"] = "ConsoleColor.Magenta",
                 ["calendar-ornament5"] = "ConsoleColor.Cyan",
                 ["calendar-ornament3"] = "ConsoleColor.DarkCyan",
+                ["title"] = "ConsoleColor.Yellow",
             };
 
             var lines = calendar.Lines.Select(line =>
                 new[] { new CalendarToken { Text = "           " } }.Concat(line)).ToList();
             lines.Add(new []{new CalendarToken {
+                Style = "title",
                 Text = @"
                 |   _      _             _          __    ___         _       ___ __  _ ____ 
                 |  /_\  __| |_ _____ _ _| |_   ___ / _|  / __|___  __| |___  |_  )  \/ |__  |
