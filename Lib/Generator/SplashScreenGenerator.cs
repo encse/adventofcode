@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -23,17 +24,9 @@ namespace AdventOfCode2017.Generator {
                 |        public static void Show() {{
                 |
                 |            var defaultColor = Console.ForegroundColor;
-                |            {calendarPrinter.Indent(14)}
+                |            {calendarPrinter.Indent(12)}
                 |            Console.ForegroundColor = defaultColor;
                 |            Console.WriteLine();
-                |            Console.WriteLine(
-                |                string.Join(""\n"", @""
-                |                      _      _             _          __    ___         _       ___ __  _ ____ 
-                |                     /_\  __| |_ _____ _ _| |_   ___ / _|  / __|___  __| |___  |_  )  \/ |__  |
-                |                    / _ \/ _` \ V / -_) ' \  _| / _ \  _| | (__/ _ \/ _` / -_)  / / () | | / / 
-                |                   /_/ \_\__,_|\_/\___|_||_\__| \___/_|    \___\___/\__,_\___| /___\__/|_|/_/  
-                |                  ""
-                |                .Split('\n').Skip(1).Select(x => x.Substring(18))));
                 |        }}
                 |
                 |       private static void Write(ConsoleColor color, string text){{
@@ -61,7 +54,15 @@ namespace AdventOfCode2017.Generator {
             };
 
             var lines = calendar.Lines.Select(line =>
-                new[] { new CalendarToken { Text = "           " } }.Concat(line));
+                new[] { new CalendarToken { Text = "           " } }.Concat(line)).ToList();
+            lines.Add(new []{new CalendarToken {
+                Text = @"
+                |   _      _             _          __    ___         _       ___ __  _ ____ 
+                |  /_\  __| |_ _____ _ _| |_   ___ / _|  / __|___  __| |___  |_  )  \/ |__  |
+                | / _ \/ _` \ V / -_) ' \  _| / _ \  _| | (__/ _ \/ _` / -_)  / / () | | / / 
+                |/_/ \_\__,_|\_/\___|_||_\__| \___/_|    \___\___/\__,_\___| /___\__/|_|/_/  "
+                .StripMargin()
+            }});
 
             var bw = new BufferWriter();
             foreach (var line in lines) {
@@ -90,11 +91,15 @@ namespace AdventOfCode2017.Generator {
                     }
                     bufferColor = color;
                 }
-                buffer += text.Replace("\n", "\\n");
+                buffer += text.Replace("\\", "\\\\").Replace("\n", "\\n");
             }
 
             private void Flush() {
-                sb.AppendLine($@"Write({bufferColor}, ""{buffer}"");");
+                while(buffer.Length > 0){
+                    var block = buffer.Substring(0, Math.Min(100, buffer.Length));
+                    buffer = buffer.Substring(block.Length);
+                    sb.AppendLine($@"Write({bufferColor}, ""{block}"");");
+                }
                 buffer = "";
             }
 
