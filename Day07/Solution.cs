@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace AdventOfCode2017.Day07 {
+namespace AdventOfCode.Day07 {
 
     class Node {
         public string Id;

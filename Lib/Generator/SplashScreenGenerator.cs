@@ -3,9 +3,9 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Text;
-using AdventOfCode2017.Model;
+using AdventOfCode.Model;
 
-namespace AdventOfCode2017.Generator {
+namespace AdventOfCode.Generator {
     
     public class SplashScreenGenerator {
         public string Generate(Calendar calendar) {
@@ -13,7 +13,7 @@ namespace AdventOfCode2017.Generator {
             return $@"
                 |using System;
                 |
-                |namespace AdventOfCode2017 {{
+                |namespace AdventOfCode {{
                 |
                 |    class SplashScreen {{
                 |
@@ -54,11 +54,11 @@ namespace AdventOfCode2017.Generator {
                 new[] { new CalendarToken { Text = "           " } }.Concat(line)).ToList();
             lines.Insert(0, new []{new CalendarToken {
                 Style = "title",
-                Text = @"
+                Text = $@"
                     |  __   ____  _  _  ____  __ _  ____     __  ____     ___  __  ____  ____         
                     | / _\ (    \/ )( \(  __)(  ( \(_  _)   /  \(  __)   / __)/  \(    \(  __)        
                     |/    \ ) D (\ \/ / ) _) /    /  )(    (  O )) _)   ( (__(  O )) D ( ) _)         
-                    |\_/\_/(____/ \__/ (____)\_)__) (__)    \__/(__)     \___)\__/(____/(____)  2017  
+                    |\_/\_/(____/ \__/ (____)\_)__) (__)    \__/(__)     \___)\__/(____/(____)  {calendar.Year}
                     |"
                 .StripMargin()
             }});

@@ -4,7 +4,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace AdventOfCode2017.Day13 {
+namespace AdventOfCode.Day13 {
 
     class Layers : List<(int depth, int range)> {
         public Layers(IEnumerable<(int depth, int range)> layers) : base(layers) {

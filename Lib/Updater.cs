@@ -10,14 +10,14 @@ using System.Threading.Tasks;
 using HtmlAgilityPack;
 using System.Text;
 using System.Text.RegularExpressions;
-using AdventOfCode2017.Generator;
-using AdventOfCode2017.Model;
+using AdventOfCode.Generator;
+using AdventOfCode.Model;
 
-namespace AdventOfCode2017 {
+namespace AdventOfCode {
 
     class Updater {
 
-        public async Task Update(int day) {
+        public async Task Update(int year, int day) {
             if (!System.Environment.GetEnvironmentVariables().Contains("SESSION")) {
                 throw new Exception("Specify SESSION environment variable");
             }
@@ -34,8 +34,8 @@ namespace AdventOfCode2017 {
                 client.BaseAddress = baseAddress;
                 cookieContainer.Add(baseAddress, new Cookie("session", System.Environment.GetEnvironmentVariable("SESSION")));
 
-                var calendar = await DownloadCalendar(client);
-                var problem = await DownloadProblem(client, day);
+                var calendar = await DownloadCalendar(client, year);
+                var problem = await DownloadProblem(client, year, day);
 
                 var dir = Dir(day);
                 if (!Directory.Exists(dir)) {
@@ -64,15 +64,15 @@ namespace AdventOfCode2017 {
 
         string Dir(int day) => $"Day{day.ToString("00")}";
 
-        async Task<Calendar> DownloadCalendar(HttpClient client) {
-            var html = await Download(client, "2017");
-            return Calendar.Parse(html);
+        async Task<Calendar> DownloadCalendar(HttpClient client, int year) {
+            var html = await Download(client, year.ToString());
+            return Calendar.Parse(year, html);
         }
 
-        async Task<Problem> DownloadProblem(HttpClient client, int day) {
-            var problemStatement = await Download(client, $"2017/day/{day}");
-            var input = await Download(client, $"2017/day/{day}/input");
-            return Problem.Parse(day, client.BaseAddress + $"/2017/day/{day}", problemStatement, input);
+        async Task<Problem> DownloadProblem(HttpClient client, int year, int day) {
+            var problemStatement = await Download(client, $"{year}/day/{day}");
+            var input = await Download(client, $"{year}/day/{day}/input");
+            return Problem.Parse(day, client.BaseAddress + $"/{year}/day/{day}", problemStatement, input);
         }
 
         void UpdateReadmeForDay(Problem problem) {

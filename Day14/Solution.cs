@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 
-namespace AdventOfCode2017.Day14 {
+namespace AdventOfCode.Day14 {
 
     class Solution : Solver {
 
