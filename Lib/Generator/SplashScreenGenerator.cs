@@ -12,10 +12,6 @@ namespace AdventOfCode2017.Generator {
             string calendarPrinter = CalendarPrinter(calendar);
             return $@"
                 |using System;
-                |using System.IO;
-                |using System.Linq;
-                |using System.Collections.Generic;
-                |using HtmlAgilityPack;
                 |
                 |namespace AdventOfCode2017 {{
                 |
@@ -23,9 +19,9 @@ namespace AdventOfCode2017.Generator {
                 |
                 |        public static void Show() {{
                 |
-                |            var defaultColor = Console.ForegroundColor;
+                |            var color = Console.ForegroundColor;
                 |            {calendarPrinter.Indent(12)}
-                |            Console.ForegroundColor = defaultColor;
+                |            Console.ForegroundColor = color;
                 |            Console.WriteLine();
                 |        }}
                 |
