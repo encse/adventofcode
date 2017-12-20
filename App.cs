@@ -12,10 +12,10 @@ namespace AdventOfCode2017 {
         static void Main(string[] args) {
             SplashScreen.Show();
 
-            Type tSolver = null;
-            var tSolvers = Assembly.GetEntryAssembly().GetTypes()
+            var tsolvers = Assembly.GetEntryAssembly().GetTypes()
                 .Where(t => t.GetTypeInfo().IsClass && typeof(Solver).IsAssignableFrom(t))
-                .OrderBy(t => t.FullName);
+                .OrderBy(t => t.FullName)
+                .ToList();
 
             var action =
                 Command(args, Args("update", "[0-9]+"), m => {
@@ -24,12 +24,19 @@ namespace AdventOfCode2017 {
                 }) ??
                 Command(args, Args("[0-9]+"), m => {
                     var day = int.Parse(m[0]);
-                    tSolver = tSolvers.Where(x => x.FullName.Contains($"Day{day.ToString("00")}")).First();
-                    return () => Runner.RunSolver(Activator.CreateInstance(tSolver) as Solver);
+                    var tsolver = tsolvers.Where(x => x.FullName.Contains($"Day{day.ToString("00")}")).First();
+                    return () => Runner.RunSolver(Activator.CreateInstance(tsolver) as Solver);
+                }) ??
+                Command(args, Args("all"), m => {
+                    return () => {
+                        foreach (var tsolver in tsolvers) {
+                            Runner.RunSolver(Activator.CreateInstance(tsolver) as Solver);
+                        }
+                    };
                 }) ??
                 Command(args, Args("last"), m => {
-                    tSolver = tSolvers.Last();
-                    return () => Runner.RunSolver(Activator.CreateInstance(tSolver) as Solver);
+                    var tsolver = tsolvers.Last();
+                    return () => Runner.RunSolver(Activator.CreateInstance(tsolver) as Solver);
                 }) ??
                 new Action(() => {
                     Console.WriteLine("USAGE: dotnet [command]");
@@ -37,6 +44,7 @@ namespace AdventOfCode2017 {
                     Console.WriteLine("Commands:");
                     Console.WriteLine($"  run update [day]  Prepares a folder for the given day, updates the input, the readme and creates a solution template.");
                     Console.WriteLine($"  run [day]         Solve the problem of the day");
+                    Console.WriteLine($"  run all           Solve each problem");
                     Console.WriteLine($"  run last          Solve the problem of the last day");
                 });
 
