@@ -23,11 +23,8 @@ namespace AdventOfCode2017.Generator {
                 |        public static void Show() {{
                 |
                 |            var defaultColor = Console.ForegroundColor;
-                |            try {{
-                |               {calendarPrinter.Indent(15)}
-                |            }} finally {{
-                |                Console.ForegroundColor = defaultColor;
-                |            }}
+                |            {calendarPrinter.Indent(14)}
+                |            Console.ForegroundColor = defaultColor;
                 |            Console.WriteLine();
                 |            Console.WriteLine(
                 |                string.Join(""\n"", @""
@@ -38,6 +35,11 @@ namespace AdventOfCode2017.Generator {
                 |                  ""
                 |                .Split('\n').Skip(1).Select(x => x.Substring(18))));
                 |        }}
+                |
+                |       private static void Write(ConsoleColor color, string text){{
+                |           Console.ForegroundColor = color;
+                |           Console.Write(text);
+                |       }}
                 |    }}
                 |}}".StripMargin();
         }
@@ -78,7 +80,6 @@ namespace AdventOfCode2017.Generator {
 
         class BufferWriter {
             StringBuilder sb = new StringBuilder();
-            string currentColor = null;
             string bufferColor = null;
             string buffer = "";
 
@@ -93,13 +94,7 @@ namespace AdventOfCode2017.Generator {
             }
 
             private void Flush() {
-                if (!string.IsNullOrWhiteSpace(buffer)) {
-                    if (currentColor != bufferColor) {
-                        sb.AppendLine($@"Console.ForegroundColor = {bufferColor};");
-                        currentColor = bufferColor;
-                    }
-                }
-                sb.AppendLine($@"Console.Write(""{buffer}"");");
+                sb.AppendLine($@"Write({bufferColor}, ""{buffer}"");");
                 buffer = "";
             }
 
