@@ -22,15 +22,41 @@ namespace AdventOfCode.Day21 {
             this.lines = lines;
         }
 
-        public IEnumerable<Mtx> Split() {
-            if (lines.Length != 4) {
-                throw new ArgumentException();
+
+        public Mtx(Mtx[] children) {
+            var block = (int)Math.Sqrt(children.Length);
+            if (block * block != children.Length) {
+                throw new ArgumentException("non square");
             }
-            for (int irow = 0; irow < lines.Length; irow += 2) {
-                for (int icol = 0; icol < lines.Length; icol += 2) {
-                    var linesChild = new string[2];
-                    for (int i = 0; i < 2; i++) {
-                        linesChild[i] = lines[irow + i].Substring(icol, 2);
+
+            var crow = children[0].lines.Length;
+
+            this.lines = new string[block * crow];
+            var iline = 0;
+
+            for (int offset = 0; offset < children.Length; offset += block) {
+                for (int irow = 0; irow < crow; irow++) {
+                    var line = "";
+                    for (int icol = 0; icol < block; icol++) {
+                        line += children[offset + icol].lines[irow];
+                    }
+                    lines[iline] = line;
+                    iline++;
+                }
+            }
+        }
+
+        public IEnumerable<Mtx> Split() {
+            var d =
+                Size % 2 == 0 ? 2 :
+                Size % 3 == 0 ? 3 :
+                throw new ArgumentException();
+
+            for (int irow = 0; irow < lines.Length; irow += d) {
+                for (int icol = 0; icol < lines.Length; icol += d) {
+                    var linesChild = new string[d];
+                    for (int i = 0; i < d; i++) {
+                        linesChild[i] = lines[irow + i].Substring(icol, d);
                     }
                     yield return new Mtx(linesChild);
                 }
@@ -90,40 +116,19 @@ namespace AdventOfCode.Day21 {
             yield return PartTwo(input);
         }
 
-        int PartOne(string input) {
+        int PartOne(string input) => Iterate(input, 5);
+        int PartTwo(string input) => Iterate(input, 18);
 
+        int Iterate(string input, int count) {
             var gridRoot = new Grid(new Mtx(".#.\n..#\n###"));
             var ruleset = Parse(input);
-            Console.WriteLine(gridRoot);
-              Console.WriteLine(gridRoot.Size);
-                Console.WriteLine();
-            for (var i = 0; i < 5; i++) {
+            for (var i = 0; i < count; i++) {
                 gridRoot.ApplyRuleset(ruleset);
-                Console.WriteLine(gridRoot);
-                Console.WriteLine(gridRoot.Size);
-                Console.WriteLine();
             }
-            var count = 0;
-            var q = new Queue<Grid>();
-            q.Enqueue(gridRoot);
-            while (q.Any()) {
-                var grid = q.Dequeue();
-                if (grid.mtx != null) {
-                    count += grid.mtx.Count();
-                } else {
-                    foreach (var gridChild in grid.Children) {
-                        q.Enqueue(gridChild);
-                    }
-                }
-            }
-            return count;
+            return gridRoot.mtx.Count();
         }
 
-        string PartTwo(string input) {
-            return "";
-        }
-
-        Rule[] Parse(string input) => ( 
+        Rule[] Parse(string input) => (
             from line in input.Split('\n').Where(line => !string.IsNullOrWhiteSpace(line))
             let parts = Regex.Split(line, " => ")
             select new Rule(new Mtx(parts[0].Split('/')), new Mtx(parts[1].Split('/')))
@@ -144,7 +149,6 @@ namespace AdventOfCode.Day21 {
     }
 
     class Grid {
-        public Grid[] Children;
         public Mtx mtx;
 
         public Grid(Mtx mtx) {
@@ -152,54 +156,26 @@ namespace AdventOfCode.Day21 {
         }
 
         public int Size {
-           get{
-                return mtx?.Size ?? 2 * Children[0].Size;
+            get {
+                return mtx.Size;
             }
         }
 
         public void ApplyRuleset(Rule[] ruleset) {
-            if (this.mtx != null) {
-                Mtx mtxNew = null;
-                foreach (var rule in ruleset) {
-                    var mtxNewT = ApplyRule(rule);
-                    if (mtxNewT != null) {
-                        Console.WriteLine(this.mtx);
-                        Console.WriteLine("<-->");
-                        Console.WriteLine(rule.Left);
-                        Console.WriteLine("    ");
-                        if (mtxNew != null) throw new Exception("coki");
-                        mtxNew = mtxNewT;
-                    }
-                }
-                if (mtxNew == null) {
-                    throw new Exception("no match found");
-                }
-
-                if (mtxNew.Size == 3) {
-                    if (this.mtx.Size != 2) throw new Exception("coki");
-                    this.mtx = mtxNew;
-                } else if (mtxNew.Size == 4) {
-                    if (this.mtx.Size != 3) throw new Exception("coki");
-                    this.mtx = null;
-                    Children = (from mtxChild in mtxNew.Split() select new Grid(mtxChild)).ToArray();
-                } else {
-                    throw new Exception("coki");
-                }
-
-            } else {
-                foreach (var child in Children) {
-                    child.ApplyRuleset(ruleset);
-                }
-            }
+            this.mtx = new Mtx(
+                this.mtx.Split().Select(child => ApplyRuleset(child, ruleset)).ToArray()
+            );
         }
 
-        Mtx ApplyRule(Rule rule) {
-            foreach (var mtxT in Variations(mtx)) {
-                if (rule.Match(mtxT)) {
-                    return rule.Right;
+        public Mtx ApplyRuleset(Mtx mtxChild, Rule[] ruleset) {
+            foreach (var rule in ruleset) {
+                foreach (var mtx in Variations(mtxChild)) {
+                    if (rule.Match(mtx)) {
+                        return rule.Right;
+                    }
                 }
             }
-            return null;
+            throw new Exception();
         }
 
         IEnumerable<Mtx> Variations(Mtx mtx) {
@@ -214,18 +190,5 @@ namespace AdventOfCode.Day21 {
             }
         }
 
-        public override string ToString() {
-            if (this.mtx != null) {
-                return mtx.ToString();
-            }
-
-            var top = Enumerable.Zip(this.Children[0].ToString().Split('\n'), this.Children[1].ToString().Split('\n'), (c1, c2) => c1 + "|" + c2);
-            var bottom = string.Join("\n", Enumerable.Zip(this.Children[2].ToString().Split('\n'), this.Children[3].ToString().Split('\n'), (c1, c2) => c1 + "|" + c2));
-            return
-                string.Join("\n", top) 
-                + "\n" + new string('-', top.First().Length) +"\n" +
-                string.Join("\n", bottom)
-                ;
-        }
     }
 }
