@@ -12,6 +12,8 @@ namespace AdventOfCode.Generator {
                  |using System.Collections.Generic;
                  |using System.Collections.Immutable;
                  |using System.Linq;
+                 |using System.Text.RegularExpressions;
+                 |using System.Text;
                  |
                  |namespace AdventOfCode.Day{problem.Day.ToString("00")} {{
                  |

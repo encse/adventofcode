@@ -3,109 +3,9 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Text;
 
 namespace AdventOfCode.Day21 {
-
-    class Mtx {
-        private string[] lines;
-
-        public Mtx(string st) : this(st.Split('\n')) {
-        }
-
-        public Mtx(string[] lines) {
-            if (lines.Length < 2 || lines.Length > 4) {
-                throw new Exception("invalid size");
-            }
-            if (lines.Any(line => lines.Length != lines.Length)) {
-                throw new Exception("invalid size");
-            }
-            this.lines = lines;
-        }
-
-
-        public Mtx(Mtx[] children) {
-            var block = (int)Math.Sqrt(children.Length);
-            if (block * block != children.Length) {
-                throw new ArgumentException("non square");
-            }
-
-            var crow = children[0].lines.Length;
-
-            this.lines = new string[block * crow];
-            var iline = 0;
-
-            for (int offset = 0; offset < children.Length; offset += block) {
-                for (int irow = 0; irow < crow; irow++) {
-                    var line = "";
-                    for (int icol = 0; icol < block; icol++) {
-                        line += children[offset + icol].lines[irow];
-                    }
-                    lines[iline] = line;
-                    iline++;
-                }
-            }
-        }
-
-        public IEnumerable<Mtx> Split() {
-            var d =
-                Size % 2 == 0 ? 2 :
-                Size % 3 == 0 ? 3 :
-                throw new ArgumentException();
-
-            for (int irow = 0; irow < lines.Length; irow += d) {
-                for (int icol = 0; icol < lines.Length; icol += d) {
-                    var linesChild = new string[d];
-                    for (int i = 0; i < d; i++) {
-                        linesChild[i] = lines[irow + i].Substring(icol, d);
-                    }
-                    yield return new Mtx(linesChild);
-                }
-            }
-        }
-
-        public int Size {
-            get { return this.lines.Length; }
-        }
-
-        public Mtx Flip() {
-            var flippedLines = from line in lines select string.Join("", line.Reverse());
-            return new Mtx(flippedLines.ToArray());
-        }
-
-        public Mtx Rotate() {
-            var resMtx = (from line in lines select line.ToArray()).ToArray();
-            for (int i = 0; i < lines.Length; i++) {
-                for (int j = 0; j < lines.Length; j++) {
-                    resMtx[i][j] = lines[j][lines.Length - i - 1];
-                }
-            }
-            var resLines = from line in resMtx select string.Join("", line);
-            return new Mtx(resLines.ToArray());
-        }
-
-        public override string ToString() {
-            return string.Join("\n", lines);
-        }
-
-        public int Count() {
-            return (from line in lines select line.Count(ch => ch == '#')).Sum();
-        }
-
-        public override bool Equals(object obj) {
-            if (obj == null || !(obj is Mtx)) {
-                return false;
-            }
-            if (ReferenceEquals(this, obj))
-                return true;
-
-            var that = obj as Mtx;
-            return this.Size == that.Size && this.ToString() == that.ToString();
-        }
-
-        public override int GetHashCode() {
-            return this.ToString().GetHashCode();
-        }
-    }
 
     class Solution : Solver {
 
@@ -117,78 +17,191 @@ namespace AdventOfCode.Day21 {
         }
 
         int PartOne(string input) => Iterate(input, 5);
+
         int PartTwo(string input) => Iterate(input, 18);
 
-        int Iterate(string input, int count) {
-            var gridRoot = new Grid(new Mtx(".#.\n..#\n###"));
-            var ruleset = Parse(input);
-            for (var i = 0; i < count; i++) {
-                gridRoot.ApplyRuleset(ruleset);
+        int Iterate(string input, int iterations) {
+            var mtx = Mtx.FromString(".#./..#/###");
+            var ruleset = new RuleSet(input);
+            for (var i = 0; i < iterations; i++) {
+                mtx = ruleset.Apply(mtx);
             }
-            return gridRoot.mtx.Count();
-        }
-
-        Rule[] Parse(string input) => (
-            from line in input.Split('\n').Where(line => !string.IsNullOrWhiteSpace(line))
-            let parts = Regex.Split(line, " => ")
-            select new Rule(new Mtx(parts[0].Split('/')), new Mtx(parts[1].Split('/')))
-        ).ToArray();
-    }
-
-    class Rule {
-        public Mtx Left;
-        public Mtx Right;
-        public Rule(Mtx left, Mtx right) {
-            this.Left = left;
-            this.Right = right;
-
-        }
-        public bool Match(Mtx mtx) {
-            return mtx.Equals(Left);
+            return mtx.Count();
         }
     }
 
-    class Grid {
-        public Mtx mtx;
+    class RuleSet {
+        private Dictionary<int, Mtx> rules2;
+        private Dictionary<int, Mtx> rules3;
 
-        public Grid(Mtx mtx) {
-            this.mtx = mtx;
-        }
+        public RuleSet(string input) {
+            rules2 = new Dictionary<int, Mtx>();
+            rules3 = new Dictionary<int, Mtx>();
 
-        public int Size {
-            get {
-                return mtx.Size;
-            }
-        }
-
-        public void ApplyRuleset(Rule[] ruleset) {
-            this.mtx = new Mtx(
-                this.mtx.Split().Select(child => ApplyRuleset(child, ruleset)).ToArray()
-            );
-        }
-
-        public Mtx ApplyRuleset(Mtx mtxChild, Rule[] ruleset) {
-            foreach (var rule in ruleset) {
-                foreach (var mtx in Variations(mtxChild)) {
-                    if (rule.Match(mtx)) {
-                        return rule.Right;
-                    }
+            foreach (var line in input.Split('\n').Where(line => !string.IsNullOrWhiteSpace(line))) {
+                var parts = Regex.Split(line, " => ");
+                var left = parts[0];
+                var right = parts[1];
+                var rules =
+                    left.Length == 5 ? rules2 :
+                    left.Length == 11 ? rules3 :
+                    throw new Exception();
+                foreach (var mtx in Variations(Mtx.FromString(left))){
+                    rules[mtx.CodeNumber] = Mtx.FromString(right);
                 }
             }
-            throw new Exception();
+        }
+
+        public Mtx Apply(Mtx mtx) {
+            return Mtx.Join((
+                from child in mtx.Split()
+                select
+                    child.Size == 2 ? rules2[child.CodeNumber] :
+                    child.Size == 3 ? rules3[child.CodeNumber] : 
+                    null
+            ).ToArray());
         }
 
         IEnumerable<Mtx> Variations(Mtx mtx) {
-            for (int i = 0; i < 4; i++) {
-                yield return mtx;
-                mtx = mtx.Rotate();
+            for (int j = 0; j < 2; j++) {
+                for (int i = 0; i < 4; i++) {
+                    yield return mtx;
+                    mtx = mtx.Rotate();
+                }
+                mtx = mtx.Flip();
             }
-            mtx = mtx.Flip();
-            for (int i = 0; i < 4; i++) {
-                yield return mtx;
-                mtx = mtx.Rotate();
+        }
+    }
+
+    class Mtx {
+        public int CodeNumber {
+            get {
+                if (Size != 2 && Size != 3) {
+                    throw new ArgumentException();
+                }
+                var i = 0;
+                for (int irow = 0; irow < Size; irow++) {
+                    for (int icol = 0; icol < Size; icol++) {
+                        if (this[irow, icol]) {
+                            i |= (1 << (irow * Size + icol));
+                        }
+                    }
+                }
+                return i;
             }
         }
 
+        public int Size {
+            get;
+            private set;
+        }
+
+        private bool[] flags;
+
+        public Mtx(int size) {
+            this.flags = new bool[size * size];
+            this.Size = size;
+        }
+
+        public static Mtx FromString(string st) {
+            st = st.Replace("/", "");
+            var size = (int)Math.Sqrt(st.Length);
+            var res = new Mtx(size);
+            for (int i = 0; i < st.Length;i++){
+                res[i / size, i % size] = st[i] == '#';
+            }
+            return res;
+        }
+
+        public static Mtx Join(Mtx[] rgmtx) {
+            var mtxPerRow = (int)Math.Sqrt(rgmtx.Length);
+            var Size = mtxPerRow * rgmtx[0].Size;
+
+            var res = new Mtx(Size);
+            for (int imtx = 0; imtx < rgmtx.Length; imtx++) {
+                var mtx = rgmtx[imtx];
+                for (int irow = 0; irow < mtx.Size; irow++) {
+                    for (int icol = 0; icol < mtx.Size; icol++) {
+                        var irowRes = (imtx / mtxPerRow) * mtx.Size + irow;
+                        var icolRes = (imtx % mtxPerRow) * mtx.Size + icol;
+                        res[irowRes, icolRes] = mtx[irow, icol];
+                    }
+                }
+            }
+
+            return res;
+        }
+
+        public IEnumerable<Mtx> Split() {
+
+            var blockSize =
+                Size % 2 == 0 ? 2 :
+                Size % 3 == 0 ? 3 :
+                throw new Exception();
+
+            for (int irow = 0; irow < Size; irow += blockSize) {
+                for (int icol = 0; icol < Size; icol += blockSize) {
+                    var mtx = new Mtx(blockSize);
+                    for (int drow = 0; drow < blockSize; drow++) {
+                        for (int dcol = 0; dcol < blockSize; dcol++) {
+                            mtx[drow, dcol] = this[irow + drow, icol + dcol];
+                        }
+                    }
+                    yield return mtx;
+                }
+            }
+        }
+
+        private bool this[int irow, int icol] {
+            get {
+                return flags[(Size * irow) + icol];
+            }
+            set {
+                flags[(Size * irow) + icol] = value;
+            }
+        }
+
+        public Mtx Flip() {
+            var res = new Mtx(this.Size);
+            for (int irow = 0; irow < Size; irow++) {
+                for (int icol = 0; icol < Size; icol++) {
+                    res[irow, Size - icol - 1] = this[irow, icol];
+                }
+            }
+            return res;
+        }
+
+        public Mtx Rotate() {
+            var res = new Mtx(this.Size);
+            for (int i = 0; i < Size; i++) {
+                for (int j = 0; j < Size; j++) {
+                    res[i, j] = this[j, Size - i - 1];
+                }
+            }
+            return res;
+        }
+
+        public int Count() {
+            var count = 0;
+             for (int irow = 0; irow < Size;irow++){
+                for (int icol = 0; icol < Size; icol++) {
+                    if (this[irow, icol]) {
+                        count++;
+                    }
+                }
+            }
+            return count;
+        }
+
+        public override string ToString(){
+            var sb = new StringBuilder();
+            for (int irow = 0; irow < Size;irow++){
+                for (int icol = 0; icol < Size; icol++) {
+                    sb.Append(this[irow, icol] ? "#" : ".");
+                }
+                sb.AppendLine();
+            }
+            return sb.ToString();
+        }
     }
 }
