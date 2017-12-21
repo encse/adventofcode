@@ -13,7 +13,7 @@ namespace AdventOfCode.Generator {
                  |using System.Collections.Immutable;
                  |using System.Linq;
                  |
-                 |namespace AdventOfCode2017.Day{problem.Day.ToString("00")} {{
+                 |namespace AdventOfCode.Day{problem.Day.ToString("00")} {{
                  |
                  |    class Solution : Solver {{
                  |
