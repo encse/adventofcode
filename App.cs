@@ -15,7 +15,7 @@ namespace AdventOfCode {
             var tsolvers = Assembly.GetEntryAssembly().GetTypes()
                 .Where(t => t.GetTypeInfo().IsClass && typeof(Solver).IsAssignableFrom(t))
                 .OrderBy(t => t.FullName)
-                .ToList();
+                .ToArray();
 
             var action =
                 Command(args, Args("update", "[0-9]+"), m => {
@@ -25,18 +25,14 @@ namespace AdventOfCode {
                 Command(args, Args("[0-9]+"), m => {
                     var day = int.Parse(m[0]);
                     var tsolver = tsolvers.Where(x => x.FullName.Contains($"Day{day.ToString("00")}")).First();
-                    return () => Runner.RunSolver(Activator.CreateInstance(tsolver) as Solver);
+                    return () => Runner.RunAll(tsolver);
                 }) ??
                 Command(args, Args("all"), m => {
-                    return () => {
-                        foreach (var tsolver in tsolvers) {
-                            Runner.RunSolver(Activator.CreateInstance(tsolver) as Solver);
-                        }
-                    };
+                    return () => Runner.RunAll(tsolvers);
                 }) ??
                 Command(args, Args("last"), m => {
                     var tsolver = tsolvers.Last();
-                    return () => Runner.RunSolver(Activator.CreateInstance(tsolver) as Solver);
+                    return () => Runner.RunAll(tsolver);
                 }) ??
                 new Action(() => {
                     Console.WriteLine("USAGE: dotnet [command]");

@@ -29,11 +29,13 @@ namespace AdventOfCode.Model {
                 md += UnparseList("", article) + "\n";
 
                 var answerNode = article.NextSibling;
-                while (answerNode != null && answerNode.SelectSingleNode("./code") == null) {
+                while (answerNode != null && answerNode.Name != "article" && answerNode.SelectSingleNode("./code") == null) {
                     answerNode = answerNode.NextSibling;
                 }
-                if (answerNode != null) {
-                    answers += answerNode.SelectSingleNode("./code").InnerText + "\n";
+
+                var code = answerNode?.SelectSingleNode("./code");
+                if (code != null) {
+                    answers += code.InnerText + "\n";
                 }
             }
             var title = HtmlEntity.DeEntitize(document.DocumentNode.SelectNodes("//h2").First().InnerText);
