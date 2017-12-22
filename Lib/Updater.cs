@@ -46,6 +46,7 @@ namespace AdventOfCode {
                 UpdateSplashScreen(calendar);
                 UpdateReadmeForDay(problem);
                 UpdateInput(problem);
+                UpdateRefout(problem);
                 UpdateSolutionTemplate(problem);
             }
         }
@@ -102,5 +103,11 @@ namespace AdventOfCode {
             WriteFile(file, problem.Input);
         }
 
+        void UpdateRefout(Problem problem) {
+            var file = Path.Combine(Dir(problem.Day), "input.refout");
+            if (problem.Answers.Any()) {
+                WriteFile(file, problem.Answers);
+            }
+        }
     }
 }
