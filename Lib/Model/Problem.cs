@@ -17,14 +17,24 @@ namespace AdventOfCode.Model {
         public string ContentMd { get; private set; }
         public int Day { get; private set; }
         public string Input { get; private set; }
+        public string Answers { get; private set; }
 
         public static Problem Parse(int day, string url, string html, string input) {
 
             var document = new HtmlDocument();
             document.LoadHtml(html);
             var md = $"original source: [{url}]({url})\n";
+            var answers = "";
             foreach (var article in document.DocumentNode.SelectNodes("//article")) {
                 md += UnparseList("", article) + "\n";
+
+                var answerNode = article.NextSibling;
+                while (answerNode != null && answerNode.SelectSingleNode("./code") == null) {
+                    answerNode = answerNode.NextSibling;
+                }
+                if (answerNode != null) {
+                    answers += answerNode.SelectSingleNode("./code").InnerText + "\n";
+                }
             }
             var title = HtmlEntity.DeEntitize(document.DocumentNode.SelectNodes("//h2").First().InnerText);
 
@@ -32,7 +42,7 @@ namespace AdventOfCode.Model {
             if (match.Success) {
                 title = match.Groups[1].Value;
             }
-            return new Problem { Day = day, Title = title, ContentMd = md, Input = input };
+            return new Problem { Day = day, Title = title, ContentMd = md, Input = input, Answers = answers };
         }
 
         static string UnparseList(string sep, HtmlNode node) {
