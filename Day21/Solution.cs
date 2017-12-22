@@ -46,7 +46,7 @@ namespace AdventOfCode.Day21 {
                     left.Length == 5 ? rules2 :
                     left.Length == 11 ? rules3 :
                     throw new Exception();
-                foreach (var mtx in Variations(Mtx.FromString(left))){
+                foreach (var mtx in Variations(Mtx.FromString(left))) {
                     rules[mtx.CodeNumber] = Mtx.FromString(right);
                 }
             }
@@ -57,7 +57,7 @@ namespace AdventOfCode.Day21 {
                 from child in mtx.Split()
                 select
                     child.Size == 2 ? rules2[child.CodeNumber] :
-                    child.Size == 3 ? rules3[child.CodeNumber] : 
+                    child.Size == 3 ? rules3[child.CodeNumber] :
                     null
             ).ToArray());
         }
@@ -74,6 +74,13 @@ namespace AdventOfCode.Day21 {
     }
 
     class Mtx {
+        private bool[] flags;
+
+        public int Size {
+            get;
+            private set;
+        }
+
         public int CodeNumber {
             get {
                 if (Size != 2 && Size != 3) {
@@ -91,13 +98,6 @@ namespace AdventOfCode.Day21 {
             }
         }
 
-        public int Size {
-            get;
-            private set;
-        }
-
-        private bool[] flags;
-
         public Mtx(int size) {
             this.flags = new bool[size * size];
             this.Size = size;
@@ -107,7 +107,7 @@ namespace AdventOfCode.Day21 {
             st = st.Replace("/", "");
             var size = (int)Math.Sqrt(st.Length);
             var res = new Mtx(size);
-            for (int i = 0; i < st.Length;i++){
+            for (int i = 0; i < st.Length; i++) {
                 res[i / size, i % size] = st[i] == '#';
             }
             return res;
@@ -115,9 +115,7 @@ namespace AdventOfCode.Day21 {
 
         public static Mtx Join(Mtx[] rgmtx) {
             var mtxPerRow = (int)Math.Sqrt(rgmtx.Length);
-            var Size = mtxPerRow * rgmtx[0].Size;
-
-            var res = new Mtx(Size);
+            var res = new Mtx(mtxPerRow * rgmtx[0].Size);
             for (int imtx = 0; imtx < rgmtx.Length; imtx++) {
                 var mtx = rgmtx[imtx];
                 for (int irow = 0; irow < mtx.Size; irow++) {
@@ -151,16 +149,7 @@ namespace AdventOfCode.Day21 {
                 }
             }
         }
-
-        private bool this[int irow, int icol] {
-            get {
-                return flags[(Size * irow) + icol];
-            }
-            set {
-                flags[(Size * irow) + icol] = value;
-            }
-        }
-
+        
         public Mtx Flip() {
             var res = new Mtx(this.Size);
             for (int irow = 0; irow < Size; irow++) {
@@ -183,7 +172,7 @@ namespace AdventOfCode.Day21 {
 
         public int Count() {
             var count = 0;
-             for (int irow = 0; irow < Size;irow++){
+            for (int irow = 0; irow < Size; irow++) {
                 for (int icol = 0; icol < Size; icol++) {
                     if (this[irow, icol]) {
                         count++;
@@ -193,15 +182,24 @@ namespace AdventOfCode.Day21 {
             return count;
         }
 
-        public override string ToString(){
+        public override string ToString() {
             var sb = new StringBuilder();
-            for (int irow = 0; irow < Size;irow++){
+            for (int irow = 0; irow < Size; irow++) {
                 for (int icol = 0; icol < Size; icol++) {
                     sb.Append(this[irow, icol] ? "#" : ".");
                 }
                 sb.AppendLine();
             }
             return sb.ToString();
+        }
+
+        private bool this[int irow, int icol] {
+            get {
+                return flags[(Size * irow) + icol];
+            }
+            set {
+                flags[(Size * irow) + icol] = value;
+            }
         }
     }
 }
