@@ -13,7 +13,7 @@ namespace AdventOfCode.Day22 {
         Infected,
         Flagged
     }
-
+    
     class Solution : Solver {
 
         public string GetName() => "Sporifica Virus";
@@ -64,7 +64,7 @@ namespace AdventOfCode.Day22 {
                     }
                 }
             }
-            var (irow, icol) = ((crow) / 2, (ccol) / 2);
+            var (irow, icol) = (crow / 2, ccol/ 2);
             var (drow, dcol) = (-1, 0);
             var infections = 0;
             for (int i = 0; i < iterations; i++) {
