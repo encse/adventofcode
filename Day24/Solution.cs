@@ -13,22 +13,13 @@ namespace AdventOfCode.Day24 {
             yield return PartTwo(input);
         }
 
-        int PartOne(string input) =>
-           LongestBridge(input, 
-                0, 
-                (component, rest) => rest + component.pinA + component.pinB);
+        int PartOne(string input) => StrongestBridge(input, (a, b) => a.strength - b.strength);
+        int PartTwo(string input) => StrongestBridge(input, (a, b) => a.CompareTo(b));
 
-        int PartTwo(string input) =>
-            LongestBridge(
-                input,
-                (length: 0, strength: 0),
-                (component, rest) => (rest.length + 1, rest.strength + component.pinA + component.pinB)
-            ).strength;
+        int StrongestBridge(string input, Func<(int length, int strength), (int length, int strength), int> compare) {
 
-        T LongestBridge<T>(string input, T seed, Func<Component, T, T> plug) where T : IComparable<T> {
-
-            T fold(int pinIn, HashSet<Component> components) {
-                var tMax = seed;
+            (int length, int strength) fold(int pinIn, HashSet<Component> components) {
+                var strongest = (0, 0);
                 foreach (var component in components.ToList()) {
                     var pinOut =
                         pinIn == component.pinA ? component.pinB :
@@ -37,14 +28,15 @@ namespace AdventOfCode.Day24 {
 
                     if (pinOut != -1) {
                         components.Remove(component);
-                        var curr = plug(component, fold(pinOut, components));
-                        tMax = curr.CompareTo(tMax) > 0 ? curr : tMax;
+                        var curr = fold(pinOut, components);
+                        (curr.length, curr.strength) = (curr.length + 1, curr.strength + component.pinA + component.pinB);
+                        strongest = compare(curr, strongest) > 0 ? curr : strongest;
                         components.Add(component);
                     }
                 }
-                return tMax;
+                return strongest;
             }
-            return fold(0, Parse(input));
+            return fold(0, Parse(input)).strength;
         }
 
         HashSet<Component> Parse(string input) {
