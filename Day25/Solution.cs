@@ -49,11 +49,7 @@ namespace AdventOfCode.Day25 {
 
             bool Int(string pattern, out int r) {
                 r = 0;
-                if (String(pattern, out string st)) {
-                    r = int.Parse(st);
-                    return true;
-                }
-                return false;
+                return String(pattern, out string st) && int.TryParse(st, out r);
             }
 
             bool String(string pattern, out string st) {
