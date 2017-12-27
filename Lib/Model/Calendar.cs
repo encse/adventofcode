@@ -4,11 +4,12 @@ using System.Linq;
 using System.Collections.Generic;
 using HtmlAgilityPack;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Model {
 
     public class CalendarToken {
-        public string Style { get; set; }
+        public string[] Styles = new string[0];
         public string Text { get; set; }
     }
 
@@ -34,23 +35,37 @@ namespace AdventOfCode.Model {
             lines.Add(line);
 
             foreach (var textNode in calendar.SelectNodes(".//text()")) {
-                var style =
-                    textNode.ParentNode.Attributes["class"]?.Value ??
-                    textNode.ParentNode.ParentNode.Attributes["class"]?.Value;
+                var styles = textNode.Ancestors()
+                    .SelectMany(node => new string[]{node.Attributes["class"]?.Value, node.Attributes["style"]?.Value})
+                    .Where(style => style != null)
+                    .ToArray();
 
+                var text = textNode.InnerText;
+                var widthSpec = styles.FirstOrDefault(style => style.StartsWith("width:"));
+                if(widthSpec != null){
+                    var m = Regex.Match(widthSpec, "[.0-9]+");
+                    if(m.Success){
+                        var width = double.Parse(m.Value) * 1.7;
+                        var c = (int)Math.Round(width - text.Length, MidpointRounding.AwayFromZero);
+                        if (c > 0) {
+                            text += new string(' ', c);
+                        }
+                    }
+                }
+                
                 var i = 0;
-                while (i < textNode.InnerText.Length) {
-                    var iNext = textNode.InnerText.IndexOf("\n", i);
+                while (i < text.Length) {
+                    var iNext = text.IndexOf("\n", i);
                     if (iNext == -1) {
-                        iNext = textNode.InnerText.Length;
+                        iNext = text.Length;
                     }
 
                     line.Add(new CalendarToken {
-                        Style = style,
-                        Text = HtmlEntity.DeEntitize(textNode.InnerText.Substring(i, iNext - i))
+                        Styles = styles,
+                        Text = HtmlEntity.DeEntitize(text.Substring(i, iNext - i))
                     });
 
-                    if (iNext < textNode.InnerText.Length) {
+                    if (iNext < text.Length) {
                         line = new List<CalendarToken>();
                         lines.Add(line);
                     }
