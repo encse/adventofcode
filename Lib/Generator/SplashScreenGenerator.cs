@@ -53,7 +53,7 @@ namespace AdventOfCode.Generator {
             var lines = calendar.Lines.Select(line =>
                 new[] { new CalendarToken { Text = "           " } }.Concat(line)).ToList();
             lines.Insert(0, new []{new CalendarToken {
-                Style = "title",
+                Styles = new []{"title"},
                 Text = $@"
                     |  __   ____  _  _  ____  __ _  ____     __  ____     ___  __  ____  ____         
                     | / _\ (    \/ )( \(  __)(  ( \(_  _)   /  \(  __)   / __)/  \(    \(  __)        
@@ -66,10 +66,8 @@ namespace AdventOfCode.Generator {
             var bw = new BufferWriter();
             foreach (var line in lines) {
                 foreach (var token in line) {
-                    var consoleColor = token.Style != null && theme.TryGetValue(token.Style, out var themeColor)
-                        ? themeColor
-                        : "ConsoleColor.DarkGray";
-
+                    var style = token.Styles.FirstOrDefault(styleT => theme.ContainsKey(styleT));
+                    var consoleColor = style != null ? theme[style] : "ConsoleColor.DarkGray";
                     bw.Write(consoleColor, token.Text);
                 }
 
@@ -90,13 +88,14 @@ namespace AdventOfCode.Generator {
                     }
                     bufferColor = color;
                 }
-                buffer += text.Replace("\\", "\\\\").Replace("\n", "\\n");
+                buffer += text;
             }
 
             private void Flush() {
                 while(buffer.Length > 0){
                     var block = buffer.Substring(0, Math.Min(100, buffer.Length));
                     buffer = buffer.Substring(block.Length);
+                    block = block.Replace("\\", "\\\\").Replace("\n", "\\n");
                     sb.AppendLine($@"Write({bufferColor}, ""{block}"");");
                 }
                 buffer = "";
