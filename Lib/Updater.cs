@@ -94,7 +94,7 @@ namespace AdventOfCode {
         }
 
         void UpdateSplashScreen(Calendar calendar) {
-            var file = Path.Combine(Path.Combine("Lib", "SplashScreen.cs"));
+            var file = Path.Combine(SolverExtensions.WorkingDir(calendar.Year), "SplashScreen.cs");
             WriteFile(file, new SplashScreenGenerator().Generate(calendar));
         }
 
