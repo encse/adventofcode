@@ -12,18 +12,24 @@ namespace AdventOfCode {
     }
 
     static class SolverExtensions {
-        public static string DayName(this Solver solver){
+        public static string DayName(this Solver solver) {
             return $"Day {solver.Day()}";
         }
 
         public static int Year(this Solver solver) {
-            return int.Parse(solver.GetType().FullName.Split('.')[1].Substring(1));
+            return Year(solver.GetType());
         }
 
+        public static int Year(Type tsolver) {
+            return int.Parse(tsolver.FullName.Split('.')[1].Substring(1));
+        }
         public static int Day(this Solver solver) {
-            return int.Parse(solver.GetType().FullName.Split('.')[2].Substring(3));
+            return Day(solver.GetType());
         }
 
+        public static int Day(Type tsolver) {
+            return int.Parse(tsolver.FullName.Split('.')[2].Substring(3));
+        }
         public static string WorkingDir(int year, int day) {
             return Path.Combine(year.ToString(), "Day" + day.ToString("00"));
         }

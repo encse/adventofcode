@@ -15,7 +15,7 @@ namespace AdventOfCode.Generator {
                  |using System.Text.RegularExpressions;
                  |using System.Text;
                  |
-                 |namespace AdventOfCode.Y2017.Day{problem.Day.ToString("00")} {{
+                 |namespace AdventOfCode.Y{problem.Year}.Day{problem.Day.ToString("00")} {{
                  |
                  |    class Solution : Solver {{
                  |
