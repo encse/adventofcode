@@ -10,7 +10,7 @@ namespace AdventOfCode {
     class App {
 
         static void Main(string[] args) {
-            SplashScreen.Show();
+          //  SplashScreen.Show();
 
             var tsolvers = Assembly.GetEntryAssembly().GetTypes()
                 .Where(t => t.GetTypeInfo().IsClass && typeof(Solver).IsAssignableFrom(t))
@@ -31,7 +31,7 @@ namespace AdventOfCode {
                         SolverExtensions.Day(tsolver) == day);
                     return () => Runner.RunAll(tsolversSelected);
                 }) ??
-                 Command(args, Args("[0-9]+", "all"), m => {
+                 Command(args, Args("[0-9]+"), m => {
                     var year = int.Parse(m[0]);
                     var tsolversSelected = tsolvers.Where(tsolver => 
                         SolverExtensions.Year(tsolver) == year);
@@ -51,8 +51,8 @@ namespace AdventOfCode {
                     Console.WriteLine();
                     Console.WriteLine("Commands:");
                     Console.WriteLine($"  run update [year] [day]   Prepares a folder for the given day, updates the input, the readme and creates a solution template.");
-                    Console.WriteLine($"  run [year] [day|all|last] Solve the specified problems");
-                    Console.WriteLine($"  run all                   Solve each problem");
+                    Console.WriteLine($"  run [year] [day|last]?    Solve the specified problems");
+                    Console.WriteLine($"  run all                   Solve everything");
                 });
 
             action();

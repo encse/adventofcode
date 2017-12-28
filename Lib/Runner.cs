@@ -20,22 +20,34 @@ namespace AdventOfCode {
             return Year(solver.GetType());
         }
 
-        public static int Year(Type tsolver) {
-            return int.Parse(tsolver.FullName.Split('.')[1].Substring(1));
+        public static int Year(Type t) {
+            return int.Parse(t.FullName.Split('.')[1].Substring(1));
         }
         public static int Day(this Solver solver) {
             return Day(solver.GetType());
         }
 
-        public static int Day(Type tsolver) {
-            return int.Parse(tsolver.FullName.Split('.')[2].Substring(3));
+        public static int Day(Type t) {
+            return int.Parse(t.FullName.Split('.')[2].Substring(3));
         }
+
+        public static string WorkingDir(int year) {
+            return Path.Combine(year.ToString());
+        }
+
         public static string WorkingDir(int year, int day) {
-            return Path.Combine(year.ToString(), "Day" + day.ToString("00"));
+            return Path.Combine(WorkingDir(year), "Day" + day.ToString("00"));
         }
 
         public static string WorkingDir(this Solver solver) {
             return WorkingDir(solver.Year(), solver.Day());
+        }
+
+        public static SplashScreen SplashScreen(this Solver solver){
+            var tsplashScreen = Assembly.GetEntryAssembly().GetTypes()
+                 .Where(t => t.GetTypeInfo().IsClass && typeof(SplashScreen).IsAssignableFrom(t))
+                 .Single(t => Year(t) == solver.Year());
+            return (SplashScreen) Activator.CreateInstance(tsplashScreen);
         }
     }
 
@@ -44,7 +56,13 @@ namespace AdventOfCode {
         public static void RunAll(params Type[] tsolvers) {
             var errors = new List<string>();
 
+            var lastYear = -1;
             foreach (var solver in tsolvers.Select(tsolver => Activator.CreateInstance(tsolver) as Solver)) {
+                if (lastYear != solver.Year()) {
+                    solver.SplashScreen().Show();
+                    lastYear = solver.Year();
+                }
+                
                 var workingDir = solver.WorkingDir();
                 var color = Console.ForegroundColor;
                 try {
