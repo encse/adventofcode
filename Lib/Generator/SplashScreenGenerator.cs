@@ -47,10 +47,27 @@ namespace AdventOfCode.Generator {
                 ["calendar-ornament5"] = "ConsoleColor.Cyan",
                 ["calendar-ornament3"] = "ConsoleColor.DarkCyan",
 
+
+                ["calendar-tree-star"] = "ConsoleColor.Yellow",
+                ["calendar-antenna-star"] = "ConsoleColor.Yellow",
+                ["calendar-antenna-signal0"] = "ConsoleColor.Yellow",
+                ["calendar-antenna-signal1"] = "ConsoleColor.Yellow",
+                ["calendar-antenna-signal2"] = "ConsoleColor.Yellow",
+                ["calendar-antenna-signal3"] = "ConsoleColor.Yellow",
+                ["calendar-antenna-signal4"] = "ConsoleColor.Yellow",
+                ["calendar-antenna-signal5"] = "ConsoleColor.Yellow",
+                ["calendar-tree-ornament0"] = "ConsoleColor.Red",
+                ["calendar-tree-ornament1"] = "ConsoleColor.Green",
+                ["calendar-tree-ornament2"] = "ConsoleColor.Blue",
+                ["calendar-tree-branches"] = "ConsoleColor.DarkGreen",
+                ["calendar-tree-trunk"] = "ConsoleColor.Gray",
                 ["calendar-streets"] = "ConsoleColor.Gray",
                 ["calendar-window-dark"] = "ConsoleColor.DarkGray",
                 ["calendar-window-red"] = "ConsoleColor.Red",
                 ["calendar-window-green"] = "ConsoleColor.Green",
+                ["calendar-window-blue"] = "ConsoleColor.Blue",
+                ["calendar-window-yellow"] = "ConsoleColor.Yellow",
+                ["calendar-window-brown"] = "ConsoleColor.DarkGreen",
 
                 ["title"] = "ConsoleColor.Yellow",
             };
