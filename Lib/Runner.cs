@@ -13,11 +13,23 @@ namespace AdventOfCode {
 
     static class SolverExtensions {
         public static string DayName(this Solver solver){
-            return $"Day {Day(solver.GetType())}";
+            return $"Day {solver.Day()}";
         }
 
-        static int Day(Type type) {
-            return int.Parse(type.FullName.Split('.')[1].Substring(3));
+        public static int Year(this Solver solver) {
+            return int.Parse(solver.GetType().FullName.Split('.')[1].Substring(1));
+        }
+
+        public static int Day(this Solver solver) {
+            return int.Parse(solver.GetType().FullName.Split('.')[2].Substring(3));
+        }
+
+        public static string WorkingDir(int year, int day) {
+            return Path.Combine(year.ToString(), "Day" + day.ToString("00"));
+        }
+
+        public static string WorkingDir(this Solver solver) {
+            return WorkingDir(solver.Year(), solver.Day());
         }
     }
 
@@ -27,13 +39,13 @@ namespace AdventOfCode {
             var errors = new List<string>();
 
             foreach (var solver in tsolvers.Select(tsolver => Activator.CreateInstance(tsolver) as Solver)) {
-                var name = solver.GetType().FullName.Split('.')[1];
+                var workingDir = solver.WorkingDir();
                 var color = Console.ForegroundColor;
                 try {
                     WriteLine(ConsoleColor.White, $"{solver.DayName()}: {solver.GetName()}");
                     WriteLine();
 
-                    foreach (var file in Directory.EnumerateFiles(name)) {
+                    foreach (var file in Directory.EnumerateFiles(workingDir)) {
 
                         if (file.EndsWith(".in")) {
                             var refoutFile = file.Replace(".in", ".refout");
