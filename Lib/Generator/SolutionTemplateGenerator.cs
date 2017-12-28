@@ -30,8 +30,8 @@ namespace AdventOfCode.Generator {
                  |            return 0;
                  |        }}
                  |
-                 |        string PartTwo(string input) {{
-                 |            return """";
+                 |        int PartTwo(string input) {{
+                 |            return 0;
                  |        }}
                  |    }}
                  |}}".StripMargin();

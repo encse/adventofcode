@@ -18,6 +18,7 @@ namespace AdventOfCode.Y2017.Day01 {
         int PartTwo(string input) => InverseCaptcha(input, input.Length / 2);
 
         int InverseCaptcha(string input, int skip) {
+            input = input.TrimEnd();
             return (
                 from i in Enumerable.Range(0, input.Length)
                 where input[i] == input[(i + skip) % input.Length]

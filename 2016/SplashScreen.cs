@@ -47,7 +47,9 @@ namespace AdventOfCode.Y2016 {
             Write(ConsoleColor.Yellow, "**\n           ");
             Write(ConsoleColor.DarkGray, "    |:::::::::::|   |     //| ____/ /_/___         10 ");
             Write(ConsoleColor.Yellow, "**\n           ");
-            Write(ConsoleColor.DarkGray, " ---|:::::::::::|   |--------|[][]|_|[][]_\\------   9 ");
+            Write(ConsoleColor.DarkGray, " ---|::::");
+            Write(ConsoleColor.Green, ":::");
+            Write(ConsoleColor.DarkGray, "::::|   |--------|[][]|_|[][]_\\------   9 ");
             Write(ConsoleColor.Yellow, "**\n           ");
             Write(ConsoleColor.DarkGray, "----|::");
             Write(ConsoleColor.Red, ":");
