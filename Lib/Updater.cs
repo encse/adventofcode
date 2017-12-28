@@ -37,7 +37,7 @@ namespace AdventOfCode {
                 var calendar = await DownloadCalendar(client, year);
                 var problem = await DownloadProblem(client, year, day);
 
-                var dir = Dir(day);
+                var dir = Dir(year, day);
                 if (!Directory.Exists(dir)) {
                     Directory.CreateDirectory(dir);
                 }
@@ -63,7 +63,7 @@ namespace AdventOfCode {
             File.WriteAllText(file, content);
         }
 
-        string Dir(int day) => $"Day{day.ToString("00")}";
+        string Dir(int year, int day) => SolverExtensions.WorkingDir(year, day);
 
         async Task<Calendar> DownloadCalendar(HttpClient client, int year) {
             var html = await Download(client, year.ToString());
@@ -73,16 +73,16 @@ namespace AdventOfCode {
         async Task<Problem> DownloadProblem(HttpClient client, int year, int day) {
             var problemStatement = await Download(client, $"{year}/day/{day}");
             var input = await Download(client, $"{year}/day/{day}/input");
-            return Problem.Parse(day, client.BaseAddress + $"/{year}/day/{day}", problemStatement, input);
+            return Problem.Parse(year, day, client.BaseAddress + $"/{year}/day/{day}", problemStatement, input);
         }
 
         void UpdateReadmeForDay(Problem problem) {
-            var file = Path.Combine(Dir(problem.Day), "README.md");
+            var file = Path.Combine(Dir(problem.Year, problem.Day), "README.md");
             WriteFile(file, problem.ContentMd);
         }
 
         void UpdateSolutionTemplate(Problem problem) {
-            var file = Path.Combine(Dir(problem.Day), "Solution.cs");
+            var file = Path.Combine(Dir(problem.Year, problem.Day), "Solution.cs");
             if (!File.Exists(file)) {
                 WriteFile(file, new SolutionTemplateGenerator().Generate(problem));
             }
@@ -99,12 +99,12 @@ namespace AdventOfCode {
         }
 
         void UpdateInput(Problem problem) {
-            var file = Path.Combine(Dir(problem.Day), "input.in");
+            var file = Path.Combine(Dir(problem.Year, problem.Day), "input.in");
             WriteFile(file, problem.Input);
         }
 
         void UpdateRefout(Problem problem) {
-            var file = Path.Combine(Dir(problem.Day), "input.refout");
+            var file = Path.Combine(Dir(problem.Year, problem.Day), "input.refout");
             if (problem.Answers.Any()) {
                 WriteFile(file, problem.Answers);
             }

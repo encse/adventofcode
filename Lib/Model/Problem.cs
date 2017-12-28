@@ -16,10 +16,11 @@ namespace AdventOfCode.Model {
         public string Title { get; private set; }
         public string ContentMd { get; private set; }
         public int Day { get; private set; }
+        public int Year { get; private set; }
         public string Input { get; private set; }
         public string Answers { get; private set; }
 
-        public static Problem Parse(int day, string url, string html, string input) {
+        public static Problem Parse(int year, int day, string url, string html, string input) {
 
             var document = new HtmlDocument();
             document.LoadHtml(html);
@@ -44,7 +45,7 @@ namespace AdventOfCode.Model {
             if (match.Success) {
                 title = match.Groups[1].Value;
             }
-            return new Problem { Day = day, Title = title, ContentMd = md, Input = input, Answers = answers };
+            return new Problem {Year = year, Day = day, Title = title, ContentMd = md, Input = input, Answers = answers };
         }
 
         static string UnparseList(string sep, HtmlNode node) {
