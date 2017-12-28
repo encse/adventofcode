@@ -34,7 +34,6 @@ namespace AdventOfCode.Generator {
         }
 
         private string CalendarPrinter(Calendar calendar) {
-
             var theme = new Dictionary<string, string>() {
                 ["calendar-edge"] = "ConsoleColor.Gray",
                 ["calendar-star"] = "ConsoleColor.Yellow",
@@ -47,6 +46,12 @@ namespace AdventOfCode.Generator {
                 ["calendar-ornament4"] = "ConsoleColor.Magenta",
                 ["calendar-ornament5"] = "ConsoleColor.Cyan",
                 ["calendar-ornament3"] = "ConsoleColor.DarkCyan",
+
+                ["calendar-streets"] = "ConsoleColor.Gray",
+                ["calendar-window-dark"] = "ConsoleColor.DarkGray",
+                ["calendar-window-red"] = "ConsoleColor.Red",
+                ["calendar-window-green"] = "ConsoleColor.Green",
+
                 ["title"] = "ConsoleColor.Yellow",
             };
 
