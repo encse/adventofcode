@@ -42,7 +42,9 @@ namespace AdventOfCode {
                     Directory.CreateDirectory(dir);
                 }
 
-                UpdateProjectReadme(calendar);
+                if (year == 2017) {
+                    UpdateProjectReadme(calendar);
+                }
                 UpdateSplashScreen(calendar);
                 UpdateReadmeForDay(problem);
                 UpdateInput(problem);

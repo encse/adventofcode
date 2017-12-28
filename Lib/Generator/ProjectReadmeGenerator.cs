@@ -12,11 +12,12 @@ namespace AdventOfCode.Generator {
                     select string.Join("", from token in line select token.Text));
                     
             return $@"
-               > # Advent of Code {calendar.Year}
+               > # Advent of Code 2017 
+               > ## and selected problems from previous years
                > ```
                > {calendarLines}
                > ```
-               > C# solutions to http://adventofcode.com/{calendar.Year} using .NET Core 2.0.
+               > C# solutions to http://adventofcode.com using .NET Core 2.0.
                > 
                > ## Dependencies
                > 
@@ -29,11 +30,11 @@ namespace AdventOfCode.Generator {
                > 
                > 1. Install .NET Core.
                > 2. Download the code.
-               > 3. Run `dotnet run <day>`.
+               > 3. Run `dotnet run <year> <day>`.
                > 
                > To prepare for the next day:
                > 
-               > 1. Run `dotnet run update <day>`.".StripMargin("> ");
+               > 1. Run `dotnet run update <year> <day>`.".StripMargin("> ");
         }
     }
 }
