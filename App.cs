@@ -18,30 +18,41 @@ namespace AdventOfCode {
                 .ToArray();
 
             var action =
-                Command(args, Args("update", "[0-9]+"), m => {
-                    var day = int.Parse(m[1]);
-                    return () => new Updater().Update(2017, day).Wait();
+                Command(args, Args("update", "[0-9]+", "[0-9]+"), m => {
+                    var year = int.Parse(m[1]);
+                    var day = int.Parse(m[2]);
+                    return () => new Updater().Update(year, day).Wait();
                 }) ??
-                Command(args, Args("[0-9]+"), m => {
-                    var day = int.Parse(m[0]);
-                    var tsolver = tsolvers.Where(x => x.FullName.Contains($"Day{day.ToString("00")}")).First();
-                    return () => Runner.RunAll(tsolver);
+                 Command(args, Args("[0-9]+", "[0-9]+"), m => {
+                    var year = int.Parse(m[0]);
+                    var day = int.Parse(m[1]);
+                    var tsolversSelected = tsolvers.First(tsolver => 
+                        SolverExtensions.Year(tsolver) == year && 
+                        SolverExtensions.Day(tsolver) == day);
+                    return () => Runner.RunAll(tsolversSelected);
+                }) ??
+                 Command(args, Args("[0-9]+", "all"), m => {
+                    var year = int.Parse(m[0]);
+                    var tsolversSelected = tsolvers.Where(tsolver => 
+                        SolverExtensions.Year(tsolver) == year);
+                    return () => Runner.RunAll(tsolversSelected.ToArray());
+                }) ??
+                Command(args, Args("[0-9]+", "last"), m => {
+                    var year = int.Parse(m[0]);
+                    var tsolversSelected = tsolvers.Last(tsolver =>
+                        SolverExtensions.Year(tsolver) == year);
+                    return () => Runner.RunAll(tsolversSelected);
                 }) ??
                 Command(args, Args("all"), m => {
                     return () => Runner.RunAll(tsolvers);
-                }) ??
-                Command(args, Args("last"), m => {
-                    var tsolver = tsolvers.Last();
-                    return () => Runner.RunAll(tsolver);
                 }) ??
                 new Action(() => {
                     Console.WriteLine("USAGE: dotnet [command]");
                     Console.WriteLine();
                     Console.WriteLine("Commands:");
-                    Console.WriteLine($"  run update [day]  Prepares a folder for the given day, updates the input, the readme and creates a solution template.");
-                    Console.WriteLine($"  run [day]         Solve the problem of the day");
-                    Console.WriteLine($"  run all           Solve each problem");
-                    Console.WriteLine($"  run last          Solve the problem of the last day");
+                    Console.WriteLine($"  run update [year] [day]   Prepares a folder for the given day, updates the input, the readme and creates a solution template.");
+                    Console.WriteLine($"  run [year] [day|all|last] Solve the specified problems");
+                    Console.WriteLine($"  run all                   Solve each problem");
                 });
 
             action();
