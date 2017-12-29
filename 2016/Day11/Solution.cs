@@ -7,14 +7,14 @@ using System.Text;
 
 namespace AdventOfCode.Y2016.Day11 {
 
-    enum ELements {
-        thulium    = 0b1,
-        plutonium  = 0b10,
-        strontium  = 0b100,
-        promethium = 0b1000,
-        ruthenium  = 0b10000,
-        elerium    = 0b100000,
-        dilithium  = 0b1000000
+    enum Element {
+        Thulium    = 0b1,
+        Plutonium  = 0b10,
+        Strontium  = 0b100,
+        Promethium = 0b1000,
+        Ruthenium  = 0b10000,
+        Elerium    = 0b100000,
+        Dilithium  = 0b1000000
     }
 
     class Solution : Solver {
@@ -28,8 +28,8 @@ namespace AdventOfCode.Y2016.Day11 {
 
         int PartOne(string input) => Solve(Parse(input));
         int PartTwo(string input) => Solve(Parse(input)
-            .AddGenerator(0, ELements.elerium).AddChip(0, ELements.elerium)
-            .AddGenerator(0, ELements.dilithium).AddChip(0, ELements.dilithium)
+            .AddGenerator(0, Element.Elerium).AddChip(0, Element.Elerium)
+            .AddGenerator(0, Element.Dilithium).AddChip(0, Element.Dilithium)
             );
 
         int Solve(ulong state){
@@ -119,10 +119,10 @@ namespace AdventOfCode.Y2016.Day11 {
         public static ulong GetGenerators(this ulong state, ulong floor) =>
             (ulong)(((state & ~floorMask[floor]) >> floorShift[floor]) & ~generatorMask) >> generatorShift;
 
-        public static ulong AddChip(this ulong state, ulong floor, ELements chip) =>
+        public static ulong AddChip(this ulong state, ulong floor, Element chip) =>
             state | (((ulong)chip << elementCount) << floorShift[floor]);
 
-        public static ulong AddGenerator(this ulong state, ulong floor, ELements genetator) =>
+        public static ulong AddGenerator(this ulong state, ulong floor, Element genetator) =>
             state | (((ulong)genetator << generatorShift) << floorShift[floor]);
 
         public static bool Valid(this ulong state) {
