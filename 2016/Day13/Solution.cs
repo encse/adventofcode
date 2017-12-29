@@ -30,7 +30,7 @@ namespace AdventOfCode.Y2016.Day13 {
             var q = new Queue<(int steps, int irow, int icol)>();
             q.Enqueue((0, 1, 1));
             var seen = new HashSet<(int, int)>();
-
+            seen.Add((1, 1));
             var n = (
                     from drow in new[] { -1, 0, 1 }
                     from dcol in new[] { -1, 0, 1 }
@@ -41,11 +41,6 @@ namespace AdventOfCode.Y2016.Day13 {
             while (q.Any()) {
                 var (steps, irow, icol) = q.Dequeue();
 
-                if (seen.Contains((irow, icol))) {
-                    continue;
-                }
-                seen.Add((irow, icol));
-
                 yield return (steps, irow, icol);
 
                 foreach (var (drow, dcol) in n) {
@@ -53,12 +48,14 @@ namespace AdventOfCode.Y2016.Day13 {
                     if (irowT >= 0 && icolT >= 0) {
                         var w = icolT * icolT + 3 * icolT + 2 * icolT * irowT + irowT + irowT * irowT + input;
                         if (Convert.ToString(w, 2).Count(ch => ch == '1') % 2 == 0) {
-                            q.Enqueue((steps + 1, irowT, icolT));
+                            if (!seen.Contains((irowT, icolT))) {
+                                q.Enqueue((steps + 1, irowT, icolT));
+                                seen.Add((irowT, icolT));
+                            }
                         }
                     }
                 }
             }
         }
-
     }
 }
