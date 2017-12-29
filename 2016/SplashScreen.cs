@@ -37,7 +37,13 @@ namespace AdventOfCode.Y2016 {
             Write(ConsoleColor.Yellow, "**\n           ");
             Write(ConsoleColor.DarkGray, "    |---------\\ / / |===|   |  /|:::::::::::|  |   15 ");
             Write(ConsoleColor.Yellow, "**\n           ");
-            Write(ConsoleColor.DarkGray, "    |----------\\ /  |===|  /  //|:::::::::::| /    14 ");
+            Write(ConsoleColor.DarkGray, "    |----------\\ /  |===|  /  //|:");
+            Write(ConsoleColor.Blue, ":");
+            Write(ConsoleColor.DarkGray, ":::");
+            Write(ConsoleColor.Blue, ":");
+            Write(ConsoleColor.DarkGray, ":::");
+            Write(ConsoleColor.Blue, ":");
+            Write(ConsoleColor.DarkGray, ":| /    14 ");
             Write(ConsoleColor.Yellow, "**\n           ");
             Write(ConsoleColor.DarkGray, "    +-----------+   |===| /  //||::::");
             Write(ConsoleColor.Blue, ":");
@@ -107,7 +113,7 @@ namespace AdventOfCode.Y2016 {
             Write(ConsoleColor.Red, ":::");
             Write(ConsoleColor.DarkGray, ":");
             Write(ConsoleColor.Green, ":::");
-            Write(ConsoleColor.DarkGray, "|  //|     / / /___/ / / / / / /    3 ");
+            Write(ConsoleColor.DarkGray, "|  //|     / / /   /           /    3 ");
             Write(ConsoleColor.Yellow, "**\n           ");
             Write(ConsoleColor.DarkGray, "    |::::");
             Write(ConsoleColor.Red, ":");
@@ -117,11 +123,11 @@ namespace AdventOfCode.Y2016 {
             Write(ConsoleColor.Green, ":");
             Write(ConsoleColor.DarkGray, ":");
             Write(ConsoleColor.Green, ":");
-            Write(ConsoleColor.DarkGray, "| //|     /   /___/           /     2 ");
+            Write(ConsoleColor.DarkGray, "| //|     /   /   /           /     2 ");
             Write(ConsoleColor.Yellow, "**\n           ");
             Write(ConsoleColor.DarkGray, "    |::::::::");
             Write(ConsoleColor.Green, ":::");
-            Write(ConsoleColor.DarkGray, "|//|     / / /   /_/_/_/_/_/_/      1 ");
+            Write(ConsoleColor.DarkGray, "|//|     / / /   /___________/      1 ");
             Write(ConsoleColor.Yellow, "**\n           ");
             Write(ConsoleColor.Gray, "  ==============//======+...+====================       \n             - - - - - - -// - - -/   / - -");
             Write(ConsoleColor.Gray, " - - - - - - - -        \n           ==============//|==============================         \n       ");
