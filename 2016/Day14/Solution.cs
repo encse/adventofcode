@@ -28,7 +28,9 @@ namespace AdventOfCode.Y2016.Day14 {
             var idx = 0;
             var idxEnd = 0;
             foreach (var hashEnd in hashes) {
+                
                 hashQueue.Enqueue(hashEnd);
+
                 for (int i = 0; i < hashEnd.Length - 5; i++) {
                     if (hashEnd[i] == hashEnd[i + 1] &&
                         hashEnd[i + 1] == hashEnd[i + 2] &&
