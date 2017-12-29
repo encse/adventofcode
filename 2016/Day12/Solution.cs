@@ -20,7 +20,7 @@ namespace AdventOfCode.Y2016.Day12 {
 
         int PartTwo(string input) => Solve(input, 1);
 
-        int Solve(string input, int c){
+        int Solve(string input, int c) {
             var regs = new Dictionary<string, int>();
             int ip = 0;
             int getReg(string reg) {

@@ -30,7 +30,11 @@ namespace AdventOfCode.Model {
                 md += UnparseList("", article) + "\n";
 
                 var answerNode = article.NextSibling;
-                while (answerNode != null && answerNode.Name != "article" && answerNode.SelectSingleNode("./code") == null) {
+                while (answerNode != null && !( 
+                    answerNode.Name == "p" 
+                    && answerNode.SelectSingleNode("./code") != null 
+                    && answerNode.InnerText.Contains("answer"))
+                ) {
                     answerNode = answerNode.NextSibling;
                 }
 
