@@ -51,8 +51,8 @@ To run the project:
 
 1. Install .NET Core.
 2. Download the code.
-3. Run `dotnet run <year> <day>`.
+3. Run `dotnet run <year>/<day>`.
 
 To prepare for the next day:
 
-1. Run `dotnet run update <year> <day>`.
+1. Run `dotnet run update <year>/<day>`.
