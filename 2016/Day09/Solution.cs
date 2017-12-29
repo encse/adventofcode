@@ -18,15 +18,15 @@ namespace AdventOfCode.Y2016.Day09 {
 
         long PartOne(string input) {
             input = input.TrimEnd();
-            return Extend(input, 0, input.Length, false);
+            return Expand(input, 0, input.Length, false);
         }
 
         long PartTwo(string input) {
             input = input.TrimEnd();
-            return Extend(input, 0, input.Length, true);
+            return Expand(input, 0, input.Length, true);
         }
 
-        long Extend(string input, int i, int lim, bool recursive) {
+        long Expand(string input, int i, int lim, bool recursive) {
             var res = 0L;
             while (i < lim) {
                 if (input[i] == '(') {
@@ -34,7 +34,7 @@ namespace AdventOfCode.Y2016.Day09 {
                     var m = Regex.Match(input.Substring(i + 1, j - i - 1), @"(\d+)x(\d+)");
                     var length = int.Parse(m.Groups[1].Value);
                     var mul = int.Parse(m.Groups[2].Value);
-                    res += recursive ? Extend(input, j + 1, j + length + 1, recursive) * mul : length * mul;
+                    res += recursive ? Expand(input, j + 1, j + length + 1, recursive) * mul : length * mul;
                     i = j + length + 1;
                 } else {
                     res++;

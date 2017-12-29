@@ -18,12 +18,12 @@ namespace AdventOfCode {
                 .ToArray();
 
             var action =
-                Command(args, Args("update", "[0-9]+", "[0-9]+"), m => {
+                Command(args, Args("update", "([0-9]+)/([0-9]+)"), m => {
                     var year = int.Parse(m[1]);
                     var day = int.Parse(m[2]);
                     return () => new Updater().Update(year, day).Wait();
                 }) ??
-                 Command(args, Args("[0-9]+", "[0-9]+"), m => {
+                 Command(args, Args("([0-9]+)/([0-9]+)"), m => {
                     var year = int.Parse(m[0]);
                     var day = int.Parse(m[1]);
                     var tsolversSelected = tsolvers.First(tsolver => 
@@ -37,7 +37,7 @@ namespace AdventOfCode {
                         SolverExtensions.Year(tsolver) == year);
                     return () => Runner.RunAll(tsolversSelected.ToArray());
                 }) ??
-                Command(args, Args("[0-9]+", "last"), m => {
+                Command(args, Args("([0-9]+)/last"), m => {
                     var year = int.Parse(m[0]);
                     var tsolversSelected = tsolvers.Last(tsolver =>
                         SolverExtensions.Year(tsolver) == year);
@@ -50,8 +50,9 @@ namespace AdventOfCode {
                     Console.WriteLine("USAGE: dotnet [command]");
                     Console.WriteLine();
                     Console.WriteLine("Commands:");
-                    Console.WriteLine($"  run update [year] [day]   Prepares a folder for the given day, updates the input, the readme and creates a solution template.");
-                    Console.WriteLine($"  run [year] [day|last]?    Solve the specified problems");
+                    Console.WriteLine($"  run update [year]/[day]   Prepares a folder for the given day, updates the input, the readme and creates a solution template.");
+                    Console.WriteLine($"  run [year]/[day|last]     Solve the specified problems");
+                    Console.WriteLine($"  run [year]                Solve the whole year");
                     Console.WriteLine($"  run all                   Solve everything");
                 });
 
@@ -67,7 +68,8 @@ namespace AdventOfCode {
                 return null;
             }
             try {
-                return parse(matches.Select(m => m.Value).ToArray());
+                
+                return parse(matches.SelectMany(m => m.Groups.Count > 1 ? m.Groups.Skip(1).Select(g => g.Value) : new []{m.Value}).ToArray());
             } catch {
                 return null;
             }
