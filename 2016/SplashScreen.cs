@@ -35,7 +35,13 @@ namespace AdventOfCode.Y2016 {
             Write(ConsoleColor.Yellow, "**\n           ");
             Write(ConsoleColor.DarkGray, "    |--------\\ / / /|===|   |   |:::::::::::|  |   16 ");
             Write(ConsoleColor.Yellow, "**\n           ");
-            Write(ConsoleColor.DarkGray, "    |---------\\ / / |===|   |  /|:::::::::::|  |   15 ");
+            Write(ConsoleColor.DarkGray, "    |---------\\ / / |===|   |  /|");
+            Write(ConsoleColor.Blue, ":::");
+            Write(ConsoleColor.DarkGray, ":");
+            Write(ConsoleColor.Blue, ":::");
+            Write(ConsoleColor.DarkGray, ":");
+            Write(ConsoleColor.Blue, ":::");
+            Write(ConsoleColor.DarkGray, "|  |   15 ");
             Write(ConsoleColor.Yellow, "**\n           ");
             Write(ConsoleColor.DarkGray, "    |----------\\ /  |===|  /  //|:");
             Write(ConsoleColor.Blue, ":");
@@ -113,7 +119,7 @@ namespace AdventOfCode.Y2016 {
             Write(ConsoleColor.Red, ":::");
             Write(ConsoleColor.DarkGray, ":");
             Write(ConsoleColor.Green, ":::");
-            Write(ConsoleColor.DarkGray, "|  //|     / / /   /           /    3 ");
+            Write(ConsoleColor.DarkGray, "|  //|     / / /   / ~o~@~O~o~ /    3 ");
             Write(ConsoleColor.Yellow, "**\n           ");
             Write(ConsoleColor.DarkGray, "    |::::");
             Write(ConsoleColor.Red, ":");
@@ -123,7 +129,7 @@ namespace AdventOfCode.Y2016 {
             Write(ConsoleColor.Green, ":");
             Write(ConsoleColor.DarkGray, ":");
             Write(ConsoleColor.Green, ":");
-            Write(ConsoleColor.DarkGray, "| //|     /   /   /           /     2 ");
+            Write(ConsoleColor.DarkGray, "| //|     /   /   /  * =>>>>> /     2 ");
             Write(ConsoleColor.Yellow, "**\n           ");
             Write(ConsoleColor.DarkGray, "    |::::::::");
             Write(ConsoleColor.Green, ":::");
