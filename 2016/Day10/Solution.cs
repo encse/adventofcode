@@ -50,7 +50,7 @@ namespace AdventOfCode.Y2016.Day10 {
                     }
                 }
             }
-            foreach (var line in input.TrimEnd().Split('\n')) {
+            foreach (var line in input.Split('\n')) {
                 if (Match(line, @"(.+) gives low to (.+) and high to (.+)", out var m)) {
                     ensureNodes(m);
                     res[m[0]].outLow = m[1];

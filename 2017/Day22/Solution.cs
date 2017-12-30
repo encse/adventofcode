@@ -53,7 +53,7 @@ namespace AdventOfCode.Y2017.Day22 {
 
 
         int Iterate(string input, int iterations, Func<State, int, int, (State State, int irow, int icol)> update) {
-            var lines = input.Split('\n').Where(line => !string.IsNullOrWhiteSpace(line)).ToArray();
+            var lines = input.Split('\n');
             var crow = lines.Length;
             var ccol = lines[0].Length;
             var cells = new Dictionary<(int irow, int icol), State>();

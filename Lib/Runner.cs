@@ -74,10 +74,13 @@ namespace AdventOfCode {
                         if (file.EndsWith(".in")) {
                             var refoutFile = file.Replace(".in", ".refout");
                             var refout = File.Exists(refoutFile) ? File.ReadAllLines(refoutFile) : null;
-
+                            var input = File.ReadAllText(file);
+                            if (input.EndsWith("\n")) {
+                                input = input.Substring(0, input.Length - 1);
+                            }
                             var dt = DateTime.Now;
                             var iline = 0;
-                            foreach (var line in solver.Solve(File.ReadAllText(file))) {
+                            foreach (var line in solver.Solve(input)) {
                                 var now = DateTime.Now;
                                 var (statusColor, status, err) =
                                     refout == null || refout.Length <= iline ? (ConsoleColor.Cyan, "?", null) :

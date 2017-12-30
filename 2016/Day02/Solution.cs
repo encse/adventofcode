@@ -24,7 +24,7 @@ namespace AdventOfCode.Y2016.Day02 {
             var lines = keypad.Split('\n');
             var (crow, ccol) = (lines.Length, lines[0].Length);
             var (irow, icol) = (crow / 2, ccol / 2);
-            foreach (var line in input.Split('\n').Where(line => !string.IsNullOrWhiteSpace(line))) {
+            foreach (var line in input.Split('\n')) {
                 foreach (var ch in line) {
                     var (drow, dcol) = (0, 0);
                     switch (ch) {

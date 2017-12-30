@@ -51,7 +51,7 @@ namespace AdventOfCode.Y2017.Day18 {
         }
 
         public IEnumerable<TState> Execute(string input) {
-            var prog = input.Split('\n').Where(line => !string.IsNullOrWhiteSpace(line)).ToArray();
+            var prog = input.Split('\n').ToArray();
 
             while (ip >= 0 && ip < prog.Length) {
                 running = true;

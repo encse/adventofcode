@@ -19,7 +19,7 @@ namespace AdventOfCode.Y2016.Day05 {
 
         string PartOne(string input) {
             var st = "";
-            foreach(var hash in Hashes(input.TrimEnd())){
+            foreach(var hash in Hashes(input)){
                 if (hash[0] == 0 && hash[1] == 0 && hash[2] < 16) {
                     st += hash[2].ToString("x");
                     if (st.Length == 8) {
@@ -33,7 +33,7 @@ namespace AdventOfCode.Y2016.Day05 {
         string PartTwo(string input) {
             var chars = Enumerable.Range(0, 8).Select(_ => (char)255).ToArray();
             var found = 0;
-            foreach (var hash in Hashes(input.TrimEnd())) {
+            foreach (var hash in Hashes(input)) {
                 if (hash[0] == 0 && hash[1] == 0 && hash[2] < 8) {
                     var i = hash[2];
                     if (chars[i] == 255) {
@@ -51,8 +51,8 @@ namespace AdventOfCode.Y2016.Day05 {
 
         public IEnumerable<byte[]> Hashes(string input) {
             var md5 = MD5.Create();
-            return from i in Enumerable.Range(0, int.MaxValue)
-                   select md5.ComputeHash(Encoding.ASCII.GetBytes(input + i));
+            for (var i = 0; ;i++)
+               yield return md5.ComputeHash(Encoding.ASCII.GetBytes(input + i));
         }
     }
 }

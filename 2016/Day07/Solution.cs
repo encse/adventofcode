@@ -17,10 +17,10 @@ namespace AdventOfCode.Y2016.Day07 {
         }
 
         int PartOne(string input) =>
-            input.TrimEnd().Split('\n').Count(TLS);
+            input.Split('\n').Count(TLS);
 
         int PartTwo(string input) =>
-            input.TrimEnd().Split('\n').Count(SSL);
+            input.Split('\n').Count(SSL);
 
 
         bool TLS(string st) =>
