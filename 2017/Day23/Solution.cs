@@ -28,7 +28,7 @@ namespace AdventOfCode.Y2017.Day23 {
                 regs[reg] = value;
             }
 
-            var prog = input.Split('\n').Where(line => !string.IsNullOrWhiteSpace(line)).ToArray();
+            var prog = input.Split('\n');
             var mulCount = 0;
             while (ip >= 0 && ip < prog.Length) {
                 var line = prog[ip];

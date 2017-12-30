@@ -34,7 +34,7 @@ namespace AdventOfCode.Y2016.Day12 {
 
             setReg("c", c);
 
-            var prog = input.Split('\n').Where(line => !string.IsNullOrWhiteSpace(line)).ToArray();
+            var prog = input.Split('\n').ToArray();
             var mulCount = 0;
             while (ip >= 0 && ip < prog.Length) {
                 var line = prog[ip];

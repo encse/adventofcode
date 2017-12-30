@@ -70,7 +70,7 @@ namespace AdventOfCode.Y2016.Day11 {
 
             ulong state = 0;
             var floor = 0;
-            foreach(var line in input.TrimEnd().Split('\n')){
+            foreach(var line in input.Split('\n')){
                 var chips = (from m in Regex.Matches(line, @"(\w+)-compatible")
                              let element = m.Groups[1].Value
                              select mask(element)).Sum();

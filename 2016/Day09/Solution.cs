@@ -17,12 +17,10 @@ namespace AdventOfCode.Y2016.Day09 {
         }
 
         long PartOne(string input) {
-            input = input.TrimEnd();
             return Expand(input, 0, input.Length, false);
         }
 
         long PartTwo(string input) {
-            input = input.TrimEnd();
             return Expand(input, 0, input.Length, true);
         }
 

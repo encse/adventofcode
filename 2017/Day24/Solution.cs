@@ -41,7 +41,7 @@ namespace AdventOfCode.Y2017.Day24 {
 
         HashSet<Component> Parse(string input) {
             var components = new HashSet<Component>();
-            foreach (var line in input.Split('\n').Where(line => !string.IsNullOrWhiteSpace(line))) {
+            foreach (var line in input.Split('\n')) {
                 var parts = line.Split('/');
                 components.Add(new Component { pinA = int.Parse(parts[0]), pinB = int.Parse(parts[1]) });
             }

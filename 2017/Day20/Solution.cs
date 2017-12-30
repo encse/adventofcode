@@ -65,7 +65,7 @@ namespace AdventOfCode.Y2017.Day20 {
 
 
         List<Particle> Parse(string input) {
-            var lines = input.Split('\n').Where(st => !string.IsNullOrWhiteSpace(st));
+            var lines = input.Split('\n');
             return (
                  from q in Enumerable.Zip(lines, Enumerable.Range(0, int.MaxValue), (line, i) => (i: i, line: line))
                  let nums = Regex.Matches(q.line, "-?[0-9]+").Select(m => int.Parse(m.Value)).ToArray()

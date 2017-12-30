@@ -52,7 +52,7 @@ namespace AdventOfCode.Y2016.Day08 {
         bool[,] Execute(string input) {
             var (crow, ccol) = (6, 50);
             var mtx = new bool[crow, ccol];
-            foreach (var line in input.TrimEnd().Split('\n')) {
+            foreach (var line in input.Split('\n')) {
                 if (Match(line, @"rect (\d+)x(\d+)", out var m)) {
                     var (ccolT, crowT) = (int.Parse(m[0]), int.Parse(m[1]));
                     for (var irow = 0; irow < crowT; irow++) {

@@ -33,7 +33,7 @@ namespace AdventOfCode.Y2016.Day03 {
         }
 
         int[][] Parse(string input) => (
-                from line in input.Split('\n').Where(line => !string.IsNullOrWhiteSpace(line))
+                from line in input.Split('\n')
                 select Regex.Matches(line, @"\d+").Select(m => int.Parse(m.Value)).ToArray()
             ).ToArray();
 

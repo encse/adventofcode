@@ -34,9 +34,9 @@ namespace AdventOfCode.Y2016.Day04 {
         IEnumerable<(string name, int sectorid, string checksum)> Parse(string input){
             var rx = new Regex(@"([^\d]+)\-(\d+)\[(.*)\]");
             
-            return from line in input.Split('\n').Where(line => !string.IsNullOrWhiteSpace(line))
-            let m = rx.Match(line)
-            select (m.Groups[1].Value, int.Parse(m.Groups[2].Value), m.Groups[3].Value);
+            return from line in input.Split('\n')
+                let m = rx.Match(line)
+                select (m.Groups[1].Value, int.Parse(m.Groups[2].Value), m.Groups[3].Value);
              
         }
     }

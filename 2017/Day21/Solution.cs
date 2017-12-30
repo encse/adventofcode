@@ -38,7 +38,7 @@ namespace AdventOfCode.Y2017.Day21 {
             rules2 = new Dictionary<int, Mtx>();
             rules3 = new Dictionary<int, Mtx>();
 
-            foreach (var line in input.Split('\n').Where(line => !string.IsNullOrWhiteSpace(line))) {
+            foreach (var line in input.Split('\n')) {
                 var parts = Regex.Split(line, " => ");
                 var left = parts[0];
                 var right = parts[1];
