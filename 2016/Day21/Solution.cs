@@ -24,8 +24,8 @@ namespace AdventOfCode.Y2016.Day21 {
         }
 
         IEnumerable<ImmutableList<char>> Permutations(string st) {
-            
-            IEnumerable<ImmutableList<char>> PermRecursive(ImmutableList<char> prefix, bool[] fseen) {
+
+            IEnumerable<ImmutableList<char>> PermutationsRec(ImmutableList<char> prefix, bool[] fseen) {
                 if (prefix.Count == st.Length) {
                     yield return prefix;
                 } else {
@@ -33,7 +33,7 @@ namespace AdventOfCode.Y2016.Day21 {
                         if (!fseen[i]) {
                             fseen[i] = true;
                             var prefixT = prefix.Add(st[i]);
-                            foreach (var res in PermRecursive(prefixT, fseen)) {
+                            foreach (var res in PermutationsRec(prefixT, fseen)) {
                                 yield return res;
                             }
                             fseen[i] = false;
@@ -42,7 +42,7 @@ namespace AdventOfCode.Y2016.Day21 {
                 }
             }
 
-            return PermRecursive(ImmutableList<char>.Empty, new bool[st.Length]);
+            return PermutationsRec(ImmutableList<char>.Empty, new bool[st.Length]);
         }
 
         Func<IEnumerable<char>, IEnumerable<char>> Parse(string input) {
@@ -52,18 +52,12 @@ namespace AdventOfCode.Y2016.Day21 {
                     Match(line, @"swap position (\d+) with position (\d+)", m => {
                         var x = int.Parse(m[0]);
                         var y = int.Parse(m[1]);
-                        return (chars) => {
-                            (chars[x], chars[y]) = (chars[y], chars[x]);
-                        };
+                        return chars => SwapPosition(chars, x, y);
                     }) ??
                     Match(line, @"swap letter (\w) with letter (\w)", m => {
                         var chX = m[0][0];
                         var chY = m[1][0];
-                        return (chars) => {
-                            for (var i = 0; i < chars.Length; i++) {
-                                chars[i] = chars[i] == chX ? chY : chars[i] == chY ? chX : chars[i];
-                            }
-                        };
+                        return (chars) => SwapLetter(chars, chX, chY);
                     }) ??
                     Match(line, @"rotate left (\d+) step", m => {
                         var x = int.Parse(m[0]);
@@ -75,10 +69,7 @@ namespace AdventOfCode.Y2016.Day21 {
                     }) ??
                     Match(line, @"rotate based on position of letter (\w)", m => {
                         var chX = m[0][0];
-                        return chars => {
-                            var i = Array.IndexOf(chars, chX);
-                            RotateRight(chars, i >= 4 ? i + 2 : i + 1);
-                        };
+                        return chars => RotateBasedOnPosition(chars, chX);
                     }) ??
                     Match(line, @"reverse positions (\d+) through (\d+)", m => {
                         var x = int.Parse(m[0]);
@@ -88,17 +79,10 @@ namespace AdventOfCode.Y2016.Day21 {
                     Match(line, @"move position (\d+) to position (\d+)", m => {
                         var x = int.Parse(m[0]);
                         var y = int.Parse(m[1]);
-                        var d = x < y ? 1 : -1;
-                        return chars => {
-                            var ch = chars[x];
-                            for (int i = x + d; i != y + d; i += d) {
-                                chars[i - d] = chars[i];
-                            }
-                            chars[y] = ch;
-                        };
+                        return chars => MovePosition(chars, x, y);
                     }) ??
                     throw new Exception("Cannot parse " + line)
-            ).ToArray();
+                ).ToArray();
 
             return chars => {
                 var charsArray = chars.ToArray();
@@ -118,30 +102,51 @@ namespace AdventOfCode.Y2016.Day21 {
             }
         }
 
-        char[] RotateLeft(char[] chars, int t) {
-            t = t % chars.Length;
-            Reverse(chars, 0, t - 1);
-            Reverse(chars, t, chars.Length - 1);
-            Reverse(chars, 0, chars.Length - 1);
-            return chars;
+        void SwapPosition(char[] chars, int x, int y) {
+            (chars[x], chars[y]) = (chars[y], chars[x]);
         }
 
-        char[] RotateRight(char[] chars, int t) {
-            t = t % chars.Length;
-            Reverse(chars, 0, chars.Length - 1);
-            Reverse(chars, 0, t - 1);
-            Reverse(chars, t, chars.Length - 1);
-            return chars;
-        }
-
-        char[] Reverse(char[] chars, int x, int y) {
-            var (i, j) = (x, y);
-            while (i < j) {
-                (chars[i], chars[j]) = (chars[j], chars[i]);
-                i++;
-                j--;
+        void SwapLetter(char[] chars, char chX, char chY) {
+            for (var i = 0; i < chars.Length; i++) {
+                chars[i] = chars[i] == chX ? chY : chars[i] == chY ? chX : chars[i];
             }
-            return chars;
+        }
+
+        void RotateBasedOnPosition(char[] chars, char chX) {
+            var i = Array.IndexOf(chars, chX);
+            RotateRight(chars, i >= 4 ? i + 2 : i + 1);
+        }
+
+        void RotateLeft(char[] chars, int t) {
+            t %= chars.Length;
+            Reverse(chars, 0, t - 1);
+            Reverse(chars, t, chars.Length - 1);
+            Reverse(chars, 0, chars.Length - 1);
+        }
+
+        void RotateRight(char[] chars, int t) {
+            t %= chars.Length;
+            Reverse(chars, 0, chars.Length - 1);
+            Reverse(chars, 0, t - 1);
+            Reverse(chars, t, chars.Length - 1);
+        }
+
+        void Reverse(char[] chars, int x, int y) {
+            while (x < y) {
+                (chars[x], chars[y]) = (chars[y], chars[x]);
+                x++;
+                y--;
+            }
+        }
+
+        void MovePosition(char[] chars, int x, int y) {
+            var d = x < y ? 1 : -1;
+
+            var ch = chars[x];
+            for (int i = x + d; i != y + d; i += d) {
+                chars[i - d] = chars[i];
+            }
+            chars[y] = ch;
         }
     }
 }
