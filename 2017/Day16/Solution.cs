@@ -80,7 +80,7 @@ namespace AdventOfCode.Y2017.Day16 {
             };
         }
 
-         Func<List<char>, List<char>> ParseMove(string stm, string pattern, Func<string[], Func<List<char>, List<char>>> a) {
+        Func<List<char>, List<char>> ParseMove(string stm, string pattern, Func<string[], Func<List<char>, List<char>>> a) {
             var match = Regex.Match(stm , pattern);
             if (match.Success) {
                 return a(match.Groups.Cast<Group>().Skip(1).Select(g => g.Value).ToArray());
