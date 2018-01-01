@@ -35,7 +35,6 @@ namespace AdventOfCode.Y2016.Day12 {
             setReg("c", c);
 
             var prog = input.Split('\n').ToArray();
-            var mulCount = 0;
             while (ip >= 0 && ip < prog.Length) {
                 var line = prog[ip];
                 var stm = line.Split(' ');
@@ -49,7 +48,6 @@ namespace AdventOfCode.Y2016.Day12 {
                         ip++;
                         break;
                     case "dec":
-                        mulCount++;
                         setReg(stm[1], getReg(stm[1]) - 1);
                         ip++;
                         break;

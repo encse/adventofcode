@@ -29,7 +29,6 @@ namespace AdventOfCode.Y2016.Day24 {
                 if (loop) {
                     perm = perm.Add(0);
                 }
-
                 var l = 0;
                 for (int i = 0; i < perm.Count - 1; i++) {
                     l += map.ShortestPathLength(map.poi[perm[i]], map.poi[perm[i + 1]]);
