@@ -34,42 +34,43 @@ namespace AdventOfCode.Generator {
         }
 
         private string CalendarPrinter(Calendar calendar) {
-            var theme = new Dictionary<string, string>() {
-                ["calendar-edge"] = "ConsoleColor.Gray",
-                ["calendar-star"] = "ConsoleColor.Yellow",
-                ["calendar-mark-complete"] = "ConsoleColor.Yellow",
-                ["calendar-mark-verycomplete"] = "ConsoleColor.Yellow",
-                ["calendar-ornament0"] = "ConsoleColor.White",
-                ["calendar-ornament1"] = "ConsoleColor.Green",
-                ["calendar-ornament2"] = "ConsoleColor.Red",
-                ["calendar-ornament3"] = "ConsoleColor.Blue",
-                ["calendar-ornament4"] = "ConsoleColor.Magenta",
-                ["calendar-ornament5"] = "ConsoleColor.Cyan",
-                ["calendar-ornament3"] = "ConsoleColor.DarkCyan",
+            var theme = new Dictionary<string[], string>() {
+                [new []{"calendar-edge"}] = "ConsoleColor.Gray",
+                [new []{"calendar-star"}] = "ConsoleColor.Yellow",
+                [new []{"calendar-complete", "calendar-mark-complete"}] = "ConsoleColor.Yellow",
+                [new []{"calendar-verycomplete", "calendar-mark-complete"}] = "ConsoleColor.Yellow",
+                [new []{"calendar-verycomplete", "calendar-mark-verycomplete"}] = "ConsoleColor.Yellow",
+                [new []{"calendar-ornament0"}] = "ConsoleColor.White",
+                [new []{"calendar-ornament1"}] = "ConsoleColor.Green",
+                [new []{"calendar-ornament2"}] = "ConsoleColor.Red",
+                [new []{"calendar-ornament3"}] = "ConsoleColor.Blue",
+                [new []{"calendar-ornament4"}] = "ConsoleColor.Magenta",
+                [new []{"calendar-ornament5"}] = "ConsoleColor.Cyan",
+                [new []{"calendar-ornament3"}] = "ConsoleColor.DarkCyan",
 
 
-                ["calendar-tree-star"] = "ConsoleColor.Yellow",
-                ["calendar-antenna-star"] = "ConsoleColor.Yellow",
-                ["calendar-antenna-signal0"] = "ConsoleColor.Yellow",
-                ["calendar-antenna-signal1"] = "ConsoleColor.Yellow",
-                ["calendar-antenna-signal2"] = "ConsoleColor.Yellow",
-                ["calendar-antenna-signal3"] = "ConsoleColor.Yellow",
-                ["calendar-antenna-signal4"] = "ConsoleColor.Yellow",
-                ["calendar-antenna-signal5"] = "ConsoleColor.Yellow",
-                ["calendar-tree-ornament0"] = "ConsoleColor.Red",
-                ["calendar-tree-ornament1"] = "ConsoleColor.Green",
-                ["calendar-tree-ornament2"] = "ConsoleColor.Blue",
-                ["calendar-tree-branches"] = "ConsoleColor.DarkGreen",
-                ["calendar-tree-trunk"] = "ConsoleColor.Gray",
-                ["calendar-streets"] = "ConsoleColor.Gray",
-                ["calendar-window-dark"] = "ConsoleColor.DarkGray",
-                ["calendar-window-red"] = "ConsoleColor.Red",
-                ["calendar-window-green"] = "ConsoleColor.Green",
-                ["calendar-window-blue"] = "ConsoleColor.Blue",
-                ["calendar-window-yellow"] = "ConsoleColor.Yellow",
-                ["calendar-window-brown"] = "ConsoleColor.DarkGreen",
+                [new []{"calendar-tree-star"}] = "ConsoleColor.Yellow",
+                [new []{"calendar-antenna-star"}] = "ConsoleColor.Yellow",
+                [new []{"calendar-antenna-signal0"}] = "ConsoleColor.Yellow",
+                [new []{"calendar-antenna-signal1"}] = "ConsoleColor.Yellow",
+                [new []{"calendar-antenna-signal2"}] = "ConsoleColor.Yellow",
+                [new []{"calendar-antenna-signal3"}] = "ConsoleColor.Yellow",
+                [new []{"calendar-antenna-signal4"}] = "ConsoleColor.Yellow",
+                [new []{"calendar-antenna-signal5"}] = "ConsoleColor.Yellow",
+                [new []{"calendar-tree-ornament0"}] = "ConsoleColor.Red",
+                [new []{"calendar-tree-ornament1"}] = "ConsoleColor.Green",
+                [new []{"calendar-tree-ornament2"}] = "ConsoleColor.Blue",
+                [new []{"calendar-tree-branches"}] = "ConsoleColor.DarkGreen",
+                [new []{"calendar-tree-trunk"}] = "ConsoleColor.Gray",
+                [new []{"calendar-streets"}] = "ConsoleColor.Gray",
+                [new []{"calendar-window-dark"}] = "ConsoleColor.DarkGray",
+                [new []{"calendar-window-red"}] = "ConsoleColor.Red",
+                [new []{"calendar-window-green"}] = "ConsoleColor.Green",
+                [new []{"calendar-window-blue"}] = "ConsoleColor.Blue",
+                [new []{"calendar-window-yellow"}] = "ConsoleColor.Yellow",
+                [new []{"calendar-window-brown"}] = "ConsoleColor.DarkGreen",
 
-                ["title"] = "ConsoleColor.Yellow",
+                [new []{"title"}] = "ConsoleColor.Yellow",
             };
 
             var lines = calendar.Lines.Select(line =>
@@ -88,8 +89,13 @@ namespace AdventOfCode.Generator {
             var bw = new BufferWriter();
             foreach (var line in lines) {
                 foreach (var token in line) {
-                    var style = token.Styles.FirstOrDefault(styleT => theme.ContainsKey(styleT));
-                    var consoleColor = style != null ? theme[style] : "ConsoleColor.DarkGray";
+                    var consoleColor = "ConsoleColor.DarkGray";
+                    foreach(var kvp in theme){
+                        if(kvp.Key.All(s => token.Styles.Contains(s))){
+                            consoleColor = kvp.Value;
+                            break;
+                        }
+                    }
                     bw.Write(consoleColor, token.Text);
                 }
 

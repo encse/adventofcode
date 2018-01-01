@@ -35,10 +35,15 @@ namespace AdventOfCode.Model {
             lines.Add(line);
 
             foreach (var textNode in calendar.SelectNodes(".//text()")) {
-                var styles = textNode.Ancestors()
-                    .SelectMany(node => new string[]{node.Attributes["class"]?.Value, node.Attributes["style"]?.Value})
-                    .Where(style => style != null)
-                    .ToArray();
+                var styles = new List<string>();
+                foreach (var node in textNode.Ancestors()) {
+                    if (node.Attributes["class"] != null) {
+                        styles.AddRange(node.Attributes["class"].Value.Split(' '));
+                    }
+                    if (node.Attributes["style"] != null) {
+                        styles.Add(node.Attributes["style"].Value);
+                    }
+                }
 
                 var text = textNode.InnerText;
                 var widthSpec = styles.FirstOrDefault(style => style.StartsWith("width:"));
@@ -61,7 +66,7 @@ namespace AdventOfCode.Model {
                     }
 
                     line.Add(new CalendarToken {
-                        Styles = styles,
+                        Styles = styles.ToArray(),
                         Text = HtmlEntity.DeEntitize(text.Substring(i, iNext - i))
                     });
 
