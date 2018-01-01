@@ -16,7 +16,11 @@ namespace AdventOfCode.Y2016 {
             Write(ConsoleColor.DarkGray, "                        \n                             +-|---+                               \n       ");
             Write(ConsoleColor.DarkGray, "                     /  |  /|                               \n                           +-----+ |   ");
             Write(ConsoleColor.DarkGray, "                            \n                           |:::::| |                          25 **\n   ");
-            Write(ConsoleColor.DarkGray, "                +----+  |:::::| |---+      +-----------+   24 **\n                  /    / \\ |:");
+            Write(ConsoleColor.DarkGray, "                +----+  |::");
+            Write(ConsoleColor.Green, ":");
+            Write(ConsoleColor.DarkGray, "::| |---+      +-----------+   24 ");
+            Write(ConsoleColor.Yellow, "**\n           ");
+            Write(ConsoleColor.DarkGray, "       /    / \\ |:");
             Write(ConsoleColor.Green, ":::");
             Write(ConsoleColor.DarkGray, ":| |  /|     / \\\\\\\\\\\\ [] /|   23 ");
             Write(ConsoleColor.Yellow, "**\n           ");

@@ -20,16 +20,16 @@ namespace AdventOfCode.Y2016.Day21 {
 
         string PartTwo(string input) {
             var scramble = Parse(input);
-            return string.Join("", Permutations("abcdefgh").First(p => scramble(p).SequenceEqual("fbgdceah")));
+            return string.Join("", Permutations("abcdefgh".ToArray()).First(p => scramble(p).SequenceEqual("fbgdceah")));
         }
 
-        IEnumerable<ImmutableList<char>> Permutations(string st) {
+        IEnumerable<ImmutableList<T>> Permutations<T>(IList<T> st) {
 
-            IEnumerable<ImmutableList<char>> PermutationsRec(ImmutableList<char> prefix, bool[] fseen) {
-                if (prefix.Count == st.Length) {
+            IEnumerable<ImmutableList<T>> PermutationsRec(ImmutableList<T> prefix, bool[] fseen) {
+                if (prefix.Count == st.Count()) {
                     yield return prefix;
                 } else {
-                    for (int i = 0; i < st.Length; i++) {
+                    for (int i = 0; i < st.Count(); i++) {
                         if (!fseen[i]) {
                             fseen[i] = true;
                             var prefixT = prefix.Add(st[i]);
@@ -42,7 +42,7 @@ namespace AdventOfCode.Y2016.Day21 {
                 }
             }
 
-            return PermutationsRec(ImmutableList<char>.Empty, new bool[st.Length]);
+            return PermutationsRec(ImmutableList<T>.Empty, new bool[st.Count()]);
         }
 
         Func<IEnumerable<char>, IEnumerable<char>> Parse(string input) {
