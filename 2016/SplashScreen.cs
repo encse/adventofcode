@@ -21,7 +21,9 @@ namespace AdventOfCode.Y2016 {
             Write(ConsoleColor.Yellow, "**\n           ");
             Write(ConsoleColor.DarkGray, "       /    / \\ |:::::| |  /|     / \\\\\\\\\\\\ [] /|   23 ");
             Write(ConsoleColor.Yellow, "**\n           ");
-            Write(ConsoleColor.DarkGray, "      /    / / \\|:::::| | / |    / \\\\\\\\\\\\ [] / |   22 ");
+            Write(ConsoleColor.DarkGray, "      /    / / \\|");
+            Write(ConsoleColor.Green, ":::::");
+            Write(ConsoleColor.DarkGray, "| | / |    / \\\\\\\\\\\\ [] / |   22 ");
             Write(ConsoleColor.Yellow, "**\n           ");
             Write(ConsoleColor.DarkGray, "     /    / / / \\::");
             Write(ConsoleColor.DarkGreen, ":");
