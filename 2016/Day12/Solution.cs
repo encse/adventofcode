@@ -38,23 +38,23 @@ namespace AdventOfCode.Y2016.Day12 {
             var mulCount = 0;
             while (ip >= 0 && ip < prog.Length) {
                 var line = prog[ip];
-                var parts = line.Split(' ');
-                switch (parts[0]) {
+                var stm = line.Split(' ');
+                switch (stm[0]) {
                     case "cpy":
-                        setReg(parts[2], getReg(parts[1]));
+                        setReg(stm[2], getReg(stm[1]));
                         ip++;
                         break;
                     case "inc":
-                        setReg(parts[1], getReg(parts[1]) + 1);
+                        setReg(stm[1], getReg(stm[1]) + 1);
                         ip++;
                         break;
                     case "dec":
                         mulCount++;
-                        setReg(parts[1], getReg(parts[1]) - 1);
+                        setReg(stm[1], getReg(stm[1]) - 1);
                         ip++;
                         break;
                     case "jnz":
-                        ip += getReg(parts[1]) != 0 ? getReg(parts[2]) : 1;
+                        ip += getReg(stm[1]) != 0 ? getReg(stm[2]) : 1;
                         break;
                     default: throw new Exception("Cannot parse " + line);
                 }
