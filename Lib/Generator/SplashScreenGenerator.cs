@@ -69,6 +69,8 @@ namespace AdventOfCode.Generator {
                 [new []{"calendar-window-blue"}] = "ConsoleColor.Blue",
                 [new []{"calendar-window-yellow"}] = "ConsoleColor.Yellow",
                 [new []{"calendar-window-brown"}] = "ConsoleColor.DarkGreen",
+               
+                [new []{"calendar-lightbeam"}] = "ConsoleColor.Yellow",
 
                 [new []{"title"}] = "ConsoleColor.Yellow",
             };
