@@ -34,10 +34,10 @@ namespace AdventOfCode.Y2015.Day06 {
             }
             return input.Split('\n')
                 .Aggregate(new int[1000 * 1000], (grid, line) =>
-                  apply(grid, line, @"turn on (\d+),(\d+) through (\d+),(\d+)", turnOn) ??
-                  apply(grid, line, @"turn off (\d+),(\d+) through (\d+),(\d+)", turnOff) ??
-                  apply(grid, line, @"toggle (\d+),(\d+) through (\d+),(\d+)", toggle) ??
-                  throw new Exception(line))
+                    apply(grid, line, @"turn on (\d+),(\d+) through (\d+),(\d+)", turnOn) ??
+                    apply(grid, line, @"turn off (\d+),(\d+) through (\d+),(\d+)", turnOff) ??
+                    apply(grid, line, @"toggle (\d+),(\d+) through (\d+),(\d+)", toggle) ??
+                    throw new Exception(line))
                 .Sum();
         }
     }
