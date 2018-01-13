@@ -15,11 +15,11 @@ namespace AdventOfCode.Y2015.Day12 {
         }
 
         int PartOne(string input) {
-            int Traverse(JToken v) {
-                switch (v) {
-                    case JObject t: return t.Properties().Select(p => Traverse(p.Value)).Sum();
-                    case JArray t: return t.Select(p => Traverse(p)).Sum();
-                    case JValue t when v.Type == JTokenType.Integer: return (int)t;
+            int Traverse(JToken t) {
+                switch (t) {
+                    case JObject v: return v.Values().Select(Traverse).Sum();
+                    case JArray v: return v.Select(Traverse).Sum();
+                    case JValue v when v.Type == JTokenType.Integer: return (int)v;
                     default: return 0;
                 }
             }
@@ -27,12 +27,12 @@ namespace AdventOfCode.Y2015.Day12 {
         }
 
         int PartTwo(string input) {
-           int Traverse(JToken v){
-               switch (v) {
-                    case JObject t when t.Properties().Any(p => p.Value.Type == JTokenType.String && (string)p.Value == "red"): return 0;
-                    case JObject t: return t.Properties().Select(p => Traverse(p.Value)).Sum();
-                    case JArray t: return t.Select(p => Traverse(p)).Sum();
-                    case JValue t when v.Type == JTokenType.Integer: return (int)t;
+           int Traverse(JToken t){
+               switch (t) {
+                    case JObject v when v.Values().Any(vv => vv.Type == JTokenType.String && (string)vv == "red"): return 0;
+                    case JObject v: return v.Values().Select(Traverse).Sum();
+                    case JArray v: return v.Select(Traverse).Sum();
+                    case JValue v when v.Type == JTokenType.Integer: return (int)v;
                     default: return 0;
                 }
             }
