@@ -22,6 +22,7 @@ namespace AdventOfCode.Generator {
                > ## Dependencies
                > 
                > - This library is based on `.NET Core 2.0`. It should work on Windows, Linux and OS X.
+               > - `Newtonsoft.Json` for JSON parsing
                > - `HtmlAgilityPack.NetCore` is used for problem download.
                > 
                > ## Running
