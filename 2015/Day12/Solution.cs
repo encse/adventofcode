@@ -18,8 +18,8 @@ namespace AdventOfCode.Y2015.Day12 {
         int PartTwo(string input) => Solve(input, true);
 
         int Solve(string input, bool skipRed) {
-            int Traverse(JToken t){
-               switch (t) {
+            int Traverse(JToken t) {
+                switch (t) {
                     case JObject v when skipRed && v.Values().Contains("red"): return 0;
                     case JObject v: return v.Values().Select(Traverse).Sum();
                     case JArray v: return v.Select(Traverse).Sum();
