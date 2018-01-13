@@ -32,13 +32,13 @@ namespace AdventOfCode.Y2015.Day07 {
                 Gate(calc, line, @"(\w+) OR (\w+) -> (\w+)", pin => pin[0] | pin[1]) ??
                 Gate(calc, line, @"(\w+) RSHIFT (\w+) -> (\w+)", pin => pin[0] >> pin[1]) ??
                 Gate(calc, line, @"(\w+) LSHIFT (\w+) -> (\w+)", pin => pin[0] << pin[1]) ??
-                Gate(calc, line, @"(\w+) -> (\w+)", pin => pin[0]) ??
                 Gate(calc, line, @"NOT (\w+) -> (\w+)", pin => ~pin[0]) ??
+                Gate(calc, line, @"(\w+) -> (\w+)", pin => pin[0]) ??
                 throw new Exception(line)
             );
 
         Calc Gate(Calc calc, string line, string pattern, Func<int[], int> op) {
-            var match = Regex.Match(line, "^" + pattern);
+            var match = Regex.Match(line, pattern);
             if (!match.Success) {
                 return null;
             }
