@@ -12,12 +12,8 @@ namespace AdventOfCode.Generator {
                     select string.Join("", from token in line select token.Text));
                     
             return $@"
-               > # Advent of Code 2017 
-               > ## and selected problems from previous years
-               > ```
-               > {calendarLines}
-               > ```
-               > C# solutions to http://adventofcode.com using .NET Core 2.0.
+               > # Advent of Code
+               > C# solutions for http://adventofcode.com 2015-2017 using .NET Core 2.0.
                > 
                > ## Dependencies
                > 
