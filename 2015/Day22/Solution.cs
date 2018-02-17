@@ -32,13 +32,15 @@ namespace AdventOfCode.Y2015.Day22 {
                 hi *= 2;
             }
             var lo = hi / 2;
+            var first = false;
             while (hi - lo > 1) {
                 var m = (hi + lo) / 2;
-                if (f(m)) {
+                if (!first && f(m)) {
                     hi = m;
                 } else {
                     lo = m;
                 }
+                first = false;
             }
             return hi;
         }
@@ -49,7 +51,8 @@ namespace AdventOfCode.Y2015.Day22 {
             }
             state = state.ApplyEffects();
             foreach (var stateT in state.PlayerSteps()) {
-                state = stateT.ApplyEffects().BossStep();
+                state = stateT.ApplyEffects();
+                state = state.BossStep();
                 if (state.bossHp <= 0 || state.playerHp > 0 && TrySolve(state, hard)) {
                     return true;
                 }
