@@ -1,6 +1,7 @@
 
 # Advent of Code
-C# solutions for http://adventofcode.com 2015-2017 using .NET Core 2.0.
+C# solutions to the advent of code problems (2015-2017).
+Check out http://adventofcode.com.
 
 ## Dependencies
 
