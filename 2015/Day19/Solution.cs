@@ -22,30 +22,21 @@ namespace AdventOfCode.Y2015.Day19 {
         }
 
         int PartTwo(string input) {
-            var (rules, mInit) = Parse(input);
-            var lookahead = rules.Select(r => r.from.Length).Max();
-
-            var q = new HashSet<string>();
-            var qNext = new HashSet<string>();
-
-            q.Add(mInit);
-            
+            var (rules, m) = Parse(input);
+            Random r = new Random();
+            var st = m;
             var depth = 0;
-            while (!q.Contains("e")) {
-                var lim = -1;
-                foreach (var m in q) {
-                    foreach (var replacement in Replacements(rules, m, false)) {
-                        if (lim == -1) {
-                            lim = replacement.from + lookahead;
-                        }
-                        if (replacement.from > lim) {
-                            break;
-                        }
-                        qNext.Add(Replace(m, replacement.from, replacement.to, replacement.length));
-                    }
+            var i = 0;
+            while (st != "e") {
+                i++;
+                var replacements = Replacements(rules, st, false).ToArray();
+                if (replacements.Length == 0) {
+                    st = m;
+                    depth = 0;
+                    continue;
                 }
-                (q, qNext) = (qNext, q);
-                qNext.Clear();
+                var replacement = replacements[r.Next(replacements.Length)];
+                st = Replace(st, replacement.from, replacement.to, replacement.length);
                 depth++;
             }
             return depth;
@@ -81,7 +72,7 @@ namespace AdventOfCode.Y2015.Day19 {
             }
         }
 
-        ((string from,string to)[] rules, string m) Parse(string input){
+        ((string from, string to)[] rules, string m) Parse(string input) {
             var rules =
                 (from line in input.Split('\n').TakeWhile(line => line.Contains("=>"))
                  let parts = line.Split(" => ")
