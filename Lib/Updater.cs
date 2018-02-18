@@ -12,6 +12,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using AdventOfCode.Generator;
 using AdventOfCode.Model;
+using System.Reflection;
 
 namespace AdventOfCode {
 
@@ -42,7 +43,12 @@ namespace AdventOfCode {
                     Directory.CreateDirectory(dir);
                 }
 
-                UpdateProjectReadme(calendar);
+                var years = Assembly.GetEntryAssembly().GetTypes()
+                    .Where(t => t.GetTypeInfo().IsClass && typeof(Solver).IsAssignableFrom(t))
+                    .Select(tsolver => SolverExtensions.Year(tsolver));
+
+                UpdateProjectReadme(years.Min(), years.Max());
+                UpdateReadmeForYear(calendar);
                 UpdateSplashScreen(calendar);
                 UpdateReadmeForDay(problem);
                 UpdateInput(problem);
@@ -88,7 +94,12 @@ namespace AdventOfCode {
             }
         }
 
-        void UpdateProjectReadme(Calendar calendar) {
+        void UpdateProjectReadme(int firstYear, int lastYear) {
+            var file = Path.Combine("README.md");
+            WriteFile(file, new ProjectReadmeGenerator().Generate(firstYear, lastYear));
+        }
+
+        void UpdateReadmeForYear(Calendar calendar) {
             var file = Path.Combine(SolverExtensions.WorkingDir(calendar.Year), "README.md");
             WriteFile(file, new ReadmeGeneratorForYear().Generate(calendar));
         }

@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace AdventOfCode.Generator {
+namespace AdventOfCode {
 
     public static class StringExtensions {
         public static string StripMargin(this string st, string margin = "|") {

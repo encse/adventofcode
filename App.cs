@@ -10,7 +10,6 @@ namespace AdventOfCode {
     class App {
 
         static void Main(string[] args) {
-          //  SplashScreen.Show();
 
             var tsolvers = Assembly.GetEntryAssembly().GetTypes()
                 .Where(t => t.GetTypeInfo().IsClass && typeof(Solver).IsAssignableFrom(t))
@@ -47,13 +46,7 @@ namespace AdventOfCode {
                     return () => Runner.RunAll(tsolvers);
                 }) ??
                 new Action(() => {
-                    Console.WriteLine("USAGE: dotnet [command]");
-                    Console.WriteLine();
-                    Console.WriteLine("Commands:");
-                    Console.WriteLine($"  run update [year]/[day]   Prepares a folder for the given day, updates the input, the readme and creates a solution template.");
-                    Console.WriteLine($"  run [year]/[day|last]     Solve the specified problems");
-                    Console.WriteLine($"  run [year]                Solve the whole year");
-                    Console.WriteLine($"  run all                   Solve everything");
+                    Console.WriteLine(Usage.Get());
                 });
 
             action();
@@ -79,5 +72,18 @@ namespace AdventOfCode {
             return regex;
         }
         
+    }
+
+    public class Usage {
+        public static string Get(){
+            return $@"
+               > USAGE: dotnet [command]
+               > Commands:
+               >  run update [year]/[day]   Prepares a folder for the given day, updates the input, the readme and creates a solution template.
+               >  run [year]/[day|last]     Solve the specified problems
+               >  run [year]                Solve the whole year
+               >  run all                   Solve everything
+               > ".StripMargin("> ");
+        }
     }
 }
