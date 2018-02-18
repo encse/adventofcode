@@ -1,6 +1,6 @@
 
-# Advent of Code
-C# solutions to the advent of code problems (2015-2017).
+# Advent of Code (2015-2017)
+My C# solutions to the advent of code problems.
 Check out http://adventofcode.com.
 
 ## Dependencies
@@ -13,10 +13,16 @@ Check out http://adventofcode.com.
 
 To run the project:
 
-1. Install .NET Core.
-2. Download the code.
-3. Run `dotnet run <year>/<day>`.
+1. Install .NET Core
+2. Clone the repo
+3. Get help with `dotnet run`
+```
 
-To prepare for the next day:
+USAGE: dotnet [command]
+Commands:
+ run update [year]/[day]   Prepares a folder for the given day, updates the input, the readme and creates a solution template.
+ run [year]/[day|last]     Solve the specified problems
+ run [year]                Solve the whole year
+ run all                   Solve everything
 
-1. Run `dotnet run update <year>/<day>`.
+```
