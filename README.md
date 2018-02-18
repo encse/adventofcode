@@ -18,12 +18,16 @@ To run the project:
 3. Get help with `dotnet run`
 ```
 
-USAGE: dotnet [command]
-Commands:
- run update [year]/[day]   Prepares a folder for the given day, updates the input, 
-                           the readme and creates a solution template.
- run [year]/[day|last]     Solve the specified problems
- run [year]                Solve the whole year
- run all                   Solve everything
+Usage: dotnet run [arguments]
+Supported arguments:
+
+ [year]/[day|last]     Solve the specified problems
+ [year]                Solve the whole year
+ all                   Solve everything
+
+To start working on new problems:
+               
+ update [year]/[day]   Prepares a folder for the given day, updates the input, 
+                       the readme and creates a solution template.
 
 ```
