@@ -1,6 +1,5 @@
 
-# Advent of Code
-C# solutions to the advent of code problems (2016).
+# Advent of Code (2016)
 Check out http://adventofcode.com/2016.
 ```
 (       (    (  ( ((*)) )  )    )       )               
