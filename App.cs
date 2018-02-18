@@ -79,7 +79,8 @@ namespace AdventOfCode {
             return $@"
                > USAGE: dotnet [command]
                > Commands:
-               >  run update [year]/[day]   Prepares a folder for the given day, updates the input, the readme and creates a solution template.
+               >  run update [year]/[day]   Prepares a folder for the given day, updates the input, 
+               >                            the readme and creates a solution template.
                >  run [year]/[day|last]     Solve the specified problems
                >  run [year]                Solve the whole year
                >  run all                   Solve everything
