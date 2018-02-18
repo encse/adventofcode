@@ -42,9 +42,7 @@ namespace AdventOfCode {
                     Directory.CreateDirectory(dir);
                 }
 
-                if (year == 2017) {
-                    UpdateProjectReadme(calendar);
-                }
+                UpdateProjectReadme(calendar);
                 UpdateSplashScreen(calendar);
                 UpdateReadmeForDay(problem);
                 UpdateInput(problem);
@@ -91,8 +89,8 @@ namespace AdventOfCode {
         }
 
         void UpdateProjectReadme(Calendar calendar) {
-            var file = Path.Combine("README.md");
-            WriteFile(file, new ProjectReadmeGenerator().Generate(calendar));
+            var file = Path.Combine(SolverExtensions.WorkingDir(calendar.Year), "README.md");
+            WriteFile(file, new ReadmeGeneratorForYear().Generate(calendar));
         }
 
         void UpdateSplashScreen(Calendar calendar) {
