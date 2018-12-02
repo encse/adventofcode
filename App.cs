@@ -42,8 +42,18 @@ namespace AdventOfCode {
                         SolverExtensions.Year(tsolver) == year);
                     return () => Runner.RunAll(tsolversSelected);
                 }) ??
+                Command(args, Args("([0-9]+)/all"), m => {
+                    var year = int.Parse(m[0]);
+                    var tsolversSelected = tsolvers.Where(tsolver =>
+                        SolverExtensions.Year(tsolver) == year);
+                    return () => Runner.RunAll(tsolversSelected.ToArray());
+                }) ??
                 Command(args, Args("all"), m => {
                     return () => Runner.RunAll(tsolvers);
+                }) ??
+                Command(args, Args("last"),  m => {
+                    var tsolversSelected = tsolvers.Last();
+                    return () => Runner.RunAll(tsolversSelected);
                 }) ??
                 new Action(() => {
                     Console.WriteLine(Usage.Get());
@@ -80,8 +90,9 @@ namespace AdventOfCode {
                > Usage: dotnet run [arguments]
                > Supported arguments:
 
-               >  [year]/[day|last]     Solve the specified problems
+               >  [year]/[day|last|all] Solve the specified problems
                >  [year]                Solve the whole year
+               >  last                  Solve the last problem
                >  all                   Solve everything
 
                > To start working on new problems:
