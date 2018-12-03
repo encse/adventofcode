@@ -125,7 +125,7 @@ namespace AdventOfCode.Generator {
                 while(buffer.Length > 0){
                     var block = buffer.Substring(0, Math.Min(100, buffer.Length));
                     buffer = buffer.Substring(block.Length);
-                    block = block.Replace("\\", "\\\\").Replace("\n", "\\n");
+                    block = block.Replace("\\", "\\\\").Replace("\"", "\\\"").Replace("\n", "\\n");
                     sb.AppendLine($@"Write({bufferColor}, ""{block}"");");
                 }
                 buffer = "";

@@ -21,8 +21,9 @@ To run the project:
 Usage: dotnet run [arguments]
 Supported arguments:
 
- [year]/[day|last]     Solve the specified problems
+ [year]/[day|last|all] Solve the specified problems
  [year]                Solve the whole year
+ last                  Solve the last problem
  all                   Solve everything
 
 To start working on new problems:
