@@ -23,14 +23,15 @@ namespace AdventOfCode.Y2018 {
             Write(ConsoleColor.DarkGray, "                                             12\n                                                    ");
             Write(ConsoleColor.DarkGray, "          11\n                                                              10\n                      ");
             Write(ConsoleColor.DarkGray, "                                         9\n                   .---_                                 ");
-            Write(ConsoleColor.DarkGray, "      8\n                  /   /\\|                                      7\n                /   | \\    ");
-            Write(ConsoleColor.DarkGray, "                                    6\n               /  /    \\                                      ");
-            Write(ConsoleColor.DarkGray, " 5\n              /         \\                                      4\n            ./ ~~~ ~~~~ ~\\.     ");
-            Write(ConsoleColor.DarkGray, "                               3 ");
+            Write(ConsoleColor.DarkGray, "      8\n                  / / /\\|                                      7\n                / / | \\ *  ");
+            Write(ConsoleColor.DarkGray, "                                    6\n               /  /  \\ \\                                      ");
+            Write(ConsoleColor.DarkGray, " 5\n              / /  / \\  \\                                      4 ");
             Write(ConsoleColor.Yellow, "**\n           ");
-            Write(ConsoleColor.DarkGray, "(  \"    -    .  )                                   2 ");
+            Write(ConsoleColor.DarkGray, " ./~~~~~~~~~~~\\.                                    3 ");
             Write(ConsoleColor.Yellow, "**\n           ");
-            Write(ConsoleColor.DarkGray, "_'~  ~  ~ ~~ ~ '_________ ___ __ _  _   _    _      1 ");
+            Write(ConsoleColor.DarkGray, "( .\",^. -\". '.~ )                                   2 ");
+            Write(ConsoleColor.Yellow, "**\n           ");
+            Write(ConsoleColor.DarkGray, "_'~~~~~~~~~~~~~'_________ ___ __ _  _   _    _      1 ");
             Write(ConsoleColor.Yellow, "**\n           \n");
             
             Console.ForegroundColor = color;
