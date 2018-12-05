@@ -25,9 +25,11 @@ namespace AdventOfCode.Y2018 {
             Write(ConsoleColor.DarkGray, "                                         9\n                   .---_                                 ");
             Write(ConsoleColor.DarkGray, "      8\n                  / / /\\|                                      7\n                / / | \\ *  ");
             Write(ConsoleColor.DarkGray, "                                    6\n               /  /  \\ \\                                      ");
-            Write(ConsoleColor.DarkGray, " 5\n              / /  / \\  \\                                      4 ");
-            Write(ConsoleColor.Yellow, "**\n           ");
-            Write(ConsoleColor.DarkGray, " ./~~~~~~~~~~~\\.                                    3 ");
+            Write(ConsoleColor.DarkGray, " 5 ");
+            Write(ConsoleColor.Yellow, "**\n              ");
+            Write(ConsoleColor.DarkGray, "/ /  / \\  \\                                      4 ");
+            Write(ConsoleColor.Yellow, "**\n            ");
+            Write(ConsoleColor.DarkGray, "./~~~~~~~~~~~\\.                                    3 ");
             Write(ConsoleColor.Yellow, "**\n           ");
             Write(ConsoleColor.DarkGray, "( .\",^. -\". '.~ )                                   2 ");
             Write(ConsoleColor.Yellow, "**\n           ");
