@@ -55,7 +55,7 @@ namespace AdventOfCode.Y2018.Day09 {
                     right.left = left;
                     left.right = right;
                     current = right;
-                    
+
                 } else {
                     var left = current.right;
                     var right = current.right.right;

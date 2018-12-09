@@ -72,7 +72,7 @@ namespace AdventOfCode {
             }
             try {
                 
-                return parse(matches.SelectMany(m => m.Groups.Count > 1 ? m.Groups.Skip(1).Select(g => g.Value) : new []{m.Value}).ToArray());
+                return parse(matches.SelectMany(m => m.Groups.Count > 1 ? m.Groups.Cast<Group>().Skip(1).Select(g => g.Value) : new []{m.Value}).ToArray());
             } catch {
                 return null;
             }

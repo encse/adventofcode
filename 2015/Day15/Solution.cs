@@ -42,7 +42,7 @@ namespace AdventOfCode.Y2015.Day15 {
         int[][] Parse(string input) =>
             (from line in input.Split('\n')
              let m = Regex.Match(line, @".*: capacity (.*), durability (.*), flavor (.*), texture (.*), calories (.*)")
-             let nums = m.Groups.Skip(1).Select(g => int.Parse(g.Value)).ToArray()
+             let nums = m.Groups.Cast<Group>().Skip(1).Select(g => int.Parse(g.Value)).ToArray()
              select nums).ToArray();
 
         IEnumerable<int[]> Partition(int n, int k) {
