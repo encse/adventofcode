@@ -21,7 +21,7 @@ namespace AdventOfCode.Y2015.Day06 {
             int[] apply(int[] grid, string line, string pattern, Func<int, int> dg) {
                 var match = Regex.Match(line, pattern);
                 if (match.Success) {
-                    var rect = match.Groups.Skip(1).Select(g => int.Parse(g.Value)).ToArray();
+                    var rect = match.Groups.Cast<Group>().Skip(1).Select(g => int.Parse(g.Value)).ToArray();
                     for (int irow = rect[0]; irow <= rect[2]; irow++) {
                         for (int icol = rect[1]; icol <= rect[3]; icol++) {
                             grid[irow * 1000 + icol] = dg(grid[irow * 1000 + icol]);

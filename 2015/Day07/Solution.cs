@@ -42,7 +42,7 @@ namespace AdventOfCode.Y2015.Day07 {
             if (!match.Success) {
                 return null;
             }
-            var parts = match.Groups.Skip(1).Select(g => g.Value).ToArray();
+            var parts = match.Groups.Cast<Group>().Skip(1).Select(g => g.Value).ToArray();
             var pinOut = parts.Last();
             var pins = parts.Take(parts.Length - 1).ToArray();
             calc[pinOut] = (state) => {
