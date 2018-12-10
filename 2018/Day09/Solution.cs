@@ -16,40 +16,31 @@ namespace AdventOfCode.Y2018.Day09 {
             yield return PartTwo(input);
         }
 
-        long PartOne(string input) {
-            var p = Parse(input);
-            return Solver(p.players, p.points);
-        }
+        long PartOne(string input) => Solve(input, 1);
 
-        long PartTwo(string input) {
-            var p = Parse(input);
-            return Solver(p.players, 100 * p.points);
-        }
+        long PartTwo(string input) => Solve(input, 100);
 
-        (int players, int points) Parse(string input) {
-            var rx = new Regex(@"(?<players>\d+) players; last marble is worth (?<points>\d+) points");
-            var m = rx.Match(input);
-            return (int.Parse(m.Groups["players"].Value), int.Parse(m.Groups["points"].Value));
-        }
+        long Solve(string input, int mul) {
 
-        long Solver(int playerCount, int points) {
-            var players = new long[playerCount];
-            var current = new Node() { value = 0 };
+            var match = Regex.Match(input, @"(?<players>\d+) players; last marble is worth (?<points>\d+) points");
+            var players = new long[int.Parse(match.Groups["players"].Value)];
+            var targetPoints = int.Parse(match.Groups["points"].Value) * mul;
+
+            var current = new Node { value = 0 };
             current.left = current;
             current.right = current;
-            var nextPoints = 1;
-            var iplayer = 0;
-            while (nextPoints <= points) {
-                iplayer = (iplayer + 1) % players.Length;
 
-                if (nextPoints % 23 == 0) {
-                    players[iplayer] += nextPoints;
+            var points = 1;
+            var iplayer = 1;
+            while (points <= targetPoints) {
 
+                if (points % 23 == 0) {
                     for (var i = 0; i < 7; i++) {
                         current = current.left;
                     }
 
-                    players[iplayer] += current.value;
+                    players[iplayer] += points + current.value;
+
                     var left = current.left;
                     var right = current.right;
                     right.left = left;
@@ -59,11 +50,13 @@ namespace AdventOfCode.Y2018.Day09 {
                 } else {
                     var left = current.right;
                     var right = current.right.right;
-                    current = new Node { value = nextPoints, left = left, right = right };
+                    current = new Node { value = points, left = left, right = right };
                     left.right = current;
                     right.left = current;
                 }
-                nextPoints++;
+
+                points++;
+                iplayer = (iplayer + 1) % players.Length;
             }
 
             return players.Max();
