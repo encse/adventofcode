@@ -16,11 +16,11 @@ namespace AdventOfCode.Y2018.Day10 {
             yield return PartTwo(input);
         }
 
-        string PartOne(string input) => Solver(input).st;
+        string PartOne(string input) => OCR(Solver(input).mx);
 
         int PartTwo(string input) => Solver(input).seconds;
 
-        (string st, int seconds) Solver(string input){
+        (bool[,] mx, int seconds) Solver(string input) {
             // position=< 21992, -10766> velocity=<-2,  1>
             var rx = new Regex(@"position=\<\s*(?<x>-?\d+),\s*(?<y>-?\d+)\> velocity=\<\s*(?<vx>-?\d+),\s*(?<vy>-?\d+)\>");
             var points = (
@@ -37,7 +37,7 @@ namespace AdventOfCode.Y2018.Day10 {
             var seconds = 0;
             Func<bool, (int left, int top, long width, long height)> step = (bool forward) => {
                 foreach (var point in points) {
-                    if(forward){
+                    if (forward) {
                         point.x += point.vx;
                         point.y += point.vy;
                     } else {
@@ -59,29 +59,55 @@ namespace AdventOfCode.Y2018.Day10 {
 
                 var rect = step(true);
                 var areaNew = (rect.width) * (rect.height);
-                
+
                 if (areaNew > area) {
                     rect = step(false);
-                    var mx = new char[rect.width, rect.height];
-                    foreach(var point in points){
-                        mx[point.x - rect.left, point.y - rect.top] = '#';
+                    var mx = new bool[rect.height, rect.width];
+                    foreach (var point in points) {
+                        mx[point.y - rect.top, point.x - rect.left] = true;
                     }
-                    
-                    var sb = new StringBuilder();
-                    for(var irow = 0;irow<mx.GetLength(1);irow++){
-                        
-                        for(var icol = 0;icol<mx.GetLength(0);icol++){
-                            sb.Append(mx[icol, irow] == '#' ? "#" : ".");
-                        }
-                        sb.AppendLine("");
-                    }
-                   
-                    return (sb.ToString(), seconds);
+
+                    return (mx, seconds);
                 }
                 area = areaNew;
             }
         }
+
+        string OCR(bool[,] mx) {
+            var dict = new Dictionary<long, string>{
+                {0x384104104145138, "J"},
+                {0xF4304104F0C31BA, "G"},
+                {0x1F430C3F430C30FC, "B"},
+                {0xF430410410410BC, "C"},
+                {0x1F8208421084107E, "Z"},
+            };
+            var res = "";
+            for (var ch = 0; ch < Math.Ceiling(mx.GetLength(1) / 8.0); ch++) {
+                var hash = 0L;
+                var st = "";
+                for (var irow = 0; irow < mx.GetLength(0); irow++) {
+                    for (var i = 0; i < 6; i++) {
+                        var icol = (ch * 8) + i;
+
+                        if (icol < mx.GetLength(1) && mx[irow, icol]) {
+                            hash += 1;
+                            st += "#";
+                        } else {
+                            st += ".";
+                        }
+                        hash <<= 1;
+                    }
+                    st += "\n";
+                }
+                if (!dict.ContainsKey(hash)) {
+                    throw new Exception($"Unrecognized letter with hash: 0x{hash.ToString("X")}\n{st}");
+                }
+                res += dict[hash];
+            }
+            return res;
+        }
     }
+    
     class Point {
         public int x;
         public int y;
