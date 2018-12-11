@@ -80,6 +80,8 @@ namespace AdventOfCode.Y2018.Day10 {
                 {0x1F430C3F430C30FC, "B"},
                 {0xF430410410410BC, "C"},
                 {0x1F8208421084107E, "Z"},
+                {0x114517D145144, "H"},
+                {0x1841041041060, "I"},
             };
             var res = "";
             for (var ch = 0; ch < Math.Ceiling(mx.GetLength(1) / 8.0); ch++) {
@@ -107,7 +109,7 @@ namespace AdventOfCode.Y2018.Day10 {
             return res;
         }
     }
-    
+
     class Point {
         public int x;
         public int y;
