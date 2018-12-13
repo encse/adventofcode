@@ -17,12 +17,12 @@ namespace AdventOfCode.Y2018.Day12 {
         }
 
         long PartOne(string input) => Iterate(input, 20);
-        
+
         long PartTwo(string input) => Iterate(input, 50000000000);
 
-        long Iterate(string input, long iterations){
+        long Iterate(string input, long iterations) {
             var (state, rules) = Parse(input);
-            
+
             var dLeftPos = 0L;
 
             while (iterations > 0) {
@@ -31,7 +31,7 @@ namespace AdventOfCode.Y2018.Day12 {
                 iterations--;
                 dLeftPos = state.left - prevState.left;
                 if (state.pots == prevState.pots) {
-                    state = new State{left = state.left + iterations * dLeftPos, pots = state.pots};
+                    state = new State { left = state.left + iterations * dLeftPos, pots = state.pots };
                     break;
                 }
             }
