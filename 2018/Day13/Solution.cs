@@ -19,26 +19,35 @@ namespace AdventOfCode.Y2018.Day13 {
         string PartOne(string input) {
             var (mat, carts) = Parse(input);
             while (true) {
-                var loc = Step(mat, carts);
-                if (loc != null) {
-                    return $"{loc.Value.icol},{loc.Value.irow}";
+                var newState = Step(mat, carts);
+                if (newState.crashed.Any()) {
+                    return Tsto(newState.crashed[0]);
                 }
             }
         }
 
-        (int irow, int icol)? Step(string[] mat, List<Cart> carts) {
-            carts.Sort((cartA, cartB) => cartA.pos.CompareTo(cartB.pos));
-            (int irow, int icol)? res = null;
-            foreach (var cart in carts.ToArray()) {
+        string PartTwo(string input) {
+            var (mat, carts) = Parse(input);
+            while (carts.Count > 1) {
+                var newState = Step(mat, carts);
+                carts = newState.carts;
+            }
+            return Tsto(carts[0]);
+        }
+
+        string Tsto(Cart cart) => $"{cart.pos.icol},{cart.pos.irow}";
+
+        (List<Cart> crashed, List<Cart> carts) Step(string[] mat, List<Cart> carts) {
+            var crashed = new List<Cart>();
+
+            foreach (var cart in carts.OrderBy((cartT) => cartT.pos)) {
                 cart.pos = (irow: cart.pos.irow + cart.drow, icol: cart.pos.icol + cart.dcol);
                 
                 foreach (var cart2 in carts.ToArray()) {
                     if (cart != cart2 && cart.pos.irow == cart2.pos.irow && cart.pos.icol == cart2.pos.icol) {
-                        if(res == null){
-                            res = cart.pos;
-                        }
-                        carts.Remove(cart);
-                        carts.Remove(cart2);
+                        crashed.Add(cart);
+                        crashed.Add(cart2);
+
                     }
                 }
                 switch (mat[cart.pos.irow][cart.pos.icol]) {
@@ -63,14 +72,7 @@ namespace AdventOfCode.Y2018.Day13 {
                         break;
                 }
             }
-            return res;
-        }
-        string PartTwo(string input) {
-            var (mat, carts) = Parse(input);
-            while (carts.Count > 1) {
-                Step(mat, carts);
-            }
-            return $"{carts[0].pos.icol},{carts[0].pos.irow}"; 
+            return (crashed, carts.Where(cart => !crashed.Contains(cart)).ToList());
         }
 
         (string[] mat, List<Cart> carts) Parse(string input){
