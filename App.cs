@@ -22,6 +22,11 @@ namespace AdventOfCode {
                     var day = int.Parse(m[2]);
                     return () => new Updater().Update(year, day).Wait();
                 }) ??
+                Command(args, Args("update", "today"), m => {
+                    var year = DateTime.Now.Year;
+                    var day = DateTime.Now.Day;
+                    return () => new Updater().Update(year, day).Wait();
+                }) ??
                  Command(args, Args("([0-9]+)/([0-9]+)"), m => {
                     var year = int.Parse(m[0]);
                     var day = int.Parse(m[1]);
@@ -99,6 +104,7 @@ namespace AdventOfCode {
                
                >  update [year]/[day]   Prepares a folder for the given day, updates the input, 
                >                        the readme and creates a solution template.
+               >  update today  
                > ".StripMargin("> ");
         }
     }
