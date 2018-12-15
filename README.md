@@ -30,5 +30,6 @@ To start working on new problems:
                
  update [year]/[day]   Prepares a folder for the given day, updates the input, 
                        the readme and creates a solution template.
+ update today  
 
 ```

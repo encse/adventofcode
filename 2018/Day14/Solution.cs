@@ -14,6 +14,7 @@ namespace AdventOfCode.Y2018.Day14 {
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);
             yield return PartTwo(input);
+            
         }
 
         string PartOne(string input) => Window(10).ElementAt(int.Parse(input)).st;
