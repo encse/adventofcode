@@ -16,8 +16,10 @@ namespace AdventOfCode.Y2018 {
             Write(ConsoleColor.DarkGray, "                              23\n                                                              22\n  ");
             Write(ConsoleColor.DarkGray, "                                                            21\n                                     ");
             Write(ConsoleColor.DarkGray, "                         20\n                                                              19\n       ");
-            Write(ConsoleColor.DarkGray, "                  _       _   _       _                18\n                 _  -                     ");
-            Write(ConsoleColor.DarkGray, "        -  _        17\n           _  -                                         -  _  16 ");
+            Write(ConsoleColor.DarkGray, "                  ____  ___   ___  ____                18\n                 ___-----                 ");
+            Write(ConsoleColor.DarkGray, "    -----___        17 ");
+            Write(ConsoleColor.Yellow, "**\n           ");
+            Write(ConsoleColor.DarkGray, "___---                                     ---___  16 ");
             Write(ConsoleColor.Yellow, "**\n                 ");
             Write(ConsoleColor.White, ") ))          ) )         ))         __");
             Write(ConsoleColor.Red, "__    ");

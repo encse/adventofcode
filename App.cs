@@ -22,10 +22,13 @@ namespace AdventOfCode {
                     var day = int.Parse(m[2]);
                     return () => new Updater().Update(year, day).Wait();
                 }) ??
-                Command(args, Args("update", "today"), m => {
-                    var year = DateTime.Now.Year;
-                    var day = DateTime.Now.Day;
-                    return () => new Updater().Update(year, day).Wait();
+                Command(args, Args("update", "last"), m => {
+                    var dt = DateTime.Now;
+                    if(dt.Month == 12 && dt.Day >=1 && dt.Day <= 25){
+                        return () => new Updater().Update(dt.Year, dt.Day).Wait();
+                    } else {
+                        throw new Exception("Event is not active. This option works in Dec 1-25 only)");
+                    }
                 }) ??
                  Command(args, Args("([0-9]+)/([0-9]+)"), m => {
                     var year = int.Parse(m[0]);
@@ -104,7 +107,7 @@ namespace AdventOfCode {
                
                >  update [year]/[day]   Prepares a folder for the given day, updates the input, 
                >                        the readme and creates a solution template.
-               >  update today  
+               >  update last           Same as above, but for the current day. Works in December only.  
                > ".StripMargin("> ");
         }
     }
