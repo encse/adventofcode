@@ -5,7 +5,10 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Text;
 
+
 namespace AdventOfCode.Y2018.Day20 {
+    using Doors = IEnumerable<((int x, int y) posFrom, (int x, int y) posTo)>;
+    delegate Doors Cont((int x, int y) Pos);
 
     class Solution : Solver {
 
@@ -16,124 +19,114 @@ namespace AdventOfCode.Y2018.Day20 {
             yield return PartTwo(input);
         }
 
-        int PartOne(string input) {
-            var grid = Positions(input).ToList().GroupBy(x => x.fromPos).ToDictionary(x => x.Key, x => x.Select(y => y.toPos).ToList());
+        int PartOne(string input) => Solver(input).dMax;
+        int PartTwo(string input) => Solver(input).distantRooms;
 
-            var q = new Queue<((int x, int y) pos, int d)>();
-            q.Enqueue(((0, 0), 0));
+        (int dMax, int distantRooms) Solver(string input) {
+
+            var grid = Parse(input);
+           
+            var queue = new Queue<((int x, int y) pos, int d)>();
+            queue.Enqueue(((0, 0), 0));
+
             var seen = new HashSet<(int x, int y)>();
-            var dMax = int.MinValue;
-            while (q.Any()) {
-                var (pos, d) = q.Dequeue();
+            var (dMax, distantRooms) = (int.MinValue, 0);
+
+            while (queue.Any()) {
+                var (pos, d) = queue.Dequeue();
                 if (seen.Contains(pos)) {
                     continue;
                 }
+
                 dMax = Math.Max(dMax, d);
+                if (d >= 1000) {
+                    distantRooms++;
+                }
 
                 seen.Add(pos);
                 foreach (var nextPos in grid[pos]) {
-                    q.Enqueue((nextPos, d + 1));
+                    queue.Enqueue((nextPos, d + 1));
                 }
             }
 
-            return dMax;
+            return (dMax, distantRooms);
         }
 
-        IEnumerable<((int x, int y) fromPos, (int x, int y) toPos)> Positions(string input){
+        Dictionary<(int x, int y), List<(int x, int y)>> Parse(string input) {
             var ich = 0;
-            var p = ParseSeq(input, ref ich);
-            return p.Traverse((0,0), ((int x, int y) pos) => { return Enumerable.Empty<((int x, int y) posFrom, (int x, int y) posTo)>();});
-        }
 
-        int PartTwo(string input) {
-            var grid = Positions(input).ToList().GroupBy(x => x.fromPos).ToDictionary(x => x.Key, x => x.Select(y => y.toPos).ToList());
-
-
-            var q = new Queue<((int x, int y) pos, int d)>();
-            q.Enqueue(((0, 0), 0));
-            var seen = new HashSet<(int x, int y)>();
-            var res = 0;
-            while (q.Any()) {
-                var (pos, d) = q.Dequeue();
-                if (seen.Contains(pos)) {
-                    continue;
-                }
-                if(d >= 1000){
-                    res ++;
-                }
-
-                seen.Add(pos);
-                foreach (var nextPos in grid[pos]) {
-                    q.Enqueue((nextPos, d + 1));
-                }
-            }
-
-            return res;
-        }
-
-
-        Node ParseSeq(string input, ref int ich) {
-            var nodes = new List<Node>();
-            while (ich < input.Length) {
-                var ch = input[ich];
-                switch (ch) {
-                    case '^':
-                        ich++;
-                        break;
-                    case '(':
-                        nodes.Add(ParseAlt(input, ref ich));
-                        break;
-                    case '|':
-                    case ')':
-                    case '$':
-                        return new Seq { nodes = nodes.ToArray() };
-                    default:
-                        nodes.Add(ParseLiteral(input, ref ich));
-                        break;
-                }
-            }
-            throw new Exception();
-        }
-
-        Node ParseAlt(string input, ref int ich) {
-            ich++;
-            var nodes = new List<Node>();
-            while (ich < input.Length) {
-                nodes.Add(ParseSeq(input, ref ich));
-                if(input[ich] == ')'){
+            bool accept(char ch) {
+                if (input[ich] == ch) {
                     ich++;
-                    break;
+                    return true;
                 } else {
-                    ich++;
+                    return false;
                 }
-            }
-            return new Alt{nodes=nodes.ToArray()};
-        }
+            };
 
-        Node ParseLiteral(string input, ref int ich) {
-            var sb = new StringBuilder();
-            while (ich < input.Length) {
-                var ch = input[ich];
-                switch (ch) {
-                    case 'E':
-                    case 'S':
-                    case 'W':
-                    case 'N':
-                        sb.Append(ch);
-                        ich++;
-                        break;
-                    default:
-                        return new Literal { st = sb.ToString() };
+            Action<char> except = (char ch) => {
+                if (!accept(ch)) throw new Exception();
+            };
+
+            bool parseLiteral(out Literal literal) {
+                var sb = new StringBuilder();
+                while (true) {
+                    if (accept('E')) sb.Append('E');
+                    else if (accept('S')) sb.Append('S');
+                    else if (accept('W')) sb.Append('W');
+                    else if (accept('N')) sb.Append('N');
+                    else break;
                 }
-            }
-            throw new Exception();
+
+                literal = sb.Length > 0 ? new Literal { st = sb.ToString() } : null;
+                return literal != null;
+            };
+
+            bool parseBody(out Node seq) {
+                var nodes = new List<Node>();
+                while (true) {
+                    if (parseAlt(out var alt)) {
+                        nodes.Add(alt);
+                    } else if (parseLiteral(out var lit)) {
+                        nodes.Add(lit);
+                    } else {
+                        break;
+                    }
+                }
+                seq = nodes.Any() ? new Seq { nodes = nodes.ToArray() } : null;
+                return seq != null;
+            };
+
+            bool parseAlt(out Alt alt) {
+                if (accept('(')) {
+                    var nodes = new List<Node>();
+                    while (parseBody(out var seq)) {
+                        nodes.Add(seq);
+                        accept('|');
+                    }
+                    except(')');
+                    alt = new Alt { nodes = nodes.ToArray() };
+                    return true;
+                } else {
+                    alt = null;
+                    return false;
+                }
+            };
+
+            except('^');
+            parseBody(out var rootNode);
+            except('$');
+
+            return rootNode
+                .Traverse((0, 0), ((int x, int y) pos) => Enumerable.Empty<((int x, int y) posFrom, (int x, int y) posTo)>())
+                .GroupBy(x => x.posFrom)
+                .ToDictionary(x => x.Key, x => x.Select(y => y.posTo).ToList());
         }
 
     }
 
     abstract class Node {
-        public abstract IEnumerable<((int x, int y) posFrom, (int x, int y) posTo)> Traverse((int x, int y) pos,
-            Func<(int x, int y), IEnumerable<((int x, int y) posFrom, (int x, int y) posTo)>> cont);
+        public abstract Doors Traverse((int x, int y) pos, Cont cont);
     }
 
     class Literal : Node {
@@ -146,35 +139,24 @@ namespace AdventOfCode.Y2018.Day20 {
             {'S',(0, 1)},
         };
 
-        public override IEnumerable<((int x, int y) posFrom, (int x, int y) posTo)> Traverse((int x, int y) pos,
-            Func<(int x, int y), IEnumerable<((int x, int y) posFrom, (int x, int y) posTo)>> cont
-        ) {
+        public override Doors Traverse((int x, int y) pos, Cont cont) {
             foreach (var ch in st) {
-                switch (ch) {
-                    case 'E':
-                    case 'N':
-                    case 'W':
-                    case 'S':
-                        var posNew = (pos.x + step[ch].dx, pos.y + step[ch].dy);
-                        yield return (pos, posNew);
-                        yield return (posNew, pos);
-                        pos = posNew;
-                        break;
-                }
+                var posNew = (pos.x + step[ch].dx, pos.y + step[ch].dy);
+                yield return (pos, posNew);
+                yield return (posNew, pos);
+                pos = posNew;
             }
 
-            foreach (var next in cont(pos))
+            foreach (var next in cont(pos)) {
                 yield return next;
+            }
         }
     }
 
     class Seq : Node {
         public Node[] nodes;
-        public override IEnumerable<((int x, int y) posFrom, (int x, int y) posTo)> Traverse(
-            (int x, int y) pos,
-            Func<(int x, int y), IEnumerable<((int x, int y) posFrom, (int x, int y) posTo)>> cont
-        ) {
-            Func<int, Func<(int x, int y), IEnumerable<((int x, int y) posFrom, (int x, int y) posTo)>>> step = null;
+        public override Doors Traverse((int x, int y) pos, Cont cont) {
+            Func<int, Cont> step = null;
             step = (int i) => {
                 if (i == nodes.Length)
                     return cont;
@@ -187,11 +169,8 @@ namespace AdventOfCode.Y2018.Day20 {
 
     class Alt : Node {
         public Node[] nodes;
-        public override IEnumerable<((int x, int y) posFrom, (int x, int y) posTo)> Traverse(
-            (int x, int y) pos,
-            Func<(int x, int y), IEnumerable<((int x, int y) posFrom, (int x, int y) posTo)>> cont
-        ) {
-            Func<int, Func<(int x, int y), IEnumerable<((int x, int y) posFrom, (int x, int y) posTo)>>> step = null;
+        public override Doors Traverse((int x, int y) pos, Cont cont) {
+            Func<int, Cont> step = null;
             step = (int i) => {
                 if (i == nodes.Length)
                     return cont;
