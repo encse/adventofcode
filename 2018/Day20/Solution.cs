@@ -173,9 +173,13 @@ namespace AdventOfCode.Y2018.Day20 {
             Func<int, Cont> step = null;
             step = (int i) => {
                 if (i == nodes.Length)
-                    return cont;
+                    return (_) => Enumerable.Empty<((int x, int y) posFrom, (int x, int y) posTo)>();
 
-                return (posT) => nodes[i].Traverse(pos, step(i + 1));
+                return (_) => {
+                    return nodes[i].Traverse(pos, (posT => {
+                        return cont(posT).Concat(step(i + 1)(pos));
+                    }));
+                };
             };
             return step(0)(pos);
         }

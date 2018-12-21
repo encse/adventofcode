@@ -16,7 +16,7 @@ namespace AdventOfCode.Y2018 {
             Write(ConsoleColor.DarkGray, "                              23\n                                                              22\n  ");
             Write(ConsoleColor.DarkGray, "                                 ");
             Write(ConsoleColor.Yellow, "*                          ");
-            Write(ConsoleColor.DarkGray, "21\n                                  ");
+            Write(ConsoleColor.DarkGray, "21 **\n                                  ");
             Write(ConsoleColor.Red, "|");
             Write(ConsoleColor.White, "\\|                         ");
             Write(ConsoleColor.DarkGray, "20 ");
