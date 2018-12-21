@@ -23,3 +23,9 @@ Because time travel is a dangerous activity, the activation system begins with a
 *What is the lowest non-negative integer value for register `0` that causes the program to halt after executing the fewest instructions?* (Executing the same instruction multiple times counts as multiple instructions executed.)
 
 
+## --- Part Two ---
+In order to determine the timing window for your underflow exploit, you also need an upper bound:
+
+*What is the lowest non-negative integer value for register `0` that causes the program to halt after executing the most instructions?* (The program must actually halt; running forever does not count as halting.)
+
+

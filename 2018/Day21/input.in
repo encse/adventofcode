@@ -1,32 +1,32 @@
 #ip 4
-seti 123 0 3            ;r3=123         
-bani 3 456 3            ;r3=r3&456      // L0
-eqri 3 72 3             ;r3=r3==72
-addr 3 4 4              ;r4=r3+r4       // goto H
-seti 0 0 4              ;r4=0           // goto L0
-seti 0 5 3              ;r3=0           // H
-bori 3 65536 2          ;r2=r3|65536
-seti 10736359 9 3       ;r3=10736359
-bani 2 255 1            ;r1=r2&255      // Q       
-addr 3 1 3              ;r3=r3+r1
-bani 3 16777215 3       ;r3=r3&16777215
-muli 3 65899 3          ;r3=r3*65899
-bani 3 16777215 3       ;r3=r3&16777215
-gtir 256 2 1            ;r1=256>r2
-addr 1 4 4              ;r4=r1+r4       // goto B
-addi 4 1 4              ;r4=r4+1        // goto C
-seti 27 2 4             ;r4 = 27        // B: goto D
-seti 0 3 1              ;r1=0           // C:
-addi 1 1 5              ;r5=r1+1
-muli 5 256 5            ;r5=r5*256
-gtrr 5 2 5              ;r5=r5>r2
-addr 5 4 4              ;r4=r4+r5       // goto E
-addi 4 1 4              ; goto G
-seti 25 8 4             ;E: goto F
-addi 1 1 1              ;G: r1=r1+1
-seti 17 6 4             ;F: goto C
-setr 1 5 2              ;r2=r1
-seti 7 7 4              ;goto Q
-eqrr 3 0 1              ;r1=r0==r3      // D:
-addr 1 4 4              ;r4=r1+r4 //halt
-seti 5 1 4              ;r4=5 ; goto H
+seti 123 0 3
+bani 3 456 3
+eqri 3 72 3
+addr 3 4 4
+seti 0 0 4
+seti 0 5 3
+bori 3 65536 2
+seti 10736359 9 3
+bani 2 255 1
+addr 3 1 3
+bani 3 16777215 3
+muli 3 65899 3
+bani 3 16777215 3
+gtir 256 2 1
+addr 1 4 4
+addi 4 1 4
+seti 27 2 4
+seti 0 3 1
+addi 1 1 5
+muli 5 256 5
+gtrr 5 2 5
+addr 5 4 4
+addi 4 1 4
+seti 25 8 4
+addi 1 1 1
+seti 17 6 4
+setr 1 5 2
+seti 7 7 4
+eqrr 3 0 1
+addr 1 4 4
+seti 5 1 4
