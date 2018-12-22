@@ -101,7 +101,7 @@ namespace AdventOfCode.Y2018.Day21 {
                     case "eqrr": compiledStm = $"r[{stm[2]}] = r[{stm[0]}] == r[{stm[1]}] ? 1 : 0"; break;
                 }
                 var brk = breakpoints.Contains(ip) ? "yield return r;" : "";
-                compiledStatements.AppendLine($"\t\tcase {ip}: {brk} {compiledStm}; break;");
+                compiledStatements.AppendLine($"\t\tcase {ip}: {brk} {compiledStm}; r[{ipReg}]++; break;");
             }
 
             return $@"
@@ -116,10 +116,8 @@ namespace AdventOfCode.Y2018.Day21 {
                                 switch (r[{ipReg}]) {{
                                     {compiledStatements.ToString()}
                                 }}
-                                r[{ipReg}]++;
                             }}
                         }}
-
                     }}
                 }}
             ";
