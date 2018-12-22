@@ -4,7 +4,6 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Text;
-using System.Numerics;
 
 namespace AdventOfCode.Y2018.Day22 {
 
@@ -24,35 +23,34 @@ namespace AdventOfCode.Y2018.Day22 {
             var (targetX, targetY) = (target[0], target[1]);
             var m = 20183;
 
-            var geologicIndex = new BigInteger[targetX+1, targetY+1];
+            var erosionLevel = new int[targetX + 1, targetY + 1];
             for (var x = 0; x <= targetX; x++) {
-                
-                geologicIndex[x, 0] = (x * new BigInteger(16807)) ;
+                if (x * 16807 < 0) {
+                    throw new Exception();
+                }
+                erosionLevel[x, 0] = ((x * 16807) + depth) % m;
             }
 
             for (var y = 0; y <= targetY; y++) {
-                
-                geologicIndex[0, y] = (y * new BigInteger(48271)) ;
+                if (y * 48271 < 0) {
+                    throw new Exception();
+                }
+                erosionLevel[0, y] = ((y * 48271) + depth) % m;
             }
 
             for (var y = 1; y <= targetY; y++) {
                 for (var x = 1; x <= targetX; x++) {
 
-                   
-                    geologicIndex[x, y] = (geologicIndex[x, y - 1] * geologicIndex[x - 1, y]);
+                    if (erosionLevel[x, y - 1] * erosionLevel[x - 1, y] < 0) {
+                        throw new Exception();
+                    }
+                    erosionLevel[x, y] = ((erosionLevel[x, y - 1] * erosionLevel[x - 1, y]) + depth) % m;
                 }
             }
 
-            geologicIndex[targetX, targetY] = 0;
+            erosionLevel[targetX, targetY] = depth;
 
-            var erosionLevel = new int[targetX+1, targetY+1];
-            for (var y = 0; y <= targetY; y++) {
-                for (var x = 0; x <= targetX; x++) {
-                    erosionLevel[x, y] = (int)(geologicIndex[x, y] + depth) % m;
-                }
-            }
-
-            var regionType = new int[targetX+1, targetY+1];
+            var regionType = new int[targetX + 1, targetY + 1];
             for (var y = 0; y <= targetY; y++) {
                 for (var x = 0; x <= targetX; x++) {
                     regionType[x, y] = erosionLevel[x, y] % 3;
@@ -69,6 +67,16 @@ namespace AdventOfCode.Y2018.Day22 {
             return riskLevel;
         }
 
+        string Tsto(int[,] m) {
+            var sb = new StringBuilder();
+            foreach (var irow in Enumerable.Range(0, m.GetLength(1))) {
+                foreach (var icol in Enumerable.Range(0, m.GetLength(0))) {
+                    sb.Append(".=|"[m[icol, irow]]);
+                }
+                sb.AppendLine();
+            }
+            return sb.ToString();
+        }
         int PartTwo(string input) {
             return 0;
         }
