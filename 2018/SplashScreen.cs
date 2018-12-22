@@ -14,7 +14,7 @@ namespace AdventOfCode.Y2018 {
             Write(ConsoleColor.Yellow, "___)\\__/(____/(____)  2018\n\n           ");
             Write(ConsoleColor.DarkGray, "                                  .                25\n                                              ");
             Write(ConsoleColor.DarkGray, "            .   24\n                                                              23\n                ");
-            Write(ConsoleColor.DarkGray, "                         .      .  _   -  -   22\n                                   ");
+            Write(ConsoleColor.DarkGray, "                         .      .  _   -  -   22 **\n                                   ");
             Write(ConsoleColor.Yellow, "*");
             Write(ConsoleColor.DarkGray, "          _               21 ");
             Write(ConsoleColor.Yellow, "**\n                                  ");
