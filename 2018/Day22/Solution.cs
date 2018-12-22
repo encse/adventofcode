@@ -27,35 +27,22 @@ namespace AdventOfCode.Y2018.Day22 {
             return riskLevel;
         }
 
+
         int PartTwo(string input) {
             var (targetX, targetY, regionType) = Parse(input);
-            var q = new PQueue<((int x, int y) pos, Tool tool)>();
+            var q = new PQueue<((int x, int y) pos, Tool tool, int t)>();
             var seen = new HashSet<((int x, int y), Tool tool)>();
 
-            q.Enqueue(0, ((0, 0), Tool.Torch));
-
-            while (q.Any()) {
-                var (t, state) = q.Dequeue();
-                var (pos, tool) = state;
-                if (pos.x == targetX && pos.y == targetY && tool == Tool.Torch) {
-                    return t;
-                }
-
-                if (seen.Contains(state)) {
-                    continue;
-                }
-
-                seen.Add(state);
-
+            IEnumerable<((int x, int y) pos, Tool tool, int dt)> Neighbours((int x, int y) pos, Tool tool) {
                 switch (regionType(pos.x, pos.y)) {
                     case RegionType.Rocky:
-                        q.Enqueue(t + 7, (pos, tool == Tool.ClimbingGear ? Tool.Torch : Tool.ClimbingGear));
+                        yield return (pos, tool == Tool.ClimbingGear ? Tool.Torch : Tool.ClimbingGear, 7);
                         break;
                     case RegionType.Narrow:
-                        q.Enqueue(t + 7, (pos, tool == Tool.Torch ? Tool.Nothing : Tool.Torch));
+                        yield return (pos, tool == Tool.Torch ? Tool.Nothing : Tool.Torch, 7);
                         break;
                     case RegionType.Wet:
-                        q.Enqueue(t + 7, (pos, tool == Tool.ClimbingGear ? Tool.Nothing : Tool.ClimbingGear));
+                        yield return (pos, tool == Tool.ClimbingGear ? Tool.Nothing : Tool.ClimbingGear, 7);
                         break;
                 }
 
@@ -73,24 +60,50 @@ namespace AdventOfCode.Y2018.Day22 {
                         switch (regionType(posNew.x, posNew.y)) {
                             case RegionType.Rocky:
                                 if (tool == Tool.ClimbingGear || tool == Tool.Torch) {
-                                    q.Enqueue(t + 1, (posNew, tool));
+                                    yield return (posNew, tool, 1);
                                 }
                                 break;
                             case RegionType.Narrow:
                                 if (tool == Tool.Torch || tool == Tool.Nothing) {
-                                    q.Enqueue(t + 1, (posNew, tool));
+                                    yield return (posNew, tool, 1);
                                 }
                                 break;
                             case RegionType.Wet:
 
                                 if (tool == Tool.ClimbingGear || tool == Tool.Nothing) {
-                                    q.Enqueue(t + 1, (posNew, tool));
+                                    yield return (posNew, tool, 1);
                                 }
 
                                 break;
                         }
                     }
                 }
+            }
+
+            q.Enqueue(0, ((0, 0), Tool.Torch, 0));
+
+            while (q.Any()) {
+                var state = q.Dequeue();
+                var (pos, tool, t) = state;
+
+                if (pos.x == targetX && pos.y == targetY && tool == Tool.Torch) {
+                    return t;
+                }
+
+                var hash = (pos, tool);
+                if (seen.Contains(hash)) {
+                    continue;
+                }
+
+                seen.Add(hash);
+
+                foreach( var (newPos, newTool, dt) in Neighbours(pos, tool)) {
+                    q.Enqueue(
+                        t + dt + Math.Abs(newPos.x - targetX) + Math.Abs(newPos.y - targetY), 
+                        (newPos, newTool, t + dt)
+                    );
+                }
+
             }
 
             throw new Exception();
@@ -155,14 +168,14 @@ namespace AdventOfCode.Y2018.Day22 {
             d[p].Enqueue(t);
         }
 
-        public (int p, T t) Dequeue() {
+        public T Dequeue() {
             var p = d.Keys.First();
             var items = d[p];
             var t = items.Dequeue();
             if (!items.Any()) {
                 d.Remove(p);
             }
-            return (p, t);
+            return t;
         }
     }
 }
