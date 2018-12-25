@@ -16,11 +16,11 @@ namespace AdventOfCode.Y2018.Day24 {
             yield return PartTwo(input);
         }
 
-        (bool immuneSystem, int units) Fight(string input, int b) {
+        (bool immuneSystem, int units) Fight(string input, int boost) {
             var army = Parse(input);
             foreach (var g in army) {
                 if (g.immuneSystem) {
-                    g.damage += b;
+                    g.damage += boost;
                 }
             }
             var attack = true;
@@ -29,9 +29,9 @@ namespace AdventOfCode.Y2018.Day24 {
                 var remainingTarget = new HashSet<Group>(army);
                 var targets = new Dictionary<Group, Group>();
                 foreach (var g in army.OrderByDescending(g => (g.effectivePower, g.initiative))) {
-                    var maxDamage = remainingTarget.Select(t => g.DamageGivenTo(t)).Max();
+                    var maxDamage = remainingTarget.Select(t => g.DamageDealtTo(t)).Max();
                     if (maxDamage > 0) {
-                        var possibleTargets = remainingTarget.Where(t => g.DamageGivenTo(t) == maxDamage);
+                        var possibleTargets = remainingTarget.Where(t => g.DamageDealtTo(t) == maxDamage);
                         targets[g] = possibleTargets.OrderByDescending(t => (t.effectivePower, t.initiative)).First();
                         remainingTarget.Remove(targets[g]);
                     }
@@ -39,7 +39,7 @@ namespace AdventOfCode.Y2018.Day24 {
                 foreach (var g in targets.Keys.OrderByDescending(g => g.initiative)) {
                     if (g.units > 0) {
                         var target = targets[g];
-                        var damage = g.DamageGivenTo(target);
+                        var damage = g.DamageDealtTo(target);
                         if (damage > 0 && target.units > 0) {
                             var dies = damage / target.hp;
                             target.units = Math.Max(0, target.units - dies);
@@ -134,7 +134,7 @@ namespace AdventOfCode.Y2018.Day24 {
             }
         }
 
-        public int DamageGivenTo(Group target) {
+        public int DamageDealtTo(Group target) {
             if (target.immuneSystem == immuneSystem) {
                 return 0;
             } else if (target.immuneTo.Contains(attackType)) {
