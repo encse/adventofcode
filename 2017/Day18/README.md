@@ -1,4 +1,4 @@
-original source: [https://adventofcode.com//2017/day/18](https://adventofcode.com//2017/day/18)
+original source: [https://adventofcode.com/2017/day/18](https://adventofcode.com/2017/day/18)
 ## --- Day 18: Duet ---
 You discover a tablet containing some strange assembly code labeled simply "[Duet](https://en.wikipedia.org/wiki/Duet)". Rather than bother the sound card with it, you decide to run the code yourself. Unfortunately, you don't see any documentation, so you're left to figure out what the instructions mean on your own.
 

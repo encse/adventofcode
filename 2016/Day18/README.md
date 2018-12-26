@@ -1,4 +1,4 @@
-original source: [https://adventofcode.com//2016/day/18](https://adventofcode.com//2016/day/18)
+original source: [https://adventofcode.com/2016/day/18](https://adventofcode.com/2016/day/18)
 ## --- Day 18: Like a Rogue ---
 As you enter this room, you hear a loud click! Some of the tiles in the floor here seem to be pressure plates for [traps](https://nethackwiki.com/wiki/Trap), and the trap you just triggered has run out of... whatever it tried to do to you. You doubt you'll be so lucky next time.
 

@@ -1,4 +1,4 @@
-original source: [https://adventofcode.com//2017/day/25](https://adventofcode.com//2017/day/25)
+original source: [https://adventofcode.com/2017/day/25](https://adventofcode.com/2017/day/25)
 ## --- Day 25: The Halting Problem ---
 Following the twisty passageways deeper and deeper into the CPU, you finally reach the core of the computer. Here, in the expansive central chamber, you find a grand apparatus that fills the entire room, suspended nanometers above your head.
 

@@ -1,4 +1,4 @@
-original source: [https://adventofcode.com//2016/day/23](https://adventofcode.com//2016/day/23)
+original source: [https://adventofcode.com/2016/day/23](https://adventofcode.com/2016/day/23)
 ## --- Day 23: Safe Cracking ---
 This is one of the top floors of the nicest tower in EBHQ. The Easter Bunny's private office is here, complete with a safe hidden behind a painting, and who *wouldn't* hide a star in a safe behind a painting?
 

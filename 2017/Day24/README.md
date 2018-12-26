@@ -1,4 +1,4 @@
-original source: [https://adventofcode.com//2017/day/24](https://adventofcode.com//2017/day/24)
+original source: [https://adventofcode.com/2017/day/24](https://adventofcode.com/2017/day/24)
 ## --- Day 24: Electromagnetic Moat ---
 The CPU itself is a large, black building surrounded by a bottomless pit. Enormous metal tubes extend outward from the side of the building at regular intervals and descend down into the void. There's no way to cross, but you need to get inside.
 

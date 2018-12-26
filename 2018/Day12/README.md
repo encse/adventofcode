@@ -1,4 +1,4 @@
-original source: [https://adventofcode.com//2018/day/12](https://adventofcode.com//2018/day/12)
+original source: [https://adventofcode.com/2018/day/12](https://adventofcode.com/2018/day/12)
 ## --- Day 12: Subterranean Sustainability ---
 The year 518 is significantly more underground than your history books implied.  Either that, or you've arrived in a vast cavern network under the North Pole.
 

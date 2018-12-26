@@ -1,4 +1,4 @@
-original source: [https://adventofcode.com//2016/day/13](https://adventofcode.com//2016/day/13)
+original source: [https://adventofcode.com/2016/day/13](https://adventofcode.com/2016/day/13)
 ## --- Day 13: A Maze of Twisty Little Cubicles ---
 You arrive at the first floor of this new building to discover a much less welcoming environment than the shiny atrium of the last one.  Instead, you are in a maze of twisty little cubicles, all alike.
 

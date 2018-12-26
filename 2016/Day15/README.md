@@ -1,4 +1,4 @@
-original source: [https://adventofcode.com//2016/day/15](https://adventofcode.com//2016/day/15)
+original source: [https://adventofcode.com/2016/day/15](https://adventofcode.com/2016/day/15)
 ## --- Day 15: Timing is Everything ---
 The halls open into an interior plaza containing a large kinetic sculpture. The sculpture is in a sealed enclosure and seems to involve a set of identical spherical capsules that are carried to the top and allowed to [bounce through the maze](https://youtu.be/IxDoO9oODOk?t=177) of spinning pieces.
 

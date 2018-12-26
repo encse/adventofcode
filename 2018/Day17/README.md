@@ -1,4 +1,4 @@
-original source: [https://adventofcode.com//2018/day/17](https://adventofcode.com//2018/day/17)
+original source: [https://adventofcode.com/2018/day/17](https://adventofcode.com/2018/day/17)
 ## --- Day 17: Reservoir Research ---
 You arrive in the year 18. If it weren't for the coat you got in 1018, you would be very cold: the North Pole base hasn't even been constructed.
 

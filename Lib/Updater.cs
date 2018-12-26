@@ -79,7 +79,7 @@ namespace AdventOfCode {
         async Task<Problem> DownloadProblem(HttpClient client, int year, int day) {
             var problemStatement = await Download(client, $"{year}/day/{day}");
             var input = await Download(client, $"{year}/day/{day}/input");
-            return Problem.Parse(year, day, client.BaseAddress + $"/{year}/day/{day}", problemStatement, input);
+            return Problem.Parse(year, day, client.BaseAddress + $"{year}/day/{day}", problemStatement, input);
         }
 
         void UpdateReadmeForDay(Problem problem) {

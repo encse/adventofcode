@@ -1,4 +1,4 @@
-original source: [https://adventofcode.com//2015/day/5](https://adventofcode.com//2015/day/5)
+original source: [https://adventofcode.com/2015/day/5](https://adventofcode.com/2015/day/5)
 ## --- Day 5: Doesn't He Have Intern-Elves For This? ---
 Santa needs help figuring out which strings in his text file are naughty or nice.
 

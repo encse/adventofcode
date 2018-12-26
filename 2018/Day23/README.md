@@ -1,4 +1,4 @@
-original source: [https://adventofcode.com//2018/day/23](https://adventofcode.com//2018/day/23)
+original source: [https://adventofcode.com/2018/day/23](https://adventofcode.com/2018/day/23)
 ## --- Day 23: Experimental Emergency Teleportation ---
 Using your torch to search the darkness of the rocky cavern, you finally locate the man's friend: a small *reindeer*.
 

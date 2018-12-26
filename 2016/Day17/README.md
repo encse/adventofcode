@@ -1,4 +1,4 @@
-original source: [https://adventofcode.com//2016/day/17](https://adventofcode.com//2016/day/17)
+original source: [https://adventofcode.com/2016/day/17](https://adventofcode.com/2016/day/17)
 ## --- Day 17: Two Steps Forward ---
 You're trying to access a secure vault protected by a `4x4` grid of small rooms connected by doors. You start in the top-left room (marked `S`), and you can access the vault (marked `V`) once you reach the bottom-right room:
 

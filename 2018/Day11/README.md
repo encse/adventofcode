@@ -1,4 +1,4 @@
-original source: [https://adventofcode.com//2018/day/11](https://adventofcode.com//2018/day/11)
+original source: [https://adventofcode.com/2018/day/11](https://adventofcode.com/2018/day/11)
 ## --- Day 11: Chronal Charge ---
 You watch the Elves and their sleigh fade into the distance as they head toward the North Pole.
 

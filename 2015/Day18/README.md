@@ -1,4 +1,4 @@
-original source: [https://adventofcode.com//2015/day/18](https://adventofcode.com//2015/day/18)
+original source: [https://adventofcode.com/2015/day/18](https://adventofcode.com/2015/day/18)
 ## --- Day 18: Like a GIF For Your Yard ---
 After the [million lights incident](6), the fire code has gotten stricter: now, at most ten thousand lights are allowed.  You arrange them in a 100x100 grid.
 

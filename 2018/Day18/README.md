@@ -1,4 +1,4 @@
-original source: [https://adventofcode.com//2018/day/18](https://adventofcode.com//2018/day/18)
+original source: [https://adventofcode.com/2018/day/18](https://adventofcode.com/2018/day/18)
 ## --- Day 18: Settlers of The North Pole ---
 On the outskirts of the North Pole base construction project, many Elves are collecting lumber.
 

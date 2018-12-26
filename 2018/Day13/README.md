@@ -1,4 +1,4 @@
-original source: [https://adventofcode.com//2018/day/13](https://adventofcode.com//2018/day/13)
+original source: [https://adventofcode.com/2018/day/13](https://adventofcode.com/2018/day/13)
 ## --- Day 13: Mine Cart Madness ---
 A crop of this size requires significant logistics to transport produce, soil, fertilizer, and so on. The Elves are very busy pushing things around in *carts* on some kind of rudimentary system of tracks they've come up with.
 

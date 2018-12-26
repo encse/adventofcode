@@ -1,4 +1,4 @@
-original source: [https://adventofcode.com//2018/day/16](https://adventofcode.com//2018/day/16)
+original source: [https://adventofcode.com/2018/day/16](https://adventofcode.com/2018/day/16)
 ## --- Day 16: Chronal Classification ---
 As you see the Elves defend their hot chocolate successfully, you go back to falling through time. This is going to become a problem.
 

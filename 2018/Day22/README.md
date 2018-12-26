@@ -1,4 +1,4 @@
-original source: [https://adventofcode.com//2018/day/22](https://adventofcode.com//2018/day/22)
+original source: [https://adventofcode.com/2018/day/22](https://adventofcode.com/2018/day/22)
 ## --- Day 22: Mode Maze ---
 This is it, your final stop: the year -483. It's snowing and dark outside; the only light you can see is coming from a small cottage in the distance. You make your way there and knock on the door.
 

@@ -1,4 +1,4 @@
-original source: [https://adventofcode.com//2018/day/6](https://adventofcode.com//2018/day/6)
+original source: [https://adventofcode.com/2018/day/6](https://adventofcode.com/2018/day/6)
 ## --- Day 6: Chronal Coordinates ---
 The device on your wrist beeps several times, and once again you feel like you're falling.
 

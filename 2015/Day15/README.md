@@ -1,4 +1,4 @@
-original source: [https://adventofcode.com//2015/day/15](https://adventofcode.com//2015/day/15)
+original source: [https://adventofcode.com/2015/day/15](https://adventofcode.com/2015/day/15)
 ## --- Day 15: Science for Hungry People ---
 Today, you set out on the task of perfecting your milk-dunking cookie recipe.  All you have to do is find the right balance of ingredients.
 

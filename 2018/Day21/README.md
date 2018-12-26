@@ -1,4 +1,4 @@
-original source: [https://adventofcode.com//2018/day/21](https://adventofcode.com//2018/day/21)
+original source: [https://adventofcode.com/2018/day/21](https://adventofcode.com/2018/day/21)
 ## --- Day 21: Chronal Conversion ---
 You should have been watching where you were going, because as you wander the new North Pole base, you trip and fall into a very deep hole!
 

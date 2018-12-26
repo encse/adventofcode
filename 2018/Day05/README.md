@@ -1,4 +1,4 @@
-original source: [https://adventofcode.com//2018/day/5](https://adventofcode.com//2018/day/5)
+original source: [https://adventofcode.com/2018/day/5](https://adventofcode.com/2018/day/5)
 ## --- Day 5: Alchemical Reduction ---
 You've managed to sneak in to the prototype suit manufacturing lab.  The Elves are making decent progress, but are still struggling with the suit's size reduction capabilities.
 

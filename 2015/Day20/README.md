@@ -1,4 +1,4 @@
-original source: [https://adventofcode.com//2015/day/20](https://adventofcode.com//2015/day/20)
+original source: [https://adventofcode.com/2015/day/20](https://adventofcode.com/2015/day/20)
 ## --- Day 20: Infinite Elves and Infinite Houses ---
 To keep the Elves busy, Santa has them deliver some presents by hand, door-to-door.  He sends them down a street with infinite houses numbered sequentially: `1`, `2`, `3`, `4`, `5`, and so on.
 

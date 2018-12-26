@@ -1,4 +1,4 @@
-original source: [https://adventofcode.com//2016/day/14](https://adventofcode.com//2016/day/14)
+original source: [https://adventofcode.com/2016/day/14](https://adventofcode.com/2016/day/14)
 ## --- Day 14: One-Time Pad ---
 In order to communicate securely with Santa while you're on this mission, you've been using a [one-time pad](https://en.wikipedia.org/wiki/One-time_pad) that you [generate](https://en.wikipedia.org/wiki/Security_through_obscurity) using a pre-agreed algorithm. Unfortunately, you've run out of keys in your one-time pad, and so you need to generate some more.
 

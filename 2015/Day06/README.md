@@ -1,4 +1,4 @@
-original source: [https://adventofcode.com//2015/day/6](https://adventofcode.com//2015/day/6)
+original source: [https://adventofcode.com/2015/day/6](https://adventofcode.com/2015/day/6)
 ## --- Day 6: Probably a Fire Hazard ---
 Because your neighbors keep defeating you in the holiday house decorating contest year after year, you've decided to deploy one million lights in a 1000x1000 grid.
 

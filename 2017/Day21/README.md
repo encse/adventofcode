@@ -1,4 +1,4 @@
-original source: [https://adventofcode.com//2017/day/21](https://adventofcode.com//2017/day/21)
+original source: [https://adventofcode.com/2017/day/21](https://adventofcode.com/2017/day/21)
 ## --- Day 21: Fractal Art ---
 You find a program trying to generate some art. It uses a strange process that involves repeatedly enhancing the detail of an image through a set of rules.
 

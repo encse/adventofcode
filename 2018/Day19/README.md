@@ -1,4 +1,4 @@
-original source: [https://adventofcode.com//2018/day/19](https://adventofcode.com//2018/day/19)
+original source: [https://adventofcode.com/2018/day/19](https://adventofcode.com/2018/day/19)
 ## --- Day 19: Go With The Flow ---
 With the Elves well on their way constructing the North Pole base, you turn your attention back to understanding the inner workings of programming the device.
 

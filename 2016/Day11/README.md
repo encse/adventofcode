@@ -1,4 +1,4 @@
-original source: [https://adventofcode.com//2016/day/11](https://adventofcode.com//2016/day/11)
+original source: [https://adventofcode.com/2016/day/11](https://adventofcode.com/2016/day/11)
 ## --- Day 11: Radioisotope Thermoelectric Generators ---
 You come upon a column of four floors that have been entirely sealed off from the rest of the building except for a small dedicated lobby.  There are some radiation warnings and a big sign which reads "Radioisotope Testing Facility".
 

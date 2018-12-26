@@ -1,4 +1,4 @@
-original source: [https://adventofcode.com//2018/day/8](https://adventofcode.com//2018/day/8)
+original source: [https://adventofcode.com/2018/day/8](https://adventofcode.com/2018/day/8)
 ## --- Day 8: Memory Maneuver ---
 The sleigh is much easier to pull than you'd expect for something its weight. Unfortunately, neither you nor the Elves know which way the North Pole is from here.
 

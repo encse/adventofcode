@@ -1,4 +1,4 @@
-original source: [https://adventofcode.com//2016/day/7](https://adventofcode.com//2016/day/7)
+original source: [https://adventofcode.com/2016/day/7](https://adventofcode.com/2016/day/7)
 ## --- Day 7: Internet Protocol Version 7 ---
 While snooping around the local network of EBHQ, you compile a list of [IP addresses](https://en.wikipedia.org/wiki/IP_address) (they're IPv7, of course; [IPv6](https://en.wikipedia.org/wiki/IPv6) is much too limited). You'd like to figure out which IPs support *TLS* (transport-layer snooping).
 

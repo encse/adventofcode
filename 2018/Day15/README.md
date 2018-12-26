@@ -1,4 +1,4 @@
-original source: [https://adventofcode.com//2018/day/15](https://adventofcode.com//2018/day/15)
+original source: [https://adventofcode.com/2018/day/15](https://adventofcode.com/2018/day/15)
 ## --- Day 15: Beverage Bandits ---
 Having perfected their hot chocolate, the Elves have a new problem: the [Goblins](https://en.wikipedia.org/wiki/Goblin) that live in these caves will do anything to steal it. Looks like they're here for a fight.
 

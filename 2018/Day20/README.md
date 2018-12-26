@@ -1,4 +1,4 @@
-original source: [https://adventofcode.com//2018/day/20](https://adventofcode.com//2018/day/20)
+original source: [https://adventofcode.com/2018/day/20](https://adventofcode.com/2018/day/20)
 ## --- Day 20: A Regular Map ---
 While you were learning about instruction pointers, the Elves made considerable progress. When you look up, you discover that the North Pole base construction project has completely surrounded you.
 

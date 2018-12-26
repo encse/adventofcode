@@ -1,4 +1,4 @@
-original source: [https://adventofcode.com//2016/day/10](https://adventofcode.com//2016/day/10)
+original source: [https://adventofcode.com/2016/day/10](https://adventofcode.com/2016/day/10)
 ## --- Day 10: Balance Bots ---
 You come upon a factory in which many robots are [zooming around](https://www.youtube.com/watch?v=JnkMyfQ5YfY&t=40) handing small microchips to each other.
 

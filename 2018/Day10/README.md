@@ -1,4 +1,4 @@
-original source: [https://adventofcode.com//2018/day/10](https://adventofcode.com//2018/day/10)
+original source: [https://adventofcode.com/2018/day/10](https://adventofcode.com/2018/day/10)
 ## --- Day 10: The Stars Align ---
 It's no use; your navigation system simply isn't capable of providing walking directions in the arctic circle, and certainly not in 1018.
 
