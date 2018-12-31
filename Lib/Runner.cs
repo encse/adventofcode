@@ -43,11 +43,11 @@ namespace AdventOfCode {
             return WorkingDir(solver.Year(), solver.Day());
         }
 
-        public static SplashScreen SplashScreen(this Solver solver){
+        public static SplashScreen SplashScreen(this Solver solver) {
             var tsplashScreen = Assembly.GetEntryAssembly().GetTypes()
                  .Where(t => t.GetTypeInfo().IsClass && typeof(SplashScreen).IsAssignableFrom(t))
                  .Single(t => Year(t) == solver.Year());
-            return (SplashScreen) Activator.CreateInstance(tsplashScreen);
+            return (SplashScreen)Activator.CreateInstance(tsplashScreen);
         }
     }
 
@@ -62,16 +62,22 @@ namespace AdventOfCode {
                     solver.SplashScreen().Show();
                     lastYear = solver.Year();
                 }
-                
+
                 var workingDir = solver.WorkingDir();
                 var color = Console.ForegroundColor;
                 try {
                     WriteLine(ConsoleColor.White, $"{solver.DayName()}: {solver.GetName()}");
                     WriteLine();
+                    foreach (var dir in new[] { workingDir, Path.Combine(workingDir, "test") }) {
+                        if (!Directory.Exists(dir)) {
+                            continue;
+                        }
+                        var files = Directory.EnumerateFiles(dir).Where(file => file.EndsWith(".in")).ToArray();
+                        foreach (var file in files) {
 
-                    foreach (var file in Directory.EnumerateFiles(workingDir)) {
-
-                        if (file.EndsWith(".in")) {
+                            if (files.Count() > 1) {
+                                WriteLine(color, "  " + file + ":");
+                            }
                             var refoutFile = file.Replace(".in", ".refout");
                             var refout = File.Exists(refoutFile) ? File.ReadAllLines(refoutFile) : null;
                             var input = File.ReadAllText(file);
@@ -120,9 +126,9 @@ namespace AdventOfCode {
         private static void WriteLine(ConsoleColor color = ConsoleColor.Gray, string text = "") {
             Write(color, text + "\n");
         }
-        private static void Write(ConsoleColor color = ConsoleColor.Gray, string text = ""){
-           Console.ForegroundColor = color;
-           Console.Write(text);
+        private static void Write(ConsoleColor color = ConsoleColor.Gray, string text = "") {
+            Console.ForegroundColor = color;
+            Console.Write(text);
         }
     }
 }

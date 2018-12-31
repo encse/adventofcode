@@ -17,13 +17,13 @@ namespace AdventOfCode.Y2018.Day15 {
         }
 
         int PartOne(string input) {
-            return Outcome(input, 3, 3).score;
+            return Outcome(input, 3, 3, false).score;
         }
 
         int PartTwo(string input) {
-            var elfAp = 3;
+            var elfAp = 4;
             while (true) {
-                var outcome = Outcome(input, 3, elfAp);
+                var outcome = Outcome(input, 3, elfAp, false);
                 if (outcome.noElfDied) {
                     return outcome.score;
                 }
@@ -31,25 +31,31 @@ namespace AdventOfCode.Y2018.Day15 {
             }
         }
 
-        (bool noElfDied, int score) Outcome(string input, int goblinAp, int elfAp) {
+        (bool noElfDied, int score) Outcome(string input, int goblinAp, int elfAp, bool tsto) {
             var game = Parse(input, goblinAp, elfAp);
             var elfCount = game.players.Count(player => player.elf);
 
-            var rounds = 0;
-            while (game.Step()) {
-                rounds++;
+            if (tsto) {
+                Console.WriteLine(game.Tsto());
             }
 
-            return (game.players.Count(p => p.elf) == elfCount, (rounds - 1) * game.players.Select(player => player.hp).Sum());
+            while (!game.Finished()) {
+                game.Step();
+                if (tsto) {
+                    Console.WriteLine(game.Tsto());
+                }
+            }
+
+            return (game.players.Count(p => p.elf) == elfCount, game.rounds * game.players.Select(player => player.hp).Sum());
         }
 
-     
+
         Game Parse(string input, int goblinAp, int elfAp) {
             var players = new List<Player>();
             var lines = input.Split("\n");
             var mtx = new Block[lines.Length, lines[0].Length];
 
-            var game = new Game{ mtx = mtx, players = players };
+            var game = new Game { mtx = mtx, players = players };
 
             for (var irow = 0; irow < lines.Length; irow++) {
                 for (var icol = 0; icol < lines[0].Length; icol++) {
@@ -75,11 +81,14 @@ namespace AdventOfCode.Y2018.Day15 {
             }
             return game;
         }
+
+
     }
-    
+
     class Game {
         public Block[,] mtx;
         public List<Player> players;
+        public int rounds;
 
         private bool ValidPos((int irow, int icol) pos) =>
             pos.irow >= 0 && pos.irow < this.mtx.GetLength(0) && pos.icol >= 0 && pos.icol < this.mtx.GetLength(1);
@@ -87,22 +96,60 @@ namespace AdventOfCode.Y2018.Day15 {
         public Block GetBlock((int irow, int icol) pos) =>
             ValidPos(pos) ? mtx[pos.irow, pos.icol] : Wall.Block;
 
-        public bool Step() =>
-             players
-                .OrderBy(a => a.pos)
-                .Aggregate(false, (res, player) => res | player.Step());
+        public void Step() {
+            var finishedBeforeEndOfRound = false;
+            foreach (var player in players.OrderBy(player => player.pos).ToArray()) {
+                if (player.hp > 0) {
+                    finishedBeforeEndOfRound |= Finished();
+                    player.Step();
+                }
+            }
+
+            if (!finishedBeforeEndOfRound) {
+                rounds++;
+            }
+        }
+
+        public bool Finished() =>
+            players.Where(p => p.elf).All(p => p.hp == 0) ||
+            players.Where(p => !p.elf).All(p => p.hp == 0);
+
+        public string Tsto() {
+
+            var res = "";
+            res += rounds == 0 ? "Initial:\n" : $"After round {rounds}:\n";
+            for (var irow = 0; irow < mtx.GetLength(0); irow++) {
+                for (var icol = 0; icol < mtx.GetLength(1); icol++) {
+                    switch (GetBlock((irow, icol))) {
+                        case Player p when p.elf: res += "E"; break;
+                        case Player p when !p.elf: res += "G"; break;
+                        case Empty _: res += "."; break;
+                        case Wall _: res += "#"; break;
+                        default: throw new Exception();
+                    }
+                }
+
+                foreach (var player in players.Where(player => player.pos.irow == irow).OrderBy(player => player.pos)) {
+                    var ch = player.elf ? 'E' : 'G';
+                    res += $" {ch}{{{player.pos.irow}, {player.pos.icol}}}({player.hp})";
+                }
+                res += "\n";
+            }
+            res += "\n";
+            return res;
+        }
     }
 
     abstract class Block { }
 
-    class Empty : Block { 
-        public static readonly Empty Block = new Empty(); 
-        private Empty(){} 
+    class Empty : Block {
+        public static readonly Empty Block = new Empty();
+        private Empty() { }
     }
 
-    class Wall : Block { 
-        public static readonly Wall Block = new Wall(); 
-        private Wall(){} 
+    class Wall : Block {
+        public static readonly Wall Block = new Wall();
+        private Wall() { }
     }
 
     class Player : Block {
@@ -126,31 +173,32 @@ namespace AdventOfCode.Y2018.Day15 {
         }
 
         private bool Move() {
-            var opponents = ClosestOpponents();
-            if (!opponents.Any()) {
+            var targets = FindTargets();
+            if (!targets.Any()) {
                 return false;
             }
-            var opponent = opponents.OrderBy(a => a.player.pos).First();
-            var nextPos = opponents.Where(a => a.player == opponent.player).Select(a => a.firstStep).OrderBy(_ => _).First();
+            var opponent = targets.OrderBy(a => a.target).First();
+            var nextPos = targets.Where(a => a.player == opponent.player).Select(a => a.firstStep).OrderBy(_ => _).First();
             (game.mtx[nextPos.irow, nextPos.icol], game.mtx[pos.irow, pos.icol]) =
                 (game.mtx[pos.irow, pos.icol], game.mtx[nextPos.irow, nextPos.icol]);
             pos = nextPos;
             return true;
         }
 
-        private IEnumerable<(Player player, (int irow, int icol) firstStep)> ClosestOpponents() {
+        private IEnumerable<(Player player, (int irow, int icol) firstStep, (int irow, int icol) target)> FindTargets() {
+
             var minDist = int.MaxValue;
-            foreach (var (otherPlayer, firstStep, dist) in OpponentsByDistance()) {
+            foreach (var (otherPlayer, firstStep, target, dist) in BlocksNextToOpponentsByDistance()) {
                 if (dist > minDist) {
                     break;
                 } else {
                     minDist = dist;
-                    yield return (otherPlayer, firstStep);
+                    yield return (otherPlayer, firstStep, target);
                 }
             }
         }
 
-        private  IEnumerable<(Player player, (int irow, int icol) firstStep, int dist)> OpponentsByDistance() {
+        private IEnumerable<(Player player, (int irow, int icol) firstStep, (int irow, int icol) target, int dist)> BlocksNextToOpponentsByDistance() {
             var seen = new HashSet<(int irow, int icol)>();
             seen.Add(pos);
             var q = new Queue<((int irow, int icol) pos, (int drow, int dcol) origDir, int dist)>();
@@ -162,23 +210,23 @@ namespace AdventOfCode.Y2018.Day15 {
 
             while (q.Any()) {
                 var (pos, firstStep, dist) = q.Dequeue();
-                switch (game.GetBlock(pos)) {
-                    case Player otherPlayer when this != otherPlayer && otherPlayer.elf != elf:
-                        yield return (otherPlayer, firstStep, dist);
-                        break;
 
-                    case Wall _:
-                        break;
+                if (game.GetBlock(pos) is Empty) {
+                    foreach (var (drow, dcol) in new[] { (-1, 0), (0, -1), (0, 1), (1, 0) }) {
+                        var posT = (pos.irow + drow, pos.icol + dcol);
+                        if (!seen.Contains(posT)) {
+                            seen.Add(posT);
+                            q.Enqueue((posT, firstStep, dist + 1));
 
-                    case Empty _:
-                        foreach (var (drow, dcol) in new[] { (-1, 0), (0, -1), (0, 1), (1, 0) }) {
-                            var posT = (pos.irow + drow, pos.icol + dcol);
-                            if (!seen.Contains(posT)) {
-                                seen.Add(posT);
-                                q.Enqueue((posT, firstStep, dist + 1));
+                            var nextBlock = game.GetBlock(posT);
+                            if (nextBlock is Player) {
+                                var player = nextBlock as Player;
+                                if (player.elf != this.elf) {
+                                    yield return (player, firstStep, pos, dist);
+                                }
                             }
                         }
-                        break;
+                    }
                 }
             }
         }
