@@ -108,7 +108,7 @@ namespace AdventOfCode.Y2018.Day16 {
                 var m = Regex.Match(lines[iline], pattern);
                 if (m.Success) {
                     iline++;
-                    r = m.Groups.Skip(1).Select(x => int.Parse(x.Value)).ToArray();
+                    r = m.Groups.Values.Skip(1).Select(x => int.Parse(x.Value)).ToArray();
                 }
                 return m.Success;
             }
