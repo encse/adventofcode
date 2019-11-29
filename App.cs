@@ -1,7 +1,5 @@
 using System;
-using System.IO;
 using System.Linq;
-using System.Collections.Generic;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
@@ -24,7 +22,7 @@ namespace AdventOfCode {
                 }) ??
                 Command(args, Args("update", "last"), m => {
                     var dt = DateTime.Now;
-                    if(dt.Month == 12 && dt.Day >=1 && dt.Day <= 25){
+                    if (dt.Month == 12 && dt.Day >=1 && dt.Day <= 25) {
                         return () => new Updater().Update(dt.Year, dt.Day).Wait();
                     } else {
                         throw new Exception("Event is not active. This option works in Dec 1-25 only)");
@@ -104,7 +102,12 @@ namespace AdventOfCode {
                >  all                   Solve everything
 
                > To start working on new problems:
-               
+               > login to https://adventofcode.com, then copy your session cookie, and export it in your console like this 
+
+               >   export SESSION=73a37e9a72a87b550ef58c590ae48a752eab56946fb7328d35857279912acaa5b32be73bf1d92186e4b250a15d9120a0
+
+               > then run the app with
+
                >  update [year]/[day]   Prepares a folder for the given day, updates the input, 
                >                        the readme and creates a solution template.
                >  update last           Same as above, but for the current day. Works in December only.  
