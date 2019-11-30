@@ -9,12 +9,12 @@ namespace AdventOfCode.Generator {
            
             return $@"
                > # Advent of Code ({firstYear}-{lastYear})
-               > My C# solutions to the advent of code problems.
+               > C# solutions to the advent of code problems.
                > Check out http://adventofcode.com.
 
                > ## Dependencies
 
-               > - This library is based on `.NET Core 3.0`. It should work on Windows, Linux and OS X.
+               > - This project is based on `.NET Core 3.0`. It should work on Windows, Linux and OS X.
                > - `Newtonsoft.Json` for JSON parsing
                > - `HtmlAgilityPack.NetCore` is used for problem download.
 

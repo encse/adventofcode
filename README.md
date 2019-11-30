@@ -1,11 +1,11 @@
 
 # Advent of Code (2015-2018)
-My C# solutions to the advent of code problems.
+C# solutions to the advent of code problems.
 Check out http://adventofcode.com.
 
 ## Dependencies
 
-- This library is based on `.NET Core 3.0`. It should work on Windows, Linux and OS X.
+- This project is based on `.NET Core 3.0`. It should work on Windows, Linux and OS X.
 - `Newtonsoft.Json` for JSON parsing
 - `HtmlAgilityPack.NetCore` is used for problem download.
 
@@ -27,7 +27,12 @@ Supported arguments:
  all                   Solve everything
 
 To start working on new problems:
-               
+login to https://adventofcode.com, then copy your session cookie, and export it in your console like this 
+
+  export SESSION=73a37e9a72a87b550ef58c590ae48a752eab56946fb7328d35857279912acaa5b32be73bf1d92186e4b250a15d9120a0
+
+then run the app with
+
  update [year]/[day]   Prepares a folder for the given day, updates the input, 
                        the readme and creates a solution template.
  update last           Same as above, but for the current day. Works in December only.  
