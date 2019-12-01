@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Text;
 
 namespace AdventOfCode.Y2016.Day01 {
 
@@ -39,10 +37,13 @@ namespace AdventOfCode.Y2016.Day01 {
 
             foreach (var stm in Regex.Split(input, ", ")) {
                 var d = int.Parse(stm.Substring(1));
-                switch (stm[0]) {
-                    case 'R': (drow, dcol) = (dcol, -drow); break;
-                    case 'L': (drow, dcol) = (-dcol, drow); break;
-                }
+
+                (drow, dcol) = stm[0] switch {
+                    'R' => (dcol, -drow),
+                    'L' => (-dcol, drow),
+                    _ => throw new ArgumentException()
+                };
+               
                 for (int i = 0; i < d; i++) {
                     (irow, icol) = (irow + drow, icol + dcol);
                     yield return (irow, icol);

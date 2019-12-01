@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Text;
 
 
@@ -12,10 +11,6 @@ using System.Runtime.Loader;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
-
-
-using System.Threading;
-using System.Reflection.Emit;
 
 namespace AdventOfCode.Y2018.Day21 {
 
@@ -81,25 +76,25 @@ namespace AdventOfCode.Y2018.Day21 {
                 var line = srcLines[ip];
                 var parts = line.Split(";")[0].Trim().Split(" ");
                 var stm = parts.Skip(1).Select(int.Parse).ToArray();
-                var compiledStm = "";
-                switch (parts[0]) {
-                    case "addr": compiledStm = $"r[{stm[2]}] = r[{stm[0]}] + r[{stm[1]}]"; break;
-                    case "addi": compiledStm = $"r[{stm[2]}] = r[{stm[0]}] + {stm[1]}"; break;
-                    case "mulr": compiledStm = $"r[{stm[2]}] = r[{stm[0]}] * r[{stm[1]}]"; break;
-                    case "muli": compiledStm = $"r[{stm[2]}] = r[{stm[0]}] * {stm[1]}"; break;
-                    case "banr": compiledStm = $"r[{stm[2]}] = r[{stm[0]}] & r[{stm[1]}]"; break;
-                    case "bani": compiledStm = $"r[{stm[2]}] = r[{stm[0]}] & {stm[1]}"; break;
-                    case "borr": compiledStm = $"r[{stm[2]}] = r[{stm[0]}] | r[{stm[1]}]"; break;
-                    case "bori": compiledStm = $"r[{stm[2]}] = r[{stm[0]}] | {stm[1]}"; break;
-                    case "setr": compiledStm = $"r[{stm[2]}] = r[{stm[0]}]"; break;
-                    case "seti": compiledStm = $"r[{stm[2]}] = {stm[0]}"; break;
-                    case "gtir": compiledStm = $"r[{stm[2]}] = {stm[0]} > r[{stm[1]}] ? 1 : 0"; break;
-                    case "gtri": compiledStm = $"r[{stm[2]}] = r[{stm[0]}] > {stm[1]} ? 1 : 0"; break;
-                    case "gtrr": compiledStm = $"r[{stm[2]}] = r[{stm[0]}] > r[{stm[1]}] ? 1 : 0"; break;
-                    case "eqir": compiledStm = $"r[{stm[2]}] = {stm[0]} == r[{stm[1]}] ? 1 : 0"; break;
-                    case "eqri": compiledStm = $"r[{stm[2]}] = r[{stm[0]}] == {stm[1]} ? 1 : 0"; break;
-                    case "eqrr": compiledStm = $"r[{stm[2]}] = r[{stm[0]}] == r[{stm[1]}] ? 1 : 0"; break;
-                }
+                var compiledStm = parts[0] switch {
+                    "addr" => $"r[{stm[2]}] = r[{stm[0]}] + r[{stm[1]}]",
+                    "addi" => $"r[{stm[2]}] = r[{stm[0]}] + {stm[1]}",
+                    "mulr" => $"r[{stm[2]}] = r[{stm[0]}] * r[{stm[1]}]",
+                    "muli" => $"r[{stm[2]}] = r[{stm[0]}] * {stm[1]}",
+                    "banr" => $"r[{stm[2]}] = r[{stm[0]}] & r[{stm[1]}]",
+                    "bani" => $"r[{stm[2]}] = r[{stm[0]}] & {stm[1]}",
+                    "borr" => $"r[{stm[2]}] = r[{stm[0]}] | r[{stm[1]}]",
+                    "bori" => $"r[{stm[2]}] = r[{stm[0]}] | {stm[1]}",
+                    "setr" => $"r[{stm[2]}] = r[{stm[0]}]",
+                    "seti" => $"r[{stm[2]}] = {stm[0]}",
+                    "gtir" => $"r[{stm[2]}] = {stm[0]} > r[{stm[1]}] ? 1 : 0",
+                    "gtri" => $"r[{stm[2]}] = r[{stm[0]}] > {stm[1]} ? 1 : 0",
+                    "gtrr" => $"r[{stm[2]}] = r[{stm[0]}] > r[{stm[1]}] ? 1 : 0",
+                    "eqir" => $"r[{stm[2]}] = {stm[0]} == r[{stm[1]}] ? 1 : 0",
+                    "eqri" => $"r[{stm[2]}] = r[{stm[0]}] == {stm[1]} ? 1 : 0",
+                    "eqrr" => $"r[{stm[2]}] = r[{stm[0]}] == r[{stm[1]}] ? 1 : 0",
+                    _ => throw new ArgumentException()
+                };
                 var brk = breakpoints.Contains(ip) ? "yield return r;" : "";
                 compiledStatements.AppendLine($"\t\tcase {ip}: {brk} {compiledStm}; r[{ipReg}]++; break;");
             }

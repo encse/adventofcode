@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Text;
 
 namespace AdventOfCode.Y2016.Day23 {
 
@@ -62,13 +59,14 @@ namespace AdventOfCode.Y2016.Day23 {
                         var ipDst = ip + getReg(stm[1]);
                         if (ipDst >= 0 && ipDst < prg.Length) {
                             var stmDst = prg[ipDst];
-                            switch (stmDst[0]) {
-                                case "cpy": stmDst[0] = "jnz"; break;
-                                case "inc": stmDst[0] = "dec"; break;
-                                case "dec": stmDst[0] = "inc"; break;
-                                case "jnz": stmDst[0] = "cpy"; break;
-                                case "tgl": stmDst[0] = "inc"; break;
-                            }
+                            stmDst[0] = stmDst[0] switch {
+                                "cpy" => "jnz",
+                                "inc" => "dec",
+                                "dec" => "inc",
+                                "jnz" => "cpy",
+                                "tgl" => "inc",
+                                _ => stmDst[0]
+                            };
                         }
                         ip++;
                         break;

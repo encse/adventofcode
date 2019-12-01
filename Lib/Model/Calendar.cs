@@ -1,9 +1,7 @@
 using System;
-using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using HtmlAgilityPack;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Model {

@@ -1,9 +1,5 @@
-using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
 using System.Text.RegularExpressions;
-using System.Text;
 
 namespace AdventOfCode.Y2018.Day18 {
 
@@ -63,11 +59,13 @@ namespace AdventOfCode.Y2018.Day18 {
                         }
                     }
 
-                    switch (mtx[irow][icol]) {
-                        case '#': line += lumberyard >= 1 && tree >= 1 ? '#' : '.'; break;
-                        case '|': line += lumberyard >= 3 ? '#' : '|'; break;
-                        case '.': line += tree >= 3 ? '|' : '.'; break;
-                    }
+                    line += mtx[irow][icol] switch {
+                        '#' when lumberyard >= 1 && tree >= 1 => '#',
+                        '|' when lumberyard >= 3 => '#',
+                        '.' when tree >= 3 => '|',
+                        '#' => '.',
+                        var c => c
+                    };
                 }
                 res.Add(line);
             }

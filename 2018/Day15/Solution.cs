@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Text;
 
 namespace AdventOfCode.Y2018.Day15 {
 
@@ -120,13 +117,13 @@ namespace AdventOfCode.Y2018.Day15 {
             res += rounds == 0 ? "Initial:\n" : $"After round {rounds}:\n";
             for (var irow = 0; irow < mtx.GetLength(0); irow++) {
                 for (var icol = 0; icol < mtx.GetLength(1); icol++) {
-                    switch (GetBlock((irow, icol))) {
-                        case Player p when p.elf: res += "E"; break;
-                        case Player p when !p.elf: res += "G"; break;
-                        case Empty _: res += "."; break;
-                        case Wall _: res += "#"; break;
-                        default: throw new Exception();
-                    }
+                    res += GetBlock((irow, icol)) switch {
+                        Player p when p.elf => "E",
+                        Player p when !p.elf => "G",
+                        Empty _ => ".",
+                        Wall _ => "#",
+                        _ => throw new ArgumentException()
+                    };
                 }
 
                 foreach (var player in players.Where(player => player.pos.irow == irow).OrderBy(player => player.pos)) {
