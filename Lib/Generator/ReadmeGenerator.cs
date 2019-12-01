@@ -1,5 +1,4 @@
 using System.Linq;
-using System.Text.RegularExpressions;
 using AdventOfCode.Model;
 
 namespace AdventOfCode.Generator {

@@ -1,9 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Text;
 
 namespace AdventOfCode.Y2017.Day22 {
 
@@ -24,32 +20,26 @@ namespace AdventOfCode.Y2017.Day22 {
         }
 
         int PartOne(string input) =>
-            Iterate(input, 10000, (state, drow, dcol) => {
-                switch (state) {
-                    case State.Clean:
-                        return (State.Infected, -dcol, drow);
-                    case State.Infected:
-                        return (State.Clean, dcol, -drow);
-                    default:
-                        throw new Exception();
-                }
-            });
+            Iterate(input, 10000, 
+                (state, drow, dcol) => 
+                    state switch {
+                        State.Clean => (State.Infected, -dcol, drow),
+                        State.Infected => (State.Clean, dcol, -drow),
+                        _ => throw new ArgumentException()
+                    }
+            );
 
         int PartTwo(string input) =>
-            Iterate(input, 10000000, (state, drow, dcol) => {
-                switch (state) {
-                    case State.Clean:
-                        return (State.Weakened, -dcol, drow);
-                    case State.Weakened:
-                        return (State.Infected, drow, dcol);
-                    case State.Infected:
-                        return (State.Flagged, dcol, -drow);
-                    case State.Flagged:
-                        return (State.Clean, -drow, -dcol);
-                    default:
-                        throw new Exception();
-                }
-            });
+            Iterate(input, 10000000, 
+                (state, drow, dcol) => 
+                    state switch {
+                        State.Clean => (State.Weakened, -dcol, drow),
+                        State.Weakened => (State.Infected, drow, dcol),
+                        State.Infected => (State.Flagged, dcol, -drow),
+                        State.Flagged => (State.Clean, -drow, -dcol),
+                        _ => throw new ArgumentException()
+                    }
+            );
 
 
         int Iterate(string input, int iterations, Func<State, int, int, (State State, int irow, int icol)> update) {

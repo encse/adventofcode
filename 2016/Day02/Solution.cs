@@ -1,9 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Text;
 
 namespace AdventOfCode.Y2016.Day02 {
 
@@ -16,23 +12,24 @@ namespace AdventOfCode.Y2016.Day02 {
             yield return PartTwo(input);
         }
 
-        string PartOne(string input) => Foo(input, "123\n456\n789");
-        string PartTwo(string input) => Foo(input, "  1  \n 234 \n56789\n ABC \n  D  ");
+        string PartOne(string input) => Solve(input, "123\n456\n789");
+        string PartTwo(string input) => Solve(input, "  1  \n 234 \n56789\n ABC \n  D  ");
 
-        string Foo(string input, string keypad) {
+        string Solve(string input, string keypad) {
             var res = "";
             var lines = keypad.Split('\n');
             var (crow, ccol) = (lines.Length, lines[0].Length);
             var (irow, icol) = (crow / 2, ccol / 2);
             foreach (var line in input.Split('\n')) {
                 foreach (var ch in line) {
-                    var (drow, dcol) = (0, 0);
-                    switch (ch) {
-                        case 'U': (drow, dcol) = (-1, 0); break;
-                        case 'D': (drow, dcol) = (1, 0); break;
-                        case 'L': (drow, dcol) = (0, -1); break;
-                        case 'R': (drow, dcol) = (0, 1); break;
-                    }
+                    var (drow, dcol) = ch switch {
+                        'U' => (-1, 0),
+                        'D' =>  (1, 0),
+                        'L' => (0, -1),
+                        'R' => (0, 1),
+                        _ => throw new ArgumentException()
+                    };
+
                     var (irowT, icolT) = (irow + drow, icol + dcol);
                     if (irowT >= 0 && irowT < crow && icolT >= 0 && icolT < ccol && lines[irowT][icolT] != ' ') {
                         (irow, icol) = (irowT, icolT);

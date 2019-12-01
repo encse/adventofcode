@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Text;
 
 namespace AdventOfCode.Y2018.Day19 {
 
@@ -43,24 +40,25 @@ namespace AdventOfCode.Y2018.Day19 {
 
         int[] Step(int[] regs, string op, int[] stm) {
             regs = regs.ToArray();
-            switch (op) {
-                case "addr": regs[stm[2]] = regs[stm[0]] + regs[stm[1]]; break;
-                case "addi": regs[stm[2]] = regs[stm[0]] + stm[1]; break;
-                case "mulr": regs[stm[2]] = regs[stm[0]] * regs[stm[1]]; break;
-                case "muli": regs[stm[2]] = regs[stm[0]] * stm[1]; break;
-                case "banr": regs[stm[2]] = regs[stm[0]] & regs[stm[1]]; break;
-                case "bani": regs[stm[2]] = regs[stm[0]] & stm[1]; break;
-                case "borr": regs[stm[2]] = regs[stm[0]] | regs[stm[1]]; break;
-                case "bori": regs[stm[2]] = regs[stm[0]] | stm[1]; break;
-                case "setr": regs[stm[2]] = regs[stm[0]]; break;
-                case "seti": regs[stm[2]] = stm[0]; break;
-                case "gtir": regs[stm[2]] = stm[0] > regs[stm[1]] ? 1 : 0; break;
-                case "gtri": regs[stm[2]] = regs[stm[0]] > stm[1] ? 1 : 0; break;
-                case "gtrr": regs[stm[2]] = regs[stm[0]] > regs[stm[1]] ? 1 : 0; break;
-                case "eqir": regs[stm[2]] = stm[0] == regs[stm[1]] ? 1 : 0; break;
-                case "eqri": regs[stm[2]] = regs[stm[0]] == stm[1] ? 1 : 0; break;
-                case "eqrr": regs[stm[2]] = regs[stm[0]] == regs[stm[1]] ? 1 : 0; break;
-            }
+            regs[stm[2]] = op switch {
+                "addr" => regs[stm[0]] + regs[stm[1]],
+                "addi" => regs[stm[0]] + stm[1],
+                "mulr" => regs[stm[0]] * regs[stm[1]],
+                "muli" => regs[stm[0]] * stm[1],
+                "banr" => regs[stm[0]] & regs[stm[1]],
+                "bani" => regs[stm[0]] & stm[1],
+                "borr" => regs[stm[0]] | regs[stm[1]],
+                "bori" => regs[stm[0]] | stm[1],
+                "setr" => regs[stm[0]],
+                "seti" => stm[0],
+                "gtir" => stm[0] > regs[stm[1]] ? 1 : 0,
+                "gtri" => regs[stm[0]] > stm[1] ? 1 : 0,
+                "gtrr" => regs[stm[0]] > regs[stm[1]] ? 1 : 0,
+                "eqir" => stm[0] == regs[stm[1]] ? 1 : 0,
+                "eqri" => regs[stm[0]] == stm[1] ? 1 : 0,
+                "eqrr" => regs[stm[0]] == regs[stm[1]] ? 1 : 0,
+                _ => throw new ArgumentException()
+            };
             return regs;
         }
     }

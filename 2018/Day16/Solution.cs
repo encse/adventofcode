@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Text;
 
 namespace AdventOfCode.Y2018.Day16 {
 
@@ -117,24 +115,25 @@ namespace AdventOfCode.Y2018.Day16 {
 
         int[] Step(int[] regs, int[] stm) {
             regs = regs.ToArray();
-            switch (stm[0]) {
-                case 0: regs[stm[3]] = regs[stm[1]] + regs[stm[2]]; break;
-                case 1: regs[stm[3]] = regs[stm[1]] + stm[2]; break;
-                case 2: regs[stm[3]] = regs[stm[1]] * regs[stm[2]]; break;
-                case 3: regs[stm[3]] = regs[stm[1]] * stm[2]; break;
-                case 4: regs[stm[3]] = regs[stm[1]] & regs[stm[2]]; break;
-                case 5: regs[stm[3]] = regs[stm[1]] & stm[2]; break;
-                case 6: regs[stm[3]] = regs[stm[1]] | regs[stm[2]]; break;
-                case 7: regs[stm[3]] = regs[stm[1]] | stm[2]; break;
-                case 8: regs[stm[3]] = regs[stm[1]]; break;
-                case 9: regs[stm[3]] = stm[1]; break;
-                case 10: regs[stm[3]] = stm[1] > regs[stm[2]] ? 1 : 0; break;
-                case 11: regs[stm[3]] = regs[stm[1]] > stm[2] ? 1 : 0; break;
-                case 12: regs[stm[3]] = regs[stm[1]] > regs[stm[2]] ? 1 : 0; break;
-                case 13: regs[stm[3]] = stm[1] == regs[stm[2]] ? 1 : 0; break;
-                case 14: regs[stm[3]] = regs[stm[1]] == stm[2] ? 1 : 0; break;
-                case 15: regs[stm[3]] = regs[stm[1]] == regs[stm[2]] ? 1 : 0; break;
-            }
+            regs[stm[3]] = stm[0] switch {
+                0 => regs[stm[1]] + regs[stm[2]],
+                1 => regs[stm[1]] + stm[2],
+                2 => regs[stm[1]] * regs[stm[2]],
+                3 => regs[stm[1]] * stm[2],
+                4 => regs[stm[1]] & regs[stm[2]],
+                5 => regs[stm[1]] & stm[2],
+                6 => regs[stm[1]] | regs[stm[2]],
+                7 => regs[stm[1]] | stm[2],
+                8 => regs[stm[1]],
+                9 => stm[1],
+                10 => stm[1] > regs[stm[2]] ? 1 : 0,
+                11 => regs[stm[1]] > stm[2] ? 1 : 0,
+                12 => regs[stm[1]] > regs[stm[2]] ? 1 : 0,
+                13 => stm[1] == regs[stm[2]] ? 1 : 0,
+                14 => regs[stm[1]] == stm[2] ? 1 : 0,
+                15 => regs[stm[1]] == regs[stm[2]] ? 1 : 0,
+                _ => throw new ArgumentException()
+            };
             return regs;
         }
     }

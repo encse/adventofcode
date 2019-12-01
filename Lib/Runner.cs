@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Text.RegularExpressions;
 
 namespace AdventOfCode {
     interface Solver {
@@ -104,7 +103,7 @@ namespace AdventOfCode {
                                     diff > 1000 ? ConsoleColor.Red :
                                     diff > 500 ? ConsoleColor.Yellow :
                                     ConsoleColor.DarkGreen,
-                                    $"({diff} ms)"
+                                    $"({diff.ToString("F3")} ms)"
                                 );
                                 dt = now;
                                 iline++;

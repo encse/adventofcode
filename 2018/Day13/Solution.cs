@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Text;
 
 namespace AdventOfCode.Y2018.Day13 {
 
@@ -112,16 +109,12 @@ namespace AdventOfCode.Y2018.Day13 {
         private Dir nextTurn = Dir.Left;
 
         public void Rotate(Dir dir) {
-            switch (dir) {
-                case Dir.Left:
-                    (drow, dcol) = (-dcol, drow);
-                    break;
-                case Dir.Right:
-                    (drow, dcol) = (dcol, -drow);
-                    break;
-                default:
-                    break;
-            }
+             (drow, dcol) = dir switch {
+                 Dir.Left => (-dcol, drow),
+                 Dir.Right => (dcol, -drow),
+                 Dir.Forward => (drow, dcol),
+                 _ => throw new ArgumentException()
+             };
         }
 
         public void Turn() {

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2017.Day08 {
 
@@ -33,22 +32,20 @@ namespace AdventOfCode.Y2017.Day08 {
                     regs[regCond] = 0;
                 }
 
-                var conditionHolds = false;
-                switch (cond) {
-                    case ">=": conditionHolds = regs[regCond] >= condNum; break;
-                    case "<=": conditionHolds = regs[regCond] <= condNum; break;
-                    case "==": conditionHolds = regs[regCond] == condNum; break;
-                    case "!=": conditionHolds = regs[regCond] != condNum; break;
-                    case ">": conditionHolds = regs[regCond] > condNum; break;
-                    case "<": conditionHolds = regs[regCond] < condNum; break;
-                    default: throw new NotImplementedException(cond);
-                }
+                var conditionHolds = cond switch {
+                    ">=" => regs[regCond] >= condNum,
+                    "<=" => regs[regCond] <= condNum,
+                    "==" => regs[regCond] == condNum,
+                    "!=" => regs[regCond] != condNum,
+                    ">"  => regs[regCond] > condNum,
+                    "<"  => regs[regCond] < condNum,
+                    _ => throw new NotImplementedException(cond)
+                };
                 if (conditionHolds) {
-                    switch(op){
-                        case "inc": regs[regDst] += num; break;
-                        case "dec": regs[regDst] -= num; break;
-                        default: throw new NotImplementedException(op);
-                    }
+                    regs[regDst] += 
+                        op == "inc" ? num :
+                        op == "dec" ? -num :
+                        throw new NotImplementedException(op);
                 }
                 runningMax = Math.Max(runningMax, regs[regDst]);
             }

@@ -19,13 +19,13 @@ namespace AdventOfCode.Y2015.Day12 {
 
         int Solve(string input, bool skipRed) {
             int Traverse(JToken t) {
-                switch (t) {
-                    case JObject v when skipRed && v.Values().Contains("red"): return 0;
-                    case JObject v: return v.Values().Select(Traverse).Sum();
-                    case JArray v: return v.Select(Traverse).Sum();
-                    case JValue v when v.Type == JTokenType.Integer: return (int)v;
-                    default: return 0;
-                }
+                return t switch {
+                    JObject v when skipRed && v.Values().Contains("red") => 0,
+                    JObject v => v.Values().Select(Traverse).Sum(),
+                    JArray v => v.Select(Traverse).Sum(),
+                    JValue v when v.Type == JTokenType.Integer => (int)v,
+                    _ => 0
+                };
             }
             return Traverse(JToken.Parse(input));
         }

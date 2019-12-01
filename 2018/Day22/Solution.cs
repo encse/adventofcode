@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Text;
 
 namespace AdventOfCode.Y2018.Day22 {
 
@@ -34,17 +32,12 @@ namespace AdventOfCode.Y2018.Day22 {
             var seen = new HashSet<((int x, int y), Tool tool)>();
 
             IEnumerable<((int x, int y) pos, Tool tool, int dt)> Neighbours((int x, int y) pos, Tool tool) {
-                switch (regionType(pos.x, pos.y)) {
-                    case RegionType.Rocky:
-                        yield return (pos, tool == Tool.ClimbingGear ? Tool.Torch : Tool.ClimbingGear, 7);
-                        break;
-                    case RegionType.Narrow:
-                        yield return (pos, tool == Tool.Torch ? Tool.Nothing : Tool.Torch, 7);
-                        break;
-                    case RegionType.Wet:
-                        yield return (pos, tool == Tool.ClimbingGear ? Tool.Nothing : Tool.ClimbingGear, 7);
-                        break;
-                }
+                yield return regionType(pos.x, pos.y) switch {
+                    RegionType.Rocky => (pos, tool == Tool.ClimbingGear ? Tool.Torch : Tool.ClimbingGear, 7),
+                    RegionType.Narrow => (pos, tool == Tool.Torch ? Tool.Nothing : Tool.Torch, 7),
+                    RegionType.Wet => (pos, tool == Tool.ClimbingGear ? Tool.Nothing : Tool.ClimbingGear, 7),
+                    _ => throw new ArgumentException()
+                };
 
                 foreach (var dx in new[] { -1, 0, 1 }) {
                     foreach (var dy in new[] { -1, 0, 1 }) {
@@ -58,22 +51,10 @@ namespace AdventOfCode.Y2018.Day22 {
                         }
 
                         switch (regionType(posNew.x, posNew.y)) {
-                            case RegionType.Rocky:
-                                if (tool == Tool.ClimbingGear || tool == Tool.Torch) {
-                                    yield return (posNew, tool, 1);
-                                }
-                                break;
-                            case RegionType.Narrow:
-                                if (tool == Tool.Torch || tool == Tool.Nothing) {
-                                    yield return (posNew, tool, 1);
-                                }
-                                break;
-                            case RegionType.Wet:
-
-                                if (tool == Tool.ClimbingGear || tool == Tool.Nothing) {
-                                    yield return (posNew, tool, 1);
-                                }
-
+                            case RegionType.Rocky when tool == Tool.ClimbingGear || tool == Tool.Torch:
+                            case RegionType.Narrow when tool == Tool.Torch || tool == Tool.Nothing:
+                            case RegionType.Wet when tool == Tool.ClimbingGear || tool == Tool.Nothing:
+                                yield return (posNew, tool, 1);
                                 break;
                         }
                     }
