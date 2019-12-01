@@ -23,7 +23,7 @@ namespace AdventOfCode.Y2019.Day01 {
                 var weight = weights.Dequeue();
                 var fuel = (int)(Math.Floor(weight / 3.0) - 2);
                 if (fuel > 0) {
-                    if (recursive && fuel > 0) {
+                    if (recursive) {
                         weights.Enqueue(fuel);
                     }
                     res += fuel;
