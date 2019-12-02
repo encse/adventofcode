@@ -4,7 +4,6 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace AdventOfCode {
-
     class App {
 
         static void Main(string[] args) {
