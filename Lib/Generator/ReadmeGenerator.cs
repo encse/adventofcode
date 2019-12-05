@@ -13,8 +13,7 @@ namespace AdventOfCode.Generator {
 
                > ## Dependencies
 
-               > - This project is based on `.NET Core 3.0`. It should work on Windows, Linux and OS X.
-               > - `Newtonsoft.Json` for JSON parsing
+               > - This project is based on `.NET Core 3.1`. It should work on Windows, Linux and OS X.
                > - `HtmlAgilityPack.NetCore` is used for problem download.
 
                > ## Running
