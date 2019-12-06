@@ -25,16 +25,13 @@ namespace AdventOfCode.Y2019.Day06 {
 
         int PartTwo(string input) {
             var childToParent = ParseTree(input);
-            var ancestors1 = GetAncestors(childToParent, "YOU").ToArray();
-            var ancestors2 = GetAncestors(childToParent, "SAN").ToArray();
-            for (var i = 0; i < ancestors1.Length; i++) {
-                for (var k = 0; k < ancestors2.Length; k++) {
-                    if (ancestors1[i] == ancestors2[k]) {
-                        return i + k;
-                    }
-                }
+            var ancestors1 = new Stack<string>(GetAncestors(childToParent, "YOU"));
+            var ancestors2 = new Stack<string>(GetAncestors(childToParent, "SAN"));
+            while (ancestors1.Peek() == ancestors2.Peek()) {
+                ancestors1.Pop();
+                ancestors2.Pop();
             }
-            throw new Exception();
+            return ancestors1.Count + ancestors2.Count;
         }
 
         ChildToParent ParseTree(string input) =>
