@@ -3,7 +3,7 @@
 C# solutions to the advent of code problems.
 Check out http://adventofcode.com.
 
-![](demo.gif | width=100)
+<img src="demo.gif" width="600px" >
 
 ## Dependencies
 
