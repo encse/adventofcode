@@ -2,9 +2,7 @@
 # Advent of Code (2015-2019)
 C# solutions to the advent of code problems.
 Check out http://adventofcode.com.
-
-<img src="demo.gif" width="600px" >
-
+![](demo.gif)
 ## Dependencies
 
 - This project is based on `.NET Core 3.1`. It should work on Windows, Linux and OS X.
