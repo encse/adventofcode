@@ -10,7 +10,7 @@ namespace AdventOfCode.Generator {
                > # Advent of Code ({firstYear}-{lastYear})
                > C# solutions to the advent of code problems.
                > Check out http://adventofcode.com.
-
+               > ![](demo.gif)
                > ## Dependencies
 
                > - This project is based on `.NET Core 3.1`. It should work on Windows, Linux and OS X.
