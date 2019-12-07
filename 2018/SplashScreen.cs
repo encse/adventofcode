@@ -7,7 +7,6 @@ namespace AdventOfCode.Y2018 {
 
         public void Show() {
 
-            var color = Console.ForegroundColor;
             Write(0xffff66, false, "\n  __   ____  _  _  ____  __ _  ____     __  ____     ___  __  ____  ____         \n / _\\ (    \\/ )( ");
             Write(0xffff66, false, "\\(  __)(  ( \\(_  _)   /  \\(  __)   / __)/  \\(    \\(  __)        \n/    \\ ) D (\\ \\/ / ) _) /    /  )( ");
             Write(0xffff66, false, "   (  O )) _)   ( (__(  O )) D ( ) _)         \n\\_/\\_/(____/ \\__/ (____)\\_)__) (__)    \\__/(__)     \\");
@@ -162,12 +161,13 @@ namespace AdventOfCode.Y2018 {
             Write(0xcccccc, false, "_'~~~~~~~~~~~~~'_________ ___ __ _  _   _    _      1 ");
             Write(0xffff66, false, "**\n           \n");
             
-            Console.ForegroundColor = color;
+            Terminal.ResetFont();
             Console.WriteLine();
         }
 
        private static void Write(int rgb, bool bold, string text){
-           Console.Write($"\u001b[38;2;{(rgb>>16)&255};{(rgb>>8)&255};{rgb&255}{(bold ? ";1" : "")}m{text}");
+           Terminal.SetFont(rgb, bold);
+           Console.Write(text);
        }
     }
 }
