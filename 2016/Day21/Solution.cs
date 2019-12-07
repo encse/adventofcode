@@ -22,28 +22,26 @@ namespace AdventOfCode.Y2016.Day21 {
             return string.Join("", Permutations("abcdefgh".ToArray()).First(p => scramble(p).SequenceEqual("fbgdceah")));
         }
 
-        IEnumerable<ImmutableList<T>> Permutations<T>(IList<T> st) {
+        IEnumerable<T[]> Permutations<T>(T[] rgt) {
+            void Swap(int i, int j) {
+                (rgt[i], rgt[j]) = (rgt[j], rgt[i]);
+            }
 
-            IEnumerable<ImmutableList<T>> PermutationsRec(ImmutableList<T> prefix, bool[] fseen) {
-                if (prefix.Count == st.Count()) {
-                    yield return prefix;
-                } else {
-                    for (int i = 0; i < st.Count(); i++) {
-                        if (!fseen[i]) {
-                            fseen[i] = true;
-                            var prefixT = prefix.Add(st[i]);
-                            foreach (var res in PermutationsRec(prefixT, fseen)) {
-                                yield return res;
-                            }
-                            fseen[i] = false;
-                        }
+            IEnumerable<T[]> PermutationsRec(int i) {
+                yield return rgt.ToArray();
+
+                for (var j = i; j < rgt.Length; j++) {
+                    Swap(i, j);
+                    foreach (var perm in PermutationsRec(i + 1)) {
+                        yield return perm;
                     }
+                    Swap(i, j);
                 }
             }
 
-            return PermutationsRec(ImmutableList<T>.Empty, new bool[st.Count()]);
+            return PermutationsRec(0);
         }
-
+        
         Func<IEnumerable<char>, IEnumerable<char>> Parse(string input) {
             var steps = (
                 from line in input.Split('\n')
