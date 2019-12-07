@@ -1,16 +1,14 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using HtmlAgilityPack;
 using System.Text.RegularExpressions;
-using ExCSS;
+using AngleSharp.Dom;
 
 namespace AdventOfCode.Model {
 
     public class CalendarToken {
-        public string[] Styles = new string[0];
         public string Text { get; set; }
-        public int? ConsoleColor { get; set; }
+        public int ConsoleColor { get; set; }
     }
 
     public class Calendar {
@@ -19,59 +17,55 @@ namespace AdventOfCode.Model {
         public Dictionary<string[], int> Theme = new Dictionary<string[], int>();
         public IReadOnlyList<IReadOnlyList<CalendarToken>> Lines { get; private set; }
 
-        public static Calendar Parse(int year, string html) {
-            var document = new HtmlAgilityPack.HtmlDocument();
-            document.LoadHtml(html);
+        public static Calendar Parse(int year, IDocument document) {
 
             var theme = new Dictionary<string[], int>();
 
-            var styleNodes = document.DocumentNode.SelectNodes("//style");
-            var styleSheetParser = new StylesheetParser();
+            // anglesharp bug, it doesn't handle external stylehseets well.
+            var q = document.CreateElement("style");
+            q.SetInnerText($@"
+                .calendar > span {{
+                    color: #333333;
+                }}
+                .calendar > a {{
+                    text-decoration: none;
+                    color: #666666;
+                    outline: none;
+                    cursor: default;
+                }}
 
-            foreach (var style in styleNodes) {
+                .calendar .calendar-day {{ color: #666666; }}
+                .calendar a .calendar-day {{ color: #cccccc; }}
+                .calendar a .calendar-mark-complete,
+                .calendar a.calendar-complete     .calendar-mark-complete,
+                .calendar a.calendar-verycomplete .calendar-mark-complete {{ color: #ffff66; }}
+                .calendar a.calendar-verycomplete .calendar-mark-verycomplete {{ color: #ffff66; }}
+            ");
 
-                var stylesheet = styleSheetParser.Parse(style.InnerText);
-                foreach (ExCSS.StyleRule rule in stylesheet.StyleRules) {
+            document.Head.Append(q);
 
-                    var color = ParseRgbColor(rule.Style.Color);
-                    if(color != null){
-                        theme.Add(rule.Selector.Text.Split(" "), color.Value);
-                    }
-                }
+            foreach (var item in document.QuerySelectorAll("link").ToList()) {
+                item.Remove();
             }
 
-            var calendar = document.DocumentNode.SelectSingleNode("//*[contains(@class,'calendar')]");
-
-            if (calendar.SelectNodes(".//script") != null) {
-                foreach (var script in calendar.SelectNodes(".//script").ToList()) {
-                    script.Remove();
-                }
+            foreach (var item in document.QuerySelectorAll("script").ToList()) {
+                item.Remove();
             }
+
+            var calendar = document.QuerySelector(".calendar");
 
             var lines = new List<List<CalendarToken>>();
             var line = new List<CalendarToken>();
             lines.Add(line);
 
-            foreach (var textNode in calendar.SelectNodes(".//text()")) {
-                var styles = new List<string>();
-                int? consoleColor = null;
-                foreach (var node in textNode.Ancestors()) {
-                    if (node.Attributes["class"] != null) {
-                        styles.AddRange(node.Attributes["class"].Value.Split(' ').Select(x => "." + x));
-                    }
 
-                    if (node.Attributes["style"] != null) {
-                        var miniStyleSheet = "x { " + node.Attributes["style"].Value + " } ";
-                        var stylesheet = styleSheetParser.Parse(miniStyleSheet);
-                        if (consoleColor == null) {
-                            consoleColor = ParseRgbColor(stylesheet.StyleRules.Cast<StyleRule>().Single().Style.Color);
-                        }
-                    }
-                }
-
-                var text = textNode.InnerText;
-                var widthSpec = styles.FirstOrDefault(style => style.StartsWith("width:"));
+            foreach (var textNode in GetText(calendar)) {
+                var text = textNode.Text();
+                var style = textNode.ParentElement.ComputeCurrentStyle();
+                var consoleColor = ParseRgbaColor(style["color"]);
+                var widthSpec = string.IsNullOrEmpty(style["width"]) ? textNode.ParentElement.ParentElement.ComputeCurrentStyle()["width"] : style["width"];
                 if (widthSpec != null) {
+
                     var m = Regex.Match(widthSpec, "[.0-9]+");
                     if (m.Success) {
                         var width = double.Parse(m.Value) * 1.7;
@@ -90,8 +84,7 @@ namespace AdventOfCode.Model {
                     }
 
                     line.Add(new CalendarToken {
-                        Styles = styles.ToArray(),
-                        Text = HtmlEntity.DeEntitize(text.Substring(i, iNext - i)),
+                        Text = text.Substring(i, iNext - i),
                         ConsoleColor = consoleColor
                     });
 
@@ -107,8 +100,22 @@ namespace AdventOfCode.Model {
             return new Calendar { Year = year, Theme = theme, Lines = lines };
         }
 
-        private static int? ParseRgbColor(string st) {
-            Regex regex = new Regex(@"rgb\((?<r>\d{1,3}), (?<g>\d{1,3}), (?<b>\d{1,3})\)");
+        private static IEnumerable<INode> GetText(INode element) {
+            if (element.NodeType == NodeType.Text) {
+                yield return element;
+            } else {
+                element = element.FirstChild;
+                while (element != null) {
+                    foreach (var text in GetText(element)) {
+                        yield return text;
+                    }
+                    element = element.NextSibling;
+                }
+            }
+        }
+
+        private static int ParseRgbaColor(string st) {
+            Regex regex = new Regex(@"rgba\((?<r>\d{1,3}), (?<g>\d{1,3}), (?<b>\d{1,3}), (?<a>\d{1,3})\)");
             Match match = regex.Match(st);
             if (match.Success) {
                 int r = int.Parse(match.Groups["r"].Value);
@@ -117,7 +124,7 @@ namespace AdventOfCode.Model {
 
                 return (r << 16) + (g << 8) + b;
             }
-            return null;
+            return 0x888888;
         }
     }
 

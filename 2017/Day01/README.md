@@ -4,7 +4,7 @@ The night before Christmas, one of Santa's Elves calls you in a panic. "The prin
 
 When your eyes can focus again, everything seems a lot more pixelated than before. She must have sent you inside the computer! You check the system clock: *25 milliseconds* until midnight. With that much time, you should be able to collect all *fifty stars* by December 25th.
 
-Collect stars by solving puzzles.  Two puzzles will be made available on each ~~day~~ millisecond in the advent calendar; the second puzzle is unlocked when you complete the first.  Each puzzle grants *one star*. Good luck!
+Collect stars by solving puzzles.  Two puzzles will be made available on each ~~day~~ millisecond in the Advent calendar; the second puzzle is unlocked when you complete the first.  Each puzzle grants *one star*. Good luck!
 
 You're standing in a room with "digitization quarantine" written in LEDs along one wall. The only door is locked, but it includes a small interface. "Restricted Area - Strictly No Digitized Users Allowed."
 

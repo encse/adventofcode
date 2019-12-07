@@ -2,7 +2,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using HtmlAgilityPack;
+using AngleSharp.Dom;
 using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Model {
@@ -14,30 +14,28 @@ namespace AdventOfCode.Model {
         public string Input { get; private set; }
         public string Answers { get; private set; }
 
-        public static Problem Parse(int year, int day, string url, string html, string input) {
+        public static Problem Parse(int year, int day, string url, IDocument document, string input) {
 
-            var document = new HtmlDocument();
-            document.LoadHtml(html);
             var md = $"original source: [{url}]({url})\n";
             var answers = "";
-            foreach (var article in document.DocumentNode.SelectNodes("//article")) {
+            foreach (var article in document.QuerySelectorAll("article")) {
                 md += UnparseList("", article) + "\n";
 
-                var answerNode = article.NextSibling;
+                var answerNode = article.NextSibling; 
                 while (answerNode != null && !( 
-                    answerNode.Name == "p" 
-                    && answerNode.SelectSingleNode("./code") != null 
-                    && answerNode.InnerText.Contains("answer"))
+                    answerNode.NodeName == "p" 
+                    && (answerNode as IElement).QuerySelector("code") != null 
+                    && answerNode.TextContent.Contains("answer"))
                 ) {
-                    answerNode = answerNode.NextSibling;
+                    answerNode = answerNode.NextSibling as IElement;
                 }
 
-                var code = answerNode?.SelectSingleNode("./code");
+                var code = (answerNode as IElement)?.QuerySelector("./code");
                 if (code != null) {
-                    answers += code.InnerText + "\n";
+                    answers += code.TextContent + "\n";
                 }
             }
-            var title = HtmlEntity.DeEntitize(document.DocumentNode.SelectNodes("//h2").First().InnerText);
+            var title = document.QuerySelector("h2").TextContent;
 
             var match = Regex.Match(title, ".*: (.*) ---");
             if (match.Success) {
@@ -46,12 +44,12 @@ namespace AdventOfCode.Model {
             return new Problem {Year = year, Day = day, Title = title, ContentMd = md, Input = input, Answers = answers };
         }
 
-        static string UnparseList(string sep, HtmlNode node) {
-            return string.Join(sep, node.ChildNodes.SelectMany(Unparse));
+        static string UnparseList(string sep, INode element) {
+            return string.Join(sep, element.ChildNodes.SelectMany(Unparse));
         }
 
-        static IEnumerable<string> Unparse(HtmlNode node) {
-            switch (node.Name) {
+        static IEnumerable<string> Unparse(INode node) {
+            switch (node.NodeName.ToLower()) {
                 case "h2":
                     yield return "## " + UnparseList("", node) + "\n";
                     break;
@@ -62,7 +60,7 @@ namespace AdventOfCode.Model {
                     yield return "*" + UnparseList("", node) + "*";
                     break;
                 case "code":
-                    if (node.ParentNode.Name == "pre") {
+                    if (node.ParentElement.TagName == "pre") {
                         yield return UnparseList("", node);
                     } else {
                         yield return "`" + UnparseList("", node) + "`";
@@ -98,16 +96,16 @@ namespace AdventOfCode.Model {
                     }
                     break;
                 case "a":
-                    yield return "[" + UnparseList("", node) + "](" + node.Attributes["href"].Value + ")";
+                    yield return "[" + UnparseList("", node) + "](" + (node as IElement).Attributes["href"].Value + ")";
                     break;
                 case "br":
                     yield return "\n";
                     break;
                 case "#text":
-                    yield return HtmlEntity.DeEntitize(node.InnerText);
+                    yield return node.TextContent;
                     break;
                 default:
-                    throw new NotImplementedException(node.Name);
+                    throw new NotImplementedException(node.NodeName);
             }
         }
     }

@@ -2,61 +2,53 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using AdventOfCode.Generator;
 using AdventOfCode.Model;
 using System.Reflection;
+
+using AngleSharp;
+using AngleSharp.Io;
+using AngleSharp.Dom;
 
 namespace AdventOfCode {
 
     class Updater {
 
         public async Task Update(int year, int day) {
+
             if (!System.Environment.GetEnvironmentVariables().Contains("SESSION")) {
                 throw new Exception("Specify SESSION environment variable");
             }
+            var session = System.Environment.GetEnvironmentVariable("SESSION");
+            var baseAddress = new Uri("https://adventofcode.com/");
 
-            var cookieContainer = new CookieContainer();
-            using (var client = new HttpClient(
-                                    new HttpClientHandler {
-                                        CookieContainer = cookieContainer,
-                                        AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
-                                    })
-            ) {
+            var context = BrowsingContext.New(Configuration.Default
+                .WithDefaultLoader()
+                .WithCss()
+                .WithDefaultCookies()
+            );
+            context.SetCookie(new Url(baseAddress.ToString()), "session=" + session);
 
-                var baseAddress = new Uri("https://adventofcode.com/");
-                client.BaseAddress = baseAddress;
-                cookieContainer.Add(baseAddress, new Cookie("session", System.Environment.GetEnvironmentVariable("SESSION")));
+            var calendar = await DownloadCalendar(context, baseAddress, year);
+            var problem = await DownloadProblem(context, baseAddress, year, day);
 
-                var calendar = await DownloadCalendar(client, year);
-                var problem = await DownloadProblem(client, year, day);
-
-                var dir = Dir(year, day);
-                if (!Directory.Exists(dir)) {
-                    Directory.CreateDirectory(dir);
-                }
-
-                var years = Assembly.GetEntryAssembly().GetTypes()
-                    .Where(t => t.GetTypeInfo().IsClass && typeof(Solver).IsAssignableFrom(t))
-                    .Select(tsolver => SolverExtensions.Year(tsolver));
-
-                UpdateProjectReadme(years.Min(), years.Max());
-                UpdateReadmeForYear(calendar);
-                UpdateSplashScreen(calendar);
-                UpdateReadmeForDay(problem);
-                UpdateInput(problem);
-                UpdateRefout(problem);
-                UpdateSolutionTemplate(problem);
+            var dir = Dir(year, day);
+            if (!Directory.Exists(dir)) {
+                Directory.CreateDirectory(dir);
             }
-        }
 
-        async Task<string> Download(HttpClient client, string path) {
-            Console.WriteLine($"Downloading {client.BaseAddress + path}");
-            var response = await client.GetAsync(path);
-            response.EnsureSuccessStatusCode();
-            return await response.Content.ReadAsStringAsync();
+            var years = Assembly.GetEntryAssembly().GetTypes()
+                .Where(t => t.GetTypeInfo().IsClass && typeof(Solver).IsAssignableFrom(t))
+                .Select(tsolver => SolverExtensions.Year(tsolver));
+
+            UpdateProjectReadme(years.Min(), years.Max());
+            UpdateReadmeForYear(calendar);
+            UpdateSplashScreen(calendar);
+            UpdateReadmeForDay(problem);
+            UpdateInput(problem);
+            UpdateRefout(problem);
+            UpdateSolutionTemplate(problem);
         }
 
         void WriteFile(string file, string content) {
@@ -66,15 +58,19 @@ namespace AdventOfCode {
 
         string Dir(int year, int day) => SolverExtensions.WorkingDir(year, day);
 
-        async Task<Calendar> DownloadCalendar(HttpClient client, int year) {
-            var html = await Download(client, year.ToString());
-            return Calendar.Parse(year, html);
+        async Task<Calendar> DownloadCalendar(IBrowsingContext context, Uri baseUri, int year) {
+            var document = await context.OpenAsync(baseUri.ToString() + year);
+            return Calendar.Parse(year, document);
         }
 
-        async Task<Problem> DownloadProblem(HttpClient client, int year, int day) {
-            var problemStatement = await Download(client, $"{year}/day/{day}");
-            var input = await Download(client, $"{year}/day/{day}/input");
-            return Problem.Parse(year, day, client.BaseAddress + $"{year}/day/{day}", problemStatement, input);
+        async Task<Problem> DownloadProblem(IBrowsingContext context, Uri baseUri, int year, int day) {
+            var problemStatement = await context.OpenAsync(baseUri + $"{year}/day/{day}");
+            var input = await context.GetService<IDocumentLoader>().FetchAsync(
+                    new DocumentRequest(new Url(baseUri + $"{year}/day/{day}/input"))).Task; 
+            return Problem.Parse(
+                year, day, baseUri + $"{year}/day/{day}", problemStatement, 
+                new StreamReader( input.Content).ReadToEnd() 
+            );
         }
 
         void UpdateReadmeForDay(Problem problem) {

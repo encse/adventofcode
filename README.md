@@ -6,7 +6,7 @@ Check out http://adventofcode.com.
 ## Dependencies
 
 - This project is based on `.NET Core 3.1`. It should work on Windows, Linux and OS X.
-- `HtmlAgilityPack.NetCore` is used for problem download.
+- `AngleSharp` is used for problem download.
 
 ## Running
 
