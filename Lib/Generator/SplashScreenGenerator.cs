@@ -23,8 +23,8 @@ namespace AdventOfCode.Generator {
                 |            Console.WriteLine();
                 |        }}
                 |
-                |       private static void Write(int rgb, string text){{
-                |           Console.Write($""\u001b[38;2;{{(rgb>>16)&255}};{{(rgb>>8)&255}};{{rgb&255}}m{{text}}"");
+                |       private static void Write(int rgb, bool bold, string text){{
+                |           Console.Write($""\u001b[38;2;{{(rgb>>16)&255}};{{(rgb>>8)&255}};{{rgb&255}}{{(bold ? "";1"" : """")}}m{{text}}"");
                 |       }}
                 |    }}
                 |}}".StripMargin();
@@ -48,10 +48,10 @@ namespace AdventOfCode.Generator {
             var bw = new BufferWriter();
             foreach (var line in lines) {
                 foreach (var token in line) {
-                    bw.Write(token.ConsoleColor, token.Text);
+                    bw.Write(token.ConsoleColor, token.Text, token.Bold);
                 }
 
-                bw.Write(-1, "\n");
+                bw.Write(-1, "\n", false);
             }
             return bw.GetContent();
         }
@@ -64,13 +64,15 @@ namespace AdventOfCode.Generator {
             StringBuilder sb = new StringBuilder();
             int bufferColor = -1;
             string buffer = "";
+            bool bufferBold;
 
-            public void Write(int color, string text) {
+            public void Write(int color, string text, bool bold) {
                 if (!string.IsNullOrWhiteSpace(text)) {
-                    if (color != bufferColor && !string.IsNullOrWhiteSpace(buffer)) {
+                    if (!string.IsNullOrWhiteSpace(buffer) && (color != bufferColor || this.bufferBold != bold) ) {
                         Flush();
                     }
                     bufferColor = color;
+                    bufferBold = bold;
                 }
                 buffer += text;
             }
@@ -80,7 +82,7 @@ namespace AdventOfCode.Generator {
                     var block = buffer.Substring(0, Math.Min(100, buffer.Length));
                     buffer = buffer.Substring(block.Length);
                     block = block.Replace("\\", "\\\\").Replace("\"", "\\\"").Replace("\n", "\\n");
-                    sb.AppendLine($@"Write(0x{bufferColor.ToString("x")}, ""{block}"");");
+                    sb.AppendLine($@"Write(0x{bufferColor.ToString("x")}, {bufferBold.ToString().ToLower()}, ""{block}"");");
                 }
                 buffer = "";
             }
