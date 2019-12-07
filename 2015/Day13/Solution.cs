@@ -36,31 +36,29 @@ namespace AdventOfCode.Y2015.Day13 {
             if (includeMe) {
                 people.Add("me");
             }
-            return Permutations(people).Select(order =>
+            return Permutations(people.ToArray()).Select(order =>
                 order.Zip(order.Skip(1).Append(order[0]), (a, b) => dh.TryGetValue((a, b), out var v) ? v : 0).Sum()
             );
         }
 
-        IEnumerable<ImmutableList<T>> Permutations<T>(IList<T> st) {
+        IEnumerable<T[]> Permutations<T>(T[] rgt) {
+            void Swap(int i, int j) {
+                (rgt[i], rgt[j]) = (rgt[j], rgt[i]);
+            }
 
-            IEnumerable<ImmutableList<T>> PermutationsRec(ImmutableList<T> prefix, bool[] fseen) {
-                if (prefix.Count == st.Count()) {
-                    yield return prefix;
-                } else {
-                    for (int i = 0; i < st.Count(); i++) {
-                        if (!fseen[i]) {
-                            fseen[i] = true;
-                            var prefixT = prefix.Add(st[i]);
-                            foreach (var res in PermutationsRec(prefixT, fseen)) {
-                                yield return res;
-                            }
-                            fseen[i] = false;
-                        }
+            IEnumerable<T[]> PermutationsRec(int i) {
+                yield return rgt.ToArray();
+
+                for (var j = i; j < rgt.Length; j++) {
+                    Swap(i, j);
+                    foreach (var perm in PermutationsRec(i + 1)) {
+                        yield return perm;
                     }
+                    Swap(i, j);
                 }
             }
 
-            return PermutationsRec(ImmutableList<T>.Empty, new bool[st.Count()]);
+            return PermutationsRec(0);
         }
     }
 }

@@ -20,11 +20,11 @@ namespace AdventOfCode.Y2016.Day24 {
         IEnumerable<int> Routes(string input, bool loop) {
             var map = new Map(input);
 
-            foreach (var permT in Permutations(Enumerable.Range(1, map.poi.Length - 1).ToArray())) {
+            foreach (var perm in Permutations(Enumerable.Range(1, map.poi.Length - 1).ToArray())) {
 
-                var perm = permT.Insert(0, 0);
+                perm.Insert(0, 0);
                 if (loop) {
-                    perm = perm.Add(0);
+                    perm.Add(0);
                 }
                 var l = 0;
                 for (int i = 0; i < perm.Count - 1; i++) {
@@ -34,26 +34,24 @@ namespace AdventOfCode.Y2016.Day24 {
             }
         }
 
-        IEnumerable<ImmutableList<T>> Permutations<T>(IList<T> st) {
+        IEnumerable<List<T>> Permutations<T>(T[] rgt) {
+            void Swap(int i, int j) {
+                (rgt[i], rgt[j]) = (rgt[j], rgt[i]);
+            }
 
-            IEnumerable<ImmutableList<T>> PermutationsRec(ImmutableList<T> prefix, bool[] fseen) {
-                if (prefix.Count == st.Count()) {
-                    yield return prefix;
-                } else {
-                    for (int i = 0; i < st.Count(); i++) {
-                        if (!fseen[i]) {
-                            fseen[i] = true;
-                            var prefixT = prefix.Add(st[i]);
-                            foreach (var res in PermutationsRec(prefixT, fseen)) {
-                                yield return res;
-                            }
-                            fseen[i] = false;
-                        }
+            IEnumerable<List<T>> PermutationsRec(int i) {
+                yield return rgt.ToList();
+
+                for (var j = i; j < rgt.Length; j++) {
+                    Swap(i, j);
+                    foreach (var perm in PermutationsRec(i + 1)) {
+                        yield return perm;
                     }
+                    Swap(i, j);
                 }
             }
 
-            return PermutationsRec(ImmutableList<T>.Empty, new bool[st.Count()]);
+            return PermutationsRec(0);
         }
 
         class Map {
