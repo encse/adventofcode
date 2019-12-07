@@ -85,6 +85,8 @@ namespace AdventOfCode.Generator {
                 [new[] { "calendar-color-i" }] = 0xff0000,
                 [new[] { "calendar-color-y" }] = 0xffff66, 
 
+                [new[] { "calendar-s" }] = 0x333333, 
+
 
             };
 
