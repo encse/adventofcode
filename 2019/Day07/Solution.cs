@@ -2,18 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-enum Opcode {
-    Add = 1,
-    Mul = 2,
-    In = 3,
-    Out = 4,
-    Jnz = 5,
-    Jz = 6,
-    Lt = 7,
-    Eq = 8,
-    Hlt = 99,
-}
-
 namespace AdventOfCode.Y2019.Day07 {
 
     class Solution : Solver {
@@ -30,11 +18,11 @@ namespace AdventOfCode.Y2019.Day07 {
 
         int Solve(string prg, bool loop, int[] prgids) {
             var amps = Enumerable.Range(0, 5).Select(x => new Amp()).ToArray();
-           
+
             for (var i = 1; i < amps.Length; i++) {
                 amps[i].input = amps[i - 1].output;
             }
-            
+
             if (loop) {
                 amps[0].input = amps[amps.Length - 1].output;
             }
@@ -89,14 +77,23 @@ namespace AdventOfCode.Y2019.Day07 {
         }
     }
 
-
+    enum Opcode {
+        Add = 1,
+        Mul = 2,
+        In = 3,
+        Out = 4,
+        Jnz = 5,
+        Jz = 6,
+        Lt = 7,
+        Eq = 8,
+        Hlt = 99,
+    }
+    
     class Amp {
         int[] mem;
         int ip;
         public Queue<int> input = new Queue<int>();
         public Queue<int> output = new Queue<int>();
-        public Amp() {
-        }
 
         public void Reset(string prg) {
             mem = prg.Split(",").Select(int.Parse).ToArray();
