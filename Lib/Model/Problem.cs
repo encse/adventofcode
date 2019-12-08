@@ -23,14 +23,14 @@ namespace AdventOfCode.Model {
 
                 var answerNode = article.NextSibling; 
                 while (answerNode != null && !( 
-                    answerNode.NodeName == "p" 
+                    answerNode.NodeName == "P" 
                     && (answerNode as IElement).QuerySelector("code") != null 
                     && answerNode.TextContent.Contains("answer"))
                 ) {
                     answerNode = answerNode.NextSibling as IElement;
                 }
 
-                var code = (answerNode as IElement)?.QuerySelector("./code");
+                var code = (answerNode as IElement)?.QuerySelector("code");
                 if (code != null) {
                     answers += code.TextContent + "\n";
                 }
