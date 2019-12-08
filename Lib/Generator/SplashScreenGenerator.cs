@@ -17,14 +17,14 @@ namespace AdventOfCode.Generator {
                 |
                 |        public void Show() {{
                 |
+                |            var color = Console.ForegroundColor;
                 |            {calendarPrinter.Indent(12)}
-                |            Terminal.ResetFont();
+                |            Console.ForegroundColor = color;
                 |            Console.WriteLine();
                 |        }}
                 |
                 |       private static void Write(int rgb, bool bold, string text){{
-                |           Terminal.SetFont(rgb, bold);
-                |           Console.Write(text);
+                |           Console.Write($""\u001b[38;2;{{(rgb>>16)&255}};{{(rgb>>8)&255}};{{rgb&255}}{{(bold ? "";1"" : """")}}m{{text}}"");
                 |       }}
                 |    }}
                 |}}".StripMargin();
