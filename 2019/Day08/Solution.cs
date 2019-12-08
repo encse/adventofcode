@@ -17,9 +17,9 @@ namespace AdventOfCode.Y2019.Day08 {
             var zeroMin = int.MaxValue;
             var checksum = 0;
             foreach (var layer in Layers(input)) {
-                var zero = (from row in layer from col in row where col == 0 select 1).Count();
-                var ones = (from row in layer from col in row where col == 1 select 1).Count();
-                var twos = (from row in layer from col in row where col == 2 select 1).Count();
+                var zero = layer.Count(item => item == 0);
+                var ones = layer.Count(item => item == 1);
+                var twos = layer.Count(item => item == 2);
 
                 if (zeroMin > zero) {
                     zeroMin = zero;
@@ -30,24 +30,21 @@ namespace AdventOfCode.Y2019.Day08 {
         }
 
         string PartTwo(string input) {
-            var img = new int[6, 25];
+            var img = new int[6 * 25];
             foreach (var layer in Layers(input).Reverse()) {
-                for (var irow = 0; irow < 6; irow++) {
-                    for (var icol = 0; icol < 25; icol++) {
-                        var c = layer[irow][icol];
-                        if (c != 2) {
-                            img[irow, icol] = c;
-                        }
+                for (var i = 0; i < img.Length; i++) {
+                    var c = layer[i];
+                    if (c != 2) {
+                        img[i] = c;
                     }
                 }
             }
-
-            return OCR(img);
+            return OCR(Chunk(img, 25));
         }
 
-        int[][][] Layers(string input) {
+        int[][] Layers(string input) {
             var picture = input.Select(ch => int.Parse(ch.ToString())).ToArray();
-            return Chunk(picture, 25 * 6).Select(layer => Chunk(layer, 25)).ToArray();
+            return Chunk(picture, 25 * 6);
         }
 
         public T[][] Chunk<T>(IEnumerable<T> source, int chunksize) {
@@ -59,7 +56,7 @@ namespace AdventOfCode.Y2019.Day08 {
             return res.ToArray();
         }
 
-        string OCR(int[,] mx) {
+        string OCR(int[][] mx) {
             var dict = new Dictionary<long, string>{
                 {0x725C94B8, "B"},
                 {0x32508498, "C"},
@@ -70,14 +67,14 @@ namespace AdventOfCode.Y2019.Day08 {
 
             var res = "";
             var width = 5;
-            for (var ch = 0; ch < Math.Ceiling(mx.GetLength(1) / (double)width); ch++) {
+            for (var ch = 0; ch < Math.Ceiling(mx[0].Length / (double)width); ch++) {
                 var hash = 0L;
                 var st = "";
-                for (var irow = 0; irow < mx.GetLength(0); irow++) {
+                for (var irow = 0; irow < mx.Length; irow++) {
                     for (var i = 0; i < width; i++) {
                         var icol = (ch * width) + i;
 
-                        if (icol < mx.GetLength(1) && mx[irow, icol] == 1) {
+                        if (icol < mx[0].Length && mx[irow][icol] == 1) {
                             hash += 1;
                             st += "#";
                         } else {
