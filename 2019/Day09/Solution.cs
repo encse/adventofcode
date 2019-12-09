@@ -17,9 +17,9 @@ namespace AdventOfCode.Y2019.Day09 {
         long PartTwo(string input) => Solve(input, 2);
 
         long Solve(string prg, long input) {
-            var m = new IntcodeMachine();
-            m.Reset(prg);
+            var m = new IntcodeMachine(prg, 1024 * 1024);
             m.input.Enqueue(input);
+          
             while (m.Step()) {
                 ;
             }
@@ -42,29 +42,25 @@ namespace AdventOfCode.Y2019.Day09 {
     }
 
     class IntcodeMachine {
+        private int[] modeMask = new int[] { 0, 100, 1000, 10000 };
         long[] mem;
         long ip;
         long r;
         public Queue<long> input = new Queue<long>();
         public Queue<long> output = new Queue<long>();
 
-        public void Reset(string stPrg) {
+        public IntcodeMachine(string stPrg, int memsize) {
             mem = new long[1024 * 1024];
             var prg = stPrg.Split(",").Select(long.Parse).ToArray();
             Array.Copy(prg, mem, prg.Length);
-
-            input.Clear();
-            output.Clear();
-            ip = 0;
         }
 
         public bool Step() {
 
             Opcode opcode = (Opcode)(mem[ip] % 100);
             long addr(int i) {
-                var mode = (mem[ip] / (int)Math.Pow(10, i + 1) % 10);
-                return mode switch
-                {
+                var mode = mem[ip] / modeMask[i] % 10;
+                return mode switch {
                     0 => mem[ip + i],
                     1 => ip + i,
                     2 => r + mem[ip + i],
