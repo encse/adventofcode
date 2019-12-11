@@ -21,11 +21,11 @@ namespace AdventOfCode.Y2019.Day10 {
         int PartOne(string input) => SelectStationPosition(input).asteroidsByDir.Count;
 
         int PartTwo(string input) {
-            var asteroid = DestroyAll(input).ElementAt(199);
+            var asteroid = Destroy(input).ElementAt(199);
             return (asteroid.icol * 100 + asteroid.irow);
         }
 
-        IEnumerable<(int irow, int icol)> DestroyAll(string input) {
+        IEnumerable<(int irow, int icol)> Destroy(string input) {
             var (station, asteroidsByDir) = SelectStationPosition(input);
 
             foreach (var dir in asteroidsByDir.Keys.ToArray()) {

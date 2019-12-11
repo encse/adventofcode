@@ -28,20 +28,20 @@ namespace AdventOfCode.Y2019.Day09 {
         }
     }
 
-    enum Opcode {
-        Add = 1,
-        Mul = 2,
-        In = 3,
-        Out = 4,
-        Jnz = 5,
-        Jz = 6,
-        Lt = 7,
-        Eq = 8,
-        StR = 9,
-        Hlt = 99,
-    }
-
     class IntcodeMachine {
+        enum Opcode {
+            Add = 1,
+            Mul = 2,
+            In = 3,
+            Out = 4,
+            Jnz = 5,
+            Jz = 6,
+            Lt = 7,
+            Eq = 8,
+            StR = 9,
+            Hlt = 99,
+        }
+
         private int[] modeMask = new int[] { 0, 100, 1000, 10000 };
         long[] mem;
         long ip;
