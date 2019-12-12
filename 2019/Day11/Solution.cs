@@ -28,9 +28,7 @@ namespace AdventOfCode.Y2019.Day11 {
                 mtx[irow] = new int[ccol];
                 for (var icol = 0; icol < ccol; icol++) {
                     mtx[irow][icol] = dict.GetValueOrDefault((irowMin + irow, icolMin + icol), 0);
-                    Console.Write(mtx[irow][icol] == 0 ? " " : "#");
                 }
-                Console.WriteLine();
             }
             return OCR(mtx);
         }
