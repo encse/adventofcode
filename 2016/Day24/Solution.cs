@@ -40,7 +40,9 @@ namespace AdventOfCode.Y2016.Day24 {
             }
 
             IEnumerable<List<T>> PermutationsRec(int i) {
-                yield return rgt.ToList();
+                if (i == rgt.Length) {
+                    yield return rgt.ToList();
+                }
 
                 for (var j = i; j < rgt.Length; j++) {
                     Swap(i, j);

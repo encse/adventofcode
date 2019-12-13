@@ -19,6 +19,7 @@ namespace AdventOfCode.Y2019.Day07 {
         long Solve(string prg, bool loop, int[] prgids) {
             var amps = Enumerable.Range(0, 5).Select(x => new IntCodeMachine(prg)).ToArray();
             var max = 0L;
+
             foreach (var perm in Permutations(prgids)) {
                 max = Math.Max(max, ExecAmps(amps, perm, loop));
             }
@@ -33,7 +34,7 @@ namespace AdventOfCode.Y2019.Day07 {
             }
 
             var data = new[] { 0L };
-            
+
             while (true) {
                 for (var i = 0; i < amps.Length; i++) {
                     data = amps[i].Run(data);
@@ -53,7 +54,9 @@ namespace AdventOfCode.Y2019.Day07 {
             }
 
             IEnumerable<T[]> PermutationsRec(int i) {
-                yield return rgt.ToArray();
+                if (i == rgt.Length) {
+                    yield return rgt.ToArray();
+                }
 
                 for (var j = i; j < rgt.Length; j++) {
                     Swap(i, j);

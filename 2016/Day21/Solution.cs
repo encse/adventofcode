@@ -22,13 +22,15 @@ namespace AdventOfCode.Y2016.Day21 {
             return string.Join("", Permutations("abcdefgh".ToArray()).First(p => scramble(p).SequenceEqual("fbgdceah")));
         }
 
-        IEnumerable<T[]> Permutations<T>(T[] rgt) {
+       IEnumerable<T[]> Permutations<T>(T[] rgt) {
             void Swap(int i, int j) {
                 (rgt[i], rgt[j]) = (rgt[j], rgt[i]);
             }
 
             IEnumerable<T[]> PermutationsRec(int i) {
-                yield return rgt.ToArray();
+                if (i == rgt.Length) {
+                    yield return rgt.ToArray();
+                }
 
                 for (var j = i; j < rgt.Length; j++) {
                     Swap(i, j);
