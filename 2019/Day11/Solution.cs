@@ -38,16 +38,14 @@ namespace AdventOfCode.Y2019.Day11 {
             (int irow, int icol) pos = (0, 0);
             (int drow, int dcol) dir = (-1, 0);
             mtx[(0, 0)] = startColor;
-            var icm = new IntcodeMachine(input, 1024 * 1024);
+            var icm = new IntCodeMachine(input);
             while (true) {
-                icm.input.Enqueue(mtx.GetValueOrDefault(pos, 0));
-                while (icm.output.Count != 2) {
-                    if (!icm.Step()) {
-                        return mtx;
-                    }
+                var output = icm.Run(mtx.GetValueOrDefault(pos, 0));
+                if (icm.Halted()) {
+                    return mtx;
                 }
-                mtx[pos] = (int)icm.output.Dequeue();
-                dir = icm.output.Dequeue() switch {
+                mtx[pos] = (int)output[0];
+                dir = output[1] switch {
                     0 => (-dir.dcol, dir.drow),
                     1 => (dir.dcol, -dir.drow),
                     _ => throw new ArgumentException()
@@ -97,72 +95,6 @@ namespace AdventOfCode.Y2019.Day11 {
                 res += dict[hash];
             }
             return res;
-        }
-    }
-
-
-    class IntcodeMachine {
-        enum Opcode {
-            Add = 1,
-            Mul = 2,
-            In = 3,
-            Out = 4,
-            Jnz = 5,
-            Jz = 6,
-            Lt = 7,
-            Eq = 8,
-            StR = 9,
-            Hlt = 99,
-        }
-
-        private int[] modeMask = new int[] { 0, 100, 1000, 10000 };
-        long[] mem;
-        long ip;
-        long r;
-        public Queue<long> input = new Queue<long>();
-        public Queue<long> output = new Queue<long>();
-
-        public IntcodeMachine(string stPrg, int memsize) {
-            mem = new long[1024 * 1024];
-            var prg = stPrg.Split(",").Select(long.Parse).ToArray();
-            Array.Copy(prg, mem, prg.Length);
-        }
-
-        public bool Step() {
-
-            Opcode opcode = (Opcode)(mem[ip] % 100);
-            long addr(int i) {
-                var mode = mem[ip] / modeMask[i] % 10;
-                return mode switch
-                {
-                    0 => mem[ip + i],
-                    1 => ip + i,
-                    2 => r + mem[ip + i],
-                    _ => throw new ArgumentException()
-                };
-            }
-
-            long arg(int i) => mem[addr(i)];
-
-            switch (opcode) {
-                case Opcode.Add: mem[addr(3)] = arg(1) + arg(2); ip += 4; break;
-                case Opcode.Mul: mem[addr(3)] = arg(1) * arg(2); ip += 4; break;
-                case Opcode.In: {
-                        if (input.Count > 0) {
-                            mem[addr(1)] = input.Dequeue(); ip += 2;
-                        }
-                        break;
-                    }
-                case Opcode.Out: output.Enqueue(arg(1)); ip += 2; break;
-                case Opcode.Jnz: ip = arg(1) != 0 ? arg(2) : ip + 3; break;
-                case Opcode.Jz: ip = arg(1) == 0 ? arg(2) : ip + 3; break;
-                case Opcode.Lt: mem[addr(3)] = arg(1) < arg(2) ? 1 : 0; ip += 4; break;
-                case Opcode.Eq: mem[addr(3)] = arg(1) == arg(2) ? 1 : 0; ip += 4; break;
-                case Opcode.StR: r += arg(1); ip += 2; break;
-                case Opcode.Hlt: return false;
-                default: throw new ArgumentException("invalid opcode " + opcode);
-            }
-            return true;
         }
     }
 }
