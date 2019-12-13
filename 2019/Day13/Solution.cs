@@ -1,0 +1,139 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace AdventOfCode.Y2019.Day13 {
+
+    class Solution : Solver {
+
+        public string GetName() => "Care Package";
+
+        public IEnumerable<object> Solve(string input) {
+            yield return PartOne(input);
+            yield return PartTwo(input);
+        }
+
+        int PartOne(string input) {
+            var icm = new IntcodeMachine(input);
+            var output = icm.Run();
+            var chunks = Chunk(output, 3);
+            return chunks.Count(x => x[2] == 2);
+        }
+
+        int PartTwo(string input) {
+            var icm = new IntcodeMachine(input);
+            icm.mem[0] = 2;
+            var score = 0;
+            var icolBall = -1;
+            var icolPaddle = -1;
+            var dir = 0;
+            while (true) {
+                var output = icm.Run(dir);
+                var chunks = Chunk(output, 3);
+                foreach (var chunk in chunks) {
+                    var (icol, irow, block) = (chunk[0], chunk[1], chunk[2]);
+                    if ((icol, irow) == (-1, 0)) {
+                        score = (int)block;
+                    } if (block == 3) {
+                        icolPaddle = icol;
+                    } else if (block == 4) {
+                        icolBall = icol;
+                    }
+                }
+
+                if (icm.Halted()) {
+                    break;
+                }
+
+                if (icolBall < icolPaddle) {
+                    dir = -1;
+                } else if (icolBall > icolPaddle) {
+                    dir = 1;
+                } else {
+                    dir = 0;
+                }
+            }
+            return score;
+        }
+
+        public T[][] Chunk<T>(IEnumerable<T> source, int chunksize) {
+            var res = new List<T[]>();
+            while (source.Any()) {
+                res.Add(source.Take(chunksize).ToArray());
+                source = source.Skip(chunksize);
+            }
+            return res.ToArray();
+        }
+    }
+
+    class IntcodeMachine {
+        enum Opcode {
+            Add = 1,
+            Mul = 2,
+            In = 3,
+            Out = 4,
+            Jnz = 5,
+            Jz = 6,
+            Lt = 7,
+            Eq = 8,
+            StR = 9,
+            Hlt = 99,
+        }
+
+        private int[] modeMask = new int[] { 0, 100, 1000, 10000 };
+        public long[] mem;
+        public long ip;
+        public long r;
+        public Queue<long> input = new Queue<long>();
+        public Queue<long> output = new Queue<long>();
+
+        public IntcodeMachine(string stPrg, int memsize = 1024 * 1024) {
+            mem = new long[1024 * 1024];
+            var prg = stPrg.Split(",").Select(long.Parse).ToArray();
+            Array.Copy(prg, mem, prg.Length);
+        }
+
+        public bool Halted() => (Opcode)(mem[ip] % 100) == Opcode.Hlt;
+
+        public int[] Run(params int[] input) {
+
+            var en = input.Cast<int>().GetEnumerator();
+            var output = new List<int>();
+            while (true) {
+                Opcode opcode = (Opcode)(mem[ip] % 100);
+                long addr(int i) {
+                    var mode = mem[ip] / modeMask[i] % 10;
+                    return mode switch
+                    {
+                        0 => mem[ip + i],
+                        1 => ip + i,
+                        2 => r + mem[ip + i],
+                        _ => throw new ArgumentException()
+                    };
+                }
+
+                long arg(int i) => mem[addr(i)];
+
+                switch (opcode) {
+                    case Opcode.Add: mem[addr(3)] = arg(1) + arg(2); ip += 4; break;
+                    case Opcode.Mul: mem[addr(3)] = arg(1) * arg(2); ip += 4; break;
+                    case Opcode.In: {
+                            if (!en.MoveNext()) {
+                                return output.ToArray();
+                            }
+                            mem[addr(1)] = en.Current; ip += 2;
+                            break;
+                        }
+                    case Opcode.Out: output.Add((int)arg(1)); ip += 2; break;
+                    case Opcode.Jnz: ip = arg(1) != 0 ? arg(2) : ip + 3; break;
+                    case Opcode.Jz: ip = arg(1) == 0 ? arg(2) : ip + 3; break;
+                    case Opcode.Lt: mem[addr(3)] = arg(1) < arg(2) ? 1 : 0; ip += 4; break;
+                    case Opcode.Eq: mem[addr(3)] = arg(1) == arg(2) ? 1 : 0; ip += 4; break;
+                    case Opcode.StR: r += arg(1); ip += 2; break;
+                    case Opcode.Hlt: return output.ToArray();
+                    default: throw new ArgumentException("invalid opcode " + opcode);
+                }
+            }
+        }
+    }
+}

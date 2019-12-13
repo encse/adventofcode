@@ -27,7 +27,7 @@ namespace AdventOfCode {
                         throw new Exception("Event is not active. This option works in Dec 1-25 only)");
                     }
                 }) ??
-                 Command(args, Args("([0-9]+)/([0-9]+)"), m => {
+                Command(args, Args("([0-9]+)/([0-9]+)"), m => {
                     var year = int.Parse(m[0]);
                     var day = int.Parse(m[1]);
                     var tsolversSelected = tsolvers.First(tsolver => 
