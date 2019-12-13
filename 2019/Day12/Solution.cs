@@ -14,75 +14,59 @@ namespace AdventOfCode.Y2019.Day12 {
             yield return PartTwo(input);
         }
 
-        int PartOne(string input) {
-
-            var state = Simulate(input).ElementAt(999);
-            return (
-                from iplanet in Enumerable.Range(0, state.rgpos.Length)
-                let pot = state.rgpos[iplanet].Select(Math.Abs).Sum()
-                let kin = state.rgv[iplanet].Select(Math.Abs).Sum()
+        int PartOne(string input) => (
+                from planet in Simulate(input).ElementAt(999)
+                let pot = planet.pos.Select(Math.Abs).Sum()
+                let kin = planet.vel.Select(Math.Abs).Sum()
                 select pot * kin
             ).Sum();
-        }
 
         long PartTwo(string input) {
-            var loop = new long[3];
-            for (var i = 0; i < 3; i++) {
-                var seen = new HashSet<(int p1, int p2, int p3, int p4, int vp1, int vp2, int vp3, int vp4)>();
-                foreach (var state in Simulate(input)) {
-                    var key = (state.rgpos[0][i], state.rgpos[1][i], state.rgpos[2][i], state.rgpos[3][i],
-                               state.rgv[0][i], state.rgv[1][i], state.rgv[2][i], state.rgv[3][i]);
-                    if (seen.Contains(key)) {
+            var statesByDim = new long[3];
+            for (var dim = 0; dim < 3; dim++) {
+                var states = new HashSet<(int,int,int,int,int,int,int,int)>();
+                foreach (var planets in Simulate(input)) {
+                    var state = (planets[0].pos[dim], planets[1].pos[dim], planets[2].pos[dim], planets[3].pos[dim],
+                                 planets[0].vel[dim], planets[1].vel[dim], planets[2].vel[dim], planets[3].vel[dim]);
+                    if (states.Contains(state)) {
                         break;
                     }
-                    seen.Add(key);
+                    states.Add(state);
                 }
-                loop[i] = seen.Count;
+                statesByDim[dim] = states.Count;
             }
 
-            return Lcm(loop[0], Lcm(loop[1], loop[2]));
+            return Lcm(statesByDim[0], Lcm(statesByDim[1], statesByDim[2]));
         }
-
 
         long Lcm(long a, long b) => a * b / Gcd(a, b);
-        long Gcd(long a, long b) {
-            while (b != 0) {
-                (a, b) = (b, a % b);
-            }
-            return a;
-        }
+        long Gcd(long a, long b) => b == 0 ? a : Gcd(b, a % b);
 
-
-        IEnumerable<(int[][] rgpos, int[][] rgv)> Simulate(string input) {
-            var rgpos = (
+        IEnumerable<(int[] pos, int[] vel)[]> Simulate(string input) {
+            var planets = (
                 from line in input.Split("\n")
                 let m = Regex.Matches(line, @"-?\d+")
                 let pos = (from v in m select int.Parse(v.Value)).ToArray()
-                select pos
+                let vel = new int[3]
+                select (pos, vel)
             ).ToArray();
 
-            var rgv = (from pos in rgpos select new int[3]).ToArray();
-
             while (true) {
-                foreach (var iposA in Enumerable.Range(0, rgpos.Length)) {
-                    foreach (var iposB in Enumerable.Range(0, rgpos.Length)) {
-                        var (posA, vA) = (rgpos[iposA], rgv[iposA]);
-                        var (posB, vB) = (rgpos[iposB], rgv[iposB]);
-                        for (var i = 0; i < 3; i++) {
-                            vA[i] += Math.Sign(posB[i] - posA[i]);
+                foreach (var planetA in planets) {
+                    foreach (var planetB in planets) {
+                        for (var dim = 0; dim < 3; dim++) {
+                            planetA.vel[dim] += Math.Sign(planetB.pos[dim] - planetA.pos[dim]);
                         }
                     }
                 }
 
-                foreach (var iposA in Enumerable.Range(0, rgpos.Length)) {
-                    var pos = rgpos[iposA];
-                    var v = rgv[iposA];
-                    for (var i = 0; i < 3; i++) {
-                        pos[i] += v[i];
+                foreach (var planet in planets) {
+                    for (var dim = 0; dim < 3; dim++) {
+                        planet.pos[dim] += planet.vel[dim];
                     }
                 }
 
-                yield return (rgpos, rgv);
+                yield return planets;
             }
         }
     }

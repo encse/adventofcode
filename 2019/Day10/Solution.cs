@@ -94,11 +94,6 @@ namespace AdventOfCode.Y2019.Day10 {
             ).ToList();
         }
 
-        int Gcd(int a, int b) {
-            while (b != 0) {
-                (a, b) = (b, a % b);
-            }
-            return a;
-        }
+       int Gcd(int a, int b) => b == 0 ? a : Gcd(b, a % b);
     }
 }
