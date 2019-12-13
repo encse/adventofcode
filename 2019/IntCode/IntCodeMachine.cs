@@ -45,7 +45,7 @@ namespace AdventOfCode.Y2019 {
         public Memory mem;
         public long ip;
         public long bp;
-
+        public Queue<long> input = new Queue<long>();
         public IntCodeMachine(string stPrg) {
             this.mem = new Memory(stPrg.Split(",").Select(long.Parse).ToArray());
             Reset();
@@ -55,12 +55,15 @@ namespace AdventOfCode.Y2019 {
             mem.Reset();
             ip = 0;
             bp = 0;
+            input.Clear();
         }
+
         public bool Halted() => (Opcode)(mem[ip] % 100) == Opcode.Hlt;
 
         public long[] Run(params long[] input) {
-
-            var en = input.Cast<long>().GetEnumerator();
+            foreach(var i in input){
+                this.input.Enqueue(i);
+            }
             var output = new List<long>();
             while (true) {
                 Opcode opcode = (Opcode)(mem[ip] % 100);
@@ -81,10 +84,10 @@ namespace AdventOfCode.Y2019 {
                     case Opcode.Add: mem[addr(3)] = arg(1) + arg(2); ip += 4; break;
                     case Opcode.Mul: mem[addr(3)] = arg(1) * arg(2); ip += 4; break;
                     case Opcode.In: {
-                            if (!en.MoveNext()) {
+                            if (!this.input.Any()) {
                                 return output.ToArray();
                             }
-                            mem[addr(1)] = en.Current; ip += 2;
+                            mem[addr(1)] = this.input.Dequeue(); ip += 2;
                             break;
                         }
                     case Opcode.Out: output.Add(arg(1)); ip += 2; break;
