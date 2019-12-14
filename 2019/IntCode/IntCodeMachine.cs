@@ -56,7 +56,7 @@ namespace AdventOfCode.Y2019 {
         public Queue<long> input = new Queue<long>();
         public IntCodeMachine(string stPrg) {
             this.mem = new Memory(stPrg.Split(",").Select(long.Parse).ToArray());
-            Console.WriteLine(Disass());
+            // Console.WriteLine(Disass());
             Reset();
         }
 

@@ -4,10 +4,6 @@ using System;
 
 namespace AdventOfCode.Y2019.Day14 {
 
-
-    class Reactions : Dictionary<string, ((long amount, string name) output, (long amount, string name)[] input)> { }
-    class DistanceFromOre : Dictionary<string, long> { }
-
     class Solution : Solver {
 
         public string GetName() => "Space Stoichiometry";
@@ -17,18 +13,20 @@ namespace AdventOfCode.Y2019.Day14 {
             yield return PartTwo(input);
         }
 
-        long PartOne(string input) => OreForFuel(input)(1);
+        long PartOne(string input) => new NanoFactory(input).OreNeededForFuel(1);
         long PartTwo(string input) {
-            var oreForFuel = OreForFuel(input);
+            var nanoFactory = new NanoFactory(input);
+            var ore = 1000000000000;
+
             var hi = 1;
-            var amount = 1000000000000;
-            while(oreForFuel(hi) < amount){
-                hi *=2;
+            while (nanoFactory.OreNeededForFuel(hi) < ore) {
+                hi *= 2;
             }
-            var lo = hi /2;
-            while(hi -lo > 1){
-                var m = (hi + lo) /2;
-                if(oreForFuel(m) > amount){
+
+            var lo = hi / 2;
+            while (hi - lo > 1) {
+                var m = (hi + lo) / 2;
+                if (nanoFactory.OreNeededForFuel(m) > ore) {
                     hi = m;
                 } else {
                     lo = m;
@@ -37,83 +35,106 @@ namespace AdventOfCode.Y2019.Day14 {
 
             return lo;
         }
+    }
 
-        Func<long, long> OreForFuel(string input) {
-            var reactions = new Reactions();
-            foreach (var line in input.Split("\n")) {
-                var inout = line.Split(" => ");
-                var inParts = inout[0].Split(", ").Select(ParsePart).ToArray();
-                var outPart = ParsePart(inout[1]);
-                reactions[outPart.name] = (outPart, inParts);
+    class Reactions : Dictionary<string, (Chemical output, Chemical[] input)> { }
+
+    class Chemical {
+        public string name;
+        public long amount;
+    }
+
+    class NanoFactory {
+        private Reactions reactions = new Reactions();
+        private Dictionary<string, int> stepsToProduce = new Dictionary<string, int>();
+
+        public NanoFactory(string productionRules) {
+
+            Chemical ParseChemical(string st) {
+                var parts = st.Split(" ");
+                return new Chemical { name = parts[1], amount = long.Parse(parts[0]) };
             }
 
-            var dist = ComputeDistanceFromOre(reactions);
-            var q = new SortedDictionary<long, Dictionary<string, long>>();
-            void enqueue(string name, long amount){
-                var d = dist[name];
-                if(!q.ContainsKey(d)){
-                    q[d] = new Dictionary<string, long>();
-                }
-                if(!q[d].ContainsKey(name)){
-                    q[d][name] = 0;
-                }
-                q[d][name] += amount;
+            foreach (var rule in productionRules.Split("\n")) {
+                var inout = rule.Split(" => ");
+                var input = inout[0].Split(", ").Select(ParseChemical).ToArray();
+                var output = ParseChemical(inout[1]);
+                reactions[output.name] = (output, input);
             }
 
-            (string name, long amount) dequeue(){
-               var d = q.Keys.Last();
-               var name = q[d].Keys.First();
-               var amount = q[d][name];
-               q[d].Remove(name);
-               if(q[d].Count == 0){
-                   q.Remove(d);
-               }
-               return (name, amount);
-            }
+            stepsToProduce["ORE"] = 0;
+        }
 
-            return (long fuel) => {
-                enqueue("FUEL", fuel);
-                var res = 0L;
-                while (q.Any()) {
-                    var part = dequeue();
-                    if (part.name == "ORE") {
-                        res += part.amount;
-                    } else {
-                        var rule = reactions[part.name];
-                        var mul = (long)Math.Ceiling((decimal)part.amount / rule.output.amount);
-                        foreach (var inPart in rule.input) {
-                            enqueue(inPart.name, inPart.amount * mul);
-                        }
+        public long OreNeededForFuel(long fuel) {
+            var productionList = new ProductionList(StepsToProduce);
+            productionList.Add(new Chemical { name = "FUEL", amount = fuel });
+            var ore = 0L;
+            while (productionList.Any()) {
+                var chemical = productionList.Next();
+                if (chemical.name == "ORE") {
+                    ore += chemical.amount;
+                } else {
+                    foreach (var chemicalT in ChemicalsToProduce(chemical)) {
+                        productionList.Add(chemicalT);
                     }
                 }
-                return res;
-            };
+            }
+            return ore;
         }
 
-        DistanceFromOre ComputeDistanceFromOre(Reactions reactions) {
-            var dist = new DistanceFromOre();
+        private Chemical[] ChemicalsToProduce(Chemical chemical) {
+            var rule = reactions[chemical.name];
+            var multiplier = (long)Math.Ceiling((decimal)chemical.amount / rule.output.amount);
+            return (
+                from chemicalT in rule.input
+                select new Chemical { name = chemicalT.name, amount = chemicalT.amount * multiplier }
+            ).ToArray();
+        }
 
-            long ComputeRec(string name) {
-                if (!dist.ContainsKey(name)) {
-                    dist[name] = reactions[name].input.Select(i => ComputeRec(i.name)).Max() + 1;
-                }
-                return dist[name];
+        private int StepsToProduce(string name) {
+
+            if (!stepsToProduce.ContainsKey(name)) {
+                var inputChemicals = reactions[name].input;
+                stepsToProduce[name] = inputChemicals.Select(checmical => StepsToProduce(checmical.name)).Max() + 1;
             }
 
-            dist["ORE"] = 0;
+            return stepsToProduce[name];
+        }
 
-            foreach (var name in reactions.Keys) {
-                ComputeRec(name);
+    }
+
+    class ProductionList {
+        private Func<string, int> getPriority;
+        private SortedDictionary<long, Dictionary<string, long>> tasksByPriority =
+            new SortedDictionary<long, Dictionary<string, long>>();
+
+        public ProductionList(Func<string, int> getPriority) {
+            this.getPriority = getPriority;
+        }
+
+        public void Add(Chemical chemical) {
+            var priority = getPriority(chemical.name);
+            if (!tasksByPriority.ContainsKey(priority)) {
+                tasksByPriority[priority] = new Dictionary<string, long>();
             }
-            return dist;
+            var tasks = tasksByPriority[priority];
+            tasks[chemical.name] = tasks.GetValueOrDefault(chemical.name) + chemical.amount;
         }
 
-        (long amount, string name) ParsePart(string st) {
-            var parts = st.Split(" ");
-            return (long.Parse(parts[0]), parts[1]);
+        public Chemical Next() {
+            var task = tasksByPriority.Last();
+            var chemicalsByName = task.Value;
+            var name = chemicalsByName.Keys.First();
+            var amount = chemicalsByName[name];
+
+            chemicalsByName.Remove(name);
+            if (chemicalsByName.Count == 0) {
+                tasksByPriority.Remove(task.Key);
+            }
+            return new Chemical { name = name, amount = amount };
         }
 
-       
+        public bool Any() => tasksByPriority.Any();
     }
 
 }
