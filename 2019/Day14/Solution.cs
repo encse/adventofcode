@@ -46,7 +46,6 @@ namespace AdventOfCode.Y2019.Day14 {
 
     class NanoFactory {
         private Reactions reactions = new Reactions();
-        private Dictionary<string, int> stepsToProduce = new Dictionary<string, int>();
 
         public NanoFactory(string productionRules) {
 
@@ -62,79 +61,43 @@ namespace AdventOfCode.Y2019.Day14 {
                 reactions[output.name] = (output, input);
             }
 
-            stepsToProduce["ORE"] = 0;
         }
 
         public long OreNeededForFuel(long fuel) {
-            var productionList = new ProductionList(StepsToProduce);
-            productionList.Add(new Chemical { name = "FUEL", amount = fuel });
+            var productionList = new Queue<Chemical>();
+            productionList.Enqueue(new Chemical { name = "FUEL", amount = fuel });
             var ore = 0L;
+            var inventory = new Dictionary<string, long>();
             while (productionList.Any()) {
-                var chemical = productionList.Next();
+                var chemical = productionList.Dequeue();
                 if (chemical.name == "ORE") {
                     ore += chemical.amount;
                 } else {
-                    foreach (var chemicalT in ChemicalsToProduce(chemical)) {
-                        productionList.Add(chemicalT);
+                    var rule = reactions[chemical.name];
+                    
+                    var amountNeeded = chemical.amount;
+                    if (inventory.ContainsKey(chemical.name)) {
+                        var use = Math.Min(amountNeeded, inventory[chemical.name]);
+                        amountNeeded -= use;
+                        inventory[chemical.name] -= use;
+                    }
+
+                    if (amountNeeded > 0) {
+                        var multiplier = (long)Math.Ceiling((decimal)amountNeeded / rule.output.amount);
+                        var chemicalsToProduce = (
+                            from chemicalT in rule.input
+                            select new Chemical { name = chemicalT.name, amount = chemicalT.amount * multiplier }
+                        ).ToArray();
+
+                        inventory[chemical.name] = Math.Max(0, multiplier * rule.output.amount - amountNeeded);
+
+                        foreach (var chemicalT in chemicalsToProduce) {
+                            productionList.Enqueue(chemicalT);
+                        }
                     }
                 }
             }
             return ore;
         }
-
-        private Chemical[] ChemicalsToProduce(Chemical chemical) {
-            var rule = reactions[chemical.name];
-            var multiplier = (long)Math.Ceiling((decimal)chemical.amount / rule.output.amount);
-            return (
-                from chemicalT in rule.input
-                select new Chemical { name = chemicalT.name, amount = chemicalT.amount * multiplier }
-            ).ToArray();
-        }
-
-        private int StepsToProduce(string name) {
-
-            if (!stepsToProduce.ContainsKey(name)) {
-                var inputChemicals = reactions[name].input;
-                stepsToProduce[name] = inputChemicals.Select(checmical => StepsToProduce(checmical.name)).Max() + 1;
-            }
-
-            return stepsToProduce[name];
-        }
-
     }
-
-    class ProductionList {
-        private Func<string, int> getPriority;
-        private SortedDictionary<long, Dictionary<string, long>> tasksByPriority =
-            new SortedDictionary<long, Dictionary<string, long>>();
-
-        public ProductionList(Func<string, int> getPriority) {
-            this.getPriority = getPriority;
-        }
-
-        public void Add(Chemical chemical) {
-            var priority = getPriority(chemical.name);
-            if (!tasksByPriority.ContainsKey(priority)) {
-                tasksByPriority[priority] = new Dictionary<string, long>();
-            }
-            var tasks = tasksByPriority[priority];
-            tasks[chemical.name] = tasks.GetValueOrDefault(chemical.name) + chemical.amount;
-        }
-
-        public Chemical Next() {
-            var task = tasksByPriority.Last();
-            var chemicalsByName = task.Value;
-            var name = chemicalsByName.Keys.First();
-            var amount = chemicalsByName[name];
-
-            chemicalsByName.Remove(name);
-            if (chemicalsByName.Count == 0) {
-                tasksByPriority.Remove(task.Key);
-            }
-            return new Chemical { name = name, amount = amount };
-        }
-
-        public bool Any() => tasksByPriority.Any();
-    }
-
 }
