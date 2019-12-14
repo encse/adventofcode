@@ -16,24 +16,23 @@ namespace AdventOfCode.Y2019.Day14 {
         long PartOne(string input) => Parse(input)(1);
         long PartTwo(string input) {
             var oreForFuel = Parse(input);
-            var ore = 1000000000000;
 
-            var hi = 1;
-            while (oreForFuel(hi) < ore) {
-                hi *= 2;
-            }
+            var ore = 1000000000000L;
 
-            var lo = hi / 2;
-            while (hi - lo > 1) {
-                var m = (hi + lo) / 2;
-                if (oreForFuel(m) > ore) {
-                    hi = m;
-                } else {
-                    lo = m;
+            var fuel = 1L;
+            while (true) {
+                // newFuel <= the amount we can produce with the given ore
+                // since (double)ore / oreForFuel(fuel) >= 1, fuel becomes
+                // a better estimation in each iteration until it reaches 
+                // the maximum
+
+                var newFuel = (int)((double)ore / oreForFuel(fuel) * fuel);
+
+                if (newFuel == fuel) {
+                    return newFuel;
                 }
+                fuel = newFuel;
             }
-
-            return lo;
         }
 
         Func<long, long> Parse(string productionRules) {
@@ -48,10 +47,10 @@ namespace AdventOfCode.Y2019.Day14 {
                 let input = inout[0].Split(", ").Select(ParseReagent).ToArray()
                 let output = ParseReagent(inout[1])
                 select (output, input)
-            ).ToDictionary(inout => inout.output.chemical, inout=> inout);
+            ).ToDictionary(inout => inout.output.chemical, inout => inout);
 
             return (fuel) => {
-              
+
                 var ore = 0L;
                 var inventory = reactions.Keys.ToDictionary(chemical => chemical, _ => 0L);
                 var productionList = new Queue<(string chemical, long amount)>();
