@@ -13,20 +13,20 @@ namespace AdventOfCode.Y2019.Day14 {
             yield return PartTwo(input);
         }
 
-        long PartOne(string input) => new NanoFactory(input).OreNeededForFuel(1);
+        long PartOne(string input) => Parse(input)(1);
         long PartTwo(string input) {
-            var nanoFactory = new NanoFactory(input);
+            var oreForFuel = Parse(input);
             var ore = 1000000000000;
 
             var hi = 1;
-            while (nanoFactory.OreNeededForFuel(hi) < ore) {
+            while (oreForFuel(hi) < ore) {
                 hi *= 2;
             }
 
             var lo = hi / 2;
             while (hi - lo > 1) {
                 var m = (hi + lo) / 2;
-                if (nanoFactory.OreNeededForFuel(m) > ore) {
+                if (oreForFuel(m) > ore) {
                     hi = m;
                 } else {
                     lo = m;
@@ -35,69 +35,51 @@ namespace AdventOfCode.Y2019.Day14 {
 
             return lo;
         }
-    }
 
-    class Reactions : Dictionary<string, (Chemical output, Chemical[] input)> { }
-
-    class Chemical {
-        public string name;
-        public long amount;
-    }
-
-    class NanoFactory {
-        private Reactions reactions = new Reactions();
-
-        public NanoFactory(string productionRules) {
-
-            Chemical ParseChemical(string st) {
+        Func<long, long> Parse(string productionRules) {
+            (string chemical, long amount) ParseReagent(string st) {
                 var parts = st.Split(" ");
-                return new Chemical { name = parts[1], amount = long.Parse(parts[0]) };
+                return (parts[1], long.Parse(parts[0]));
             }
 
-            foreach (var rule in productionRules.Split("\n")) {
-                var inout = rule.Split(" => ");
-                var input = inout[0].Split(", ").Select(ParseChemical).ToArray();
-                var output = ParseChemical(inout[1]);
-                reactions[output.name] = (output, input);
-            }
+            var reactions = (
+                from rule in productionRules.Split("\n")
+                let inout = rule.Split(" => ")
+                let input = inout[0].Split(", ").Select(ParseReagent).ToArray()
+                let output = ParseReagent(inout[1])
+                select (output, input)
+            ).ToDictionary(inout => inout.output.chemical, inout=> inout);
 
-        }
+            return (fuel) => {
+              
+                var ore = 0L;
+                var inventory = reactions.Keys.ToDictionary(chemical => chemical, _ => 0L);
+                var productionList = new Queue<(string chemical, long amount)>();
+                productionList.Enqueue(("FUEL", fuel));
 
-        public long OreNeededForFuel(long fuel) {
-            var productionList = new Queue<Chemical>();
-            productionList.Enqueue(new Chemical { name = "FUEL", amount = fuel });
-            var ore = 0L;
-            var inventory = new Dictionary<string, long>();
-            while (productionList.Any()) {
-                var chemical = productionList.Dequeue();
-                if (chemical.name == "ORE") {
-                    ore += chemical.amount;
-                } else {
-                    var rule = reactions[chemical.name];
-                    
-                    var amountNeeded = chemical.amount;
-                    if (inventory.ContainsKey(chemical.name)) {
-                        var use = Math.Min(amountNeeded, inventory[chemical.name]);
-                        amountNeeded -= use;
-                        inventory[chemical.name] -= use;
-                    }
+                while (productionList.Any()) {
+                    var (chemical, amount) = productionList.Dequeue();
+                    if (chemical == "ORE") {
+                        ore += amount;
+                    } else {
+                        var reaction = reactions[chemical];
 
-                    if (amountNeeded > 0) {
-                        var multiplier = (long)Math.Ceiling((decimal)amountNeeded / rule.output.amount);
-                        var chemicalsToProduce = (
-                            from chemicalT in rule.input
-                            select new Chemical { name = chemicalT.name, amount = chemicalT.amount * multiplier }
-                        ).ToArray();
+                        var useFromInventory = Math.Min(amount, inventory[chemical]);
+                        amount -= useFromInventory;
+                        inventory[chemical] -= useFromInventory;
 
-                        inventory[chemical.name] = Math.Max(0, multiplier * rule.output.amount - amountNeeded);
+                        if (amount > 0) {
+                            var multiplier = (long)Math.Ceiling((decimal)amount / reaction.output.amount);
+                            inventory[chemical] = Math.Max(0, multiplier * reaction.output.amount - amount);
 
-                        foreach (var chemicalT in chemicalsToProduce) {
-                            productionList.Enqueue(chemicalT);
+                            foreach (var reagent in reaction.input) {
+                                productionList.Enqueue((reagent.chemical, reagent.amount * multiplier));
+                            }
                         }
                     }
                 }
-            }
-            return ore;
+                return ore;
+            };
         }
     }
 }
