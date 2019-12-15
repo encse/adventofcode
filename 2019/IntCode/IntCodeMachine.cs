@@ -32,6 +32,11 @@ namespace AdventOfCode.Y2019 {
             this.initial = initial;
         }
 
+        private Memory(long[] initial, Dictionary<long, long> mem){
+            this.initial = initial;
+            this.mem = mem;
+        }
+
         public long this[long addr] {
             get {
                 return mem.ContainsKey(addr) ? mem[addr] : addr < initial.Length ? initial[addr] : 0;
@@ -41,8 +46,29 @@ namespace AdventOfCode.Y2019 {
             }
         }
 
+
+        public Memory Clone(){
+            return new Memory(initial, new Dictionary<long, long>(mem));
+        }
+
         public void Reset() {
             mem.Clear();
+        }
+    }
+
+
+    class ImmutableIntCodeMachine {
+        IntCodeMachine icm;
+        public ImmutableIntCodeMachine(string stPrg): this(new IntCodeMachine(stPrg)){
+        }
+
+        private ImmutableIntCodeMachine(IntCodeMachine icm){
+            this.icm = icm;
+        }
+
+        public (ImmutableIntCodeMachine icm, long[] output) Run(params long[] input){
+            var iicm = new ImmutableIntCodeMachine(this.icm.Clone());
+            return (iicm, iicm.icm.Run(input));
         }
     }
 
@@ -50,27 +76,41 @@ namespace AdventOfCode.Y2019 {
 
         private static int[] modeMask = new int[] { 0, 100, 1000, 10000 };
 
-        public Memory mem;
+        public Memory memory;
         public long ip;
         public long bp;
-        public Queue<long> input = new Queue<long>();
-        public IntCodeMachine(string stPrg) {
-            this.mem = new Memory(stPrg.Split(",").Select(long.Parse).ToArray());
-            // Console.WriteLine(Disass());
-            Reset();
+        public Queue<long> input;
+
+        public IntCodeMachine(string stPrg) : 
+            this(new Memory(stPrg.Split(",").Select(long.Parse).ToArray()), 
+            0, 
+            0, 
+            new Queue<long>()
+        ) {
+        }
+
+        private IntCodeMachine(Memory memory, long ip, long bp, Queue<long> input) {
+            this.memory = memory;
+            this.ip = ip;
+            this.bp = bp;
+            this.input = input;
         }
 
         public void Reset() {
-            mem.Reset();
+            memory.Reset();
             ip = 0;
             bp = 0;
             input.Clear();
         }
 
-        public bool Halted() => (Opcode)(mem[ip] % 100) == Opcode.Hlt;
+        public IntCodeMachine Clone() {
+            return new IntCodeMachine(memory.Clone(), ip, bp, new Queue<long>(input));
+        }
 
-        private Mode GetMode(long addr, int i) => (Mode)(mem[addr] / modeMask[i] % 10);
-        private Opcode GetOpcode(long addr) => (Opcode)(mem[addr] % 100);
+        public bool Halted() => (Opcode)(memory[ip] % 100) == Opcode.Hlt;
+
+        private Mode GetMode(long addr, int i) => (Mode)(memory[addr] / modeMask[i] % 10);
+        private Opcode GetOpcode(long addr) => (Opcode)(memory[addr] % 100);
 
         public long[] Run(params long[] input) {
 
@@ -84,30 +124,30 @@ namespace AdventOfCode.Y2019 {
                 long addr(int i) {
                     return GetMode(ip, i) switch
                     {
-                        Mode.Positional => mem[ip + i],
+                        Mode.Positional => memory[ip + i],
                         Mode.Immediate => ip + i,
-                        Mode.Relative => bp + mem[ip + i],
+                        Mode.Relative => bp + memory[ip + i],
                         _ => throw new ArgumentException()
                     };
                 }
 
-                long arg(int i) => mem[addr(i)];
+                long arg(int i) => memory[addr(i)];
 
                 switch (opcode) {
-                    case Opcode.Add: mem[addr(3)] = arg(1) + arg(2); ip += 4; break;
-                    case Opcode.Mul: mem[addr(3)] = arg(1) * arg(2); ip += 4; break;
+                    case Opcode.Add: memory[addr(3)] = arg(1) + arg(2); ip += 4; break;
+                    case Opcode.Mul: memory[addr(3)] = arg(1) * arg(2); ip += 4; break;
                     case Opcode.In: {
                             if (!this.input.Any()) {
                                 return output.ToArray();
                             }
-                            mem[addr(1)] = this.input.Dequeue(); ip += 2;
+                            memory[addr(1)] = this.input.Dequeue(); ip += 2;
                             break;
                         }
                     case Opcode.Out: output.Add(arg(1)); ip += 2; break;
                     case Opcode.Jnz: ip = arg(1) != 0 ? arg(2) : ip + 3; break;
                     case Opcode.Jz: ip = arg(1) == 0 ? arg(2) : ip + 3; break;
-                    case Opcode.Lt: mem[addr(3)] = arg(1) < arg(2) ? 1 : 0; ip += 4; break;
-                    case Opcode.Eq: mem[addr(3)] = arg(1) == arg(2) ? 1 : 0; ip += 4; break;
+                    case Opcode.Lt: memory[addr(3)] = arg(1) < arg(2) ? 1 : 0; ip += 4; break;
+                    case Opcode.Eq: memory[addr(3)] = arg(1) == arg(2) ? 1 : 0; ip += 4; break;
                     case Opcode.StR: bp += arg(1); ip += 2; break;
                     case Opcode.Hlt: return output.ToArray();
                     default: throw new ArgumentException("invalid opcode " + opcode);
@@ -130,8 +170,8 @@ namespace AdventOfCode.Y2019 {
             string addr(int i) {
                 return GetMode(ip, i) switch
                 {
-                    Mode.Positional => $"mem[{mem[ip + i]}]",
-                    Mode.Relative => $"mem[bp + {mem[ip + i]}]",
+                    Mode.Positional => $"mem[{memory[ip + i]}]",
+                    Mode.Relative => $"mem[bp + {memory[ip + i]}]",
                     _ => throw new ArgumentException()
                 };
             }
@@ -139,14 +179,14 @@ namespace AdventOfCode.Y2019 {
             string arg(int i) {
                 return GetMode(ip, i) switch
                 {
-                    Mode.Positional => $"mem[{mem[ip + i]}] ({guard(() => mem[mem[ip + i]])})",
-                    Mode.Immediate => $"{mem[ip + i]}",
-                    Mode.Relative => $"mem[bp + {mem[ip + i]}] ({guard(() => mem[bp + mem[ip + i]] )})",
+                    Mode.Positional => $"mem[{memory[ip + i]}] ({guard(() => memory[memory[ip + i]])})",
+                    Mode.Immediate => $"{memory[ip + i]}",
+                    Mode.Relative => $"mem[bp + {memory[ip + i]}] ({guard(() => memory[bp + memory[ip + i]] )})",
                     _ => throw new ArgumentException()
                 };
             }
 
-            for (var i = 0; i < count && ip < mem.initial.Length; i++) {
+            for (var i = 0; i < count && ip < memory.initial.Length; i++) {
                 try {
                     sb.Append(ip.ToString("0000  "));
                     switch (GetOpcode(ip)) {
@@ -160,10 +200,10 @@ namespace AdventOfCode.Y2019 {
                         case Opcode.Eq: sb.AppendLine($"{addr(3)} = {arg(1)} == {arg(2)} ? 1 : 0;"); ip += 4; break;
                         case Opcode.StR: sb.AppendLine($"bp += {arg(1)};"); ip += 2; break;
                         case Opcode.Hlt: sb.AppendLine($"halt();"); ip += 1; break;
-                        default: sb.AppendLine($"{mem[ip]}"); ip += 1; break;
+                        default: sb.AppendLine($"{memory[ip]}"); ip += 1; break;
                     }
                 } catch {
-                    sb.AppendLine($"{mem[ip]}"); ip += 2;
+                    sb.AppendLine($"{memory[ip]}"); ip += 2;
                 }
             }
 
