@@ -66,9 +66,9 @@ namespace AdventOfCode.Y2019 {
             this.icm = icm;
         }
 
-        public (ImmutableIntCodeMachine icm, long[] output) Run(params long[] input){
-            var iicm = new ImmutableIntCodeMachine(this.icm.Clone());
-            return (iicm, iicm.icm.Run(input));
+        public (ImmutableIntCodeMachine iicm, long[] output) Run(params long[] input){
+            var immutableIntCodeMachine = new ImmutableIntCodeMachine(this.icm.Clone());
+            return (immutableIntCodeMachine, immutableIntCodeMachine.icm.Run(input));
         }
     }
 

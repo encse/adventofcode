@@ -29,41 +29,32 @@ namespace AdventOfCode.Y2019.Day15 {
             return Bfs(iicm).Last().path.Count;
         }
 
-        IEnumerable<(Tile tile, ImmutableList<int> path, ImmutableIntCodeMachine iicm)> Bfs(ImmutableIntCodeMachine startIicm) {
+        IEnumerable<(ImmutableIntCodeMachine iicm, ImmutableList<int> path, Tile tile)> Bfs(ImmutableIntCodeMachine startIicm) {
 
             (int dx, int dy)[] dirs = new[] { (0, -1), (0, 1), (-1, 0), (1, 0) };
 
-            var seen = new HashSet<(int x, int y)>{(0,0)};
-            var q = new Queue<(int x, int y, ImmutableList<int> path, ImmutableIntCodeMachine iicm)>();
-            q.Enqueue((0, 0, ImmutableList<int>.Empty, startIicm));
+            var seen = new HashSet<(int x, int y)> { (0, 0) };
+            var q = new Queue<(ImmutableIntCodeMachine iicm, ImmutableList<int> path, int x, int y)>();
+            q.Enqueue((startIicm, ImmutableList<int>.Empty, 0, 0));
             while (q.Any()) {
-                var (x, y, path, iicm) = q.Dequeue();
+                var current = q.Dequeue();
 
                 for (var i = 0; i < dirs.Length; i++) {
-                    var (xT, yT) = (x + dirs[i].dx, y + dirs[i].dy);
+                    var (nextX, nextY) = (current.x + dirs[i].dx, current.y + dirs[i].dy);
 
-                    if (!seen.Contains((xT, yT))) {
-                        seen.Add((xT, yT));
+                    if (!seen.Contains((nextX, nextY))) {
+                        seen.Add((nextX, nextY));
+                        var nextPath = current.path.Add(i + 1);
+                        var (nextIicm, output) = current.iicm.Run(i + 1);
 
-                        var pathT = path.Add(i + 1);
-                        var (iicmT, output) = iicm.Run(i+1); 
                         var tile = (Tile)output.Single();
                         if (tile != Tile.Wall) {
-                            yield return (tile, pathT, iicmT);
-                            q.Enqueue((xT, yT, pathT, iicmT));
+                            yield return (nextIicm, nextPath, tile);
+                            q.Enqueue((nextIicm, nextPath, nextX, nextY));
                         }
                     }
                 }
             }
-        }
-
-        Tile Walk(IntCodeMachine icm, ImmutableList<int> path) {
-            icm.Reset();
-            Tile tile = 0;
-            foreach (var step in path) {
-                tile = (Tile)icm.Run(step).Single();
-            }
-            return tile;
         }
     }
 }
