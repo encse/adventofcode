@@ -21,7 +21,7 @@ namespace AdventOfCode.Y2019.Day13 {
 
         int PartTwo(string input) {
             var icm = new IntCodeMachine(input);
-            icm.mem[0] = 2;
+            icm.memory[0] = 2;
             var score = 0;
             var icolBall = -1;
             var icolPaddle = -1;

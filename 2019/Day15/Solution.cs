@@ -1,13 +1,16 @@
-using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Text;
 
 namespace AdventOfCode.Y2019.Day15 {
 
     class Solution : Solver {
+
+        enum Tile {
+            Wall = 0,
+            Empty = 1,
+            O2 = 2,
+        }
 
         public string GetName() => "Oxygen System";
 
@@ -17,40 +20,24 @@ namespace AdventOfCode.Y2019.Day15 {
         }
 
         int PartOne(string input) {
-            var icm = new IntCodeMachine(input);
-            return Traverse(icm, ImmutableList<int>.Empty).Count;
+            var iicm = new ImmutableIntCodeMachine(input);
+            return Bfs(iicm).First(s => s.tile == Tile.O2).path.Count;
         }
 
         int PartTwo(string input) {
-            var icm = new IntCodeMachine(input);
-            var o2 = Traverse(icm, ImmutableList<int>.Empty);
-            return Traverse(icm, o2).Count - o2.Count;
+            var iicm = Bfs(new ImmutableIntCodeMachine(input)).First(s => s.tile == Tile.O2).iicm;
+            return Bfs(iicm).Last().path.Count;
         }
 
-        int walk(IntCodeMachine icm, ImmutableList<int> path) {
-            icm.Reset();
-            var res = 0;
-            foreach (var step in path) {
-                res = (int)icm.Run(step).Single();
-            }
-            return res;
-        }
-
-        ImmutableList<int> Traverse(IntCodeMachine icm,  ImmutableList<int> startPath) {
-            var q = new Queue<(int x, int y, ImmutableList<int> path)>();
-            var seen = new HashSet<(int x, int y)>();
+        IEnumerable<(Tile tile, ImmutableList<int> path, ImmutableIntCodeMachine iicm)> Bfs(ImmutableIntCodeMachine startIicm) {
 
             (int dx, int dy)[] dirs = new[] { (0, -1), (0, 1), (-1, 0), (1, 0) };
 
-            var e = new[] { -1, 2, 1, 4, 3 };
-
-            q.Enqueue((0, 0, startPath));
-            seen.Add((0, 0));
-            ImmutableList<int> lastPath = null;
-            var stop = false;
-            while (!stop && q.Any()) {
-                var (x, y, path) = q.Dequeue();
-                lastPath = path;
+            var seen = new HashSet<(int x, int y)>{(0,0)};
+            var q = new Queue<(int x, int y, ImmutableList<int> path, ImmutableIntCodeMachine iicm)>();
+            q.Enqueue((0, 0, ImmutableList<int>.Empty, startIicm));
+            while (q.Any()) {
+                var (x, y, path, iicm) = q.Dequeue();
 
                 for (var i = 0; i < dirs.Length; i++) {
                     var (xT, yT) = (x + dirs[i].dx, y + dirs[i].dy);
@@ -59,18 +46,24 @@ namespace AdventOfCode.Y2019.Day15 {
                         seen.Add((xT, yT));
 
                         var pathT = path.Add(i + 1);
-                        var res = walk(icm, pathT);
-                        switch (res) {
-                            case 0: break;
-                            case 1: q.Enqueue((xT, yT, pathT)); break;
-                            case 2: lastPath = pathT; stop = true; break;
-                            default: throw new Exception();
+                        var (iicmT, output) = iicm.Run(i+1); 
+                        var tile = (Tile)output.Single();
+                        if (tile != Tile.Wall) {
+                            yield return (tile, pathT, iicmT);
+                            q.Enqueue((xT, yT, pathT, iicmT));
                         }
                     }
                 }
-
             }
-            return lastPath;
+        }
+
+        Tile Walk(IntCodeMachine icm, ImmutableList<int> path) {
+            icm.Reset();
+            Tile tile = 0;
+            foreach (var step in path) {
+                tile = (Tile)icm.Run(step).Single();
+            }
+            return tile;
         }
     }
 }

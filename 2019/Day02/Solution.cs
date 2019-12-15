@@ -31,10 +31,10 @@ namespace AdventOfCode.Y2019.Day02 {
 
         long ExecIntCode(IntCodeMachine icm, int noun, int verb) {
             icm.Reset();
-            icm.mem[1] = noun;
-            icm.mem[2] = verb;
+            icm.memory[1] = noun;
+            icm.memory[2] = verb;
             icm.Run();
-            return icm.mem[0];
+            return icm.memory[0];
         }
     }
 }
