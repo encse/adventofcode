@@ -32,7 +32,7 @@ namespace AdventOfCode.Y2019 {
             this.initial = initial;
         }
 
-        public long this[long addr]{
+        public long this[long addr] {
             get {
                 return mem.ContainsKey(addr) ? mem[addr] : addr < initial.Length ? initial[addr] : 0;
             }
@@ -49,7 +49,7 @@ namespace AdventOfCode.Y2019 {
     class IntCodeMachine {
 
         private static int[] modeMask = new int[] { 0, 100, 1000, 10000 };
-       
+
         public Memory mem;
         public long ip;
         public long bp;
@@ -70,15 +70,16 @@ namespace AdventOfCode.Y2019 {
         public bool Halted() => (Opcode)(mem[ip] % 100) == Opcode.Hlt;
 
         private Mode GetMode(long addr, int i) => (Mode)(mem[addr] / modeMask[i] % 10);
-        private Opcode GetOpcode(long addr) =>  (Opcode)(mem[addr] % 100);
+        private Opcode GetOpcode(long addr) => (Opcode)(mem[addr] % 100);
 
         public long[] Run(params long[] input) {
 
-            foreach(var i in input){
+            foreach (var i in input) {
                 this.input.Enqueue(i);
             }
             var output = new List<long>();
             while (true) {
+                // Console.WriteLine(this.Disass(1));
                 var opcode = GetOpcode(ip);
                 long addr(int i) {
                     return GetMode(ip, i) switch
@@ -118,6 +119,14 @@ namespace AdventOfCode.Y2019 {
             var ip = this.ip;
             var sb = new StringBuilder();
 
+            string guard<T>(Func<T> action) {
+                try {
+                    return action().ToString();
+                } catch {
+                    return "?";
+                }
+                
+            }
             string addr(int i) {
                 return GetMode(ip, i) switch
                 {
@@ -130,14 +139,14 @@ namespace AdventOfCode.Y2019 {
             string arg(int i) {
                 return GetMode(ip, i) switch
                 {
-                    Mode.Positional => $"mem[{mem[ip + i]}] ({mem[mem[ip + i]]})",
+                    Mode.Positional => $"mem[{mem[ip + i]}] ({guard(() => mem[mem[ip + i]])})",
                     Mode.Immediate => $"{mem[ip + i]}",
-                    Mode.Relative => $"mem[bp + {mem[ip + i]}] ({mem[bp + mem[ip + i]] })",
+                    Mode.Relative => $"mem[bp + {mem[ip + i]}] ({guard(() => mem[bp + mem[ip + i]] )})",
                     _ => throw new ArgumentException()
                 };
             }
 
-            for (var i =0;i<count && ip < mem.initial.Length; i++) {
+            for (var i = 0; i < count && ip < mem.initial.Length; i++) {
                 try {
                     sb.Append(ip.ToString("0000  "));
                     switch (GetOpcode(ip)) {
