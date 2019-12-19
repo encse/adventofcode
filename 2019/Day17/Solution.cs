@@ -21,9 +21,8 @@ namespace AdventOfCode.Y2019.Day17 {
         }
 
         int PartOne(string input) {
-            var icm = new IntCodeMachine(input);
-            var output = icm.Run();
-            var mx = string.Join("", output.Select(x => (char)x)).Split("\n").Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
+            var mx = Screenshot(input);
+           
             var crow = mx.Length;
             var ccol = mx[0].Length;
             var res = 0;
@@ -50,21 +49,21 @@ namespace AdventOfCode.Y2019.Day17 {
             return res;
         }
 
+        
+        int PartTwo(string prg) {
+            var path = Path(prg);
 
-        int PartTwo(string input) {
-            var icm = new IntCodeMachine(input);
-            var output = icm.Run();
-            var mx = string.Join("", output.Select(x => (char)x)).Split("\n").Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
-            var path = Path(mx);
-            foreach (var (main, programs) in Solve(path, 0, ImmutableList<string>.Empty)) {
-                var compiled = programs.Select(program => compile(program)).ToArray();
-                if (main.Length <= 20 && compiled.All(c => c.Length <= 20)) {
-                    var mainC = main.Replace(" ", ",").Replace("0", "A").Replace("1","B").Replace("2","C").TrimEnd(',');
-                    var lines = $"{mainC}\n{compiled[0]}\n{compiled[1]}\n{compiled[2]}\nn\n";
+            foreach (var res in Solve(path, ImmutableList<string>.Empty)) {
+
+                var compressed = res.functions.Select(program => Compress(program)).ToArray();
+
+                if (res.main.Count <= 20 && compressed.All(c => c.Length <= 20)) {
+                    var mainC = string.Join(",", res.main);
+                    var lines = $"{mainC}\n{compressed[0]}\n{compressed[1]}\n{compressed[2]}\nn\n";
                     
-                    icm.Reset();
+                    var icm = new IntCodeMachine(prg);
                     icm.memory[0] = 2;
-                    output = icm.Run(lines.Select(x=>(long)x).ToArray());
+                    var output = icm.Run(lines.Select(x=>(long)x).ToArray());
 
                     var q = string.Join("", output.Select(x => (char)x));
                     return (int)output.Last();
@@ -73,109 +72,41 @@ namespace AdventOfCode.Y2019.Day17 {
             throw new Exception();
         }
 
-        IEnumerable<(string, string[])> Solve(string path, int ich, ImmutableList<string> parts) {
-            if (ich == path.Length) {
-                yield return ("", parts.ToArray());
+        string[] Screenshot(string input){
+            var icm = new IntCodeMachine(input);
+            var output = icm.Run();
+            return string.Join("", output.Select(x => (char)x)).Split("\n").Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
+        }
+        
+        IEnumerable<(ImmutableList<char> main, string[] functions)> Solve(string path, ImmutableList<string> functions) {
+            if (path.Length == 0) {
+                yield return (ImmutableList<char>.Empty, functions.ToArray());
             }
 
-            for (var ipart = 0; ipart < parts.Count; ipart++) {
-                var part = parts[ipart];
-                if (ich + part.Length <= path.Length && path.Substring(ich, part.Length) == part) {
-                    foreach (var (main, programs) in Solve(path, ich + part.Length, parts)) {
-                        yield return (ipart + " " + main, programs);
+            var functionNames = "ABC";
+
+            for (var ifunction = 0; ifunction < functions.Count; ifunction++) {
+                var function = functions[ifunction];
+                var name = functionNames[ifunction];
+                if (path.StartsWith(function)) {
+                    foreach (var res in Solve(path.Substring(function.Length), functions)) {
+                        yield return (res.main.Insert(0, name), res.functions);
                     }
                 }
             }
-            if (parts.Count < 3) {
-                for (var l = 1; ich + l <= path.Length; l++) {
-                    var newPart = path.Substring(ich, l);
-                    var newParts = parts.Add(newPart);
-                    foreach (var (main, programs) in Solve(path, ich + l, newParts)) {
-                        yield return ((newParts.Count - 1) + " " + main, programs);
+
+            if (functions.Count < 3) {
+                for (var length = 1; length <= path.Length; length++) {
+                    var function = path[0..length].ToString();
+                    var name = functionNames[functions.Count];
+                    foreach (var (main, programs) in Solve(path.Substring(function.Length), functions.Add(function))) {
+                        yield return (main.Insert(0, name), programs);
                     }
                 }
             }
         }
 
-        // IEnumerable<string> main(string path, string a, string b, string c) {
-        //     if (path == "") {
-        //         yield return "";
-        //     }
-        //     if (path.StartsWith(a)) {
-        //         foreach (var x in main(path.Substring(a.Length), a, b, c)) {
-        //             if (x == "") {
-        //                 yield return "a";
-        //             } else {
-        //                 yield return "a," + x;
-        //             }
-        //         }
-        //     }
-        //     if (path.StartsWith(b)) {
-        //         foreach (var x in main(path.Substring(b.Length), a, b, c)) {
-        //             if (x == "") {
-        //                 yield return "b";
-        //             } else {
-        //                 yield return "b," + x;
-        //             }
-        //         }
-        //     }
-        //     if (path.StartsWith(c)) {
-        //         foreach (var x in main(path.Substring(c.Length), a, b, c)) {
-        //             if (x == "") {
-        //                 yield return "c";
-        //             } else {
-        //                 yield return "c," + x;
-        //             }
-        //         }
-        //     }
-        // }
-
-        // string[] Program2(string[] mx) {
-        //     var path = Path(mx);
-        //     var s = new Dictionary<string, int>();
-        //     for (var ich = 0; ich < path.Length; ich++) {
-        //         for (var cch = 1; ich + cch <= path.Length; cch++) {
-        //             var key = path.Substring(ich, cch);
-        //             if (!s.ContainsKey(key)) {
-        //                 s[key] = 1;
-        //             } else {
-        //                 s[key]++;
-        //             }
-        //         }
-        //     }
-        //     var compiled = new Dictionary<string, string>();
-        //     foreach (var substring in s.Keys) {
-        //         if (!compiled.ContainsKey(substring)) {
-        //             compiled[substring] = compile(substring);
-        //         }
-        //     }
-
-
-
-        //     var substrings = s.Keys
-        //         .Where(st => compiled[st].Length <= 20)
-        //         .OrderBy(substring => -(substring.Length - compiled[substring].Length) * s[substring])
-        //         .ToList();
-
-        //     foreach (var stA in substrings) {
-        //         foreach (var stB in substrings) {
-        //             foreach (var stC in substrings) {
-        //                 if (stA != stB && stA != stC && stB != stC) {
-        //                     foreach (var m in main(path, stA, stB, stC)) {
-        //                         Console.WriteLine(m.Length);
-        //                         // Console.WriteLine(m);
-        //                         // Console.WriteLine(stA);
-        //                         // Console.WriteLine(stB);
-        //                         // Console.WriteLine(stC);
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }
-        //     return new string[] { };
-        // }
-
-        string compile(string st) {
+        string Compress(string st) {
             var steps = new List<string>();
             var l = 0;
             for (var i = 0; i < st.Length; i++) {
@@ -197,78 +128,8 @@ namespace AdventOfCode.Y2019.Day17 {
             return string.Join(",", steps);
         }
 
-        // string[] Program(string[] mx) {
-        //     var path = Path(mx);
-
-        //     string decompile(string st) {
-        //         if (st == "") {
-        //             return "";
-        //         }
-        //         var res = "";
-        //         foreach (var step in st.Split(",")) {
-        //             if (step == "L" || step == "R") {
-        //                 res += step;
-        //             } else {
-        //                 res += new string('F', int.Parse(step));
-        //             }
-
-        //         }
-        //         return res;
-        //     }
-        //     var p = 0;
-
-        //     Console.WriteLine(compile(path));
-        //     var ichA = 0;
-        //     for (var cchA = 1; ichA + cchA <= path.Length; cchA++) {
-        //         var stA = path.Substring(ichA, cchA);
-        //         var cA = compile(stA);
-        //         if (cA.Length > 20) {
-        //             continue;
-        //         }
-
-        //         var ichB = ichA + cchA;
-        //         for (var cchB = 1; ichB + cchB <= path.Length; cchB++) {
-        //             var stB = path.Substring(ichB, cchB);
-        //             var cB = compile(stB);
-        //             if (cB.Length > 20) {
-        //                 continue;
-        //             }
-
-        //             for (var ichC = ichB + cchB; ichC < path.Length; ichC++) {
-        //                 for (var cchC = 1; ichC + cchC <= path.Length; cchC++) {
-        //                     var stC = path.Substring(ichC, cchC);
-
-        //                     var cC = compile(stC);
-
-        //                     if (cC.Length > 20) {
-        //                         continue;
-        //                     }
-        //                     var sanity = stA + stB + stC;
-
-        //                     // if(!sanity.Contains("F")|| !sanity.Contains("L")|| !sanity.Contains("R")){
-        //                     //     continue;
-        //                     // }
-        //                     foreach (var m in main(path, stA, stB, stC)) {
-        //                         // if (m.Length <= 20) {
-        //                         //Console.WriteLine(path);
-        //                         Console.WriteLine(m.Length);
-        //                         // Console.WriteLine(m);
-        //                         // Console.WriteLine(cA);
-        //                         // Console.WriteLine(cB);
-        //                         // Console.WriteLine(cC);
-        //                         p++;
-        //                         // }
-        //                     }
-        //                     // Console.Write(".");
-        //                 }
-        //             }
-        //         }
-        //     }
-
-        //     Console.WriteLine(p);
-        //     return new string[] { };
-        // }
-        string Path(string[] mx) {
+        string Path(string input) {
+            var mx = Screenshot(input);
             var crow = mx.Length;
             var ccol = mx[0].Length;
 
