@@ -7,12 +7,6 @@ namespace AdventOfCode.Y2019.Day17 {
 
     class Solution : Solver {
 
-        enum Dir {
-            Up = '^',
-            Down = 'v',
-            Left = '<',
-            Right = '>',
-        }
         public string GetName() => "Set and Forget";
 
         public IEnumerable<object> Solve(string input) {
@@ -22,87 +16,80 @@ namespace AdventOfCode.Y2019.Day17 {
 
         int PartOne(string input) {
             var mx = Screenshot(input);
-           
+
             var crow = mx.Length;
             var ccol = mx[0].Length;
-            var res = 0;
-            var pattern = ".#.\n###\n.#.".Split("\n");
+            var cross = ".#.\n###\n.#.".Split("\n");
 
-            var x = 0;
-            for (var irow = 1; irow < crow - 1; irow++) {
-                for (var icol = 1; icol < ccol - 1; icol++) {
-                    var ok = true;
-                    foreach (var drow in new[] { -1, 0, 1 }) {
-                        foreach (var dcol in new[] { -1, 0, 1 }) {
-                            if (pattern[1 + drow][1 + dcol] != mx[irow + drow][icol + dcol]) {
-                                ok = false;
-                            }
-                        }
-                    }
+            bool crossing(int irow, int icol) => (
+                from drow in new[] { -1, 0, 1 }
+                from dcol in new[] { -1, 0, 1 }
+                select cross[1 + drow][1 + dcol] == mx[irow + drow][icol + dcol]
+            ).All(x => x);
 
-                    if (ok) {
-                        x++;
-                        res += icol * irow;
-                    }
-                }
-            }
-            return res;
+            return (
+                from irow in Enumerable.Range(1, crow - 2)
+                from icol in Enumerable.Range(1, ccol - 2)
+                where crossing(irow, icol)
+                select icol * irow
+            ).Sum();
         }
 
-        
-        int PartTwo(string prg) {
-            var path = Path(prg);
+        long PartTwo(string input) {
+            var program = GeneratePrograms(Path(input)).First();
 
-            foreach (var res in Solve(path, ImmutableList<string>.Empty)) {
-
-                var compressed = res.functions.Select(program => Compress(program)).ToArray();
-
-                if (res.main.Count <= 20 && compressed.All(c => c.Length <= 20)) {
-                    var mainC = string.Join(",", res.main);
-                    var lines = $"{mainC}\n{compressed[0]}\n{compressed[1]}\n{compressed[2]}\nn\n";
-                    
-                    var icm = new IntCodeMachine(prg);
-                    icm.memory[0] = 2;
-                    var output = icm.Run(lines.Select(x=>(long)x).ToArray());
-
-                    var q = string.Join("", output.Select(x => (char)x));
-                    return (int)output.Last();
-                }
-            }
-            throw new Exception();
+            var icm = new IntCodeMachine(input);
+            icm.memory[0] = 2;
+            return icm.Run(program.Select(x => (long)x).ToArray()).Last();
         }
 
-        string[] Screenshot(string input){
+        string[] Screenshot(string input) {
             var icm = new IntCodeMachine(input);
             var output = icm.Run();
             return string.Join("", output.Select(x => (char)x)).Split("\n").Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
         }
-        
-        IEnumerable<(ImmutableList<char> main, string[] functions)> Solve(string path, ImmutableList<string> functions) {
-            if (path.Length == 0) {
-                yield return (ImmutableList<char>.Empty, functions.ToArray());
-            }
 
-            var functionNames = "ABC";
+        IEnumerable<string> GeneratePrograms(string path) {
 
-            for (var ifunction = 0; ifunction < functions.Count; ifunction++) {
-                var function = functions[ifunction];
-                var name = functionNames[ifunction];
-                if (path.StartsWith(function)) {
-                    foreach (var res in Solve(path.Substring(function.Length), functions)) {
-                        yield return (res.main.Insert(0, name), res.functions);
+            IEnumerable<(ImmutableList<int> indices, ImmutableList<string> functions)> GenerateRec(string path, ImmutableList<string> functions) {
+                if (path.Length == 0) {
+                    yield return (ImmutableList<int>.Empty, functions);
+                }
+
+                for (var i = 0; i < functions.Count; i++) {
+                    var function = functions[i];
+
+                    if (path.StartsWith(function)) {
+
+                        var pathT = path.Substring(function.Length);
+                        foreach (var res in GenerateRec(pathT, functions)) {
+                            yield return (res.indices.Insert(0, i), res.functions);
+                        }
+                    }
+                }
+
+                if (functions.Count < 3) {
+                    for (var length = 1; length <= path.Length; length++) {
+                        var function = path[0..length].ToString();
+                        var functionsT = functions.Add(function);
+                        var idx = functions.Count;
+                        var pathT = path.Substring(function.Length);
+                        foreach (var res in GenerateRec(pathT, functionsT)) {
+                            yield return (res.indices.Insert(0, idx), res.functions);
+                        }
                     }
                 }
             }
 
-            if (functions.Count < 3) {
-                for (var length = 1; length <= path.Length; length++) {
-                    var function = path[0..length].ToString();
-                    var name = functionNames[functions.Count];
-                    foreach (var (main, programs) in Solve(path.Substring(function.Length), functions.Add(function))) {
-                        yield return (main.Insert(0, name), programs);
-                    }
+            foreach (var (indices, functions) in GenerateRec(path, ImmutableList<string>.Empty)) {
+
+                var compressed = functions.Select(Compress).ToArray();
+                if (indices.Count <= 20 && compressed.All(c => c.Length <= 20)) {
+
+                    var main = string.Join(",", indices.Select(i => "ABC"[i]));
+                    yield return $"{main}\n{compressed[0]}\n{compressed[1]}\n{compressed[2]}\nn\n";
                 }
+
             }
         }
 
@@ -133,7 +120,7 @@ namespace AdventOfCode.Y2019.Day17 {
             var crow = mx.Length;
             var ccol = mx[0].Length;
 
-            var (pos, dir) = RobotPosition(mx);
+            var (pos, dir) = FindRobot(mx);
             char look((int irow, int icol) pos) {
                 var (irow, icol) = pos;
                 return irow < 0 || irow >= crow || icol < 0 || icol >= ccol ? '.' : mx[irow][icol];
@@ -161,28 +148,20 @@ namespace AdventOfCode.Y2019.Day17 {
             return path;
         }
 
-        ((int irow, int icol) pos, (int drow, int dcol) dir) RobotPosition(string[] mx) {
-            var crow = mx.Length;
-            var ccol = mx[0].Length;
-
-            var forward = new Dictionary<Dir, (int drow, int dcol)> {
-                {Dir.Up, (-1, 0)},
-                {Dir.Down, (1, 0)},
-                {Dir.Left, (0, -1)},
-                {Dir.Right, (0, 1)},
-            };
-
-            for (var irow = 0; irow < crow; irow++) {
-                for (var icol = 0; icol < ccol; icol++) {
-                    var dir = (Dir)mx[irow][icol];
-                    if (Enum.IsDefined(typeof(Dir), dir)) {
-                        return ((irow, icol), forward[dir]);
-                    }
-                }
+        ((int irow, int icol) pos, (int drow, int dcol) dir) FindRobot(string[] mx) => (
+            from irow in Enumerable.Range(0, mx.Length)
+            from icol in Enumerable.Range(0, mx[0].Length)
+            let ch = mx[irow][icol]
+            where "^v<>".Contains(ch)
+            let dir = mx[irow][icol] switch
+            {
+                '^' => (-1, 0),
+                'v' => (1, 0),
+                '<' => (0, -1),
+                '>' => (0, 1),
+                _ => throw new Exception()
             }
-
-            throw new Exception();
-
-        }
+            select ((irow, icol), dir)
+        ).First();
     }
 }
