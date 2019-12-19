@@ -15,7 +15,6 @@ namespace AdventOfCode.Y2019.Day18 {
         int crow => maze.Length;
         Dictionary<char, (int, int)> positionCache = new Dictionary<char, (int, int)>();
         Dictionary<(char, char), int> distanceCache = new Dictionary<(char, char), int>();
-        Dictionary<char, int> minDistCache = new Dictionary<char, int>();
 
         public char Look((int irow, int icol) pos) {
             var (irow, icol) = pos;
@@ -174,8 +173,6 @@ namespace AdventOfCode.Y2019.Day18 {
             cache[cacheKey] = d;
             return d;
         }
-
-
 
         Dictionary<char, ImmutableHashSet<char>> GenerateDependencies((int irow, int icol) pos, Maze maze) {
             var q = new Queue<((int irow, int icol) pos, string doors)>();
