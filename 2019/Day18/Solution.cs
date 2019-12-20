@@ -85,7 +85,7 @@ namespace AdventOfCode.Y2019.Day18 {
             throw new Exception();
         }
     }
-    
+
     class Solution : Solver {
 
         public string GetName() => "Many-Worlds Interpretation";
@@ -98,10 +98,9 @@ namespace AdventOfCode.Y2019.Day18 {
         int PartOne(string input) {
             var maze = new Maze(input);
 
-            var pos = maze.Find('@');
 
-            var dependencies = GenerateDependencies(pos, maze);
-            return Solve(maze, dependencies, ImmutableHashSet.CreateRange(dependencies.Keys), '@', new Dictionary<(char, string), int>());
+            var dependencies = GenerateDependencies(maze);
+            return Solve(maze);
         }
 
 
@@ -110,10 +109,8 @@ namespace AdventOfCode.Y2019.Day18 {
             foreach (var subMaze in GenerateSubMazes(input)) {
                 var maze = new Maze(subMaze);
 
-                var pos = maze.Find('@');
-
-                var dependencies = GenerateDependencies(pos, maze);
-                d += Solve(maze, dependencies, ImmutableHashSet.CreateRange(dependencies.Keys), '@', new Dictionary<(char, string), int>());
+                var dependencies = GenerateDependencies(maze);
+                d += Solve(maze);
             }
             return d;
         }
@@ -147,43 +144,45 @@ namespace AdventOfCode.Y2019.Day18 {
             }
         }
 
-        int Solve(Maze maze,
-            Dictionary<char, ImmutableHashSet<char>> dependencies,
-            ImmutableHashSet<char> keys,
-            char startKey,
-            Dictionary<(char, string), int> cache
-        ) {
 
-            var cacheKey = (startKey, string.Join("", keys.OrderBy(x => x)));
-            if (cache.ContainsKey(cacheKey)) {
+        int Solve(Maze maze) {
+            var dependencies = GenerateDependencies(maze);
+            var cache = new Dictionary<string, int>();
+
+            int SolveRecursive(char currentItem, ImmutableHashSet<char> keys
+            ) {
+                if (keys.Count == 0) {
+                    return 0;
+                }
+                var cacheKey = currentItem + string.Join("", keys);
+
+                if (!cache.ContainsKey(cacheKey)) {
+                    var result = int.MaxValue;
+                    foreach (var key in keys) {
+                        if (dependencies[key].Intersect(keys).Count == 0) {
+                            var d = maze.Distance(currentItem, key) + SolveRecursive(key, keys.Remove(key));
+                            result = Math.Min(d, result);
+                        }
+                    }
+                    cache[cacheKey] = result;
+                }
                 return cache[cacheKey];
             }
 
-            if (keys.Count == 0) {
-                return 0;
-            }
-            var d = int.MaxValue;
-            foreach (var key in keys) {
-                if (dependencies[key].Intersect(keys).Count == 0) {
-                    var innen = maze.Distance(startKey, key) + Solve(maze, dependencies, keys.Remove(key), key, cache);
-                    d = Math.Min(innen, d);
-                }
-            }
-
-            cache[cacheKey] = d;
-            return d;
+            return SolveRecursive('@', dependencies.Keys.ToImmutableHashSet());
         }
 
-        Dictionary<char, ImmutableHashSet<char>> GenerateDependencies((int irow, int icol) pos, Maze maze) {
-            var q = new Queue<((int irow, int icol) pos, string doors)>();
-            var doors = "";
-            q.Enqueue((pos, doors));
+        Dictionary<char, ImmutableHashSet<char>> GenerateDependencies(Maze maze) {
+            var q = new Queue<((int irow, int icol) pos, string dependsOn)>();
+            var pos = maze.Find('@');
+            var dependsOn = "";
+            q.Enqueue((pos, dependsOn));
 
             var res = new Dictionary<char, ImmutableHashSet<char>>();
             var seen = new HashSet<(int irow, int icol)>();
             seen.Add(pos);
             while (q.Any()) {
-                (pos, doors) = q.Dequeue();
+                (pos, dependsOn) = q.Dequeue();
 
                 foreach (var (drow, dcol) in new[] { (-1, 0), (1, 0), (0, -1), (0, 1) }) {
                     var posT = (pos.irow + drow, pos.icol + dcol);
@@ -194,17 +193,16 @@ namespace AdventOfCode.Y2019.Day18 {
                     }
 
                     seen.Add(posT);
-                    var doorsT = doors;
+                    var dependsOnT = dependsOn;
 
-                    if (ch >= 'a' && ch <= 'z') {
-                        res[ch] = ImmutableHashSet.CreateRange(doors.ToLower());
-                        doorsT += ch;
+                    if (char.IsLower(ch)) {
+                        res[ch] = ImmutableHashSet.CreateRange(dependsOn);
                     }
 
-                    if (ch >= 'A' && ch <= 'Z') {
-                        doorsT += ch;
+                    if (char.IsLetter(ch)) {
+                        dependsOnT += char.ToLower(ch);
                     }
-                    q.Enqueue((posT, doorsT));
+                    q.Enqueue((posT, dependsOnT));
                 }
             }
             return res;
