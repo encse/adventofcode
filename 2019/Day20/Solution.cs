@@ -4,36 +4,6 @@ using System.Linq;
 
 namespace AdventOfCode.Y2019.Day20 {
 
-
-    class Pos2 {
-        readonly (int x, int y) repr;
-        public int x => repr.x;
-        public int y => repr.y;
-        private Pos2((int x, int y) pos) {
-            this.repr = pos;
-        }
-        public static implicit operator Pos2((int, int) pos){
-            return new Pos2(pos);
-        }
-        public override bool Equals(object obj) => repr.Equals(obj);
-        public override int GetHashCode() => repr.GetHashCode();
-    }
-
-    class Pos3 {
-        readonly (int x, int y, int z) repr;
-        public int x => repr.x;
-        public int y => repr.y;
-        public int z => repr.z;
-        private Pos3((int x, int y, int z) pos) {
-            this.repr = pos;
-        }
-        public static implicit operator Pos3((int, int, int) pos){
-            return new Pos3(pos);
-        }
-        public override bool Equals(object obj) => repr.Equals(obj);
-        public override int GetHashCode() => repr.GetHashCode();
-    }
-
     class Solution : Solver {
 
         public string GetName() => "Donut Maze";
@@ -63,44 +33,40 @@ namespace AdventOfCode.Y2019.Day20 {
             var seen = new HashSet<(int irow, int icol, int level)>();
             seen.Add(pos);
 
+            IEnumerable<(int irow, int icol, int level)> Neighbours((int irow, int icol, int level) pos) {
+                foreach (var (drow, dcol) in new[] { (0, -1), (0, 1), (-1, 0), (1, 0) }) {
+                    yield return (irow: pos.irow + drow, icol: pos.icol + dcol, level: pos.level);
+                }
+
+                if (portals.ContainsKey((pos.irow, pos.icol))) {
+                    var (irowT, icolT, dlevel) = portals[(pos.irow, pos.icol)];
+
+                    if (!part2) {
+                        dlevel = 0;
+                    }
+
+                    if (pos.level + dlevel >= 0) {
+                        yield return (irowT, icolT, pos.level + dlevel);
+                    }
+                }
+            }
+
             while (q.Any()) {
                 (pos, dist) = q.Dequeue();
                 if (pos == end) {
                     return dist;
                 }
-                foreach (var (drow, dcol) in new[] { (0, -1), (0, 1), (-1, 0), (1, 0) }) {
-                    var (irowT, icolT, levelT) = (pos.irow + drow, pos.icol + dcol, pos.level);
-                    var posT = (irowT, icolT, levelT);
+
+                foreach (var posT in Neighbours(pos)) {
                     if (!seen.Contains(posT)) {
-
                         var distT = dist + 1;
-
-                        if (mx[irowT][icolT] == '.') {
-                            seen.Add(posT);
-                            q.Enqueue((posT, distT));
-                        }
-
-                    }
-
-
-                }
-
-                if (portals.ContainsKey((pos.irow, pos.icol))) {
-                    var (irowT, icolT, dlevel) = portals[(pos.irow, pos.icol)];
-                    var posT = (irowT, icolT, pos.level + dlevel);
-                    if (!seen.Contains(posT) && pos.level + dlevel >= 0) {
-
-                        var distT = dist + 1;
-
-                        if (mx[irowT][icolT] == '.') {
+                        if (mx[posT.irow][posT.icol] == '.') {
                             seen.Add(posT);
                             q.Enqueue((posT, distT));
                         }
 
                     }
                 }
-
-
             }
             throw new Exception();
         }
