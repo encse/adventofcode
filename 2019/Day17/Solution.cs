@@ -40,7 +40,7 @@ namespace AdventOfCode.Y2019.Day17 {
 
             var icm = new IntCodeMachine(input);
             icm.memory[0] = 2;
-            return icm.Run(program.Select(x => (long)x).ToArray()).Last();
+            return icm.Run(program).Last();
         }
 
         string[] Screenshot(string input) {

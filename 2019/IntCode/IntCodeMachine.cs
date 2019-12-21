@@ -32,7 +32,7 @@ namespace AdventOfCode.Y2019 {
             this.initial = initial;
         }
 
-        private Memory(long[] initial, Dictionary<long, long> mem){
+        private Memory(long[] initial, Dictionary<long, long> mem) {
             this.initial = initial;
             this.mem = mem;
         }
@@ -47,7 +47,7 @@ namespace AdventOfCode.Y2019 {
         }
 
 
-        public Memory Clone(){
+        public Memory Clone() {
             return new Memory(initial, new Dictionary<long, long>(mem));
         }
 
@@ -59,14 +59,14 @@ namespace AdventOfCode.Y2019 {
 
     class ImmutableIntCodeMachine {
         IntCodeMachine icm;
-        public ImmutableIntCodeMachine(string stPrg): this(new IntCodeMachine(stPrg)){
+        public ImmutableIntCodeMachine(string stPrg) : this(new IntCodeMachine(stPrg)) {
         }
 
-        private ImmutableIntCodeMachine(IntCodeMachine icm){
+        private ImmutableIntCodeMachine(IntCodeMachine icm) {
             this.icm = icm;
         }
 
-        public (ImmutableIntCodeMachine iicm, long[] output) Run(params long[] input){
+        public (ImmutableIntCodeMachine iicm, long[] output) Run(params long[] input) {
             var immutableIntCodeMachine = new ImmutableIntCodeMachine(this.icm.Clone());
             return (immutableIntCodeMachine, immutableIntCodeMachine.icm.Run(input));
         }
@@ -81,10 +81,10 @@ namespace AdventOfCode.Y2019 {
         public long bp;
         public Queue<long> input;
 
-        public IntCodeMachine(string stPrg) : 
-            this(new Memory(stPrg.Split(",").Select(long.Parse).ToArray()), 
-            0, 
-            0, 
+        public IntCodeMachine(string stPrg) :
+            this(new Memory(stPrg.Split(",").Select(long.Parse).ToArray()),
+            0,
+            0,
             new Queue<long>()
         ) {
         }
@@ -112,6 +112,37 @@ namespace AdventOfCode.Y2019 {
         private Mode GetMode(long addr, int i) => (Mode)(memory[addr] / modeMask[i] % 10);
         private Opcode GetOpcode(long addr) => (Opcode)(memory[addr] % 100);
 
+        public long[] Run() {
+            return Run(new long[0]);
+        }
+
+
+        public void RunInteractive() {
+            var input = new long[0];
+            while (true) {
+                var output = Run(input);
+                Console.Write(AsciiDecode(output));
+                if (this.Halted()) {
+                    break;
+                }
+                input = AsciiEncode(Console.ReadLine() + "\n");
+            }
+        }
+
+
+        private long[] AsciiEncode(string st) {
+            return (from ch in st select (long)ch).ToArray();
+        }
+
+        private string AsciiDecode(long[] items) {
+            return string.Join("", from item in items select (char)item);
+        }
+
+        public long[] Run(params string[] input) {
+            var st = string.Join("", from line in input select line + "\n");
+            return Run(AsciiEncode(st));
+        }
+
         public long[] Run(params long[] input) {
 
             foreach (var i in input) {
@@ -119,7 +150,6 @@ namespace AdventOfCode.Y2019 {
             }
             var output = new List<long>();
             while (true) {
-                // Console.WriteLine(this.Disass(1));
                 var opcode = GetOpcode(ip);
                 long addr(int i) {
                     return GetMode(ip, i) switch
@@ -165,7 +195,7 @@ namespace AdventOfCode.Y2019 {
                 } catch {
                     return "?";
                 }
-                
+
             }
             string addr(int i) {
                 return GetMode(ip, i) switch
@@ -181,7 +211,7 @@ namespace AdventOfCode.Y2019 {
                 {
                     Mode.Positional => $"mem[{memory[ip + i]}] ({guard(() => memory[memory[ip + i]])})",
                     Mode.Immediate => $"{memory[ip + i]}",
-                    Mode.Relative => $"mem[bp + {memory[ip + i]}] ({guard(() => memory[bp + memory[ip + i]] )})",
+                    Mode.Relative => $"mem[bp + {memory[ip + i]}] ({guard(() => memory[bp + memory[ip + i]])})",
                     _ => throw new ArgumentException()
                 };
             }
