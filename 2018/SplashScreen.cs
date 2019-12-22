@@ -8,10 +8,8 @@ namespace AdventOfCode.Y2018 {
         public void Show() {
 
             var color = Console.ForegroundColor;
-            Write(0xffff66, false, "\n  __   ____  _  _  ____  __ _  ____     __  ____     ___  __  ____  ____         \n / _\\ (    \\/ )( ");
-            Write(0xffff66, false, "\\(  __)(  ( \\(_  _)   /  \\(  __)   / __)/  \\(    \\(  __)        \n/    \\ ) D (\\ \\/ / ) _) /    /  )( ");
-            Write(0xffff66, false, "   (  O )) _)   ( (__(  O )) D ( ) _)         \n\\_/\\_/(____/ \\__/ (____)\\_)__) (__)    \\__/(__)     \\");
-            Write(0xffff66, false, "___)\\__/(____/(____)  2018\n\n                ");
+            Write(0xffff66, false, "\n /\\   _|     _  ._ _|_    _ _|_   /   _   _|  _  \n/--\\ (_| \\/ (/_ | | |_   (_) |    \\_ (_) (_| (/_ ");
+            Write(0xffff66, false, " 2018\n\n                ");
             Write(0xcccccc, false, ".         .         .        .        .       25 ");
             Write(0xffff66, false, "**\n            ");
             Write(0xcccccc, false, ".        .         .        .       ");
