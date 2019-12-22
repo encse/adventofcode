@@ -53,15 +53,16 @@ namespace AdventOfCode.Y2019.Day22 {
                     throw new Exception();
                 }
             }
-
+           
             var resA = BigInteger.One;
             var resB = BigInteger.Zero;
-
+         
             while (iter > 0) {
                 if (iter % 2 == 1) {
-                    (resA, resB) = ((resA * a) % m, (resB * a + b) % m);
+                    (resA, resB) = ((a * resA) % m, (a * resB + b) % m);
                 }
-                (a, b) = ((a * a) % m, (b * a + b) % m);
+
+                (a, b) = ((a * a) % m, (a + 1) * b % m);
                 iter >>= 1;
             }
 
