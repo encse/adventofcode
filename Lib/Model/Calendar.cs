@@ -9,7 +9,7 @@ namespace AdventOfCode.Model {
     public class CalendarToken {
         public string Text { get; set; }
         public int ConsoleColor { get; set; }
-        public bool Bold {get; set;}
+        public bool Bold { get; set; }
     }
 
     public class Calendar {
@@ -66,7 +66,10 @@ namespace AdventOfCode.Model {
                 var consoleColor = ParseRgbaColor(style["color"]);
                 var bold = !string.IsNullOrEmpty(style["text-shadow"]);
 
-                var widthSpec = string.IsNullOrEmpty(style["width"]) ? 
+                if (style["position"] == "absolute") {
+                    continue;
+                }
+                var widthSpec = string.IsNullOrEmpty(style["width"]) ?
                     textNode.ParentElement.ParentElement.ComputeCurrentStyle()["width"] : style["width"];
                 if (widthSpec != null) {
 
@@ -90,7 +93,7 @@ namespace AdventOfCode.Model {
                     line.Add(new CalendarToken {
                         Text = text.Substring(i, iNext - i),
                         ConsoleColor = consoleColor,
-                        Bold = bold 
+                        Bold = bold
                     });
 
                     if (iNext < text.Length) {
