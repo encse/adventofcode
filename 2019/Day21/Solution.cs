@@ -14,33 +14,32 @@ namespace AdventOfCode.Y2019.Day21 {
 
         long PartOne(string input) {
             var icm = new IntCodeMachine(input);
+            
+            // J = (¬A ∨ ¬B ∨ ¬C) ∧ D  
+            // jump if no road ahead, but we can continue from D
             return new IntCodeMachine(input).Run(
-                "NOT C J",
-                "AND D J",
-                "NOT B T",
-                "AND D T",
-                "OR T J",
-                "NOT A T",
-                "AND D T",
-                "OR T J",
+                "OR A T",
+                "AND B T",
+                "AND C T",
+                "NOT T J", 
+                "AND D J", 
                 "WALK"
             ).Last();
         }
 
         long PartTwo(string input) {
+
+             // J = (¬A ∨ ¬B ∨ ¬C) ∧ D ∧ (H ∨ E) 
+             // same as part 1, but also check that D is not a dead end
             return new IntCodeMachine(input).Run(
-                "NOT A J", 
-                "NOT C T", 
-                "AND D T", 
-                "AND H T", 
-                "OR T J", 
-                "NOT C T", 
-                "AND D T", 
-                "AND E T", 
-                "OR T J", 
-                "NOT B T", 
-                "AND D T", 
-                "OR T J", 
+                "OR A T",
+                "AND B T",
+                "AND C T",
+                "NOT T J",  
+                "AND D J", 
+                "OR H T",
+                "OR E T",
+                "AND T J", 
                 "RUN"
             ).Last();
         }
