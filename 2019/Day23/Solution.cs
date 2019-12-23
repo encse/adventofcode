@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace AdventOfCode.Y2019.Day23 {
 
+    class Packets : List<(long address, long x, long y)> { }
 
     class Solution : Solver {
 
@@ -13,64 +15,71 @@ namespace AdventOfCode.Y2019.Day23 {
             yield return PartTwo(input);
         }
 
-        long PartOne(string input) => Solve(input, true);
+        long PartOne(string input) => Solve(input, false);
+        long PartTwo(string input) => Solve(input, true);
 
-        long PartTwo(string input) => Solve(input, false);
+        long Solve(string input, bool hasNat) {
+            var machines = (
+                from address in Enumerable.Range(0, 50)
+                select Nic(input, address)
+            ).ToList();
 
-        long Solve(string input, bool part1) {
+            var natAddress = 255;
 
-            var addresses = Enumerable.Range(0, 50).ToList();
-            var nics = new IntCodeMachine[50];
-            foreach (var address in addresses) {
-                nics[address] = new IntCodeMachine(input);
-                nics[address].Run(address);
+            if (hasNat) {
+                machines.Add(Nat(natAddress));
             }
 
-            var queue = new List<(long address, long x, long y)>();
-
-            addresses.Add(255);
-            long yLast = 0;
-            while (true) {
-
-                foreach (var address in addresses) {
-                    var filteredQueue = new List<(long, long, long)>();
-                    var data = new List<long>();
-                    foreach (var packet in queue) {
-                        if (packet.address == address) {
-                            data.Add(packet.x);
-                            data.Add(packet.y);
-                        } else {
-                            filteredQueue.Add(packet);
-                        }
-                    }
-                    queue = filteredQueue;
-                    if (address == 255) {
-                        if (data.Any()) {
-                            if (part1) {
-                                return data[1];
-                            }
-                            if (queue.Count == 0) {
-                                var (x, y) = (data[^2], data[^1]);
-                                if (y != yLast) {
-                                    queue.Add((0, x, y));
-                                    yLast = y;
-                                } else {
-                                    return yLast;
-                                }
-                            }
-                        }
-                    } else {
-                        if (!data.Any()) {
-                            data.Add(-1);
-                        }
-                        var output = nics[address].Run(data.ToArray());
-                        for (var d = 0; d < output.Length; d += 3) {
-                            queue.Add((output[d], output[d + 1], output[d + 2]));
-                        }
-                    }
+            var packets = new Packets();
+            while (!packets.Any(packet => packet.address == natAddress)) {
+                foreach (var machine in machines) {
+                    packets = machine(packets);
                 }
             }
+            return packets.Single(packet => packet.address == natAddress).y;
         }
 
+        (List<long> data, Packets packets) Receive(Packets packets, int address) {
+            var filteredPackets = new Packets();
+            var data = new List<long>();
+            foreach (var packet in packets) {
+                if (packet.address == address) {
+                    data.Add(packet.x);
+                    data.Add(packet.y);
+                } else {
+                    filteredPackets.Add(packet);
+                }
+            }
+            return (data, filteredPackets);
+        }
+
+        Func<Packets, Packets> Nic(string program, int address) {
+            var icm = new IntCodeMachine(program);
+            icm.Run(address);
+            return (input) => {
+                var (data, packets) = Receive(input, address);
+                if (!data.Any()) {
+                    data.Add(-1);
+                }
+                var output = icm.Run(data.ToArray());
+                for (var d = 0; d < output.Length; d += 3) {
+                    packets.Add((output[d], output[d + 1], output[d + 2]));
+                }
+                return packets;
+            };
+        }
+
+        Func<Packets, Packets> Nat(int address) {
+            long? yLast = null;
+            return (input) => {
+                var (data, packets) = Receive(input, address);
+                if (data.Any() && packets.Count == 0) {
+                    var (x, y) = (data[^2], data[^1]);
+                    packets.Add((y == yLast ? 255 : 0, x, y));
+                    yLast = y;
+                }
+                return packets;
+            };
+        }
     }
 }
