@@ -1,9 +1,5 @@
-using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Text;
 
 namespace AdventOfCode.Y2019.Day23 {
 
@@ -22,54 +18,56 @@ namespace AdventOfCode.Y2019.Day23 {
         long PartTwo(string input) => Solve(input, false);
 
         long Solve(string input, bool part1) {
-            var nics = (
-               from i in Enumerable.Range(0, 50)
-               select (machine: new IntCodeMachine(input), queue: new Queue<long>(new long[] { i }))
-           ).ToArray();
 
+            var addresses = Enumerable.Range(0, 50).ToList();
+            var nics = new IntCodeMachine[50];
+            foreach (var address in addresses) {
+                nics[address] = new IntCodeMachine(input);
+                nics[address].Run(address);
+            }
 
-            var (x, y, yLast) = (0L, 0L, 0L);
-            var idle = false;
+            var queue = new List<(long address, long x, long y)>();
+
+            addresses.Add(255);
+            long yLast = 0;
             while (true) {
 
-                idle = true;
-
-                for (var i = 0; i < 50; i++) {
-                    var (machine, queue) = nics[i];
-                    var data = queue.Any() ? queue.ToArray() : new[] { -1L };
-                    if (queue.Any()) {
-                        idle = false;
-                    }
-                    queue.Clear();
-                    var output = machine.Run(data);
-                    for (var d = 0; d < output.Length; d += 3) {
-                        var packet = output.Skip(d).Take(3).ToArray();
-                        idle = false;
-                        var recipient = packet[0];
-                        if (recipient == 255) {
-
-                            (x, y) = (packet[1], packet[2]);
-                            if (part1) {
-                                return y;
-                            }
-
+                foreach (var address in addresses) {
+                    var filteredQueue = new List<(long, long, long)>();
+                    var data = new List<long>();
+                    foreach (var packet in queue) {
+                        if (packet.address == address) {
+                            data.Add(packet.x);
+                            data.Add(packet.y);
                         } else {
-                            var recipientQ = nics[recipient];
-                            recipientQ.queue.Enqueue(packet[1]);
-                            recipientQ.queue.Enqueue(packet[2]);
+                            filteredQueue.Add(packet);
                         }
                     }
-                }
-
-                if (idle) {
-
-                    idle = false;
-                    nics[0].queue.Enqueue(x);
-                    nics[0].queue.Enqueue(y);
-                    if (y == yLast) {
-                        return y;
+                    queue = filteredQueue;
+                    if (address == 255) {
+                        if (data.Any()) {
+                            if (part1) {
+                                return data[1];
+                            }
+                            if (queue.Count == 0) {
+                                var (x, y) = (data[^2], data[^1]);
+                                if (y != yLast) {
+                                    queue.Add((0, x, y));
+                                    yLast = y;
+                                } else {
+                                    return yLast;
+                                }
+                            }
+                        }
+                    } else {
+                        if (!data.Any()) {
+                            data.Add(-1);
+                        }
+                        var output = nics[address].Run(data.ToArray());
+                        for (var d = 0; d < output.Length; d += 3) {
+                            queue.Add((output[d], output[d + 1], output[d + 2]));
+                        }
                     }
-                    yLast = y;
                 }
             }
         }
