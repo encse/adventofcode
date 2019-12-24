@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using System.Diagnostics;
 
 namespace AdventOfCode.Y2019.Day23 {
 
-    class Packets : List<(long address, long x, long y)> { }
+    class Packets : List<(long address, long x, long y)>{}
 
     class Solution : Solver {
 
@@ -55,7 +56,9 @@ namespace AdventOfCode.Y2019.Day23 {
 
         Func<Packets, Packets> Nic(string program, int address) {
             var icm = new IntCodeMachine(program);
-            icm.Run(address);
+            var output = icm.Run(address);
+            Debug.Assert(output.Length == 0);
+
             return (input) => {
                 var (data, packets) = Receive(input, address);
                 if (!data.Any()) {
@@ -70,13 +73,18 @@ namespace AdventOfCode.Y2019.Day23 {
         }
 
         Func<Packets, Packets> Nat(int address) {
-            long? yLast = null;
+            long? yLastSent = null;
+            long? x = null;
+            long? y = null;
             return (input) => {
                 var (data, packets) = Receive(input, address);
-                if (data.Any() && packets.Count == 0) {
-                    var (x, y) = (data[^2], data[^1]);
-                    packets.Add((y == yLast ? 255 : 0, x, y));
-                    yLast = y;
+                if (data.Any()) {
+                    (x, y) = (data[^2], data[^1]);
+                }
+                if (packets.Count == 0) {
+                    Debug.Assert(x.HasValue && y.HasValue);
+                    packets.Add((y == yLastSent ? 255 : 0, x.Value, y.Value));
+                    yLastSent = y;
                 }
                 return packets;
             };
