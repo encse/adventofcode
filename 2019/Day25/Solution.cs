@@ -11,9 +11,7 @@ namespace AdventOfCode.Y2019.Day25 {
         }
 
         int PartOne(string input) {
-           // new IntCodeMachine(input).RunInteractive();
             return 201327120;
         }
-
     }
 }
