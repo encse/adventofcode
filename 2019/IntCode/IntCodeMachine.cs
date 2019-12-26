@@ -70,6 +70,13 @@ namespace AdventOfCode.Y2019 {
             var immutableIntCodeMachine = new ImmutableIntCodeMachine(this.icm.Clone());
             return (immutableIntCodeMachine, immutableIntCodeMachine.icm.Run(input));
         }
+
+        public (ImmutableIntCodeMachine iicm, long[] output) Run(params string[] input) {
+            var immutableIntCodeMachine = new ImmutableIntCodeMachine(this.icm.Clone());
+            return (immutableIntCodeMachine, immutableIntCodeMachine.icm.Run(input));
+        }
+
+        public bool Halted() => icm.Halted();
     }
 
     class IntCodeMachine {
@@ -115,7 +122,6 @@ namespace AdventOfCode.Y2019 {
         public long[] Run() {
             return Run(new long[0]);
         }
-
 
         public void RunInteractive() {
             var input = new long[0];

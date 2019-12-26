@@ -66,7 +66,9 @@ namespace AdventOfCode.Model {
                 var consoleColor = ParseRgbaColor(style["color"]);
                 var bold = !string.IsNullOrEmpty(style["text-shadow"]);
 
-                if (style["position"] == "absolute") {
+                if (style["position"] == "absolute" || 
+                    textNode.ParentElement.ParentElement.ComputeCurrentStyle()["position"] == "absolute"
+                ) {
                     continue;
                 }
                 var widthSpec = string.IsNullOrEmpty(style["width"]) ?

@@ -1,10 +1,9 @@
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
-using System;
-using System.Threading;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 namespace AdventOfCode.Y2015.Day04 {
 
@@ -22,37 +21,25 @@ namespace AdventOfCode.Y2015.Day04 {
         int PartTwo(string input) => ParallelFind(input, "000000");
 
         int ParallelFind(string input, string prefix) {
-            var lck = new object();
-            int res = int.MaxValue;
+            var q = new ConcurrentQueue<int>();
 
-            var step = Environment.ProcessorCount;
-            var pres = Parallel.For(0, step, (i, state) => {
-                foreach (var (hash, idx) in Hashes(input, i, step)) {
-                    if (state.ShouldExitCurrentIteration) {
-                        lock (lck) {
-                            if (idx > res) {
-                                return;
-                            }
-                        }
-                    }
+            Parallel.ForEach(
+                Enumerable.Range(0, int.MaxValue), 
+                () => MD5.Create(), 
+                (i, state, md5) => {
+                    var hashBytes = md5.ComputeHash(Encoding.ASCII.GetBytes(input + i));
+                    var hash = string.Join("", hashBytes.Select(b => b.ToString("x2")));
 
                     if (hash.StartsWith(prefix)) {
-                        lock (lck) {
-                            res = Math.Min(res, idx);
-                        }
+                        q.Enqueue(i);
                         state.Stop();
-                        return;
                     }
-                }
-            });
-            return res;
+                    return md5;
+                 }, 
+                 (_) => {}
+            );
+            return q.Min();
         }
-        IEnumerable<(string hash, int idx)> Hashes(string st, int start, int step) {
-            var md5 = MD5.Create();
-            for (var i = start; ; i += step) {
-                var hash = md5.ComputeHash(Encoding.ASCII.GetBytes(st + i));
-                yield return (string.Join("", hash.Select(b => b.ToString("x2"))), i);
-            }
-        }
+
     }
 }
