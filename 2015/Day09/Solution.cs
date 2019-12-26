@@ -35,21 +35,17 @@ namespace AdventOfCode.Y2015.Day09 {
         }
 
         IEnumerable<T[]> Permutations<T>(T[] rgt) {
-            void Swap(int i, int j) {
-                (rgt[i], rgt[j]) = (rgt[j], rgt[i]);
-            }
-
             IEnumerable<T[]> PermutationsRec(int i) {
                 if (i == rgt.Length) {
                     yield return rgt.ToArray();
                 }
 
                 for (var j = i; j < rgt.Length; j++) {
-                    Swap(i, j);
+                    (rgt[i], rgt[j]) = (rgt[j], rgt[i]);
                     foreach (var perm in PermutationsRec(i + 1)) {
                         yield return perm;
                     }
-                    Swap(i, j);
+                    (rgt[i], rgt[j]) = (rgt[j], rgt[i]);
                 }
             }
 
