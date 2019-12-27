@@ -15,9 +15,29 @@ namespace AdventOfCode.Y2019.Day16 {
         }
 
         string PartOne(string input) {
+
+            int[] Fft(int[] digits) {
+                IEnumerable<int> Pattern(int digit) {
+                    var repeat = digit + 1;
+                    while (true) {
+                        foreach (var item in new[] { 0, 1, 0, -1 }) {
+                            for (var i = 0; i < repeat; i++) {
+                                yield return item;
+                            }
+                        }
+                    }
+                }
+
+                return (
+                    from i in Enumerable.Range(0, digits.Length)
+                    let pattern = Pattern(i).Skip(1)
+                    let dotProduct = (from p in digits.Zip(pattern) select p.First * p.Second).Sum()
+                    select Math.Abs(dotProduct) % 10
+                ).ToArray();
+            }
+
             var digits = input.Select(ch => int.Parse(ch.ToString())).ToArray();
 
-            var cache = new Dictionary<(int idigit, int depth), int>();
             for (var i = 0; i < 100; i++) {
                 digits = Fft(digits);
             }
@@ -110,46 +130,23 @@ namespace AdventOfCode.Y2019.Day16 {
             var crow = 8;
             var ccol = input.Length * 10000 - t;
 
+            var bijMods = new int[ccol + 1];
+            var bij = new BigInteger(1);
+            for (var j = 1; j <= ccol; j++) {
+                bijMods[j] = (int)(bij % 10);
+                bij = bij * (j + 99) / j;
+            }
+
             for (var i = 1; i <= crow; i++) {
                 var s = 0;
-                var bij = new BigInteger(1);
                 for (var j = i; j <= ccol; j++) {
                     var x = xs[(t + j - 1) % input.Length];
-                    var bijMod = (int)(bij % 10);
-                    s += x * bijMod;
-                    bij = bij * (j - i + 100) / (j - i + 1);
+                    s += x * bijMods[j - i + 1];
                 }
                 res += (s % 10).ToString();
             }
 
             return res;
-        }
-
-        int[] Fft(int[] digits) {
-            var res = new int[digits.Length];
-            for (var i = 0; i < digits.Length; i++) {
-                res[i] = Math.Abs(digits.Zip(Pattern(i)).Select(p => p.First * p.Second).Sum()) % 10;
-            }
-            return res;
-        }
-
-        IEnumerable<int> Pattern(int digit) => RepeatItems(Loop(new[] { 0, 1, 0, -1 }), digit + 1).Skip(1);
-
-        IEnumerable<int> RepeatItems(IEnumerable<int> items, int count) {
-            while (true) {
-                foreach (var item in items) {
-                    for (var i = 0; i < count; i++) {
-                        yield return item;
-                    }
-                }
-            }
-        }
-        IEnumerable<int> Loop(IEnumerable<int> items) {
-            while (true) {
-                foreach (var item in items) {
-                    yield return item;
-                }
-            }
         }
 
     }
