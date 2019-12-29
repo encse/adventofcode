@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Text;
 
 namespace AdventOfCode.Y2019 {
@@ -39,13 +40,18 @@ namespace AdventOfCode.Y2019 {
 
         public long this[long addr] {
             get {
-                return mem.ContainsKey(addr) ? mem[addr] : addr < initial.Length ? initial[addr] : 0;
+                return mem.ContainsKey(addr) ? mem[addr] : addr >= 0 && addr < initial.Length ? initial[addr] : 0;
             }
             set {
                 mem[addr] = value;
             }
         }
 
+        public long Length {
+            get {
+                return Math.Max(this.initial.Length, this.mem.Keys.Any() ? this.mem.Keys.Max() : 0);
+            }
+        }
 
         public Memory Clone() {
             return new Memory(initial, new Dictionary<long, long>(mem));
@@ -76,7 +82,7 @@ namespace AdventOfCode.Y2019 {
             return (immutableIntCodeMachine, immutableIntCodeMachine.icm.Run(input));
         }
 
-        public bool Halted() => icm.Halted();
+        public bool Halted() => this.icm.Halted();
     }
 
     class IntCodeMachine {
@@ -86,7 +92,6 @@ namespace AdventOfCode.Y2019 {
         public Memory memory;
         public long ip;
         public long bp;
-        private bool halted;
         public Queue<long> input;
 
         public IntCodeMachine(string stPrg) :
@@ -115,7 +120,7 @@ namespace AdventOfCode.Y2019 {
             return new IntCodeMachine(memory.Clone(), ip, bp, new Queue<long>(input));
         }
 
-        public bool Halted() => halted;
+        public bool Halted() => GetOpcode(ip) == Opcode.Hlt;
 
         private Mode GetMode(long addr, int i) => (Mode)(memory[addr] / modeMask[i] % 10);
         private Opcode GetOpcode(long addr) => (Opcode)(memory[addr] % 100);
@@ -150,7 +155,39 @@ namespace AdventOfCode.Y2019 {
             return Run(AsciiEncode(st));
         }
 
+        public string RunAscii(params string[] input) {
+            return AsciiDecode(Run(input));
+        }
+
+        bool Match(string stm, string pattern, out int[] m) {
+            var match = Regex.Match(stm, pattern);
+            m = null;
+            if (match.Success) {
+                m = match.Groups.Cast<Group>().Skip(1).Select(g => int.Parse(g.Value)).ToArray();
+                return true;
+            } else {
+                return false;
+            }
+        }
+
         public long[] Run(params long[] input) {
+            var cmd = AsciiDecode(input);
+
+            int[] args;
+            if (Match(cmd, @"!disass (\d+) (\d+)\n", out args)) {
+                Console.WriteLine(Decompile(Disass(false, args[1], args[0])));
+                return new long[0];
+            }
+
+            if (Match(cmd, @"!disass (\d+)\n", out args)) {
+                Console.WriteLine(Decompile(Disass(false, args[0])));
+                return new long[0];
+            }
+
+            if (Match(cmd, @"!mem\[(\d+)\]\n", out args)) {
+                Console.WriteLine(this.memory[args[0]]);
+                return new long[0];
+            }
 
             foreach (var i in input) {
                 this.input.Enqueue(i);
@@ -158,19 +195,19 @@ namespace AdventOfCode.Y2019 {
             var output = new List<long>();
             while (true) {
                 var opcode = GetOpcode(ip);
+                var oldIp = ip;
+
                 long addr(int i) {
-                    return GetMode(ip, i) switch
+                    return GetMode(oldIp, i) switch
                     {
-                        Mode.Positional => memory[ip + i],
-                        Mode.Immediate => ip + i,
-                        Mode.Relative => bp + memory[ip + i],
+                        Mode.Positional => memory[oldIp + i],
+                        Mode.Immediate => oldIp + i,
+                        Mode.Relative => bp + memory[oldIp + i],
                         _ => throw new ArgumentException()
                     };
                 }
 
                 long arg(int i) => memory[addr(i)];
-                var oldIp = ip;
-                Console.WriteLine(this.Disass(1));
                 switch (opcode) {
                     case Opcode.Add: memory[addr(3)] = arg(1) + arg(2); ip += 4; break;
                     case Opcode.Mul: memory[addr(3)] = arg(1) * arg(2); ip += 4; break;
@@ -189,15 +226,53 @@ namespace AdventOfCode.Y2019 {
                     case Opcode.Hlt: break;
                     default: throw new ArgumentException("invalid opcode " + opcode);
                 }
+
                 if (ip == oldIp) {
-                    halted = opcode != Opcode.In;
-                    return output.ToArray();
+                    break;
                 }
             }
+
+            return output.ToArray();
         }
 
-        public string Disass(int count = int.MaxValue) {
-            var ip = this.ip;
+        public string Decompile(string st) {
+            var inLines = st.Split("\n").ToList();
+            var outLines = new List<string>();
+
+            // function start
+            for (var iline = 0; iline < inLines.Count; iline++) {
+                string line(int i) {
+                    return iline + i >= 0 ? inLines[iline + i] : "";
+                }
+
+                if (Regex.Match(line(0), @"bp \+= \d+;").Success) {
+                    outLines.Add("fn_" + line(0).Split(" ")[0] + ":");
+                }
+                outLines.Add(line(0));
+            }
+
+            inLines = outLines.ToList();
+            outLines.Clear();
+
+            // return from function
+            for (var iline = 0; iline < inLines.Count; iline++) {
+                string line(int i) {
+                    return iline + i >= 0 ? inLines[iline + i] : "";
+                }
+                outLines.Add(line(0));
+
+                if (Regex.Match(line(-1), @"bp -= \d+;").Success && Regex.Match(line(0), @"goto mem\[bp\]").Success) {
+                    outLines.Add("return;");
+                }
+            }
+
+            return string.Join("\n", outLines);
+        }
+
+        public string Disass(bool trace = false, int count = int.MaxValue, long ip = -1) {
+            if (ip == -1) {
+                ip = this.ip;
+            }
             var sb = new StringBuilder();
 
             string addr(int i) {
@@ -209,15 +284,37 @@ namespace AdventOfCode.Y2019 {
                         memory[ip + i] > 0 ? $"mem[bp + {memory[ip + i]}]" :
                         memory[ip + i] == 0 ? $"mem[bp]" :
                         memory[ip + i] < 0 ? $"mem[bp - {-memory[ip + i]}]" :
-                        throw new Exception(),
+                        throw new ArgumentException(),
                     _ => throw new ArgumentException()
                 };
             }
 
-            string arg(int i) => addr(i);
+            string arg(int i) {
+                var st = addr(i);
+                if (trace) {
+                    var val = GetMode(ip, i) switch
+                    {
+                        Mode.Positional => memory[memory[ip + i]],
+                        Mode.Immediate => memory[ip + i],
+                        Mode.Relative => memory[bp + memory[ip + i]],
+                        _ => throw new ArgumentException()
+                    };
+
+                    st += $" ({format(val)})";
+                }
+                return st;
+            };
+
+            string format(long v) {
+                var st = v.ToString();
+                if (v >= 32 && v < 128) {
+                    st += $"  '{(char)(v)}'";
+                }
+                return st;
+            }
             int a1, a2;
 
-            for (var i = 0; i < count && ip < memory.initial.Length; i++) {
+            for (var i = 0; i < count && ip < memory.Length; i++) {
                 try {
                     sb.Append(ip.ToString("0000  "));
                     switch (GetOpcode(ip)) {
@@ -254,30 +351,32 @@ namespace AdventOfCode.Y2019 {
                                 break;
                             }
                         case Opcode.In: sb.AppendLine($"{addr(1)} = input;"); ip += 2; break;
-                        case Opcode.Out: sb.AppendLine($"output {arg(1)};"); ip += 2; break;
+                        case Opcode.Out: {
+                                sb.AppendLine($"output {arg(1)};"); ip += 2; break;
+                            }
                         case Opcode.Jnz: {
-                            if (int.TryParse(arg(1), out a1) && a1 != 0) {
-                                sb.AppendLine($"goto {arg(2)};");
-                            } else if (int.TryParse(arg(1), out a1) && a1 == 0) {
-                                sb.AppendLine($";");
-                            } else {
-                                sb.AppendLine($"if (!{arg(1)}) goto {arg(2)};");
+                                if (int.TryParse(arg(1), out a1) && a1 != 0) {
+                                    sb.AppendLine($"goto {arg(2)};");
+                                } else if (int.TryParse(arg(1), out a1) && a1 == 0) {
+                                    sb.AppendLine($";");
+                                } else {
+                                    sb.AppendLine($"if ({arg(1)}) goto {arg(2)};");
 
+                                }
+                                ip += 3;
+                                break;
                             }
-                            ip += 3;
-                            break;
-                        }
                         case Opcode.Jz: {
-                            if (int.TryParse(arg(1), out a1) && a1 == 0) {
-                                sb.AppendLine($"goto {arg(2)};");
-                            } else if (int.TryParse(arg(1), out a1) && a1 != 0) {
-                                sb.AppendLine($";");
-                            } else {
-                                sb.AppendLine($"if ({arg(1)}) goto {arg(2)};");
+                                if (int.TryParse(arg(1), out a1) && a1 == 0) {
+                                    sb.AppendLine($"goto {arg(2)};");
+                                } else if (int.TryParse(arg(1), out a1) && a1 != 0) {
+                                    sb.AppendLine($";");
+                                } else {
+                                    sb.AppendLine($"if (!{arg(1)}) goto {arg(2)};");
+                                }
+                                ip += 3;
+                                break;
                             }
-                            ip += 3;
-                            break;
-                        }
                         case Opcode.Lt: sb.AppendLine($"{addr(3)} = {arg(1)} < {arg(2)};"); ip += 4; break;
                         case Opcode.Eq: sb.AppendLine($"{addr(3)} = {arg(1)} == {arg(2)};"); ip += 4; break;
                         case Opcode.StR: {
@@ -289,7 +388,11 @@ namespace AdventOfCode.Y2019 {
                                 ip += 2; break;
                             }
                         case Opcode.Hlt: sb.AppendLine($"halt;"); ip += 1; break;
-                        default: sb.AppendLine($"{memory[ip]}"); ip += 1; break;
+                        default: {
+                                sb.AppendLine(format(memory[ip]));
+                                ip += 1;
+                                break;
+                            }
                     }
                 } catch {
                     sb.AppendLine($"{memory[ip]}"); ip += 2;
