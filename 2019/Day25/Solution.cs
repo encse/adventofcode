@@ -88,7 +88,7 @@ namespace AdventOfCode.Y2019.Day25 {
                             if (res != null) {
                                 return res;
                             }
-                            icm.RunAscii(directions[3 - directions.IndexOf(door)]);
+                            icm.RunAscii(ReverseDir(door));
                         }
                     }
                 }
