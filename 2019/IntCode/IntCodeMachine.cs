@@ -133,7 +133,10 @@ namespace AdventOfCode.Y2019 {
             var input = new long[0];
             while (true) {
                 var output = Run(input);
+                var c = Console.ForegroundColor;
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.Write(AsciiDecode(output));
+                Console.ForegroundColor = c;
                 if (this.Halted()) {
                     break;
                 }

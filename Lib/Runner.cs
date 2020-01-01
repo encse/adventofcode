@@ -63,58 +63,53 @@ namespace AdventOfCode {
                 }
 
                 var workingDir = solver.WorkingDir();
-                var color = Console.ForegroundColor;
-                try {
-                    WriteLine(ConsoleColor.White, $"{solver.DayName()}: {solver.GetName()}");
-                    WriteLine();
-                    foreach (var dir in new[] { workingDir, Path.Combine(workingDir, "test") }) {
-                        if (!Directory.Exists(dir)) {
-                            continue;
+                WriteLine(ConsoleColor.White, $"{solver.DayName()}: {solver.GetName()}");
+                WriteLine();
+                foreach (var dir in new[] { workingDir, Path.Combine(workingDir, "test") }) {
+                    if (!Directory.Exists(dir)) {
+                        continue;
+                    }
+                    var files = Directory.EnumerateFiles(dir).Where(file => file.EndsWith(".in")).ToArray();
+                    foreach (var file in files) {
+
+                        if (files.Count() > 1) {
+                            Console.WriteLine("  " + file + ":");
                         }
-                        var files = Directory.EnumerateFiles(dir).Where(file => file.EndsWith(".in")).ToArray();
-                        foreach (var file in files) {
+                        var refoutFile = file.Replace(".in", ".refout");
+                        var refout = File.Exists(refoutFile) ? File.ReadAllLines(refoutFile) : null;
+                        var input = File.ReadAllText(file);
+                        if (input.EndsWith("\n")) {
+                            input = input.Substring(0, input.Length - 1);
+                        }
+                        var dt = DateTime.Now;
+                        var iline = 0;
+                        foreach (var line in solver.Solve(input)) {
+                            var now = DateTime.Now;
+                            var (statusColor, status, err) =
+                                refout == null || refout.Length <= iline ? (ConsoleColor.Cyan, "?", null) :
+                                refout[iline] == line.ToString() ? (ConsoleColor.DarkGreen, "✓", null) :
+                                (ConsoleColor.Red, "X", $"{solver.DayName()}: In line {iline + 1} expected '{refout[iline]}' but found '{line}'");
 
-                            if (files.Count() > 1) {
-                                WriteLine(color, "  " + file + ":");
+                            if (err != null) {
+                                errors.Add(err);
                             }
-                            var refoutFile = file.Replace(".in", ".refout");
-                            var refout = File.Exists(refoutFile) ? File.ReadAllLines(refoutFile) : null;
-                            var input = File.ReadAllText(file);
-                            if (input.EndsWith("\n")) {
-                                input = input.Substring(0, input.Length - 1);
-                            }
-                            var dt = DateTime.Now;
-                            var iline = 0;
-                            foreach (var line in solver.Solve(input)) {
-                                var now = DateTime.Now;
-                                var (statusColor, status, err) =
-                                    refout == null || refout.Length <= iline ? (ConsoleColor.Cyan, "?", null) :
-                                    refout[iline] == line.ToString() ? (ConsoleColor.DarkGreen, "✓", null) :
-                                    (ConsoleColor.Red, "X", $"{solver.DayName()}: In line {iline + 1} expected '{refout[iline]}' but found '{line}'");
 
-                                if (err != null) {
-                                    errors.Add(err);
-                                }
-
-                                Write(statusColor, $"  {status}");
-                                Write(color, $" {line} ");
-                                var diff = (now - dt).TotalMilliseconds;
-                                WriteLine(
-                                    diff > 1000 ? ConsoleColor.Red :
-                                    diff > 500 ? ConsoleColor.Yellow :
-                                    ConsoleColor.DarkGreen,
-                                    $"({diff.ToString("F3")} ms)"
-                                );
-                                dt = now;
-                                iline++;
-                            }
+                            Write(statusColor, $"  {status}");
+                            Console.Write($" {line} ");
+                            var diff = (now - dt).TotalMilliseconds;
+                            WriteLine(
+                                diff > 1000 ? ConsoleColor.Red :
+                                diff > 500 ? ConsoleColor.Yellow :
+                                ConsoleColor.DarkGreen,
+                                $"({diff.ToString("F3")} ms)"
+                            );
+                            dt = now;
+                            iline++;
                         }
                     }
-
-                    WriteLine();
-                } finally {
-                    Console.ForegroundColor = color;
                 }
+
+                WriteLine();
             }
 
             if (errors.Any()) {
@@ -126,8 +121,10 @@ namespace AdventOfCode {
             Write(color, text + "\n");
         }
         private static void Write(ConsoleColor color = ConsoleColor.Gray, string text = "") {
+            var c = Console.ForegroundColor;
             Console.ForegroundColor = color;
             Console.Write(text);
+            Console.ForegroundColor = c;
         }
     }
 }
