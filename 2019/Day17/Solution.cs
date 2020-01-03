@@ -46,7 +46,7 @@ namespace AdventOfCode.Y2019.Day17 {
         string[] Screenshot(string input) {
             var icm = new IntCodeMachine(input);
             var output = icm.Run();
-            return string.Join("", output.Select(x => (char)x)).Split("\n").Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
+            return output.ToAscii().Split("\n").Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
         }
 
         IEnumerable<string> GeneratePrograms(string path) {

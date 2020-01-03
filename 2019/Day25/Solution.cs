@@ -19,20 +19,20 @@ namespace AdventOfCode.Y2019.Day25 {
         long PartOne(string input) {
             var securityRoom = "== Security Checkpoint ==";
             var icm = new IntCodeMachine(input);
-            var description = icm.RunAscii();
+            var description = icm.Run().ToAscii();
 
             VisitRooms(securityRoom, icm, description, args => {
                 foreach (var item in args.items) {
                     if (item != "infinite loop") {
                         var takeCmd = "take " + item;
                         var clone = icm.Clone();
-                        clone.RunAscii(takeCmd);
+                        clone.Run(takeCmd);
                         if (!clone.Halted() && Inventory(clone).Contains(item)) {
-                            icm.RunAscii(takeCmd);
+                            icm.Run(takeCmd);
                         }
                     }
                 }
-                return null as string;
+                return null;
             });
 
             var door = VisitRooms(securityRoom, icm, description, args =>
@@ -44,13 +44,13 @@ namespace AdventOfCode.Y2019.Day25 {
                 var item = from[i];
                 from.RemoveAt(i);
                 to.Add(item);
-                icm.RunAscii(cmd + " " + item);
+                icm.Run(cmd + " " + item);
             }
 
             var inventory = Inventory(icm).ToList();
             var floor = new List<string>();
             while (true) {
-                var output = icm.RunAscii(door);
+                var output = icm.Run(door).ToAscii();
                 if (output.Contains("heavier")) {
                     TakeOrDrop("take", floor, inventory);
                 } else if (output.Contains("lighter")) {
@@ -61,17 +61,17 @@ namespace AdventOfCode.Y2019.Day25 {
             }
         }
 
-        T VisitRooms<T>(
+        string VisitRooms(
             string securityRoom,
             IntCodeMachine icm, 
             string description, 
-            Func<(IEnumerable<string> items, string room, string doorTaken, IEnumerable<string> doors), T> callback
+            Func<(IEnumerable<string> items, string room, string doorTaken, IEnumerable<string> doors), string> callback
         ) {
 
             var roomsSeen = new HashSet<string>();
-            T DFS(string description, string doorTaken) {
+            string DFS(string description, string doorTaken) {
                 var room = description.Split("\n").Single(x => x.Contains("=="));
-                var listing = TakeListItems(description).ToHashSet();
+                var listing = GetListItems(description).ToHashSet();
                 var doors = listing.Intersect(directions);
                 var items = listing.Except(doors);
 
@@ -84,23 +84,23 @@ namespace AdventOfCode.Y2019.Day25 {
                     }
                     if (room != securityRoom) {
                         foreach (var door in doors) {
-                            res = DFS(icm.RunAscii(door), door);
+                            res = DFS(icm.Run(door).ToAscii(), door);
                             if (res != null) {
                                 return res;
                             }
-                            icm.RunAscii(ReverseDir(door));
+                            icm.Run(ReverseDir(door));
                         }
                     }
                 }
-                return default(T);
+                return null;
             }
 
             return DFS(description, null);
         }
 
-        IEnumerable<string> Inventory(IntCodeMachine icm) => TakeListItems(icm.RunAscii("inv"));
+        IEnumerable<string> Inventory(IntCodeMachine icm) => GetListItems(icm.Run("inv").ToAscii());
 
-        IEnumerable<string> TakeListItems(string description) =>
+        IEnumerable<string> GetListItems(string description) =>
             from line in description.Split("\n")
             where line.StartsWith("- ")
             select line.Substring(2);

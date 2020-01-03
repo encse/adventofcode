@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Text;
+using System.Collections;
 
 namespace AdventOfCode.Y2019 {
 
@@ -72,17 +73,35 @@ namespace AdventOfCode.Y2019 {
             this.icm = icm;
         }
 
-        public (ImmutableIntCodeMachine iicm, long[] output) Run(params long[] input) {
+        public (ImmutableIntCodeMachine iicm, IntCodeOutput output) Run(params long[] input) {
             var immutableIntCodeMachine = new ImmutableIntCodeMachine(this.icm.Clone());
             return (immutableIntCodeMachine, immutableIntCodeMachine.icm.Run(input));
         }
 
-        public (ImmutableIntCodeMachine iicm, long[] output) Run(params string[] input) {
+        public (ImmutableIntCodeMachine iicm, IntCodeOutput output) Run(params string[] input) {
             var immutableIntCodeMachine = new ImmutableIntCodeMachine(this.icm.Clone());
             return (immutableIntCodeMachine, immutableIntCodeMachine.icm.Run(input));
         }
 
         public bool Halted() => this.icm.Halted();
+    }
+
+    class IntCodeOutput : IReadOnlyList<long> {
+        long[] output;
+
+        public IntCodeOutput(long[] output){
+            this.output = output;
+        }
+
+        public string ToAscii() => string.Join("", from item in output select (char)item);
+       
+        public long this[int index] => this.output[index];
+
+        public int Count => this.output.Length;
+
+        public IEnumerator<long> GetEnumerator() => (this.output as IEnumerable<long>).GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => this.output.GetEnumerator();
     }
 
     class IntCodeMachine {
@@ -125,17 +144,13 @@ namespace AdventOfCode.Y2019 {
         private Mode GetMode(long addr, int i) => (Mode)(memory[addr] / modeMask[i] % 10);
         private Opcode GetOpcode(long addr) => (Opcode)(memory[addr] % 100);
 
-        public long[] Run() {
-            return Run(new long[0]);
-        }
-
         public void RunInteractive() {
             var input = new long[0];
             while (true) {
                 var output = Run(input);
                 var c = Console.ForegroundColor;
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.Write(AsciiDecode(output));
+                Console.Write(output.ToAscii());
                 Console.ForegroundColor = c;
                 if (this.Halted()) {
                     break;
@@ -149,19 +164,6 @@ namespace AdventOfCode.Y2019 {
             return (from ch in st select (long)ch).ToArray();
         }
 
-        private string AsciiDecode(long[] items) {
-            return string.Join("", from item in items select (char)item);
-        }
-
-        public long[] Run(params string[] input) {
-            var st = string.Join("", from line in input select line + "\n");
-            return Run(AsciiEncode(st));
-        }
-
-        public string RunAscii(params string[] input) {
-            return AsciiDecode(Run(input));
-        }
-
         bool Match(string stm, string pattern, out int[] m) {
             var match = Regex.Match(stm, pattern);
             m = null;
@@ -173,24 +175,15 @@ namespace AdventOfCode.Y2019 {
             }
         }
 
-        public long[] Run(params long[] input) {
-            var cmd = AsciiDecode(input);
+        public IntCodeOutput Run() {
+            return Run(new long[0]);
+        }
 
-            int[] args;
-            if (Match(cmd, @"!disass (\d+) (\d+)\n", out args)) {
-                Console.WriteLine(Decompile(Disass(false, args[1], args[0])));
-                return new long[0];
-            }
+        public IntCodeOutput Run(params string[] input) {
+            return Run(AsciiEncode(string.Join("", from line in input select line + "\n")));
+        }
 
-            if (Match(cmd, @"!disass (\d+)\n", out args)) {
-                Console.WriteLine(Decompile(Disass(false, args[0])));
-                return new long[0];
-            }
-
-            if (Match(cmd, @"!mem\[(\d+)\]\n", out args)) {
-                Console.WriteLine(this.memory[args[0]]);
-                return new long[0];
-            }
+        public IntCodeOutput Run(params long[] input) {
 
             foreach (var i in input) {
                 this.input.Enqueue(i);
@@ -235,7 +228,7 @@ namespace AdventOfCode.Y2019 {
                 }
             }
 
-            return output.ToArray();
+            return new IntCodeOutput(output.ToArray());
         }
 
         public string Decompile(string st) {

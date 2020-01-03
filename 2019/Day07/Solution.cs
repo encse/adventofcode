@@ -37,7 +37,7 @@ namespace AdventOfCode.Y2019.Day07 {
 
             while (true) {
                 for (var i = 0; i < amps.Length; i++) {
-                    data = amps[i].Run(data);
+                    data = amps[i].Run(data).ToArray();
                 }
                 if (amps.All(amp => amp.Halted())) {
                     return data.Last();
