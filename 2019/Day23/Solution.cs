@@ -57,7 +57,7 @@ namespace AdventOfCode.Y2019.Day23 {
         Func<Packets, Packets> Nic(string program, int address) {
             var icm = new IntCodeMachine(program);
             var output = icm.Run(address);
-            Debug.Assert(output.Length == 0);
+            Debug.Assert(output.Count == 0);
 
             return (input) => {
                 var (data, packets) = Receive(input, address);
@@ -65,7 +65,7 @@ namespace AdventOfCode.Y2019.Day23 {
                     data.Add(-1);
                 }
                 var output = icm.Run(data.ToArray());
-                for (var d = 0; d < output.Length; d += 3) {
+                for (var d = 0; d < output.Count; d += 3) {
                     packets.Add((output[d], output[d + 1], output[d + 2]));
                 }
                 return packets;
