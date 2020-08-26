@@ -4,6 +4,10 @@ using System.Linq;
 
 namespace AdventOfCode.Y2019.Day24 {
 
+    record Position(int ilevel, int irow, int icol) {
+
+    }
+
     class Solution : Solver {
 
         public string GetName() => "Planet of Discord";
@@ -69,7 +73,7 @@ namespace AdventOfCode.Y2019.Day24 {
             return biodiversity | (1 << (irow * 5 + icol));
         }
 
-        int[] Step(int[] oldLevelsT, Func<(int ilevel, int irow, int icol), IEnumerable<(int ilevel, int irow, int icol)>> neighbours) {
+        int[] Step(int[] oldLevelsT, Func<Position, IEnumerable<Position>> neighbours) {
             var oldLevels = oldLevelsT.ToList();
             oldLevels.Insert(0, 0);
             oldLevels.Add(0);
@@ -80,7 +84,7 @@ namespace AdventOfCode.Y2019.Day24 {
                 var newLevel = 0;
                 foreach (var (irow, icol) in Positions()) {
                     var bugCount = 0;
-                    foreach (var (ilevelT, irowT, icolT) in neighbours((ilevel, irow, icol))) {
+                    foreach (var (ilevelT, irowT, icolT) in neighbours(new Position(ilevel, irow, icol))) {
                         if (ilevelT >= 0 && ilevelT < oldLevels.Count) {
                             bugCount += HasBug(oldLevels[ilevelT], irowT, icolT) ? 1 : 0;
                         }
@@ -103,16 +107,16 @@ namespace AdventOfCode.Y2019.Day24 {
         }
 
 
-        IEnumerable<(int ilevel, int irow, int icol)> FlatNeighbours((int ilevel, int irow, int icol) pos) {
+        IEnumerable<Position> FlatNeighbours(Position pos) {
             foreach (var (drow, dcol) in new[] { (0, 1), (0, -1), (-1, 0), (1, 0) }) {
                 var (irowT, icolT) = (pos.irow + drow, pos.icol + dcol);
                 if (icolT >= 0 && icolT <= 4 && irowT >= 0 && irowT <= 4) {
-                    yield return (pos.ilevel, irowT, icolT);
+                    yield return new Position(pos.ilevel, irowT, icolT);
                 }
             }
         }
 
-        IEnumerable<(int ilevel, int irow, int icol)> RecursiveNeighbours((int ilevel, int irow, int icol) pos) {
+        IEnumerable<Position> RecursiveNeighbours(Position pos) {
             var (ilevel, irow, icol) = pos;
             foreach (var (drow, dcol) in new[] { (0, 1), (0, -1), (-1, 0), (1, 0) }) {
                 var posMin = (irow: irow + drow, icol: icol + dcol);
@@ -144,7 +148,7 @@ namespace AdventOfCode.Y2019.Day24 {
 
                 for (var irowT = posMin.irow; irowT <= posMax.irow; irowT++) {
                     for (var icolT = posMin.icol; icolT <= posMax.icol; icolT++) {
-                        yield return (ilevelT, irowT, icolT);
+                        yield return new Position(ilevelT, irowT, icolT);
                     }
                 }
             }

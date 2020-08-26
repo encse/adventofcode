@@ -3,9 +3,9 @@ using System.Linq;
 using System;
 using System.Diagnostics;
 
-namespace AdventOfCode.Y2019.Day23 {
+using Packets = System.Collections.Generic.List<(long address, long x, long y)>;
 
-    class Packets : List<(long address, long x, long y)>{}
+namespace AdventOfCode.Y2019.Day23 {
 
     class Solution : Solver {
 

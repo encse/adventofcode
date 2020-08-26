@@ -13,7 +13,7 @@ namespace AdventOfCode.Generator {
                > ![](demo.gif)
                > ## Dependencies
 
-               > - This project is based on `.NET Core 3.1`. It should work on Windows, Linux and OS X.
+               > - This project is based on `.NET 5`. It should work on Windows, Linux and OS X.
                > - `AngleSharp` is used for problem download.
 
                > ## Running
