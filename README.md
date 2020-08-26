@@ -5,7 +5,7 @@ Check out http://adventofcode.com.
 ![](demo.gif)
 ## Dependencies
 
-- This project is based on `.NET Core 3.1`. It should work on Windows, Linux and OS X.
+- This project is based on `.NET 5`. It should work on Windows, Linux and OS X.
 - `AngleSharp` is used for problem download.
 
 ## Running
@@ -28,7 +28,7 @@ Supported arguments:
 To start working on new problems:
 login to https://adventofcode.com, then copy your session cookie, and export it in your console like this 
 
-  export SESSION=73a37e9a72a87b550ef58c590ae48a752eab56946fb7328d35857279912acaa5b32be73bf1d92186e4b250a15d9120a0
+  export SESSION=73a37e9a72a...
 
 then run the app with
 

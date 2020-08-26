@@ -103,7 +103,7 @@ namespace AdventOfCode {
                > To start working on new problems:
                > login to https://adventofcode.com, then copy your session cookie, and export it in your console like this 
 
-               >   export SESSION=73a37e9a72a87b550ef58c590ae48a752eab56946fb7328d35857279912acaa5b32be73bf1d92186e4b250a15d9120a0
+               >   export SESSION=73a37e9a72a...
 
                > then run the app with
 
