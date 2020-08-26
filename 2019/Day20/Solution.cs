@@ -39,18 +39,18 @@ namespace AdventOfCode.Y2019.Day20 {
 
             IEnumerable<Pos3> Neighbours(Pos3 pos) {
                 foreach (var (drow, dcol) in new[] { (0, -1), (0, 1), (-1, 0), (1, 0) }) {
-                    yield return new Pos3(pos.irow + drow, pos.icol + dcol, pos.level);
+                    yield return new (pos.irow + drow, pos.icol + dcol, pos.level);
                 }
 
-                if (portals.ContainsKey(new Pos2(pos.irow, pos.icol))) {
-                    var (irowT, icolT, dlevel) = portals[new Pos2(pos.irow, pos.icol)];
+                if (portals.ContainsKey(new (pos.irow, pos.icol))) {
+                    var (irowT, icolT, dlevel) = portals[new (pos.irow, pos.icol)];
 
                     if (!part2) {
                         dlevel = 0;
                     }
 
                     if (pos.level + dlevel >= 0) {
-                        yield return new Pos3(irowT, icolT, pos.level + dlevel);
+                        yield return new (irowT, icolT, pos.level + dlevel);
                     }
                 }
             }
@@ -91,8 +91,8 @@ namespace AdventOfCode.Y2019.Day20 {
 
                             if (tmp.ContainsKey(st)) {
                                 var dlevel = portal.icol == 2 || portal.icol == ccol - 3 || portal.irow == 2 || portal.irow == crow - 3 ? -1 : 1;
-                                portals[portal] = new PosD(tmp[st].irow, tmp[st].icol, dlevel);
-                                portals[tmp[st]] = new PosD(portal.irow, portal.icol, -dlevel);
+                                portals[portal] = new (tmp[st].irow, tmp[st].icol, dlevel);
+                                portals[tmp[st]] = new (portal.irow, portal.icol, -dlevel);
                             } else {
                                 tmp[st] = portal;
                             }
@@ -103,7 +103,7 @@ namespace AdventOfCode.Y2019.Day20 {
                 }
             }
 
-            return (portals, new Pos3(tmp["AA"].irow, tmp["AA"].icol, 0), new Pos3(tmp["ZZ"].irow, tmp["ZZ"].icol, 0));
+            return (portals, new (tmp["AA"].irow, tmp["AA"].icol, 0), new (tmp["ZZ"].irow, tmp["ZZ"].icol, 0));
         }
     }
 }
