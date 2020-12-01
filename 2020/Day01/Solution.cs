@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Text;
 
 namespace AdventOfCode.Y2020.Day01 {
 
@@ -34,19 +32,23 @@ namespace AdventOfCode.Y2020.Day01 {
 
         IEnumerable<ImmutableList<T>> Choose<T>(List<T> items, int k) {
 
-            if (k == 0) {
-                yield return ImmutableList<T>.Empty;
-            } else {
-                for (var i = 0; i < items.Count; i++) {
-                    var item = items[i];
-                    items.RemoveAt(i);
-                    foreach (var res in Choose(items, k - 1)) {
-                        yield return res.Add(item);
+            IEnumerable<ImmutableList<T>> ChooseRec(LinkedList<T> ll, int k) {
+                if (k == 0) {
+                    yield return ImmutableList<T>.Empty;
+                } else {
+                    for(var i =0;i< ll.Count;i++) {
+                        var item = ll.First.Value;
+                        ll.RemoveFirst();
+                        foreach (var res in ChooseRec(ll, k - 1)) {
+                            yield return res.Add(item);
+                        }
+                        ll.AddLast(item);
                     }
-
-                    items.Insert(i, item);
                 }
             }
+
+            return ChooseRec(new LinkedList<T>(items), k);
+
         }
     }
 }
