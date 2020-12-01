@@ -18,16 +18,19 @@ namespace AdventOfCode.Y2020.Day01 {
         long PartTwo(string input) => Solve(input, 3);
 
         long Solve(string input, int k) {
-            foreach (var pair in Choose(Numbers(input), k)) {
-                if (pair.Sum() == 2020) {
-                    return pair.Aggregate(1, (acc, t) => acc * t);
+            var numbers = Numbers(input);
+            var min = Numbers(input).Min();
+            numbers = numbers.Where(n => n + min <= 2020);
+            foreach (var subset in Choose(numbers.ToList(), k)) {
+                if (subset.Sum() == 2020) {
+                    return subset.Aggregate(1, (acc, t) => acc * t);
                 }
             }
             throw new Exception();
         }
 
-        List<int> Numbers(string input) {
-            return input.Split('\n').Select(int.Parse).ToList();
+        IEnumerable<int> Numbers(string input) {
+            return input.Split('\n').Select(int.Parse);
         }
 
         IEnumerable<ImmutableList<T>> Choose<T>(List<T> items, int k) {
