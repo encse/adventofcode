@@ -8,6 +8,7 @@ namespace AdventOfCode.Y2018.Day13 {
 
         public string GetName() => "Mine Cart Madness";
 
+       
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);
             yield return PartTwo(input);
