@@ -16,8 +16,8 @@ namespace AdventOfCode.Y2020.Day01 {
             var numbers = Numbers(input);
             return (
                 from x in numbers 
-                from y in numbers 
-                where x + y == 2020 
+                let y = 2020 - x
+                where numbers.Contains(y)
                 select x * y
             ).First();
         }
@@ -27,14 +27,14 @@ namespace AdventOfCode.Y2020.Day01 {
             return (
                 from x in numbers 
                 from y in numbers 
-                from z in numbers 
-                where x + y + z == 2020 
+                let z = 2020 - x - y
+                where numbers.Contains(z)
                 select x * y * z
             ).First();
         }
 
-        int[] Numbers(string input) {
-            return input.Split('\n').Select(int.Parse).ToArray();
+        HashSet<int> Numbers(string input) {
+            return input.Split('\n').Select(int.Parse).ToHashSet<int>();
         }
     }
 }
