@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,29 +14,27 @@ namespace AdventOfCode.Y2020.Day01 {
 
         long PartOne(string input) {
             var numbers = Numbers(input);
-            foreach (var x in numbers)
-            foreach (var y in numbers) {
-                if (x + y == 2020) {
-                    return x * y;
-                }
-            }
-            throw new Exception();
+            return (
+                from x in numbers 
+                from y in numbers 
+                where x + y == 2020 
+                select x * y
+            ).First();
         }
 
         long PartTwo(string input) {
             var numbers = Numbers(input);
-            foreach (var x in numbers)
-            foreach (var y in numbers) 
-            foreach (var z in numbers) {
-                if (x + y + z == 2020) {
-                    return x * y * z;
-                }
-            }
-            throw new Exception();
+            return (
+                from x in numbers 
+                from y in numbers 
+                from z in numbers 
+                where x + y + z == 2020 
+                select x * y * z
+            ).First();
         }
 
-        IEnumerable<int> Numbers(string input) {
-            return input.Split('\n').Select(int.Parse);
+        int[] Numbers(string input) {
+            return input.Split('\n').Select(int.Parse).ToArray();
         }
     }
 }
