@@ -1,4 +1,4 @@
-original source: [http://adventofcode.com/2017/day/5](http://adventofcode.com/2017/day/5)
+original source: [https://adventofcode.com/2017/day/5](https://adventofcode.com/2017/day/5)
 ## --- Day 5: A Maze of Twisty Trampolines, All Alike ---
 An urgent interrupt arrives from the CPU: it's trapped in a maze of jump instructions, and it would like assistance from any programs with spare cycles to help find the exit.
 

@@ -1,4 +1,4 @@
-original source: [http://adventofcode.com/2017/day/16](http://adventofcode.com/2017/day/16)
+original source: [https://adventofcode.com/2017/day/16](https://adventofcode.com/2017/day/16)
 ## --- Day 16: Permutation Promenade ---
 You come upon a very unusual sight; a group of programs here appear to be [dancing](https://www.youtube.com/watch?v=lyZQPjUT5B4&t=53).
 

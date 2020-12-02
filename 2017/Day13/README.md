@@ -1,4 +1,4 @@
-original source: [http://adventofcode.com/2017/day/13](http://adventofcode.com/2017/day/13)
+original source: [https://adventofcode.com/2017/day/13](https://adventofcode.com/2017/day/13)
 ## --- Day 13: Packet Scanners ---
 You need to cross a vast *firewall*. The firewall consists of several layers, each with a *security scanner* that moves back and forth across the layer. To succeed, you must not be detected by a scanner.
 

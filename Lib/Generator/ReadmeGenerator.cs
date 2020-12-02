@@ -39,7 +39,7 @@ namespace AdventOfCode.Generator {
                     
             return $@"
                > # Advent of Code ({calendar.Year})
-               > Check out http://adventofcode.com/{calendar.Year}.
+               > Check out https://adventofcode.com/{calendar.Year}.
                > ```
                > {calendarLines}
                > ```
