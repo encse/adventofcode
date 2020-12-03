@@ -6,9 +6,8 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2017.Day16 {
 
+    [ProblemName("Permutation Promenade")]
     class Solution : Solver {
-
-        public string GetName() => "Permutation Promenade";
 
         public IEnumerable<object> Solve(string input) {
             var step = ParseStep(input);

@@ -4,9 +4,8 @@ using System.Linq;
 
 namespace AdventOfCode.Y2017.Day11 {
 
+    [ProblemName("Hex Ed")]
     class Solution : Solver {
-
-        public string GetName() => "Hex Ed";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

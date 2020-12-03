@@ -3,11 +3,8 @@ using System.Linq;
 
 namespace AdventOfCode.Y2017.Day09 {
 
+    [ProblemName("Stream Processing")]
     class Solution : Solver {
-
-        public string GetName() { 
-            return "Stream Processing"; 
-        }
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

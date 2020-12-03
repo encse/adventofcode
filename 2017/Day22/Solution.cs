@@ -10,9 +10,8 @@ namespace AdventOfCode.Y2017.Day22 {
         Flagged
     }
     
+    [ProblemName("Sporifica Virus")]
     class Solution : Solver {
-
-        public string GetName() => "Sporifica Virus";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

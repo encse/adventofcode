@@ -4,9 +4,8 @@ using System.Linq;
 
 namespace AdventOfCode.Y2018.Day08 {
 
+    [ProblemName("Memory Maneuver")]
     class Solution : Solver {
-
-        public string GetName() => "Memory Maneuver";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

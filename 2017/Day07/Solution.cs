@@ -14,9 +14,8 @@ namespace AdventOfCode.Y2017.Day07 {
 
     class Tree : Dictionary<string, Node> { }
 
+    [ProblemName("Recursive Circus")]
     class Solution : Solver {
-
-        public string GetName() => "Recursive Circus"; 
 
         public IEnumerable<object> Solve(string input) {
             var tree = new Tree();

@@ -4,9 +4,8 @@ using System.Linq;
 
 namespace AdventOfCode.Y2017.Day05 {
 
+    [ProblemName("A Maze of Twisty Trampolines, All Alike")]
     class Solution : Solver {
-
-        public string GetName() => "A Maze of Twisty Trampolines, All Alike"; 
         
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

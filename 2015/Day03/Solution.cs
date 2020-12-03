@@ -3,9 +3,8 @@ using System.Linq;
 
 namespace AdventOfCode.Y2015.Day03 {
 
+    [ProblemName("Perfectly Spherical Houses in a Vacuum")]
     class Solution : Solver {
-
-        public string GetName() => "Perfectly Spherical Houses in a Vacuum";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

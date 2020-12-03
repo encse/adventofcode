@@ -4,9 +4,8 @@ using System.Linq;
 
 namespace AdventOfCode.Y2016.Day13 {
 
+    [ProblemName("A Maze of Twisty Little Cubicles")]
     class Solution : Solver {
-
-        public string GetName() => "A Maze of Twisty Little Cubicles";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

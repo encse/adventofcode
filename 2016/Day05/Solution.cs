@@ -7,9 +7,8 @@ using System.Security.Cryptography;
 
 namespace AdventOfCode.Y2016.Day05 {
 
+    [ProblemName("How About a Nice Game of Chess?")]
     class Solution : Solver {
-
-        public string GetName() => "How About a Nice Game of Chess?";
 
         public IEnumerable<object> Solve(string input) {
 

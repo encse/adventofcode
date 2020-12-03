@@ -4,9 +4,8 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2016.Day15 {
 
+    [ProblemName("Timing is Everything")]
     class Solution : Solver {
-
-        public string GetName() => "Timing is Everything";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

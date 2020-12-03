@@ -4,9 +4,8 @@ using System;
 
 namespace AdventOfCode.Y2019.Day14 {
 
+    [ProblemName("Space Stoichiometry")]
     class Solution : Solver {
-
-        public string GetName() => "Space Stoichiometry";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

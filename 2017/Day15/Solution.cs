@@ -3,9 +3,8 @@ using System.Linq;
 
 namespace AdventOfCode.Y2017.Day15 {
 
+    [ProblemName("Dueling Generators")]
     class Solution : Solver {
-
-        public string GetName() => "Dueling Generators";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

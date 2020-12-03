@@ -3,9 +3,8 @@ using System.Linq;
 
 namespace AdventOfCode.Y2018.Day05 {
 
+    [ProblemName("Alchemical Reduction")]
     class Solution : Solver {
-
-        public string GetName() => "Alchemical Reduction";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

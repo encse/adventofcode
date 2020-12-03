@@ -4,9 +4,8 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2015.Day08 {
 
+    [ProblemName("Matchsticks")]
     class Solution : Solver {
-
-        public string GetName() => "Matchsticks";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

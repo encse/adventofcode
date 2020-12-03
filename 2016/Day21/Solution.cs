@@ -6,9 +6,8 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2016.Day21 {
 
+    [ProblemName("Scrambled Letters and Hash")]
     class Solution : Solver {
-
-        public string GetName() => "Scrambled Letters and Hash";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

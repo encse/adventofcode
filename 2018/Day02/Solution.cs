@@ -3,9 +3,8 @@ using System.Linq;
 
 namespace AdventOfCode.Y2018.Day02 {
 
+    [ProblemName("Inventory Management System")]
     class Solution : Solver {
-
-        public string GetName() => "Inventory Management System";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

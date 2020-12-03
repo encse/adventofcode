@@ -9,9 +9,8 @@ namespace AdventOfCode.Y2017.Day12 {
         public List<string> Neighbours;
     }
 
+    [ProblemName("Digital Plumber")]
     class Solution : Solver {
-
-        public string GetName() => "Digital Plumber";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

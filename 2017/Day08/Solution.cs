@@ -4,11 +4,8 @@ using System.Linq;
 
 namespace AdventOfCode.Y2017.Day08 {
 
+    [ProblemName("I Heard You Like Registers")]
     class Solution : Solver {
-
-        public string GetName() { 
-            return "I Heard You Like Registers"; 
-        }
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

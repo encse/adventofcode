@@ -5,12 +5,12 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2015.Day07 {
 
+    [ProblemName("Some Assembly Required")]
     class Solution : Solver {
 
         class State : Dictionary<string, int> { }
         class Calc : Dictionary<string, Func<State, int>> { }
 
-        public string GetName() => "Some Assembly Required";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

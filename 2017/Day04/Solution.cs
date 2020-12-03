@@ -4,9 +4,8 @@ using System.Linq;
 
 namespace AdventOfCode.Y2017.Day04 {
 
+    [ProblemName("High-Entropy Passphrases")]
     class Solution : Solver {
-
-        public string GetName() => "High-Entropy Passphrases"; 
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

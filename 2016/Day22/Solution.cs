@@ -6,9 +6,8 @@ using System.Text;
 
 namespace AdventOfCode.Y2016.Day22 {
 
+    [ProblemName("Grid Computing")]
     class Solution : Solver {
-
-        public string GetName() => "Grid Computing";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);
