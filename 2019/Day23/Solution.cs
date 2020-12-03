@@ -7,9 +7,8 @@ using Packets = System.Collections.Generic.List<(long address, long x, long y)>;
 
 namespace AdventOfCode.Y2019.Day23 {
 
+    [ProblemName("Category Six")]
     class Solution : Solver {
-
-        public string GetName() => "Category Six";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

@@ -8,9 +8,8 @@ namespace AdventOfCode.Y2019.Day24 {
 
     }
 
+    [ProblemName("Planet of Discord")]
     class Solution : Solver {
-
-        public string GetName() => "Planet of Discord";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

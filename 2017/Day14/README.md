@@ -1,4 +1,4 @@
-original source: [http://adventofcode.com/2017/day/14](http://adventofcode.com/2017/day/14)
+original source: [https://adventofcode.com/2017/day/14](https://adventofcode.com/2017/day/14)
 ## --- Day 14: Disk Defragmentation ---
 Suddenly, a scheduled job activates the system's [disk defragmenter](https://en.wikipedia.org/wiki/Defragmentation). Were the situation different, you might [sit and watch it for a while](https://www.youtube.com/watch?v=kPv1gQ5Rs8A&t=37), but today, you just don't have that kind of time. It's soaking up valuable system resources that are needed elsewhere, and so the only option is to help it finish its task as soon as possible.
 

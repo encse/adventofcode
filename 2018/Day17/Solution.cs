@@ -6,9 +6,8 @@ using System.Text;
 
 namespace AdventOfCode.Y2018.Day17 {
 
+    [ProblemName("Reservoir Research")]
     class Solution : Solver {
-
-        public string GetName() => "Reservoir Research";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

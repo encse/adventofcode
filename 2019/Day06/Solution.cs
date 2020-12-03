@@ -5,9 +5,8 @@ using ChildToParent = System.Collections.Generic.Dictionary<string, string>;
 
 namespace AdventOfCode.Y2019.Day06 {
 
+    [ProblemName("Universal Orbit Map")]
     class Solution : Solver {
-
-        public string GetName() => "Universal Orbit Map";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

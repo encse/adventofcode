@@ -3,9 +3,8 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2018.Day18 {
 
+    [ProblemName("Settlers of The North Pole")]
     class Solution : Solver {
-
-        public string GetName() => "Settlers of The North Pole";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

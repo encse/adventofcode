@@ -4,9 +4,8 @@ using System.Linq;
 
 namespace AdventOfCode.Y2019.Day11 {
 
+    [ProblemName("Space Police")]
     class Solution : Solver {
-
-        public string GetName() => "Space Police";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

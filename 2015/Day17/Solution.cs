@@ -4,9 +4,8 @@ using System.Linq;
 
 namespace AdventOfCode.Y2015.Day17 {
 
+    [ProblemName("No Such Thing as Too Much")]
     class Solution : Solver {
-
-        public string GetName() => "No Such Thing as Too Much";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

@@ -3,9 +3,8 @@ using System.Linq;
 
 namespace AdventOfCode.Y2016.Day20 {
 
+    [ProblemName("Firewall Rules")]
     class Solution : Solver {
-
-        public string GetName() => "Firewall Rules";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

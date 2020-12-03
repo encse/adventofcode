@@ -3,9 +3,8 @@ using System.Collections.Generic;
 
 namespace AdventOfCode.Y2019.Day02 {
 
+    [ProblemName("1202 Program Alarm")]
     class Solution : Solver {
-
-        public string GetName() => "1202 Program Alarm";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

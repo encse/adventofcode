@@ -5,9 +5,8 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2018.Day04 {
 
+    [ProblemName("Repose Record")]
     class Solution : Solver {
-
-        public string GetName() => "Repose Record";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

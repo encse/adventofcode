@@ -5,9 +5,8 @@ using System.Numerics;
 
 namespace AdventOfCode.Y2019.Day16 {
 
+    [ProblemName("Flawed Frequency Transmission")]
     class Solution : Solver {
-
-        public string GetName() => "Flawed Frequency Transmission";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

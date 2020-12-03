@@ -4,9 +4,8 @@ using System.Linq;
 
 namespace AdventOfCode.Y2016.Day25 {
 
+    [ProblemName("Clock Signal")]
     class Solution : Solver {
-
-        public string GetName() => "Clock Signal";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

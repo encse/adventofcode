@@ -5,9 +5,8 @@ using System.Text;
 
 namespace AdventOfCode.Y2016.Day16 {
 
+    [ProblemName("Dragon Checksum")]
     class Solution : Solver {
-
-        public string GetName() => "Dragon Checksum";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

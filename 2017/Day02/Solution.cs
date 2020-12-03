@@ -3,9 +3,8 @@ using System.Collections.Generic;
 
 namespace AdventOfCode.Y2017.Day02 {
 
+    [ProblemName("Corruption Checksum")]
     class Solution : Solver {
-
-        public string GetName() => "Corruption Checksum"; 
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

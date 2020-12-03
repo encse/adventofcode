@@ -3,9 +3,8 @@ using System.Linq;
 
 namespace AdventOfCode.Y2016.Day07 {
 
+    [ProblemName("Internet Protocol Version 7")]
     class Solution : Solver {
-
-        public string GetName() => "Internet Protocol Version 7";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

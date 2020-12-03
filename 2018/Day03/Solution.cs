@@ -4,9 +4,8 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2018.Day03 {
 
+    [ProblemName("No Matter How You Slice It")]
     class Solution : Solver {
-
-        public string GetName() => "No Matter How You Slice It";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

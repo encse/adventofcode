@@ -1,4 +1,4 @@
-original source: [http://adventofcode.com/2017/day/4](http://adventofcode.com/2017/day/4)
+original source: [https://adventofcode.com/2017/day/4](https://adventofcode.com/2017/day/4)
 ## --- Day 4: High-Entropy Passphrases ---
 A new system policy has been put in place that requires all accounts to use a *passphrase* instead of simply a pass*word*. A passphrase consists of a series of words (lowercase letters) separated by spaces.
 

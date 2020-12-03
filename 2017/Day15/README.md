@@ -1,4 +1,4 @@
-original source: [http://adventofcode.com/2017/day/15](http://adventofcode.com/2017/day/15)
+original source: [https://adventofcode.com/2017/day/15](https://adventofcode.com/2017/day/15)
 ## --- Day 15: Dueling Generators ---
 Here, you encounter a pair of dueling generators. The generators, called *generator A* and *generator B*, are trying to agree on a sequence of numbers. However, one of them is malfunctioning, and so the sequences don't always match.
 

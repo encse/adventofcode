@@ -1,6 +1,6 @@
 
 # Advent of Code (2017)
-Check out http://adventofcode.com/2017.
+Check out https://adventofcode.com/2017.
 ```
 |O|        Naughty      |        Nice         |O|       
 |O|  -------------------+-------------------  |O|       

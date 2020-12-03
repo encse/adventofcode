@@ -4,9 +4,8 @@ using System.Linq;
 
 
 namespace AdventOfCode.Y2018.Day20 {
+    [ProblemName("A Regular Map")]
     class Solution : Solver {
-
-        public string GetName() => "A Regular Map";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

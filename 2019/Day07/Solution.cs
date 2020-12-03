@@ -4,9 +4,8 @@ using System.Linq;
 
 namespace AdventOfCode.Y2019.Day07 {
 
+    [ProblemName("Amplification Circuit")]
     class Solution : Solver {
-
-        public string GetName() => "Amplification Circuit";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

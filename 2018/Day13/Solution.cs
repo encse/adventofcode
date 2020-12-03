@@ -4,9 +4,8 @@ using System.Linq;
 
 namespace AdventOfCode.Y2018.Day13 {
 
+    [ProblemName("Mine Cart Madness")]
     class Solution : Solver {
-
-        public string GetName() => "Mine Cart Madness";
 
        
         public IEnumerable<object> Solve(string input) {

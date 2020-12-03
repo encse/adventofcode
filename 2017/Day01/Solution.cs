@@ -3,10 +3,9 @@ using System.Collections.Generic;
 
 namespace AdventOfCode.Y2017.Day01 {
 
+    [ProblemName("Inverse Captcha")]
     class Solution : Solver {
 
-        public string GetName() => "Inverse Captcha"; 
-        
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);
             yield return PartTwo(input);

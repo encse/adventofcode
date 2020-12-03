@@ -2,9 +2,8 @@ using System.Collections.Generic;
 
 namespace AdventOfCode.Y2018.Day11 {
 
+    [ProblemName("Chronal Charge")]
     class Solution : Solver {
-
-        public string GetName() => "Chronal Charge";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

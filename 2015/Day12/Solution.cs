@@ -4,9 +4,8 @@ using System.Text.Json;
 
 namespace AdventOfCode.Y2015.Day12 {
 
+    [ProblemName("JSAbacusFramework.io")]
     class Solution : Solver {
-
-        public string GetName() => "JSAbacusFramework.io";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

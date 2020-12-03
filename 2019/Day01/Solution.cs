@@ -4,9 +4,8 @@ using System.Linq;
 
 namespace AdventOfCode.Y2019.Day01 {
 
+    [ProblemName("The Tyranny of the Rocket Equation")]
     class Solution : Solver {
-
-        public string GetName() => "The Tyranny of the Rocket Equation";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

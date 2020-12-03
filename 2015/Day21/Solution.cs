@@ -4,9 +4,8 @@ using System.Linq;
 
 namespace AdventOfCode.Y2015.Day21 {
 
+    [ProblemName("RPG Simulator 20XX")]
     class Solution : Solver {
-
-        public string GetName() => "RPG Simulator 20XX";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

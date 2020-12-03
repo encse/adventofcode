@@ -9,9 +9,8 @@ using System.Threading.Tasks;
 
 namespace AdventOfCode.Y2016.Day14 {
 
+    [ProblemName("One-Time Pad")]
     class Solution : Solver {
-
-        public string GetName() => "One-Time Pad";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

@@ -5,9 +5,8 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2017.Day20 {
 
+    [ProblemName("Particle Swarm")]
     class Solution : Solver {
-
-        public string GetName() => "Particle Swarm";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

@@ -1,57 +1,39 @@
-using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 
 namespace AdventOfCode.Y2020.Day01 {
 
+    [ProblemName("Report Repair")]
     class Solution : Solver {
-
-        public string GetName() => "Report Repair";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);
             yield return PartTwo(input);
         }
 
-        long PartOne(string input) => Solve(input, 2);
-        long PartTwo(string input) => Solve(input, 3);
-
-        long Solve(string input, int k) {
+        long PartOne(string input) {
             var numbers = Numbers(input);
-            var min = Numbers(input).Min();
-            numbers = numbers.Where(n => n + min <= 2020);
-            foreach (var subset in Choose(numbers.ToList(), k)) {
-                if (subset.Sum() == 2020) {
-                    return subset.Aggregate(1, (acc, t) => acc * t);
-                }
-            }
-            throw new Exception();
+            return (
+                from x in numbers 
+                let y = 2020 - x
+                where numbers.Contains(y)
+                select x * y
+            ).First();
         }
 
-        IEnumerable<int> Numbers(string input) {
-            return input.Split('\n').Select(int.Parse);
+        long PartTwo(string input) {
+            var numbers = Numbers(input);
+            return (
+                from x in numbers 
+                from y in numbers 
+                let z = 2020 - x - y
+                where numbers.Contains(z)
+                select x * y * z
+            ).First();
         }
 
-        IEnumerable<ImmutableList<T>> Choose<T>(List<T> items, int k) {
-
-            IEnumerable<ImmutableList<T>> ChooseRec(LinkedList<T> ll, int k) {
-                if (k == 0) {
-                    yield return ImmutableList<T>.Empty;
-                } else {
-                    for(var i =0;i< ll.Count;i++) {
-                        var item = ll.First.Value;
-                        ll.RemoveFirst();
-                        foreach (var res in ChooseRec(ll, k - 1)) {
-                            yield return res.Add(item);
-                        }
-                        ll.AddLast(item);
-                    }
-                }
-            }
-
-            return ChooseRec(new LinkedList<T>(items), k);
-
+        HashSet<int> Numbers(string input) {
+            return input.Split('\n').Select(int.Parse).ToHashSet<int>();
         }
     }
 }
