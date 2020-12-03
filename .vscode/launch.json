@@ -6,7 +6,25 @@
     "configurations": [
 
         {
-            "name": ".NET Core Launch (console)",
+            "name": "Update",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            // If you have changed target frameworks, make sure to update the program path.
+            "program": "${workspaceFolder}/bin/Debug/net5.0/adventofcode.dll",
+            "args": ["update", "last"],
+            "cwd": "${workspaceFolder}",
+            // For more information about the 'console' field, see https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md#console-terminal-window
+            "console": "internalConsole",
+            "stopAtEntry": false,
+            "internalConsoleOptions": "openOnSessionStart",
+            "requireExactSource": false,
+            "env": {
+                "SESSION": "Your cookie here"
+            }
+        },
+        {
+            "name": "Run",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
@@ -18,7 +36,10 @@
             "console": "internalConsole",
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart",
-            "requireExactSource": false
+            "requireExactSource": false,
+            "env": {
+                "SESSION": "Your cookie here"
+            }
         },
         {
             "name": ".NET Core Attach",
