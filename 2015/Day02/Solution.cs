@@ -3,9 +3,8 @@ using System.Linq;
 
 namespace AdventOfCode.Y2015.Day02 {
 
+    [ProblemName("I Was Told There Would Be No Math")]
     class Solution : Solver {
-
-        public string GetName() => "I Was Told There Would Be No Math";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

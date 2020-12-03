@@ -6,9 +6,8 @@ namespace AdventOfCode.Y2020.Day02 {
 
     record PasswordEntry(int a, int b, char ch, string password);
 
+    [ProblemName("Password Philosophy")]
     class Solution : Solver {
-
-        public string GetName() => "Password Philosophy";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

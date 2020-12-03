@@ -14,9 +14,8 @@ using Microsoft.CodeAnalysis.Emit;
 
 namespace AdventOfCode.Y2018.Day21 {
 
+    [ProblemName("Chronal Conversion")]
     class Solution : Solver {
-
-        public string GetName() => "Chronal Conversion";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

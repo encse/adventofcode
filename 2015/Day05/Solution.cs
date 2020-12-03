@@ -3,9 +3,8 @@ using System.Linq;
 
 namespace AdventOfCode.Y2015.Day05 {
 
+    [ProblemName("Doesn't He Have Intern-Elves For This?")]
     class Solution : Solver {
-
-        public string GetName() => "Doesn't He Have Intern-Elves For This?";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

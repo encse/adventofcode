@@ -16,9 +16,8 @@ namespace AdventOfCode.Y2016.Day11 {
         Dilithium  = 0b1000000
     }
 
+    [ProblemName("Radioisotope Thermoelectric Generators")]
     class Solution : Solver {
-
-        public string GetName() => "Radioisotope Thermoelectric Generators";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

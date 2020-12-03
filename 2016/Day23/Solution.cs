@@ -4,9 +4,8 @@ using System.Linq;
 
 namespace AdventOfCode.Y2016.Day23 {
 
+    [ProblemName("Safe Cracking")]
     class Solution : Solver {
-
-        public string GetName() => "Safe Cracking";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

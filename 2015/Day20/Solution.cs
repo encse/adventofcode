@@ -2,9 +2,8 @@ using System.Collections.Generic;
 
 namespace AdventOfCode.Y2015.Day20 {
 
+    [ProblemName("Infinite Elves and Infinite Houses")]
     class Solution : Solver {
-
-        public string GetName() => "Infinite Elves and Infinite Houses";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

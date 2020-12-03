@@ -5,9 +5,8 @@ using System.Numerics;
 
 namespace AdventOfCode.Y2019.Day22 {
 
+    [ProblemName("Slam Shuffle")]
     class Solution : Solver {
-
-        public string GetName() => "Slam Shuffle";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

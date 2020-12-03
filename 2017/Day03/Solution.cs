@@ -4,9 +4,8 @@ using System.Linq;
 
 namespace AdventOfCode.Y2017.Day03 {
 
+    [ProblemName("Spiral Memory")]
     class Solution : Solver {
-
-        public string GetName() => "Spiral Memory"; 
         
         public IEnumerable<object> Solve(string input) {
             var num = int.Parse(input);

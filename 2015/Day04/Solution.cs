@@ -7,9 +7,8 @@ using System.Collections.Generic;
 
 namespace AdventOfCode.Y2015.Day04 {
 
+    [ProblemName("The Ideal Stocking Stuffer")]
     class Solution : Solver {
-
-        public string GetName() => "The Ideal Stocking Stuffer";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

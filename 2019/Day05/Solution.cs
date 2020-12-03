@@ -3,9 +3,8 @@ using System.Linq;
 
 namespace AdventOfCode.Y2019.Day05 {
 
+    [ProblemName("Sunny with a Chance of Asteroids")]
     class Solution : Solver {
-
-        public string GetName() => "Sunny with a Chance of Asteroids";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

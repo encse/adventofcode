@@ -4,9 +4,8 @@ using System.Linq;
 
 namespace AdventOfCode.Y2019.Day03 {
 
+    [ProblemName("Crossed Wires")]
     class Solution : Solver {
-
-        public string GetName() => "Crossed Wires";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

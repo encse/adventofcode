@@ -86,9 +86,8 @@ namespace AdventOfCode.Y2019.Day18 {
         }
     }
 
+    [ProblemName("Many-Worlds Interpretation")]
     class Solution : Solver {
-
-        public string GetName() => "Many-Worlds Interpretation";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

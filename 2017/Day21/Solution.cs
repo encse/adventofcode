@@ -6,9 +6,8 @@ using System.Text;
 
 namespace AdventOfCode.Y2017.Day21 {
 
+    [ProblemName("Fractal Art")]
     class Solution : Solver {
-
-        public string GetName() => "Fractal Art";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

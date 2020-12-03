@@ -3,9 +3,8 @@ using System.Collections.Generic;
 
 namespace AdventOfCode.Y2015.Day22 {
 
+    [ProblemName("Wizard Simulator 20XX")]
     class Solution : Solver {
-
-        public string GetName() => "Wizard Simulator 20XX";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

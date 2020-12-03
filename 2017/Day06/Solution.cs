@@ -3,9 +3,8 @@ using System.Linq;
 
 namespace AdventOfCode.Y2017.Day06 {
 
+    [ProblemName("Memory Reallocation")]
     class Solution : Solver {
-
-        public string GetName() => "Memory Reallocation"; 
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input.Split('\t').Select(int.Parse).ToList());

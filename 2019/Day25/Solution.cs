@@ -5,9 +5,8 @@ using System.Linq;
 
 namespace AdventOfCode.Y2019.Day25 {
 
+    [ProblemName("Cryostasis")]
     class Solution : Solver {
-
-        public string GetName() => "Cryostasis";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

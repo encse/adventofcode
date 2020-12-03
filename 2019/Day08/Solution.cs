@@ -4,9 +4,8 @@ using System.Linq;
 
 namespace AdventOfCode.Y2019.Day08 {
 
+    [ProblemName("Space Image Format")]
     class Solution : Solver {
-
-        public string GetName() => "Space Image Format";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

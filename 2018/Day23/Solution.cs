@@ -6,9 +6,8 @@ using System.Numerics;
 
 namespace AdventOfCode.Y2018.Day23 {
 
+    [ProblemName("Experimental Emergency Teleportation")]
     class Solution : Solver {
-
-        public string GetName() => "Experimental Emergency Teleportation";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

@@ -9,7 +9,7 @@ namespace AdventOfCode.Generator {
             return $@"
                > # Advent of Code ({firstYear}-{lastYear})
                > C# solutions to the Advent of Code problems.
-               > Check out http://adventofcode.com.
+               > Check out https://adventofcode.com.
                > ![](demo.gif)
                > ## Dependencies
 
