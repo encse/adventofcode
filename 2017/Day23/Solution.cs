@@ -3,9 +3,8 @@ using System.Collections.Generic;
 
 namespace AdventOfCode.Y2017.Day23 {
 
+    [ProblemName("Coprocessor Conflagration")]
     class Solution : Solver {
-
-        public string GetName() => "Coprocessor Conflagration";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

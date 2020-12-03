@@ -3,9 +3,8 @@ using System.Collections.Generic;
 
 namespace AdventOfCode.Y2015.Day23 {
 
+    [ProblemName("Opening the Turing Lock")]
     class Solution : Solver {
-
-        public string GetName() => "Opening the Turing Lock";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

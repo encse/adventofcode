@@ -5,9 +5,8 @@ using System.Security.Cryptography;
 
 namespace AdventOfCode.Y2016.Day17 {
 
+    [ProblemName("Two Steps Forward")]
     class Solution : Solver {
-
-        public string GetName() => "Two Steps Forward";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

@@ -9,9 +9,8 @@ namespace AdventOfCode.Y2017.Day13 {
         }
     }
 
+    [ProblemName("Packet Scanners")]
     class Solution : Solver {
-
-        public string GetName() => "Packet Scanners";
 
         public IEnumerable<object> Solve(string input) {
             var layers = Parse(input);

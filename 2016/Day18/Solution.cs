@@ -4,9 +4,8 @@ using System.Text;
 
 namespace AdventOfCode.Y2016.Day18 {
 
+    [ProblemName("Like a Rogue")]
     class Solution : Solver {
-
-        public string GetName() => "Like a Rogue";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

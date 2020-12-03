@@ -4,9 +4,8 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2016.Day08 {
 
+    [ProblemName("Two-Factor Authentication")]
     class Solution : Solver {
-
-        public string GetName() => "Two-Factor Authentication";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

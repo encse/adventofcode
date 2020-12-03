@@ -4,9 +4,8 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2015.Day16 {
 
+    [ProblemName("Aunt Sue")]
     class Solution : Solver {
-
-        public string GetName() => "Aunt Sue";
 
         private Dictionary<string, int> target = new Dictionary<string, int> {
             ["children"] = 3,

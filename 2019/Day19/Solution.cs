@@ -4,9 +4,8 @@ using System.Linq;
 
 namespace AdventOfCode.Y2019.Day19 {
 
+    [ProblemName("Tractor Beam")]
     class Solution : Solver {
-
-        public string GetName() => "Tractor Beam";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

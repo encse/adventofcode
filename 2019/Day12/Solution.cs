@@ -5,9 +5,8 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2019.Day12 {
 
+    [ProblemName("The N-Body Problem")]
     class Solution : Solver {
-
-        public string GetName() => "The N-Body Problem";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

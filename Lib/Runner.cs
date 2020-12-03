@@ -5,12 +5,28 @@ using System.Collections.Generic;
 using System.Reflection;
 
 namespace AdventOfCode {
+    
+    class ProblemName : Attribute {
+        public readonly string Name;
+        public ProblemName(string name){
+            this.Name = name;
+        }
+    }
+
     interface Solver {
-        string GetName();
         IEnumerable<object> Solve(string input);
     }
 
     static class SolverExtensions {
+
+        public static string GetName(this Solver solver) {
+            return (
+                solver
+                    .GetType()
+                    .GetCustomAttribute(typeof(ProblemName)) as ProblemName
+            ).Name;
+        }
+
         public static string DayName(this Solver solver) {
             return $"Day {solver.Day()}";
         }

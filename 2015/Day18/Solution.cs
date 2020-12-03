@@ -3,9 +3,8 @@ using System.Linq;
 
 namespace AdventOfCode.Y2015.Day18 {
 
+    [ProblemName("Like a GIF For Your Yard")]
     class Solution : Solver {
-
-        public string GetName() => "Like a GIF For Your Yard";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

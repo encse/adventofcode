@@ -4,9 +4,8 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2016.Day03 {
 
+    [ProblemName("Squares With Three Sides")]
     class Solution : Solver {
-
-        public string GetName() => "Squares With Three Sides";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

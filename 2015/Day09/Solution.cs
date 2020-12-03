@@ -5,9 +5,8 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2015.Day09 {
 
+    [ProblemName("All in a Single Night")]
     class Solution : Solver {
-
-        public string GetName() => "All in a Single Night";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

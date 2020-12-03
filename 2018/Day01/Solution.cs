@@ -4,9 +4,8 @@ using System.Linq;
 
 namespace AdventOfCode.Y2018.Day01 {
 
+    [ProblemName("Chronal Calibration")]
     class Solution : Solver {
-
-        public string GetName() => "Chronal Calibration";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

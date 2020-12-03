@@ -4,9 +4,8 @@ using System.Linq;
 
 namespace AdventOfCode.Y2016.Day24 {
 
+    [ProblemName("Air Duct Spelunking")]
     class Solution : Solver {
-
-        public string GetName() => "Air Duct Spelunking";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

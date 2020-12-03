@@ -4,9 +4,8 @@ using System.Linq;
 
 namespace AdventOfCode.Y2017.Day14 {
 
+    [ProblemName("Disk Defragmentation")]
     class Solution : Solver {
-
-        public string GetName() => "Disk Defragmentation";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

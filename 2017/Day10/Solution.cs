@@ -3,9 +3,8 @@ using System.Linq;
 
 namespace AdventOfCode.Y2017.Day10 {
 
+    [ProblemName("Knot Hash")]
     class Solution : Solver {
-
-        public string GetName() => "Knot Hash"; 
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

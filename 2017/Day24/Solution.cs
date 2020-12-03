@@ -4,9 +4,8 @@ using System.Linq;
 
 namespace AdventOfCode.Y2017.Day24 {
 
+    [ProblemName("Electromagnetic Moat")]
     class Solution : Solver {
-
-        public string GetName() => "Electromagnetic Moat";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

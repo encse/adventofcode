@@ -4,9 +4,8 @@ using System.Text;
 
 namespace AdventOfCode.Y2018.Day07 {
 
+    [ProblemName("The Sum of Its Parts")]
     class Solution : Solver {
-
-        public string GetName() => "The Sum of Its Parts";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

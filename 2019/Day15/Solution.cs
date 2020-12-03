@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace AdventOfCode.Y2019.Day15 {
 
+    [ProblemName("Oxygen System")]
     class Solution : Solver {
 
         enum Tile {
@@ -11,8 +12,6 @@ namespace AdventOfCode.Y2019.Day15 {
             Empty = 1,
             O2 = 2,
         }
-
-        public string GetName() => "Oxygen System";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

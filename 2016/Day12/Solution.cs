@@ -4,9 +4,8 @@ using System.Linq;
 
 namespace AdventOfCode.Y2016.Day12 {
 
+    [ProblemName("Leonardo's Monorail")]
     class Solution : Solver {
-
-        public string GetName() => "Leonardo's Monorail";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

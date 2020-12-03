@@ -8,9 +8,8 @@ namespace AdventOfCode.Y2019.Day20 {
     record Pos3(int irow, int icol, int level);
     record PosD(int irow, int icol, int dlevel);
     
+    [ProblemName("Donut Maze")]
     class Solution : Solver {
-
-        public string GetName() => "Donut Maze";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

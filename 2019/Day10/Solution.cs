@@ -9,9 +9,8 @@ using AsteroidsByDir = System.Collections.Generic.Dictionary<
 
 namespace AdventOfCode.Y2019.Day10 {
 
+    [ProblemName("Monitoring Station")]
     class Solution : Solver {
-
-        public string GetName() => "Monitoring Station";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

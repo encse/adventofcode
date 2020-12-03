@@ -3,9 +3,8 @@ using System.Linq;
 
 namespace AdventOfCode.Y2015.Day01 {
 
+    [ProblemName("Not Quite Lisp")]
     class Solution : Solver {
-
-        public string GetName() => "Not Quite Lisp";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

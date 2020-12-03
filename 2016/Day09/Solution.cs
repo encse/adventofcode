@@ -3,9 +3,8 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2016.Day09 {
 
+    [ProblemName("Explosives in Cyberspace")]
     class Solution : Solver {
-
-        public string GetName() => "Explosives in Cyberspace";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

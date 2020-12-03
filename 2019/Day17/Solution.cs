@@ -5,9 +5,8 @@ using System;
 
 namespace AdventOfCode.Y2019.Day17 {
 
+    [ProblemName("Set and Forget")]
     class Solution : Solver {
-
-        public string GetName() => "Set and Forget";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

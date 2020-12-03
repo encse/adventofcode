@@ -4,9 +4,8 @@ using System.Linq;
 
 namespace AdventOfCode.Y2018.Day19 {
 
+    [ProblemName("Go With The Flow")]
     class Solution : Solver {
-
-        public string GetName() => "Go With The Flow";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);

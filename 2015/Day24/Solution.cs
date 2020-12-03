@@ -4,9 +4,8 @@ using System.Linq;
 
 namespace AdventOfCode.Y2015.Day24 {
 
+    [ProblemName("It Hangs in the Balance")]
     class Solution : Solver {
-
-        public string GetName() => "It Hangs in the Balance";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);
