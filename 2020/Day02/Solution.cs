@@ -23,18 +23,15 @@ namespace AdventOfCode.Y2020.Day02 {
             return (pe.password[pe.a - 1] == pe.ch) ^ (pe.password[pe.b - 1] == pe.ch);
         });
 
-        int ValidCount(string input, Func<PasswordEntry, bool> isValid) {
-            return (
-                from line in input.Split("\n")
-                    let parts = line.Split(' ')
-                    let range = parts[0].Split('-').Select(int.Parse).ToArray()
-                    let ch = parts[1][0]
-                    let pe = new PasswordEntry(range[0], range[1], ch, parts[2])
-                where
-                    isValid(pe)
-                select
-                    pe
-            ).Count();
-        }
+        int ValidCount(string input, Func<PasswordEntry, bool> isValid) =>
+            input
+                .Split("\n")
+                .Select(line => {
+                    var parts = line.Split(' ');
+                    var range = parts[0].Split('-').Select(int.Parse).ToArray();
+                    var ch = parts[1][0];
+                    return new PasswordEntry(range[0], range[1], ch, parts[2]);
+                })
+                .Count(isValid);
     }
 }
