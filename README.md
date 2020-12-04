@@ -1,7 +1,7 @@
 
 # Advent of Code (2015-2020)
 C# solutions to the Advent of Code problems.
-Check out http://adventofcode.com.
+Check out https://adventofcode.com.
 ![](demo.gif)
 ## Dependencies
 
