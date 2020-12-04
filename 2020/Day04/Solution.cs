@@ -25,13 +25,12 @@ namespace AdventOfCode.Y2020.Day04 {
             {"pid", "[0-9]{9}"},
         };
 
-        bool HasRequiredKeys(Dictionary<string, string> id) =>
-            rxs.Keys.All(key => id.ContainsKey(key));
+        bool HasRequiredKeys(Dictionary<string, string> cred) =>
+            rxs.All(kvp => cred.ContainsKey(kvp.Key));
 
-        bool HasRequiredValues(Dictionary<string, string> id) =>
-            id.All(kvp =>
-                !rxs.ContainsKey(kvp.Key) ||
-                Regex.IsMatch(kvp.Value, "^(" + rxs[kvp.Key] + ")$")
+        bool HasRequiredValues(Dictionary<string, string> cred) =>
+            rxs.All(kvp =>
+                cred.TryGetValue(kvp.Key, out var value) && Regex.IsMatch(value, "^(" + kvp.Value + ")$")
             );
 
         IEnumerable<Dictionary<string, string>> Credentials(string input) =>
