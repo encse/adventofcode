@@ -3,8 +3,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System;
 
-using Credentials = System.Collections.Generic.Dictionary<string, string>;
-
 namespace AdventOfCode.Y2020.Day04 {
 
     [ProblemName("Passport Processing")]
@@ -15,8 +13,15 @@ namespace AdventOfCode.Y2020.Day04 {
             yield return PartTwo(input);
         }
 
-        int PartOne(string input) => ValidCount(input, cred => HasRequiredKeys(cred));
-        int PartTwo(string input) => ValidCount(input, cred => HasRequiredKeys(cred) && HasRequiredValues(cred));
+        int PartOne(string input) => ValidCount(input, cred => 
+            rxs.All(kvp => cred.ContainsKey(kvp.Key))
+        );
+        
+        int PartTwo(string input) => ValidCount(input, cred => 
+            rxs.All(kvp =>
+                cred.TryGetValue(kvp.Key, out var value) && Regex.IsMatch(value, "^(" + kvp.Value + ")$")
+            )
+        );
 
         Dictionary<string, string> rxs = new Dictionary<string, string>(){
             {"byr", "19[2-9][0-9]|200[0-2]"},
@@ -28,15 +33,7 @@ namespace AdventOfCode.Y2020.Day04 {
             {"pid", "[0-9]{9}"},
         };
 
-        bool HasRequiredKeys(Credentials cred) =>
-            rxs.All(kvp => cred.ContainsKey(kvp.Key));
-
-        bool HasRequiredValues(Credentials cred) =>
-            rxs.All(kvp =>
-                cred.TryGetValue(kvp.Key, out var value) && Regex.IsMatch(value, "^(" + kvp.Value + ")$")
-            );
-
-        int ValidCount(string input, Func<Credentials, bool> isValid) =>
+        int ValidCount(string input, Func<Dictionary<string, string>, bool> isValid) =>
             input
                 .Split("\n\n")
                 .Select(block => block
