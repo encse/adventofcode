@@ -12,8 +12,8 @@ namespace AdventOfCode.Y2020.Day04 {
             yield return PartTwo(input);
         }
 
-        int PartOne(string input) => Ids(input).Count(HasRequiredKeys);
-        int PartTwo(string input) => Ids(input).Count(id => HasRequiredKeys(id) && HasRequiredValues(id));
+        int PartOne(string input) => Credentials(input).Count(HasRequiredKeys);
+        int PartTwo(string input) => Credentials(input).Count(cred => HasRequiredKeys(cred) && HasRequiredValues(cred));
 
         Dictionary<string, string> rxs = new Dictionary<string, string>(){
             {"byr", "19[2-9][0-9]|200[0-2]"},
@@ -31,22 +31,15 @@ namespace AdventOfCode.Y2020.Day04 {
         bool HasRequiredValues(Dictionary<string, string> id) =>
             id.All(kvp =>
                 !rxs.ContainsKey(kvp.Key) ||
-                Regex.Match(kvp.Value, "^(" + rxs[kvp.Key] + ")$").Success
+                Regex.IsMatch(kvp.Value, "^(" + rxs[kvp.Key] + ")$")
             );
 
-        IEnumerable<Dictionary<string, string>> Ids(string input) {
-            var lines = input.Split("\n");
-            for (var i = 0; i < lines.Length; i++) {
-                var id = new Dictionary<string, string>();
-                while (i < lines.Length && lines[i] != "") {
-                    foreach (var item in lines[i].Split(" ")) {
-                        var parts = item.Split(":");
-                        id.Add(parts[0], parts[1]);
-                    }
-                    i++;
-                }
-                yield return id;
-            }
-        }
+        IEnumerable<Dictionary<string, string>> Credentials(string input) =>
+            from block in input.Split("\n\n") 
+            select 
+                block
+                    .Split("\n ".ToCharArray())
+                    .Select(part => part.Split(":"))
+                    .ToDictionary(parts => parts[0], parts => parts[1]);
     }
 }
