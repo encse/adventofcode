@@ -11,6 +11,10 @@ using AngleSharp;
 using AngleSharp.Io;
 using AngleSharp.Dom;
 
+using System.Net.Http;
+using System.Collections.Generic;
+using System.Net;
+
 namespace AdventOfCode {
 
     class Updater {
@@ -49,6 +53,34 @@ namespace AdventOfCode {
             UpdateInput(problem);
             UpdateRefout(problem);
             UpdateSolutionTemplate(problem);
+        }
+
+        public async Task Upload(int year, int day, int part, string answer) {
+
+            if (!System.Environment.GetEnvironmentVariables().Contains("SESSION")) {
+                throw new Exception("Specify SESSION environment variable");
+            }
+            var session = System.Environment.GetEnvironmentVariable("SESSION");
+
+            // https://adventofcode.com/{year}/day/{day}/answer
+            // level={part}&answer={answer}
+
+            var baseAddress = new Uri("https://adventofcode.com");
+            var cookieContainer = new CookieContainer();
+            using var handler = new HttpClientHandler() { CookieContainer = cookieContainer };
+            using var client = new HttpClient(handler) { BaseAddress = baseAddress };
+
+            var content = new FormUrlEncodedContent(new[]
+            {
+                new KeyValuePair<string, string>("level", part.ToString()),
+                new KeyValuePair<string, string>("answer", answer),
+            });
+            cookieContainer.Add(baseAddress, new Cookie("session", session));
+            var result = await client.PostAsync($"/{year}/day/{day}/answer", content);
+            result.EnsureSuccessStatusCode();
+            var responseString = await result.Content.ReadAsStringAsync();
+
+            await Update(year, day);
         }
 
         void WriteFile(string file, string content) {
