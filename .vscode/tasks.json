@@ -84,6 +84,22 @@
             "label": "run part",
             "problemMatcher": [],
             "dependsOn": "git commit"
+        },
+        {
+            "label": "update",
+            "command": "dotnet",
+            "args": [
+                "run",
+                "update",
+                "${input:year}/${input:day}"
+            ],
+            "options": {
+                "env": {
+                    "SESSION": "${input:session}"
+                }
+            },
+            "problemMatcher": [],
+            "dependsOn": "run"
         }
     ],
     "inputs": [
