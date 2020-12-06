@@ -12,7 +12,7 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "git add",
+            "label": "git add day",
             "command": "git",
             "type": "process",
             "args": [
@@ -20,6 +20,24 @@
                 "**/Day*/*"
             ],
             "problemMatcher": []
+        },
+        {
+            "label": "run",
+            "command": "dotnet",
+            "args": [
+                "run",
+                "${input:year}/${input:day}"
+            ],
+            "options": {
+                "env": {
+                    "SESSION": "${input:session}"
+                }
+            },
+            "problemMatcher": [],
+            "dependsOn": [
+                "git add day",
+                "build"
+            ]
         },
         {
             "label": "upload",
@@ -37,15 +55,15 @@
                 }
             },
             "problemMatcher": [],
-            "dependsOn": "git add"
+            "dependsOn": "run"
         },
         {
-            "label": "git add refout",
+            "label": "git add",
             "command": "git",
             "type": "process",
             "args": [
                 "add",
-                "**/Day*/*"
+                "*"
             ],
             "problemMatcher": [],
             "dependsOn": "upload"
@@ -60,7 +78,7 @@
                 "Y${input:year}D${input:day}P${input:part}"
             ],
             "problemMatcher": [],
-            "dependsOn": "git add refout"
+            "dependsOn": "git add"
         },
         {
             "label": "run part",
