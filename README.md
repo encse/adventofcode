@@ -41,4 +41,13 @@ You can directly upload your answer with:
  upload last [part(1/2)] [answer]           Upload the answer for the selected part on the current day
  upload [year]/[day] [part(1/2)] [answer]   Upload the answer for the selected part on the selected year and day
 
+Or, you can do everything fron within VSCode:
+
+ Open the command Palette ('Cmd\Ctrl + Shift + P')
+ run the task ('Tasks: Run Task' command) : 'update'
+ then Write / Debug your code for part 1.
+ then run the task 'run part'
+ then Write / Debug your code for part 2.
+ then run the task 'run part'
+
 ```
