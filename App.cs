@@ -20,9 +20,22 @@ namespace AdventOfCode {
                     return () => new Updater().Update(year, day).Wait();
                 }) ??
                 Command(args, Args("update", "last"), m => {
-                    var dt = DateTime.Now;
-                    if (dt.Month == 12 && dt.Day >=1 && dt.Day <= 25) {
+                    var dt = DateTime.UtcNow.AddHours(-5);
+                    if (dt is { Month: 12, Day: >= 1 and <= 25 }) {
                         return () => new Updater().Update(dt.Year, dt.Day).Wait();
+                    } else {
+                        throw new Exception("Event is not active. This option works in Dec 1-25 only)");
+                    }
+                }) ??
+                Command(args, Args("upload", "([0-9]+)/([0-9]+)", "(1|2)", "(.*)"), m => {
+                    var year = int.Parse(m[1]);
+                    var day = int.Parse(m[2]);
+                    return () => new Updater().Upload(year, day, int.Parse(m[3]), m[4]).Wait();
+                }) ??
+                Command(args, Args("upload", "last", "(1|2)", "(.*)"), m => {
+                    var dt = DateTime.UtcNow.AddHours(-5);
+                    if (dt is { Month: 12, Day: >= 1 and <= 25 }) {
+                        return () => new Updater().Upload(dt.Year, dt.Day, int.Parse(m[2]), m[3]).Wait();
                     } else {
                         throw new Exception("Event is not active. This option works in Dec 1-25 only)");
                     }
@@ -101,15 +114,20 @@ namespace AdventOfCode {
                >  all                   Solve everything
 
                > To start working on new problems:
-               > login to https://adventofcode.com, then copy your session cookie, and export it in your console like this 
+               > login to https://adventofcode.com, then copy your session cookie, and export it in your console like this
 
                >   export SESSION=73a37e9a72a...
 
                > then run the app with
 
-               >  update [year]/[day]   Prepares a folder for the given day, updates the input, 
+               >  update [year]/[day]   Prepares a folder for the given day, updates the input,
                >                        the readme and creates a solution template.
-               >  update last           Same as above, but for the current day. Works in December only.  
+               >  update last           Same as above, but for the current day. Works in December only.
+               >
+               > You can directly upload your answer with:
+               >
+               >  upload last [part(1/2)] [answer]           Upload the answer for the selected part on the current day
+               >  upload [year]/[day] [part(1/2)] [answer]   Upload the answer for the selected part on the selected year and day
                > ".StripMargin("> ");
         }
     }

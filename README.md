@@ -26,14 +26,19 @@ Supported arguments:
  all                   Solve everything
 
 To start working on new problems:
-login to https://adventofcode.com, then copy your session cookie, and export it in your console like this 
+login to https://adventofcode.com, then copy your session cookie, and export it in your console like this
 
   export SESSION=73a37e9a72a...
 
 then run the app with
 
- update [year]/[day]   Prepares a folder for the given day, updates the input, 
+ update [year]/[day]   Prepares a folder for the given day, updates the input,
                        the readme and creates a solution template.
- update last           Same as above, but for the current day. Works in December only.  
+ update last           Same as above, but for the current day. Works in December only.
+
+You can directly upload your answer with:
+
+ upload last [part(1/2)] [answer]           Upload the answer for the selected part on the current day
+ upload [year]/[day] [part(1/2)] [answer]   Upload the answer for the selected part on the selected year and day
 
 ```
