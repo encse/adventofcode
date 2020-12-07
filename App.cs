@@ -89,7 +89,7 @@ namespace AdventOfCode {
                 return null;
             }
             try {
-                
+
                 return parse(matches.SelectMany(m => m.Groups.Count > 1 ? m.Groups.Cast<Group>().Skip(1).Select(g => g.Value) : new []{m.Value}).ToArray());
             } catch {
                 return null;
@@ -99,7 +99,7 @@ namespace AdventOfCode {
         static string[] Args(params string[] regex) {
             return regex;
         }
-        
+
     }
 
     public class Usage {
@@ -123,11 +123,20 @@ namespace AdventOfCode {
                >  update [year]/[day]   Prepares a folder for the given day, updates the input,
                >                        the readme and creates a solution template.
                >  update last           Same as above, but for the current day. Works in December only.
-               >
+
                > You can directly upload your answer with:
-               >
+
                >  upload last [part(1/2)] [answer]           Upload the answer for the selected part on the current day
                >  upload [year]/[day] [part(1/2)] [answer]   Upload the answer for the selected part on the selected year and day
+
+               > Or, you can do everything fron within VSCode:
+
+               >  Open the command Palette ('Cmd\Ctrl + Shift + P')
+               >  run the task ('Tasks: Run Task' command) : 'update'
+               >  then Write / Debug your code for part 1.
+               >  then run the task 'run part'
+               >  then Write / Debug your code for part 2.
+               >  then run the task 'run part'
                > ".StripMargin("> ");
         }
     }
