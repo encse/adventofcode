@@ -80,6 +80,26 @@ namespace AdventOfCode {
             result.EnsureSuccessStatusCode();
             var responseString = await result.Content.ReadAsStringAsync();
 
+            //Use the default configuration for AngleSharp
+            var config = Configuration.Default;
+
+            //Create a new context for evaluating webpages with the given config
+            var context = BrowsingContext.New(config);
+
+            //Just get the DOM representation
+            var document = await context.OpenAsync(req => req.Content(responseString));
+            var article = document.Body.QuerySelector("body > main > article").Text();
+
+            var color = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Blue;
+            System.Console.WriteLine();
+            System.Console.WriteLine(article);
+            System.Console.WriteLine();
+            Console.ForegroundColor = color;
+
+            if (article.StartsWith("That's not the right answer."))
+                throw new Exception("That's not the right answer.");
+
             await Update(year, day);
         }
 
