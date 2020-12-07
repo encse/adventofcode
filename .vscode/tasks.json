@@ -12,12 +12,12 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "git add day",
+            "label": "git add",
             "command": "git",
             "type": "process",
             "args": [
                 "add",
-                "**/Day*/*"
+                "*"
             ],
             "problemMatcher": []
         },
@@ -35,7 +35,7 @@
             },
             "problemMatcher": [],
             "dependsOn": [
-                "git add day",
+                "git add",
                 "build"
             ]
         },
@@ -58,12 +58,12 @@
             "dependsOn": "run"
         },
         {
-            "label": "git add",
+            "label": "git add refout",
             "command": "git",
             "type": "process",
             "args": [
                 "add",
-                "*"
+                "**/Day*/*.refout"
             ],
             "problemMatcher": [],
             "dependsOn": "upload"
@@ -78,7 +78,7 @@
                 "Y${input:year}D${input:day}P${input:part}"
             ],
             "problemMatcher": [],
-            "dependsOn": "git add"
+            "dependsOn": "git add refout"
         },
         {
             "label": "run part",
@@ -98,8 +98,17 @@
                     "SESSION": "${input:session}"
                 }
             },
-            "problemMatcher": [],
-            "dependsOn": "run"
+            "problemMatcher": []
+        },
+        {
+            "label": "git reset last",
+            "command": "git",
+            "args": [
+                "reset",
+                "--soft",
+                "HEAD~1"
+            ],
+            "problemMatcher": []
         }
     ],
     "inputs": [
@@ -128,18 +137,14 @@
             "command": "memento.pickString",
             "args": {
                 "id": "day",
-                "options": ["01", "02", "03", "04", "05", "06", "07", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25"],
+                "options": ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25"],
                 "description": "Current day"
             }
         },
         {
             "id": "answer",
-            "type": "command",
-            "command": "memento.promptString",
-            "args": {
-                "id": "answer",
-                "description": "Answer for the part day"
-            }
+            "type": "promptString",
+            "description": "Answer for the part day"
         },
         {
             "id": "session",
