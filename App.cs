@@ -8,7 +8,7 @@ namespace AdventOfCode {
 
         static void Main(string[] args) {
 
-            var tsolvers = Assembly.GetEntryAssembly().GetTypes()
+            var tsolvers = Assembly.GetEntryAssembly()!.GetTypes()
                 .Where(t => t.GetTypeInfo().IsClass && typeof(Solver).IsAssignableFrom(t))
                 .OrderBy(t => t.FullName)
                 .ToArray();
