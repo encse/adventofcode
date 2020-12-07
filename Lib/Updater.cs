@@ -91,14 +91,30 @@ namespace AdventOfCode {
             var article = document.Body.QuerySelector("body > main > article").Text();
 
             var color = Console.ForegroundColor;
-            Console.ForegroundColor = ConsoleColor.Blue;
             System.Console.WriteLine();
-            System.Console.WriteLine(article);
-            System.Console.WriteLine();
-            Console.ForegroundColor = color;
 
             if (article.StartsWith("That's not the right answer."))
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                System.Console.WriteLine(article);
+                Console.ForegroundColor = color;
+                System.Console.WriteLine();
                 throw new Exception("That's not the right answer.");
+            }
+            else if(article.StartsWith("You gave an answer too recently;"))
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                System.Console.WriteLine(article);
+                Console.ForegroundColor = color;
+                System.Console.WriteLine();
+                throw new Exception("You gave an answer too recently;");
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Blue;
+                System.Console.WriteLine(article);
+                Console.ForegroundColor = color;
+            }
 
             await Update(year, day);
         }
