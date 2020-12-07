@@ -109,6 +109,13 @@ namespace AdventOfCode {
                 System.Console.WriteLine();
                 throw new Exception("You gave an answer too recently;");
             }
+            else if(article.Contains("Did you already complete it?"))
+            {
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                System.Console.WriteLine(article);
+                Console.ForegroundColor = color;
+                System.Console.WriteLine();
+            }
             else
             {
                 Console.ForegroundColor = ConsoleColor.Blue;
