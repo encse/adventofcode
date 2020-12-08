@@ -93,7 +93,14 @@ namespace AdventOfCode {
             var color = Console.ForegroundColor;
             System.Console.WriteLine();
 
-            if (article.StartsWith("That's not the right answer."))
+            if(article.StartsWith("That's the right answer"))
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                System.Console.WriteLine(article);
+                Console.ForegroundColor = color;
+                System.Console.WriteLine();
+            }
+            else if (article.StartsWith("That's not the right answer"))
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 System.Console.WriteLine(article);
@@ -101,7 +108,7 @@ namespace AdventOfCode {
                 System.Console.WriteLine();
                 throw new Exception("That's not the right answer.");
             }
-            else if(article.StartsWith("You gave an answer too recently;"))
+            else if(article.StartsWith("You gave an answer too recently"))
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 System.Console.WriteLine(article);
@@ -109,7 +116,7 @@ namespace AdventOfCode {
                 System.Console.WriteLine();
                 throw new Exception("You gave an answer too recently;");
             }
-            else if(article.Contains("Did you already complete it?"))
+            else if(article.Contains("Did you already complete it"))
             {
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
                 System.Console.WriteLine(article);
