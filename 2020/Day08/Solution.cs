@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AdventOfCode.Y2020.Day08 {
 
-    [ProblemName("Handheld Halting")]      
+    [ProblemName("Handheld Halting")]
     class Solution : Solver {
+        record Stm(string op, int arg);
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);
@@ -12,53 +14,53 @@ namespace AdventOfCode.Y2020.Day08 {
         }
 
         int PartOne(string input) {
-            var stms = input.Split("\n");
+            var seen = new HashSet<int>();
+            return RunUntil(Parse(input), (ip) => {
+                var res = !seen.Contains(ip);
+                seen.Add(ip);
+                return res;
+            });
+        }
+
+        int RunUntil(Stm[] program, Func<int, bool> cond) {
             var ip = 0;
             var acc = 0;
-            var seen = new HashSet<int>();
-            while(true) {
-                var stm = stms[ip].Split(" ");
-                if(seen.Contains(ip)){
-                    return acc;
-                }
-                seen.Add(ip);
-                switch(stm[0]){
+            while (ip < program.Length && cond(ip)) {
+                var stm = program[ip];
+                switch (stm.op) {
                     case "nop": ip++; break;
-                    case "acc": acc+= int.Parse(stm[1]); ip++; break;
-                    case "jmp": ip += int.Parse(stm[1]); break;
+                    case "acc": acc += stm.arg; ip++; break;
+                    case "jmp": ip += stm.arg; break;
                 }
             }
+            return acc;
         }
 
         int PartTwo(string input) {
-            var stms = input.Split("\n");
+            Stm[] Patch(Stm[] program, int line) {
+                program[line] = program[line] with {op = program[line].op =="jmp" ? "nop" : "jmp"};
+                return program;
+            }
 
-            for(var patch =0;patch<stms.Length;patch++){
-                if(stms[patch].Split(" ")[0]=="acc") {
-                    continue;
-                }
+            IEnumerable<Stm[]> Patches(Stm[] program) => 
+                from line in Enumerable.Range(0, program.Length)
+                where program[line].op != "acc"
+                select Patch(program.ToArray(), line);
 
-                var ip = 0;
-                var acc = 0;
-                var timeout = 10000000/stms.Length;
-                
-                while(timeout > 0) {
-                    timeout--;
-                    if(ip>=stms.Length){
-                        return acc;
-                    }
-                    var stm = stms[ip].Split(" ");
-                    if(patch == ip){
-                        stm[0] = stm[0] == "nop" ? "jmp" : "nop";
-                    }
-                    switch(stm[0]){
-                        case "nop": ip++; break;
-                        case "acc": acc+= int.Parse(stm[1]); ip++; break;
-                        case "jmp": ip += int.Parse(stm[1]); break;
-                    }
+            foreach(var program in Patches(Parse(input))){
+                var timeout = 10000000 / program.Length;
+                var acc = RunUntil(program, _ => 0 < timeout--);
+                if (timeout > 0){
+                    return acc;
                 }
             }
             throw new Exception();
         }
+
+        Stm[] Parse(string input) => (
+           from line in input.Split("\n")
+           let parts = line.Split(" ")
+           select new Stm(parts[0], int.Parse(parts[1]))
+        ).ToArray();
     }
 }
