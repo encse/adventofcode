@@ -4,63 +4,69 @@ using System.Linq;
 
 namespace AdventOfCode.Y2020.Day08 {
 
+    record Stm(string op, int arg);
+    record State(int ip, int acc, bool terminated);
+
     [ProblemName("Handheld Halting")]
     class Solution : Solver {
-        record Stm(string op, int arg);
-
+     
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input);
             yield return PartTwo(input);
         }
 
         int PartOne(string input) {
-            var seen = new HashSet<int>();
-            return RunUntil(Parse(input), (ip) => {
-                var res = !seen.Contains(ip);
-                seen.Add(ip);
-                return res;
-            });
-        }
+            var program = Parse(input);
 
-        int RunUntil(Stm[] program, Func<int, bool> cond) {
-            var ip = 0;
-            var acc = 0;
-            while (ip < program.Length && cond(ip)) {
-                var stm = program[ip];
-                switch (stm.op) {
-                    case "nop": ip++; break;
-                    case "acc": acc += stm.arg; ip++; break;
-                    case "jmp": ip += stm.arg; break;
-                }
+            var state = new State(0, 0, false);
+            for (var seen = new HashSet<int>(); !seen.Contains(state.ip);) {
+                seen.Add(state.ip);
+                state = Step(state, program);
             }
-            return acc;
+
+            return state.acc;
         }
 
         int PartTwo(string input) {
-            Stm[] Patch(Stm[] program, int line) {
-                program[line] = program[line] with {op = program[line].op =="jmp" ? "nop" : "jmp"};
-                return program;
-            }
+            foreach (var program in Patches(Parse(input))) {
 
-            IEnumerable<Stm[]> Patches(Stm[] program) => 
-                from line in Enumerable.Range(0, program.Length)
-                where program[line].op != "acc"
-                select Patch(program.ToArray(), line);
+                var state = new State(0, 0, false);
+                for (var t = 0; t < 1000 /* big enough for this input */; t++) {
+                    state = Step(state, program);
+                }
 
-            foreach(var program in Patches(Parse(input))){
-                var timeout = 10000000 / program.Length;
-                var acc = RunUntil(program, _ => 0 < timeout--);
-                if (timeout > 0){
-                    return acc;
+                if (state.terminated) {
+                    return state.acc;
                 }
             }
             throw new Exception();
         }
 
+        IEnumerable<Stm[]> Patches(Stm[] program) =>
+            from lineToPatch in Enumerable.Range(0, program.Length) 
+            where program[lineToPatch].op != "acc"
+            select 
+                program.Select((stm, line) => 
+                    line != lineToPatch ? stm :
+                    stm.op == "jmp"     ? stm with {op = "nop" }:
+                    stm.op == "nop"     ? stm with {op = "jmp" } :
+                    throw new Exception()
+                ).ToArray();
+
+        State Step(State state, Stm[] program) =>
+            state.terminated           ? state :
+            state.ip >= program.Length ? state with { terminated = true } :
+            program[state.ip] switch {
+                ("nop", _      ) => state with { ip = state.ip + 1 },
+                ("acc", var arg) => state with { ip = state.ip + 1, acc = state.acc + arg },
+                ("jmp", var arg) => state with { ip = state.ip + arg },
+                _ => throw new Exception()
+            };
+
         Stm[] Parse(string input) => (
-           from line in input.Split("\n")
-           let parts = line.Split(" ")
-           select new Stm(parts[0], int.Parse(parts[1]))
-        ).ToArray();
+                from line in input.Split("\n")
+                let parts = line.Split(" ")
+                select new Stm(parts[0], int.Parse(parts[1]))
+            ).ToArray();
     }
 }
