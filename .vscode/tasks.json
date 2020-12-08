@@ -58,7 +58,8 @@
             "type": "process",
             "args": [
                 "add",
-                "**/Day*/*.refout"
+                "**/Day*/*.refout",
+                "**/*.cs"
             ],
             "problemMatcher": [],
             "dependsOn": "upload"
