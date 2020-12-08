@@ -28,11 +28,6 @@
                 "run",
                 "${input:year}/${input:day}"
             ],
-            "options": {
-                "env": {
-                    "SESSION": "${input:session}"
-                }
-            },
             "problemMatcher": [],
             "dependsOn": [
                 "git add",
