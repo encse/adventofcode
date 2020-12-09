@@ -26,11 +26,11 @@
         },
 
         {
-            "label": "run last",
+            "label": "run today",
             "command": "dotnet",
             "args": [
                 "run",
-                "last"
+                "today"
             ],
             "problemMatcher": [],
             "dependsOn": [
@@ -55,12 +55,12 @@
         },
         
         {
-            "label": "upload last",
+            "label": "upload today",
             "command": "dotnet",
             "args": [
                 "run",
                 "upload",
-                "last",
+                "today",
             ],
             "options": {
                 "env": {
@@ -87,12 +87,12 @@
         },
 
         {
-            "label": "update last",
+            "label": "update today",
             "command": "dotnet",
             "args": [
                 "run",
                 "update",
-                "last"
+                "today"
             ],
             "options": {
                 "env": {

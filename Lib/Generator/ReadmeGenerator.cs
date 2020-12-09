@@ -26,6 +26,16 @@ namespace AdventOfCode.Generator {
                > ```
                > {Usage.Get()}
                > ```
+
+               > ## Working in Visual Studio Code
+               > If you prefer, you can work directly in VSCode as well. 
+ 
+               >  Open the command Palette (⇧ ⌘ P), select `Tasks: Run Task` then e.g. `update today`.
+               > 
+               >  Work on part 1. Check the solution with the `upload today` task. Continue with part 2.
+               > 
+               >  **Note:** this feature relies on the ""Memento Inputs"" extension to store your session cookie, you need 
+               >  to set it up it in advance from the Command Palette with `Install Extensions`.
                > ".StripMargin("> ");
         }
     }
