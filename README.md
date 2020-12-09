@@ -26,7 +26,8 @@ Usage: dotnet run [arguments]
  all                   Solve everything
 
 2) To start working on new problems:
-login to https://adventofcode.com, then copy your session cookie, and export it in your console like this
+login to https://adventofcode.com, then copy your session cookie, and export 
+it in your console like this
 
  export SESSION=73a37e9a72a...
 
