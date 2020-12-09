@@ -66,13 +66,39 @@ namespace AdventOfCode {
         }
     }
 
+    record UncheckedResult(int part, string answer);
+
     class Runner {
 
-        public static void RunAll(params Type[] tsolvers) {
+        private static string GetNormalizedInput(string file){
+            var input = File.ReadAllText(file);
+            if (input.EndsWith("\n")) {
+                input = input.Substring(0, input.Length - 1);
+            }
+            return input;
+        }
+
+        public static UncheckedResult GetUncheckedResult(Solver solver) {
+            var workingDir = solver.WorkingDir();
+            var inputFile = Path.Combine(workingDir, "input.in");
+            var input = GetNormalizedInput(inputFile);
+            var refoutFile = (Path.Combine(workingDir, "input.refout"));
+            var refout = (File.Exists(refoutFile) ? GetNormalizedInput(refoutFile): "")
+                    .Split("\n")
+                    .Where(x=>!string.IsNullOrWhiteSpace(x))
+                    .ToArray();
+
+            var output = solver.Solve(input).Select(res => res.ToString()).ToArray();
+            Console.WriteLine("refiout "+refout.Length+" "+output.Length);
+
+            return refout.Length < output.Length ? new UncheckedResult(refout.Length+1, output[refout.Length]) : null;
+        }
+
+        public static void RunAll(params Solver[] solvers) {
             var errors = new List<string>();
 
             var lastYear = -1;
-            foreach (var solver in tsolvers.Select(tsolver => Activator.CreateInstance(tsolver) as Solver)) {
+            foreach (var solver in solvers) {
                 if (lastYear != solver.Year()) {
                     solver.SplashScreen().Show();
                     lastYear = solver.Year();
@@ -93,10 +119,7 @@ namespace AdventOfCode {
                         }
                         var refoutFile = file.Replace(".in", ".refout");
                         var refout = File.Exists(refoutFile) ? File.ReadAllLines(refoutFile) : null;
-                        var input = File.ReadAllText(file);
-                        if (input.EndsWith("\n")) {
-                            input = input.Substring(0, input.Length - 1);
-                        }
+                        var input = GetNormalizedInput(file);
                         var dt = DateTime.Now;
                         var iline = 0;
                         foreach (var line in solver.Solve(input)) {

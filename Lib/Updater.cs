@@ -54,12 +54,25 @@ namespace AdventOfCode {
             UpdateSolutionTemplate(problem);
         }
 
-        public async Task Upload(int year, int day, int part, string answer) {
+        public async Task Upload(Solver solver) {
+
+            var color = Console.ForegroundColor;
+            System.Console.WriteLine();
+
+            var uncheckedResult = Runner.GetUncheckedResult(solver);
+            if (uncheckedResult == null) {
+                Console.ForegroundColor = ConsoleColor.Green;
+                System.Console.WriteLine("Solution is validated, nothing to send.");
+                Console.ForegroundColor = color;
+                System.Console.WriteLine();
+                return;
+            } 
 
             if (!System.Environment.GetEnvironmentVariables().Contains("SESSION")) {
                 throw new Exception("Specify SESSION environment variable");
             }
             var session = System.Environment.GetEnvironmentVariable("SESSION");
+
 
             // https://adventofcode.com/{year}/day/{day}/answer
             // level={part}&answer={answer}
@@ -71,11 +84,11 @@ namespace AdventOfCode {
 
             var content = new FormUrlEncodedContent(new[]
             {
-                new KeyValuePair<string, string>("level", part.ToString()),
-                new KeyValuePair<string, string>("answer", answer),
+                new KeyValuePair<string, string>("level", uncheckedResult.part.ToString()),
+                new KeyValuePair<string, string>("answer", uncheckedResult.answer),
             });
             cookieContainer.Add(baseAddress, new Cookie("session", session));
-            var result = await client.PostAsync($"/{year}/day/{day}/answer", content);
+            var result = await client.PostAsync($"/{solver.Year()}/day/{solver.Day()}/answer", content);
             result.EnsureSuccessStatusCode();
             var responseString = await result.Content.ReadAsStringAsync();
 
@@ -89,8 +102,7 @@ namespace AdventOfCode {
             var document = await context.OpenAsync(req => req.Content(responseString));
             var article = document.Body.QuerySelector("body > main > article").TextContent;
 
-            var color = Console.ForegroundColor;
-            System.Console.WriteLine();
+          
 
             if(article.StartsWith("That's the right answer"))
             {
@@ -129,7 +141,7 @@ namespace AdventOfCode {
                 Console.ForegroundColor = color;
             }
 
-            await Update(year, day);
+            await Update(solver.Year(), solver.Day());
         }
 
         void WriteFile(string file, string content) {

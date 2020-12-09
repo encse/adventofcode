@@ -11,16 +11,7 @@
             ],
             "problemMatcher": "$msCompile"
         },
-        {
-            "label": "git add",
-            "command": "git",
-            "type": "process",
-            "args": [
-                "add",
-                "*"
-            ],
-            "problemMatcher": []
-        },
+
         {
             "label": "run",
             "command": "dotnet",
@@ -30,10 +21,23 @@
             ],
             "problemMatcher": [],
             "dependsOn": [
-                "git add",
                 "build"
             ]
         },
+
+        {
+            "label": "run last",
+            "command": "dotnet",
+            "args": [
+                "run",
+                "last"
+            ],
+            "problemMatcher": [],
+            "dependsOn": [
+                "build"
+            ]
+        },
+
         {
             "label": "upload",
             "command": "dotnet",
@@ -41,8 +45,6 @@
                 "run",
                 "upload",
                 "${input:year}/${input:day}",
-                "${input:part}",
-                "${input:answer}"
             ],
             "options": {
                 "env": {
@@ -50,37 +52,24 @@
                 }
             },
             "problemMatcher": [],
-            "dependsOn": "run"
         },
+        
         {
-            "label": "git add refout",
-            "command": "git",
-            "type": "process",
+            "label": "upload last",
+            "command": "dotnet",
             "args": [
-                "add",
-                "**/Day*/*.refout",
-                "**/*.cs"
+                "run",
+                "upload",
+                "last",
             ],
+            "options": {
+                "env": {
+                    "SESSION": "${input:session}"
+                }
+            },
             "problemMatcher": [],
-            "dependsOn": "upload"
         },
-        {
-            "label": "git commit",
-            "command": "git",
-            "type": "process",
-            "args": [
-                "commit",
-                "-m",
-                "Y${input:year}D${input:day}P${input:part}"
-            ],
-            "problemMatcher": [],
-            "dependsOn": "git add refout"
-        },
-        {
-            "label": "run part",
-            "problemMatcher": [],
-            "dependsOn": "git commit"
-        },
+
         {
             "label": "update",
             "command": "dotnet",
@@ -96,16 +85,23 @@
             },
             "problemMatcher": []
         },
+
         {
-            "label": "git reset last",
-            "command": "git",
+            "label": "update last",
+            "command": "dotnet",
             "args": [
-                "reset",
-                "--soft",
-                "HEAD~1"
+                "run",
+                "update",
+                "last"
             ],
+            "options": {
+                "env": {
+                    "SESSION": "${input:session}"
+                }
+            },
             "problemMatcher": []
-        }
+        },
+        
     ],
     "inputs": [
         {
