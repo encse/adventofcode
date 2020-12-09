@@ -18,36 +18,39 @@ To run the project:
 ```
 
 Usage: dotnet run [arguments]
-Supported arguments:
+1) To run the solutions and admire your advent calendar:
 
- [year]/[day|last|all] Solve the specified problems
+ [year]/[day|all]      Solve the specified problems
+ today                 Shortcut to the above
  [year]                Solve the whole year
- last                  Solve the last problem
  all                   Solve everything
 
-To start working on new problems:
+2) To start working on new problems:
 login to https://adventofcode.com, then copy your session cookie, and export it in your console like this
 
-  export SESSION=73a37e9a72a...
+ export SESSION=73a37e9a72a...
 
 then run the app with
 
  update [year]/[day]   Prepares a folder for the given day, updates the input,
                        the readme and creates a solution template.
- update last           Same as above, but for the current day. Works in December only.
+ update today          Shortcut to the above.
 
-You can directly upload your answer with:
+3) To upload your answer:
+set up your SESSION variable as above.
 
- upload last [part(1/2)] [answer]           Upload the answer for the selected part on the current day
- upload [year]/[day] [part(1/2)] [answer]   Upload the answer for the selected part on the selected year and day
+ upload [year]/[day]   Upload the answer for the selected year and day.
+ upload today          Shortcut to the above.
 
-Or, you can do everything fron within VSCode:
-
- Open the command Palette ('Cmd\Ctrl + Shift + P')
- run the task ('Tasks: Run Task' command) : 'update'
- then Write / Debug your code for part 1.
- then run the task 'run part'
- then Write / Debug your code for part 2.
- then run the task 'run part'
 
 ```
+
+## Working in Visual Studio Code
+If you prefer, you can work directly in VSCode as well. 
+ 
+ Open the command Palette (⇧ ⌘ P), select `Tasks: Run Task` then e.g. `update today`.
+
+ Work on part 1. Check the solution with the `upload today` task. Continue with part 2.
+
+ **Note:** this feature relies on the "Memento Inputs" extension to store your session cookie, you need 
+ to set it up it in advance from the Command Palette with `Install Extensions`.

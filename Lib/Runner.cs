@@ -89,7 +89,6 @@ namespace AdventOfCode {
                     .ToArray();
 
             var output = solver.Solve(input).Select(res => res.ToString()).ToArray();
-            Console.WriteLine("refiout "+refout.Length+" "+output.Length);
 
             return refout.Length < output.Length ? new UncheckedResult(refout.Length+1, output[refout.Length]) : null;
         }
