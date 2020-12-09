@@ -10,6 +10,146 @@
                 "${workspaceFolder}/adventofcode.csproj"
             ],
             "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "git add",
+            "command": "git",
+            "type": "process",
+            "args": [
+                "add",
+                "*"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "run",
+            "command": "dotnet",
+            "args": [
+                "run",
+                "${input:year}/${input:day}"
+            ],
+            "problemMatcher": [],
+            "dependsOn": [
+                "git add",
+                "build"
+            ]
+        },
+        {
+            "label": "upload",
+            "command": "dotnet",
+            "args": [
+                "run",
+                "upload",
+                "${input:year}/${input:day}",
+                "${input:part}",
+                "${input:answer}"
+            ],
+            "options": {
+                "env": {
+                    "SESSION": "${input:session}"
+                }
+            },
+            "problemMatcher": [],
+            "dependsOn": "run"
+        },
+        {
+            "label": "git add refout",
+            "command": "git",
+            "type": "process",
+            "args": [
+                "add",
+                "**/Day*/*.refout",
+                "**/*.cs"
+            ],
+            "problemMatcher": [],
+            "dependsOn": "upload"
+        },
+        {
+            "label": "git commit",
+            "command": "git",
+            "type": "process",
+            "args": [
+                "commit",
+                "-m",
+                "Y${input:year}D${input:day}P${input:part}"
+            ],
+            "problemMatcher": [],
+            "dependsOn": "git add refout"
+        },
+        {
+            "label": "run part",
+            "problemMatcher": [],
+            "dependsOn": "git commit"
+        },
+        {
+            "label": "update",
+            "command": "dotnet",
+            "args": [
+                "run",
+                "update",
+                "${input:year}/${input:day}"
+            ],
+            "options": {
+                "env": {
+                    "SESSION": "${input:session}"
+                }
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "git reset last",
+            "command": "git",
+            "args": [
+                "reset",
+                "--soft",
+                "HEAD~1"
+            ],
+            "problemMatcher": []
+        }
+    ],
+    "inputs": [
+        {
+            "id": "year",
+            "type": "command",
+            "command": "memento.promptString",
+            "args": {
+                "id": "year",
+                "description": "Current year (YYYY)"
+            }
+        },
+        {
+            "id": "part",
+            "type": "command",
+            "command": "memento.pickString",
+            "args": {
+                "id": "part",
+                "options": ["1", "2"],
+                "description": "Part of the day"
+            }
+        },
+        {
+            "id": "day",
+            "type": "command",
+            "command": "memento.pickString",
+            "args": {
+                "id": "day",
+                "options": ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25"],
+                "description": "Current day"
+            }
+        },
+        {
+            "id": "answer",
+            "type": "promptString",
+            "description": "Answer for the part day"
+        },
+        {
+            "id": "session",
+            "type": "command",
+            "command": "memento.promptString",
+            "args": {
+                "id": "session",
+                "description": "Session cookie"
+            }
         }
     ]
 }
