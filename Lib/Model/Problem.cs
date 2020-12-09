@@ -12,12 +12,12 @@ namespace AdventOfCode.Model {
         public int Day { get; private set; }
         public int Year { get; private set; }
         public string Input { get; private set; }
-        public string Answers { get; private set; }
+        public string[] Answers { get; private set; }
 
         public static Problem Parse(int year, int day, string url, IDocument document, string input) {
 
             var md = $"original source: [{url}]({url})\n";
-            var answers = "";
+            var answers = new List<string>();
             foreach (var article in document.QuerySelectorAll("article")) {
                 md += UnparseList("", article) + "\n";
 
@@ -32,7 +32,7 @@ namespace AdventOfCode.Model {
 
                 var code = (answerNode as IElement)?.QuerySelector("code");
                 if (code != null) {
-                    answers += code.TextContent + "\n";
+                    answers.Add(code.TextContent);
                 }
             }
             var title = document.QuerySelector("h2").TextContent;
@@ -41,7 +41,7 @@ namespace AdventOfCode.Model {
             if (match.Success) {
                 title = match.Groups[1].Value;
             }
-            return new Problem {Year = year, Day = day, Title = title, ContentMd = md, Input = input, Answers = answers };
+            return new Problem {Year = year, Day = day, Title = title, ContentMd = md, Input = input, Answers = answers.ToArray() };
         }
 
         static string UnparseList(string sep, INode element) {

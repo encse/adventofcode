@@ -66,7 +66,7 @@ namespace AdventOfCode {
         }
     }
 
-    record UncheckedResult(int part, string answer);
+    record SolverResult(string[] answers, string[] errors);
 
     class Runner {
 
@@ -78,19 +78,46 @@ namespace AdventOfCode {
             return input;
         }
 
-        public static UncheckedResult GetUncheckedResult(Solver solver) {
+        public static SolverResult RunSolver(Solver solver) {
+
             var workingDir = solver.WorkingDir();
-            var inputFile = Path.Combine(workingDir, "input.in");
-            var input = GetNormalizedInput(inputFile);
-            var refoutFile = (Path.Combine(workingDir, "input.refout"));
-            var refout = (File.Exists(refoutFile) ? GetNormalizedInput(refoutFile): "")
-                    .Split("\n")
-                    .Where(x=>!string.IsNullOrWhiteSpace(x))
-                    .ToArray();
+            WriteLine(ConsoleColor.White, $"{solver.DayName()}: {solver.GetName()}");
+            WriteLine();
+            var dir = workingDir;
+            var file = Path.Combine(workingDir,  "input.in");
+            var refoutFile = file.Replace(".in", ".refout");
+            var refout = File.Exists(refoutFile) ? File.ReadAllLines(refoutFile) : null;
+            var input = GetNormalizedInput(file);
+            var dt = DateTime.Now;
+            var iline = 0;
+            var answers = new List<string>();
+            var errors = new List<string>();
+            foreach (var line in solver.Solve(input)) {
+                answers.Add(line.ToString());
+                var now = DateTime.Now;
+                var (statusColor, status, err) =
+                    refout == null || refout.Length <= iline ? (ConsoleColor.Cyan, "?", null) :
+                    refout[iline] == line.ToString() ? (ConsoleColor.DarkGreen, "✓", null) :
+                    (ConsoleColor.Red, "X", $"{solver.DayName()}: In line {iline + 1} expected '{refout[iline]}' but found '{line}'");
 
-            var output = solver.Solve(input).Select(res => res.ToString()).ToArray();
+                if (err != null) {
+                    errors.Add(err);
+                }
 
-            return refout.Length < output.Length ? new UncheckedResult(refout.Length+1, output[refout.Length]) : null;
+                Write(statusColor, $"  {status}");
+                Console.Write($" {line} ");
+                var diff = (now - dt).TotalMilliseconds;
+                WriteLine(
+                    diff > 1000 ? ConsoleColor.Red :
+                    diff > 500 ? ConsoleColor.Yellow :
+                    ConsoleColor.DarkGreen,
+                    $"({diff.ToString("F3")} ms)"
+                );
+                dt = now;
+                iline++;
+            }
+
+            return new SolverResult(answers.ToArray(), errors.ToArray());
         }
 
         public static void RunAll(params Solver[] solvers) {
@@ -103,52 +130,11 @@ namespace AdventOfCode {
                     lastYear = solver.Year();
                 }
 
-                var workingDir = solver.WorkingDir();
-                WriteLine(ConsoleColor.White, $"{solver.DayName()}: {solver.GetName()}");
-                WriteLine();
-                foreach (var dir in new[] { workingDir, Path.Combine(workingDir, "test") }) {
-                    if (!Directory.Exists(dir)) {
-                        continue;
-                    }
-                    var files = Directory.EnumerateFiles(dir).Where(file => file.EndsWith(".in")).ToArray();
-                    foreach (var file in files) {
-
-                        if (files.Count() > 1) {
-                            Console.WriteLine("  " + file + ":");
-                        }
-                        var refoutFile = file.Replace(".in", ".refout");
-                        var refout = File.Exists(refoutFile) ? File.ReadAllLines(refoutFile) : null;
-                        var input = GetNormalizedInput(file);
-                        var dt = DateTime.Now;
-                        var iline = 0;
-                        foreach (var line in solver.Solve(input)) {
-                            var now = DateTime.Now;
-                            var (statusColor, status, err) =
-                                refout == null || refout.Length <= iline ? (ConsoleColor.Cyan, "?", null) :
-                                refout[iline] == line.ToString() ? (ConsoleColor.DarkGreen, "✓", null) :
-                                (ConsoleColor.Red, "X", $"{solver.DayName()}: In line {iline + 1} expected '{refout[iline]}' but found '{line}'");
-
-                            if (err != null) {
-                                errors.Add(err);
-                            }
-
-                            Write(statusColor, $"  {status}");
-                            Console.Write($" {line} ");
-                            var diff = (now - dt).TotalMilliseconds;
-                            WriteLine(
-                                diff > 1000 ? ConsoleColor.Red :
-                                diff > 500 ? ConsoleColor.Yellow :
-                                ConsoleColor.DarkGreen,
-                                $"({diff.ToString("F3")} ms)"
-                            );
-                            dt = now;
-                            iline++;
-                        }
-                    }
-                }
-
-                WriteLine();
+                var result = RunSolver(solver);
+                errors.AddRange(result.errors);
             }
+
+            WriteLine();
 
             if (errors.Any()) {
                 WriteLine(ConsoleColor.Red, "Errors:\n" + string.Join("\n", errors));
