@@ -55,93 +55,72 @@ namespace AdventOfCode {
         }
 
         public async Task Upload(Solver solver) {
+            if (!System.Environment.GetEnvironmentVariables().Contains("SESSION")) {
+                throw new Exception("Specify SESSION environment variable.");
+            }
+            var session = System.Environment.GetEnvironmentVariable("SESSION");
 
             var color = Console.ForegroundColor;
             System.Console.WriteLine();
 
             var uncheckedResult = Runner.GetUncheckedResult(solver);
             if (uncheckedResult == null) {
-                Console.ForegroundColor = ConsoleColor.Green;
-                System.Console.WriteLine("Solution is validated, nothing to send.");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                System.Console.WriteLine("Both parts of this puzzle are complete!");
                 Console.ForegroundColor = color;
                 System.Console.WriteLine();
-                return;
-            } 
+            } else {
 
-            if (!System.Environment.GetEnvironmentVariables().Contains("SESSION")) {
-                throw new Exception("Specify SESSION environment variable");
+                // https://adventofcode.com/{year}/day/{day}/answer
+                // level={part}&answer={answer}
+
+                var baseAddress = new Uri("https://adventofcode.com");
+                var cookieContainer = new CookieContainer();
+                using var handler = new HttpClientHandler() { CookieContainer = cookieContainer };
+                using var client = new HttpClient(handler) { BaseAddress = baseAddress };
+
+                var content = new FormUrlEncodedContent(new[] {
+                    new KeyValuePair<string, string>("level", uncheckedResult.part.ToString()),
+                    new KeyValuePair<string, string>("answer", uncheckedResult.answer),
+                });
+
+                cookieContainer.Add(baseAddress, new Cookie("session", session));
+                var result = await client.PostAsync($"/{solver.Year()}/day/{solver.Day()}/answer", content);
+                result.EnsureSuccessStatusCode();
+                var responseString = await result.Content.ReadAsStringAsync();
+
+                var config = Configuration.Default;
+                var context = BrowsingContext.New(config);
+                var document = await context.OpenAsync(req => req.Content(responseString));
+                var article = document.Body.QuerySelector("body > main > article").TextContent;
+
+                if (article.StartsWith("That's the right answer")) {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    System.Console.WriteLine(article);
+                    Console.ForegroundColor = color;
+                    System.Console.WriteLine();
+                    await Update(solver.Year(), solver.Day());
+                } else if (article.StartsWith("That's not the right answer")) {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    System.Console.WriteLine(article);
+                    Console.ForegroundColor = color;
+                    System.Console.WriteLine();
+                } else if (article.StartsWith("You gave an answer too recently")) {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    System.Console.WriteLine(article);
+                    Console.ForegroundColor = color;
+                    System.Console.WriteLine();
+                } else if (article.Contains("Did you already complete it")) {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    System.Console.WriteLine(article);
+                    Console.ForegroundColor = color;
+                    System.Console.WriteLine();
+                } else {
+                    Console.ForegroundColor = ConsoleColor.White;
+                    System.Console.WriteLine(article);
+                    Console.ForegroundColor = color;
+                }
             }
-            var session = System.Environment.GetEnvironmentVariable("SESSION");
-
-
-            // https://adventofcode.com/{year}/day/{day}/answer
-            // level={part}&answer={answer}
-
-            var baseAddress = new Uri("https://adventofcode.com");
-            var cookieContainer = new CookieContainer();
-            using var handler = new HttpClientHandler() { CookieContainer = cookieContainer };
-            using var client = new HttpClient(handler) { BaseAddress = baseAddress };
-
-            var content = new FormUrlEncodedContent(new[]
-            {
-                new KeyValuePair<string, string>("level", uncheckedResult.part.ToString()),
-                new KeyValuePair<string, string>("answer", uncheckedResult.answer),
-            });
-            cookieContainer.Add(baseAddress, new Cookie("session", session));
-            var result = await client.PostAsync($"/{solver.Year()}/day/{solver.Day()}/answer", content);
-            result.EnsureSuccessStatusCode();
-            var responseString = await result.Content.ReadAsStringAsync();
-
-            //Use the default configuration for AngleSharp
-            var config = Configuration.Default;
-
-            //Create a new context for evaluating webpages with the given config
-            var context = BrowsingContext.New(config);
-
-            //Just get the DOM representation
-            var document = await context.OpenAsync(req => req.Content(responseString));
-            var article = document.Body.QuerySelector("body > main > article").TextContent;
-
-          
-
-            if(article.StartsWith("That's the right answer"))
-            {
-                Console.ForegroundColor = ConsoleColor.Green;
-                System.Console.WriteLine(article);
-                Console.ForegroundColor = color;
-                System.Console.WriteLine();
-            }
-            else if (article.StartsWith("That's not the right answer"))
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                System.Console.WriteLine(article);
-                Console.ForegroundColor = color;
-                System.Console.WriteLine();
-                throw new Exception("That's not the right answer.");
-            }
-            else if(article.StartsWith("You gave an answer too recently"))
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                System.Console.WriteLine(article);
-                Console.ForegroundColor = color;
-                System.Console.WriteLine();
-                throw new Exception("You gave an answer too recently;");
-            }
-            else if(article.Contains("Did you already complete it"))
-            {
-                Console.ForegroundColor = ConsoleColor.DarkYellow;
-                System.Console.WriteLine(article);
-                Console.ForegroundColor = color;
-                System.Console.WriteLine();
-            }
-            else
-            {
-                Console.ForegroundColor = ConsoleColor.Blue;
-                System.Console.WriteLine(article);
-                Console.ForegroundColor = color;
-            }
-
-            await Update(solver.Year(), solver.Day());
         }
 
         void WriteFile(string file, string content) {
@@ -159,10 +138,10 @@ namespace AdventOfCode {
         async Task<Problem> DownloadProblem(IBrowsingContext context, Uri baseUri, int year, int day) {
             var problemStatement = await context.OpenAsync(baseUri + $"{year}/day/{day}");
             var input = await context.GetService<IDocumentLoader>().FetchAsync(
-                    new DocumentRequest(new Url(baseUri + $"{year}/day/{day}/input"))).Task; 
+                    new DocumentRequest(new Url(baseUri + $"{year}/day/{day}/input"))).Task;
             return Problem.Parse(
-                year, day, baseUri + $"{year}/day/{day}", problemStatement, 
-                new StreamReader( input.Content).ReadToEnd() 
+                year, day, baseUri + $"{year}/day/{day}", problemStatement,
+                new StreamReader(input.Content).ReadToEnd()
             );
         }
 
