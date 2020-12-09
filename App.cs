@@ -5,7 +5,10 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode {
     class App {
-
+    
+        static Solver[] GetSolvers(params Type[] tsolver) => 
+            tsolver.Select(t => Activator.CreateInstance(t) as Solver).ToArray();
+      
         static void Main(string[] args) {
 
             var tsolvers = Assembly.GetEntryAssembly()!.GetTypes()
@@ -27,15 +30,23 @@ namespace AdventOfCode {
                         throw new Exception("Event is not active. This option works in Dec 1-25 only)");
                     }
                 }) ??
-                Command(args, Args("upload", "([0-9]+)/([0-9]+)", "(1|2)", "(.*)"), m => {
+                Command(args, Args("upload", "([0-9]+)/([0-9]+)"), m => {
                     var year = int.Parse(m[1]);
                     var day = int.Parse(m[2]);
-                    return () => new Updater().Upload(year, day, int.Parse(m[3]), m[4]).Wait();
+                    return () => {
+                        var tsolver = tsolvers.First(tsolver => 
+                            SolverExtensions.Year(tsolver) == year && 
+                            SolverExtensions.Day(tsolver) == day);
+
+                        new Updater().Upload(GetSolvers(tsolver)[0]).Wait();
+                    };
                 }) ??
-                Command(args, Args("upload", "last", "(1|2)", "(.*)"), m => {
+                Command(args, Args("upload", "last"), m => {
                     var dt = DateTime.UtcNow.AddHours(-5);
                     if (dt is { Month: 12, Day: >= 1 and <= 25 }) {
-                        return () => new Updater().Upload(dt.Year, dt.Day, int.Parse(m[2]), m[3]).Wait();
+                        return () => {
+                            new Updater().Upload(GetSolvers(tsolvers.Last())[0]).Wait();
+                        };
                     } else {
                         throw new Exception("Event is not active. This option works in Dec 1-25 only)");
                     }
@@ -46,32 +57,32 @@ namespace AdventOfCode {
                     var tsolversSelected = tsolvers.First(tsolver => 
                         SolverExtensions.Year(tsolver) == year && 
                         SolverExtensions.Day(tsolver) == day);
-                    return () => Runner.RunAll(tsolversSelected);
+                    return () => Runner.RunAll(GetSolvers(tsolversSelected));
                 }) ??
                  Command(args, Args("[0-9]+"), m => {
                     var year = int.Parse(m[0]);
                     var tsolversSelected = tsolvers.Where(tsolver => 
                         SolverExtensions.Year(tsolver) == year);
-                    return () => Runner.RunAll(tsolversSelected.ToArray());
+                    return () => Runner.RunAll(GetSolvers(tsolversSelected.ToArray()));
                 }) ??
                 Command(args, Args("([0-9]+)/last"), m => {
                     var year = int.Parse(m[0]);
                     var tsolversSelected = tsolvers.Last(tsolver =>
                         SolverExtensions.Year(tsolver) == year);
-                    return () => Runner.RunAll(tsolversSelected);
+                    return () => Runner.RunAll(GetSolvers(tsolversSelected));
                 }) ??
                 Command(args, Args("([0-9]+)/all"), m => {
                     var year = int.Parse(m[0]);
                     var tsolversSelected = tsolvers.Where(tsolver =>
                         SolverExtensions.Year(tsolver) == year);
-                    return () => Runner.RunAll(tsolversSelected.ToArray());
+                    return () => Runner.RunAll(GetSolvers(tsolversSelected.ToArray()));
                 }) ??
                 Command(args, Args("all"), m => {
-                    return () => Runner.RunAll(tsolvers);
+                    return () => Runner.RunAll(GetSolvers(tsolvers));
                 }) ??
                 Command(args, Args("last"),  m => {
                     var tsolversSelected = tsolvers.Last();
-                    return () => Runner.RunAll(tsolversSelected);
+                    return () => Runner.RunAll(GetSolvers(tsolversSelected));
                 }) ??
                 new Action(() => {
                     Console.WriteLine(Usage.Get());
@@ -140,4 +151,6 @@ namespace AdventOfCode {
                > ".StripMargin("> ");
         }
     }
+
+     
 }
