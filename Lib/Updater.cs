@@ -87,7 +87,7 @@ namespace AdventOfCode {
 
             //Just get the DOM representation
             var document = await context.OpenAsync(req => req.Content(responseString));
-            var article = document.Body.QuerySelector("body > main > article").Text();
+            var article = document.Body.QuerySelector("body > main > article").TextContent;
 
             var color = Console.ForegroundColor;
             System.Console.WriteLine();
