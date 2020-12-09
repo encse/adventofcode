@@ -35,7 +35,7 @@ namespace AdventOfCode.Generator {
                >  Work on part 1. Check the solution with the `upload today` task. Continue with part 2.
                > 
                >  **Note:** this feature relies on the ""Memento Inputs"" extension to store your session cookie, you need 
-               >  to set it up it in advance from the Command Palette with `Install Extensions`.
+               >  to set it up in advance from the Command Palette with `Install Extensions`.
                > ".StripMargin("> ");
         }
     }
