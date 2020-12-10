@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -24,14 +23,16 @@ namespace AdventOfCode.Y2020.Day10 {
 
         long PartTwo(string input) {
             var jolts = Parse(input);
-            var cache = new Dictionary<int, long>();
-            long Rec(int prevI, int i) =>
-                i >= jolts.Count            ? 0 :
-                jolts[i] - jolts[prevI] > 3 ? 0 :
-                i == jolts.Count - 1        ? 1 :
-                /* otherwise */             cache.GetOrCompute(i, () => Rec(i, i + 1) + Rec(i, i + 2) + Rec(i, i + 3));
 
-            return Rec(0, 0);
+            var result = new Dictionary<int, long>(){
+                { jolts.Count - 1, 1 }
+            };
+
+            for (var i = jolts.Count - 2; i >= 0; i--) {
+                long get(int di) => i + di < jolts.Count && jolts[i + di] - jolts[i] <= 3 ? result[i + di] : 0;
+                result[i] = get(1) + get(2) + get(3);
+            }
+            return result[0];
         }
 
         ImmutableList<int> Parse(string input) {
@@ -40,15 +41,6 @@ namespace AdventOfCode.Y2020.Day10 {
                 .Create(0)
                 .AddRange(num)
                 .Add(num.Last() + 3);
-        }
-    }
-
-    static class Cache {
-        public static B GetOrCompute<A, B>(this Dictionary<A, B> dict, A a, Func<B> compute) {
-            if (!dict.ContainsKey(a)) {
-                dict[a] = compute();
-            }
-            return dict[a];
         }
     }
 }
