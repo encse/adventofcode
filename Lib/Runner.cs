@@ -131,6 +131,7 @@ namespace AdventOfCode {
                 }
 
                 var result = RunSolver(solver);
+                WriteLine();
                 errors.AddRange(result.errors);
             }
 
