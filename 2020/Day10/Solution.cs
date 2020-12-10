@@ -24,7 +24,8 @@ namespace AdventOfCode.Y2020.Day10 {
         long PartTwo(string input) {
             var jolts = Parse(input);
 
-            var (a, b, c) = (1L, 0L, 0L);
+            // dynamic programming with rolling variables a, b, c for the function values at i + 1, i + 2 and i + 3.
+            var (a, b, c) = (1L, 0L, 0L); 
             for (var i = jolts.Count - 2; i >= 0; i--) {
                 var s =  
                     (i + 1 < jolts.Count && jolts[i + 1] - jolts[i] <= 3 ? a : 0) +
