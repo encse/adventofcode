@@ -24,15 +24,15 @@ namespace AdventOfCode.Y2020.Day10 {
         long PartTwo(string input) {
             var jolts = Parse(input);
 
-            var result = new Dictionary<int, long>(){
-                { jolts.Count - 1, 1 }
-            };
-
+            var (a, b, c) = (1L, 0L, 0L);
             for (var i = jolts.Count - 2; i >= 0; i--) {
-                long get(int di) => i + di < jolts.Count && jolts[i + di] - jolts[i] <= 3 ? result[i + di] : 0;
-                result[i] = get(1) + get(2) + get(3);
+                var s =  
+                    (i + 1 < jolts.Count && jolts[i + 1] - jolts[i] <= 3 ? a : 0) +
+                    (i + 2 < jolts.Count && jolts[i + 2] - jolts[i] <= 3 ? b : 0) +
+                    (i + 3 < jolts.Count && jolts[i + 3] - jolts[i] <= 3 ? c : 0);
+                (a, b, c) = (s, a, b);
             }
-            return result[0];
+            return a;
         }
 
         ImmutableList<int> Parse(string input) {
