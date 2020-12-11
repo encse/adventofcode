@@ -31,15 +31,15 @@ namespace AdventOfCode.Y2020.Day11 {
                 }
             }
 
-            int OccupiedPlaces(string st, int idx) {
+            int OccupiedPlacesAround(string st, int idx) {
                 var directions = new[] { (0, -1), (0, 1), (-1, 0), (1, 0), (-1, -1), (-1, 1), (1, -1), (1, 1) };
-                var n = 0;
+                var occupied = 0;
                 foreach (var (drow, dcol) in directions) {
                     if (PlaceInDirection(st, idx / ccol, idx % ccol, drow, dcol) == '#') {
-                        n++;
+                        occupied++;
                     }
                 }
-                return n;
+                return occupied;
             }
 
             var prev = "";
@@ -48,8 +48,8 @@ namespace AdventOfCode.Y2020.Day11 {
                 prev = curr;
                 curr = string.Join("",
                     curr.Select((place, i) =>
-                        place == '#' && OccupiedPlaces(curr, i) >= occupiedLimit ? 'L' :
-                        place == 'L' && OccupiedPlaces(curr, i) == 0             ? '#' :
+                        place == '#' && OccupiedPlacesAround(curr, i) >= occupiedLimit ? 'L' :
+                        place == 'L' && OccupiedPlacesAround(curr, i) == 0             ? '#' :
                         place /*otherwise*/
                     )
                 );
