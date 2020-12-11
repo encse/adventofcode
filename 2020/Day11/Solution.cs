@@ -31,22 +31,25 @@ namespace AdventOfCode.Y2020.Day11 {
 
         Func<string, string> Step(int crow, int ccol, int occupiedLimit, Func<char, bool> stop) {
 
-            int OccupiedPlaces(string st, int irow, int icol) {
-                var n = 0;
-                foreach (var (drow, dcol) in new[] { (0, -1), (0, 1), (-1, 0), (1, 0), (-1, -1), (-1, 1), (1, -1), (1, 1) }) {
-                    var (irowT, icolT) = (irow, icol);
-                    while (true) {
-                        (irowT, icolT) = (irowT + drow, icolT + dcol);
-                        var place =
-                            irowT < 0 || irowT >= crow ? 'L' :
-                            icolT < 0 || icolT >= ccol ? 'L' :
-                            st[irowT * ccol + icolT];
+            char PlaceInDirection(string st, int irow, int icol, int drow, int dcol) {
+                while (true) {
+                    (irow, icol) = (irow + drow, icol + dcol);
+                    var place =
+                        irow < 0 || irow >= crow ? 'L' :
+                        icol < 0 || icol >= ccol ? 'L' :
+                        st[irow * ccol + icol];
+                    if (stop(place)) {
+                        return place;
+                    }
+                }
+            }
 
-                        if (stop(place)) {
-                            if (place == '#')
-                                n++;
-                            break;
-                        }
+            int OccupiedPlaces(string st, int idx) {
+                var directions = new[] { (0, -1), (0, 1), (-1, 0), (1, 0), (-1, -1), (-1, 1), (1, -1), (1, 1) };
+                var n = 0;
+                foreach (var (drow, dcol) in directions) {
+                    if (PlaceInDirection(st, idx / ccol, idx % ccol, drow, dcol) == '#') {
+                        n++;
                     }
                 }
                 return n;
@@ -54,14 +57,13 @@ namespace AdventOfCode.Y2020.Day11 {
 
             return st =>
                 string.Join("",
-                    from irow in Enumerable.Range(0, crow)
-                    from icol in Enumerable.Range(0, ccol)
-                    select
-                        st[irow * ccol + icol] switch {
-                            'L' => OccupiedPlaces(st, irow, icol) == 0 ? '#' : 'L',
-                            '#' => OccupiedPlaces(st, irow, icol) >= occupiedLimit ? 'L' : '#',
-                            var ch => ch
+                    st.Select((ch, i) =>
+                        ch switch {
+                            'L' => OccupiedPlaces(st, i) == 0 ? '#' : 'L',
+                            '#' => OccupiedPlaces(st, i) >= occupiedLimit ? 'L' : '#',
+                            _ => ch
                         }
+                    )
                 );
         }
     }
