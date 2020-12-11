@@ -18,7 +18,8 @@ namespace AdventOfCode.Y2020.Day11 {
         int Solve(string input, int occupiedLimit, Func<char, bool> placeToCheck) {
             var (crow, ccol) = (input.Split("\n").Length, input.IndexOf('\n'));
 
-            char PlaceInDirection(string st, int irow, int icol, int drow, int dcol) {
+            char PlaceInDirection(char[] st, int idx, int drow, int dcol) {
+                var (irow, icol) = (idx / ccol, idx % ccol);
                 while (true) {
                     (irow, icol) = (irow + drow, icol + dcol);
                     var place =
@@ -31,30 +32,28 @@ namespace AdventOfCode.Y2020.Day11 {
                 }
             }
 
-            int OccupiedPlacesAround(string st, int idx) {
+            int OccupiedPlacesAround(char[] st, int idx) {
                 var directions = new[] { (0, -1), (0, 1), (-1, 0), (1, 0), (-1, -1), (-1, 1), (1, -1), (1, 1) };
                 var occupied = 0;
                 foreach (var (drow, dcol) in directions) {
-                    if (PlaceInDirection(st, idx / ccol, idx % ccol, drow, dcol) == '#') {
+                    if (PlaceInDirection(st, idx, drow, dcol) == '#') {
                         occupied++;
                     }
                 }
                 return occupied;
             }
 
-            var prev = "";
-            var curr = input.Replace("\n", "").Replace("L", "#");
-            while (prev != curr) {
-                prev = curr;
-                curr = string.Join("",
-                    curr.Select((place, i) =>
-                        place == '#' && OccupiedPlacesAround(curr, i) >= occupiedLimit ? 'L' :
-                        place == 'L' && OccupiedPlacesAround(curr, i) == 0             ? '#' :
-                        place /*otherwise*/
-                    )
-                );
+            var prevState = new char[0];
+            var state = input.Replace("\n", "").Replace("L", "#").ToArray();
+            while (!prevState.SequenceEqual(state)) {
+                prevState = state;
+                state = state.Select((place, i) =>
+                    place == '#' && OccupiedPlacesAround(state, i) >= occupiedLimit ? 'L' :
+                    place == 'L' && OccupiedPlacesAround(state, i) == 0             ? '#' :
+                    place /*otherwise*/
+                ).ToArray();
             }
-            return curr.Count(place => place == '#');
+            return state.Count(place => place == '#');
         }
     }
 }
