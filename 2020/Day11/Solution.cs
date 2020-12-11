@@ -58,11 +58,9 @@ namespace AdventOfCode.Y2020.Day11 {
             return st =>
                 string.Join("",
                     st.Select((ch, i) =>
-                        ch switch {
-                            'L' => OccupiedPlaces(st, i) == 0 ? '#' : 'L',
-                            '#' => OccupiedPlaces(st, i) >= occupiedLimit ? 'L' : '#',
-                            _ => ch
-                        }
+                        ch == '#' &&  OccupiedPlaces(st, i) >= occupiedLimit  ? 'L' :
+                        ch == 'L' &&  OccupiedPlaces(st, i) == 0              ? '#' :
+                        ch /*otherwise*/
                     )
                 );
         }
