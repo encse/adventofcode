@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Text;
 
 namespace AdventOfCode.Y2020.Day11 {
 
@@ -15,97 +12,66 @@ namespace AdventOfCode.Y2020.Day11 {
             yield return PartTwo(input);
         }
 
-        string Step1(string st) {
-            var lines = st.Split("\n");
-            var crow = lines.Length;
-            var ccol = lines[0].Length;
+        int PartOne(string input) => Solve(input, 4, _ => true);
+        int PartTwo(string input) => Solve(input, 5, ch => ch != '.');
 
-            var res = "";
-            for (var irow = 0; irow < crow; irow++) {
-                for (var icol = 0; icol < ccol; icol++) {
-                    var n = 0;
+        int Solve(string input, int occupiedLimit, Func<char, bool> stop) =>
+            FixPoint(
+                input.Replace("\n", "").Replace("L", "#"), 
+                Step(input, occupiedLimit, stop)
+            ).Count(ch => ch == '#');
 
-                    foreach (var drow in new[] { -1, 0, 1 }) {
-                        foreach (var dcol in new[] { -1, 0, 1 }) {
-                            if ((drow != 0 || dcol != 0) &&
-                                irow + drow >= 0 && irow + drow < crow &&
-                                icol + dcol >= 0 && icol + dcol < ccol &&
-                                lines[irow + drow][icol + dcol] == '#'
-                            ) {
+        string FixPoint(string st, Func<string, string> f) {
+            var (prev, curr) = (st, f(st));
+            while(prev != curr){
+                (prev, curr) = (curr, f(curr));
+            }
+            return curr;
+        }
+
+        IEnumerable<(int drow, int dcol)> Directions = (
+            from drow in new[] { -1, 0, 1 }
+            from dcol in new[] { -1, 0, 1 }
+            where drow != 0 || dcol != 0
+            select (drow, dcol)
+        ).ToArray();
+        
+        Func<string, string> Step(string input, int occupiedLimit, Func<char, bool> stop) {
+            var crow = input.Count(x => (x == '\n')) + 1;
+            var ccol = input.IndexOf('\n');
+          
+            int OccupiedPlaces(string st, int irow, int icol) {
+                var n = 0;
+                foreach (var (drow, dcol) in Directions) {
+                    var (irowT, icolT) = (irow, icol);
+                    while (true) {
+                        (irowT, icolT) = (irowT + drow, icolT + dcol);
+                        var place =
+                            irowT < 0 || irowT >= crow ? 'L' :
+                            icolT < 0 || icolT >= ccol ? 'L' :
+                            st[irowT * ccol + icolT];
+
+                        if (stop(place)) {
+                            if (place == '#')
                                 n++;
-                            }
-
-
-
+                            break;
                         }
                     }
-                    res += lines[irow][icol] switch {
-                        'L' => n == 0 ? '#' : 'L',
-                        '#' => n >= 4 ? 'L' : '#',
-                        var ch => ch
-                    };
                 }
-                if (irow < crow - 1)
-                    res += "\n";
+                return n;
             }
-            return res;
-        }
 
-        string Step2(string st) {
-            var lines = st.Split("\n");
-            var crow = lines.Length;
-            var ccol = lines[0].Length;
-
-            var res = "";
-            for (var irow = 0; irow < crow; irow++) {
-                for (var icol = 0; icol < ccol; icol++) {
-                    var n = 0;
-
-                    foreach (var drow in new[] { -1, 0, 1 }) {
-                        foreach (var dcol in new[] { -1, 0, 1 }) {
-                            if ((drow != 0 || dcol != 0)){
-                                var (irowT, icolT) = (irow+drow, icol+dcol);
-                                while( 
-                                    irowT >= 0 && irowT < crow &&
-                                    icolT >= 0 && icolT < ccol
-                                ){
-                                    if(lines[irowT][icolT] == 'L'){
-                                        break;
-                                    } else if(lines[irowT][icolT] == '#'){
-                                        n++;
-                                        break;
-                                    }
-                                    (irowT, icolT) = (irowT+drow, icolT+dcol);
-                                }
-                            }
+            return st => 
+                string.Join("",
+                    from irow in Enumerable.Range(0, crow)
+                    from icol in Enumerable.Range(0, ccol)
+                    select
+                        st[irow * ccol + icol] switch {
+                            'L' => OccupiedPlaces(st, irow, icol) == 0 ? '#' : 'L',
+                            '#' => OccupiedPlaces(st, irow, icol) >= occupiedLimit ? 'L' : '#',
+                            var ch => ch
                         }
-                    }
-                    res += lines[irow][icol] switch {
-                        'L' => n == 0 ? '#' : 'L',
-                        '#' => n >= 5 ? 'L' : '#',
-                        var ch => ch
-                    };
-                }
-                if (irow < crow - 1)
-                    res += "\n";
-            }
-            return res;
-        }
-
-        int PartOne(string input) {
-            var (prev, cur) = (input, input.Replace('L', '#'));
-            while (prev != cur) {
-                (prev, cur) = (cur, Step1(cur));
-            }
-            return prev.Count(ch => ch == '#');
-        }
-
-        int PartTwo(string input) {
-            var (prev, cur) = (input, input.Replace('L', '#'));
-            while (prev != cur) {
-                (prev, cur) = (cur, Step2(cur));
-            }
-            return prev.Count(ch => ch == '#');
+                );
         }
     }
 }
