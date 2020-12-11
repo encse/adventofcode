@@ -17,32 +17,23 @@ namespace AdventOfCode.Y2020.Day11 {
 
         int Solve(string input, int occupiedLimit, Func<char, bool> stop) =>
             FixPoint(
-                input.Replace("\n", "").Replace("L", "#"), 
-                Step(input, occupiedLimit, stop)
+                input.Replace("\n", "").Replace("L", "#"),
+                Step(input.Split("\n").Length, input.IndexOf('\n'), occupiedLimit, stop)
             ).Count(ch => ch == '#');
 
         string FixPoint(string st, Func<string, string> f) {
             var (prev, curr) = (st, f(st));
-            while(prev != curr){
+            while (prev != curr) {
                 (prev, curr) = (curr, f(curr));
             }
             return curr;
         }
 
-        IEnumerable<(int drow, int dcol)> Directions = (
-            from drow in new[] { -1, 0, 1 }
-            from dcol in new[] { -1, 0, 1 }
-            where drow != 0 || dcol != 0
-            select (drow, dcol)
-        ).ToArray();
-        
-        Func<string, string> Step(string input, int occupiedLimit, Func<char, bool> stop) {
-            var crow = input.Count(x => (x == '\n')) + 1;
-            var ccol = input.IndexOf('\n');
-          
+        Func<string, string> Step(int crow, int ccol, int occupiedLimit, Func<char, bool> stop) {
+
             int OccupiedPlaces(string st, int irow, int icol) {
                 var n = 0;
-                foreach (var (drow, dcol) in Directions) {
+                foreach (var (drow, dcol) in new[] { (0, -1), (0, 1), (-1, 0), (1, 0), (-1, -1), (-1, 1), (1, -1), (1, 1) }) {
                     var (irowT, icolT) = (irow, icol);
                     while (true) {
                         (irowT, icolT) = (irowT + drow, icolT + dcol);
@@ -61,7 +52,7 @@ namespace AdventOfCode.Y2020.Day11 {
                 return n;
             }
 
-            return st => 
+            return st =>
                 string.Join("",
                     from irow in Enumerable.Range(0, crow)
                     from icol in Enumerable.Range(0, ccol)
