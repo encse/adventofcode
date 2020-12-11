@@ -47,14 +47,14 @@ namespace AdventOfCode.Y2020.Day11 {
             while (prev != curr) {
                 prev = curr;
                 curr = string.Join("",
-                    curr.Select((ch, i) =>
-                        ch == '#' && OccupiedPlaces(curr, i) >= occupiedLimit ? 'L' :
-                        ch == 'L' && OccupiedPlaces(curr, i) == 0             ? '#' :
-                        ch /*otherwise*/
+                    curr.Select((place, i) =>
+                        place == '#' && OccupiedPlaces(curr, i) >= occupiedLimit ? 'L' :
+                        place == 'L' && OccupiedPlaces(curr, i) == 0             ? '#' :
+                        place /*otherwise*/
                     )
                 );
             }
-            return curr.Count(ch => ch == '#');
+            return curr.Count(place => place == '#');
         }
     }
 }
