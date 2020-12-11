@@ -13,9 +13,9 @@ namespace AdventOfCode.Y2020.Day11 {
         }
 
         int PartOne(string input) => Solve(input, 4, _ => true);
-        int PartTwo(string input) => Solve(input, 5, ch => ch != '.');
+        int PartTwo(string input) => Solve(input, 5, place => place != '.');
 
-        int Solve(string input, int occupiedLimit, Func<char, bool> stop) {
+        int Solve(string input, int occupiedLimit, Func<char, bool> placeToCheck) {
             var (crow, ccol) = (input.Split("\n").Length, input.IndexOf('\n'));
 
             char PlaceInDirection(string st, int irow, int icol, int drow, int dcol) {
@@ -25,7 +25,7 @@ namespace AdventOfCode.Y2020.Day11 {
                         irow < 0 || irow >= crow ? 'L' :
                         icol < 0 || icol >= ccol ? 'L' :
                         st[irow * ccol + icol];
-                    if (stop(place)) {
+                    if (placeToCheck(place)) {
                         return place;
                     }
                 }
