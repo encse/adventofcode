@@ -15,21 +15,8 @@ namespace AdventOfCode.Y2020.Day11 {
         int PartOne(string input) => Solve(input, 4, _ => true);
         int PartTwo(string input) => Solve(input, 5, ch => ch != '.');
 
-        int Solve(string input, int occupiedLimit, Func<char, bool> stop) =>
-            FixPoint(
-                input.Replace("\n", "").Replace("L", "#"),
-                Step(input.Split("\n").Length, input.IndexOf('\n'), occupiedLimit, stop)
-            ).Count(ch => ch == '#');
-
-        string FixPoint(string st, Func<string, string> f) {
-            var (prev, curr) = (st, f(st));
-            while (prev != curr) {
-                (prev, curr) = (curr, f(curr));
-            }
-            return curr;
-        }
-
-        Func<string, string> Step(int crow, int ccol, int occupiedLimit, Func<char, bool> stop) {
+        int Solve(string input, int occupiedLimit, Func<char, bool> stop) {
+            var (crow, ccol) = (input.Split("\n").Length, input.IndexOf('\n'));
 
             char PlaceInDirection(string st, int irow, int icol, int drow, int dcol) {
                 while (true) {
@@ -55,14 +42,19 @@ namespace AdventOfCode.Y2020.Day11 {
                 return n;
             }
 
-            return st =>
-                string.Join("",
-                    st.Select((ch, i) =>
-                        ch == '#' &&  OccupiedPlaces(st, i) >= occupiedLimit  ? 'L' :
-                        ch == 'L' &&  OccupiedPlaces(st, i) == 0              ? '#' :
+            var prev = "";
+            var curr = input.Replace("\n", "").Replace("L", "#");
+            while (prev != curr) {
+                prev = curr;
+                curr = string.Join("",
+                    curr.Select((ch, i) =>
+                        ch == '#' && OccupiedPlaces(curr, i) >= occupiedLimit ? 'L' :
+                        ch == 'L' && OccupiedPlaces(curr, i) == 0             ? '#' :
                         ch /*otherwise*/
                     )
                 );
+            }
+            return curr.Count(ch => ch == '#');
         }
     }
 }
