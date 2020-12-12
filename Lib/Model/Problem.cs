@@ -60,7 +60,7 @@ namespace AdventOfCode.Model {
                     yield return "*" + UnparseList("", node) + "*";
                     break;
                 case "code":
-                    if (node.ParentElement.TagName == "pre") {
+                    if (node.ParentElement.TagName == "PRE") {
                         yield return UnparseList("", node);
                     } else {
                         yield return "`" + UnparseList("", node) + "`";
