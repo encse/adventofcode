@@ -1,7 +1,10 @@
 using System;
 using System.Linq;
+using System.Numerics;
 
 namespace AdventOfCode.Y2020.Day12 {
+
+    record State(Complex pos, Complex dir);
 
     [ProblemName("Rain Risk")]
     class Solution : Solver {
@@ -9,28 +12,28 @@ namespace AdventOfCode.Y2020.Day12 {
         public object PartOne(string input) => MoveShip(input, true);
         public object PartTwo(string input) => MoveShip(input, false);
 
-        int MoveShip(string input, bool part1) =>
+        double MoveShip(string input, bool part1) =>
             input
                 .Split("\n")
                 .Select(line => (line[0], int.Parse(line.Substring(1))))
                 .Aggregate(
-                    (pos: (x: 0, y: 0), dir: part1 ? (x: 1, y: 0) : (x: 10, y: 1)), 
+                    new State(pos: Complex.Zero, dir: part1 ? Complex.One : new Complex(10, 1)), 
                     (state, line) => 
                         line switch {
-                            ('N', var arg) when part1 => ((state.pos.x,  state.pos.y + arg), state.dir),
-                            ('N', var arg)            => (state.pos, (state.dir.x, state.dir.y + arg)),
-                            ('S', var arg) when part1 => ((state.pos.x, state.pos.y - arg), state.dir),
-                            ('S', var arg)            => (state.pos, (state.dir.x, state.dir.y - arg)),
-                            ('E', var arg) when part1 => ((state.pos.x + arg,  state.pos.y), state.dir),
-                            ('E', var arg)            => (state.pos, (state.dir.x + arg, state.dir.y)),
-                            ('W', var arg) when part1 => ((state.pos.x - arg, state.pos.y), state.dir),
-                            ('W', var arg)            => (state.pos, (state.dir.x - arg, state.dir.y)), 
-                            ('F', var arg)            => ((state.pos.x + arg * state.dir.x, state.pos.y + arg * state.dir.y), state.dir),
-                            ('L', 90)  or ('R', 270)  => (state.pos, (-state.dir.y,  state.dir.x)),
-                            ('L', 270) or ('R', 90)   => (state.pos, ( state.dir.y, -state.dir.x)),
-                            ('L', 180) or ('R', 180)  => (state.pos, (-state.dir.x, -state.dir.y)),
+                            ('N', var arg) when part1 => state with {pos = state.pos + arg * Complex.ImaginaryOne},
+                            ('N', var arg)            => state with {dir = state.dir + arg * Complex.ImaginaryOne},
+                            ('S', var arg) when part1 => state with {pos = state.pos - arg * Complex.ImaginaryOne},
+                            ('S', var arg)            => state with {dir = state.dir - arg * Complex.ImaginaryOne},
+                            ('E', var arg) when part1 => state with {pos = state.pos + arg},
+                            ('E', var arg)            => state with {dir = state.dir + arg},
+                            ('W', var arg) when part1 => state with {pos = state.pos - arg},
+                            ('W', var arg)            => state with {dir = state.dir - arg},
+                            ('F', var arg)            => state with {pos = state.pos + arg * state.dir},
+                            ('L', 90)  or ('R', 270)  => state with {dir =  state.dir * Complex.ImaginaryOne},
+                            ('L', 270) or ('R', 90)   => state with {dir = -state.dir * Complex.ImaginaryOne},
+                            ('L', 180) or ('R', 180)  => state with {dir = -state.dir},
                             _ => throw new Exception()
                         }, 
-                    state => Math.Abs(state.pos.x) + Math.Abs(state.pos.y));
+                    state => Math.Abs(state.pos.Imaginary) + Math.Abs(state.pos.Real));
     }
 }
