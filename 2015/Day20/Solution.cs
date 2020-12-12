@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace AdventOfCode.Y2015.Day20 {
 
     [ProblemName("Infinite Elves and Infinite Houses")]

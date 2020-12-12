@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace AdventOfCode.Y2018.Day11 {
 
     [ProblemName("Chronal Charge")]

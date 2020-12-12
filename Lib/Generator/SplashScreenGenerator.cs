@@ -13,7 +13,7 @@ namespace AdventOfCode.Generator {
                 |
                 |namespace AdventOfCode.Y{calendar.Year} {{
                 |
-                |    class SplashScreenImpl : AdventOfCode.SplashScreen {{
+                |    class SplashScreenImpl : SplashScreen {{
                 |
                 |        public void Show() {{
                 |

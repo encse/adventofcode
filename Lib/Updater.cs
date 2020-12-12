@@ -1,19 +1,17 @@
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AdventOfCode.Generator;
 using AdventOfCode.Model;
-using System.Reflection;
-
 using AngleSharp;
 using AngleSharp.Io;
-
-using System.Net.Http;
-using System.Collections.Generic;
-using System.Net;
-using System.Text.RegularExpressions;
 
 namespace AdventOfCode {
 
@@ -21,10 +19,10 @@ namespace AdventOfCode {
 
         public async Task Update(int year, int day) {
 
-            if (!System.Environment.GetEnvironmentVariables().Contains("SESSION")) {
+            if (!Environment.GetEnvironmentVariables().Contains("SESSION")) {
                 throw new Exception("Specify SESSION environment variable");
             }
-            var session = System.Environment.GetEnvironmentVariable("SESSION");
+            var session = Environment.GetEnvironmentVariable("SESSION");
             var baseAddress = new Uri("https://adventofcode.com/");
 
             var context = BrowsingContext.New(Configuration.Default
@@ -60,10 +58,10 @@ namespace AdventOfCode {
         }
 
         private string GetSession() {
-            if (!System.Environment.GetEnvironmentVariables().Contains("SESSION")) {
+            if (!Environment.GetEnvironmentVariables().Contains("SESSION")) {
                 throw new Exception("Specify SESSION environment variable.");
             }
-            return System.Environment.GetEnvironmentVariable("SESSION");
+            return Environment.GetEnvironmentVariable("SESSION");
         }
         private IBrowsingContext GetContext() {
 
@@ -79,30 +77,30 @@ namespace AdventOfCode {
         public async Task Upload(Solver solver) {
 
             var color = Console.ForegroundColor;
-            System.Console.WriteLine();
+            Console.WriteLine();
             var solverResult = Runner.RunSolver(solver);
-            System.Console.WriteLine();
+            Console.WriteLine();
            
             if (solverResult.errors.Any()) {
                 Console.ForegroundColor = ConsoleColor.Red;
-                System.Console.WriteLine("Uhh-ohh the solution doesn't pass the tests...");
+                Console.WriteLine("Uhh-ohh the solution doesn't pass the tests...");
                 Console.ForegroundColor = color;
-                System.Console.WriteLine();
+                Console.WriteLine();
                 return;
             }
 
             var problem = await DownloadProblem(GetContext(), GetBaseAddress(), solver.Year(), solver.Day());
 
             if (problem.Answers.Length == 2) {
-                System.Console.WriteLine("Both parts of this puzzle are complete!");
-                System.Console.WriteLine();
+                Console.WriteLine("Both parts of this puzzle are complete!");
+                Console.WriteLine();
             } else if (solverResult.answers.Length <= problem.Answers.Length) {
-                System.Console.WriteLine($"You need to work on part {problem.Answers.Length + 1}");
-                System.Console.WriteLine();
+                Console.WriteLine($"You need to work on part {problem.Answers.Length + 1}");
+                Console.WriteLine();
             } else {
                 var level = problem.Answers.Length + 1;
                 var answer = solverResult.answers[problem.Answers.Length];
-                System.Console.WriteLine($"Uploading answer ({answer}) for part {level}...");
+                Console.WriteLine($"Uploading answer ({answer}) for part {level}...");
 
                 // https://adventofcode.com/{year}/day/{day}/answer
                 // level={part}&answer={answer}
@@ -132,23 +130,23 @@ namespace AdventOfCode {
                    
                 if (article.StartsWith("That's the right answer")) {
                     Console.ForegroundColor = ConsoleColor.Green;
-                    System.Console.WriteLine(article);
+                    Console.WriteLine(article);
                     Console.ForegroundColor = color;
-                    System.Console.WriteLine();
+                    Console.WriteLine();
                     await Update(solver.Year(), solver.Day());
                 } else if (article.StartsWith("That's not the right answer")) {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    System.Console.WriteLine(article);
+                    Console.WriteLine(article);
                     Console.ForegroundColor = color;
-                    System.Console.WriteLine();
+                    Console.WriteLine();
                 } else if (article.StartsWith("You gave an answer too recently")) {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    System.Console.WriteLine(article);
+                    Console.WriteLine(article);
                     Console.ForegroundColor = color;
-                    System.Console.WriteLine();
+                    Console.WriteLine();
                 } else {
                     Console.ForegroundColor = ConsoleColor.White;
-                    System.Console.WriteLine(article);
+                    Console.WriteLine(article);
                     Console.ForegroundColor = color;
                 }
             }

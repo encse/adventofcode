@@ -1,8 +1,8 @@
-using System.Linq;
-using System.Text;
-using System.Security.Cryptography;
-using System.Threading.Tasks;
 using System.Collections.Concurrent;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace AdventOfCode.Y2015.Day04 {
 

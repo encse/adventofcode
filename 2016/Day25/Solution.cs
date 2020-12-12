@@ -7,8 +7,6 @@ namespace AdventOfCode.Y2016.Day25 {
     [ProblemName("Clock Signal")]
     class Solution : Solver {
 
-        public object PartTwo(string input) => null;
-
         public object PartOne(string input) {
             for (int a = 0; ; a++) {
                 var length = 0;
@@ -27,6 +25,8 @@ namespace AdventOfCode.Y2016.Day25 {
             }
         }
 
+        public object PartTwo(string input) => null;
+        
         IEnumerable<int> Run(string input, int a) {
             var prg = Parse(input);
             var regs = new Dictionary<string, int>();

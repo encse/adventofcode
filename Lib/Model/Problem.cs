@@ -1,9 +1,9 @@
 
 using System;
-using System.Linq;
 using System.Collections.Generic;
-using AngleSharp.Dom;
+using System.Linq;
 using System.Text.RegularExpressions;
+using AngleSharp.Dom;
 
 namespace AdventOfCode.Model {
     public class Problem {

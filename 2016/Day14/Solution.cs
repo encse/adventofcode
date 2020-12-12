@@ -1,10 +1,9 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Security.Cryptography;
-
-using System.Collections.Concurrent;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace AdventOfCode.Y2016.Day14 {

@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2015.Day25 {
@@ -6,8 +5,6 @@ namespace AdventOfCode.Y2015.Day25 {
     [ProblemName("Let It Snow")]
     class Solution : Solver {
 
-        public object PartTwo(string input) => null;
-        
         public object PartOne(string input) {
             var m = 20151125L;
             var (irow, icol) = (1, 1);
@@ -23,6 +20,8 @@ namespace AdventOfCode.Y2015.Day25 {
             }
             return m;
         }
+
+        public object PartTwo(string input) => null;
 
         (int irowDst, int icolDst) Parse(string  input){
             var m = Regex.Match(input, @"To continue, please consult the code grid in the manual.  Enter the code at row (\d+), column (\d+).");

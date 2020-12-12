@@ -1,7 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System;
 
 namespace AdventOfCode.Y2020.Day04 {
 

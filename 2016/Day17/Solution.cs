@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace AdventOfCode.Y2016.Day17 {
 

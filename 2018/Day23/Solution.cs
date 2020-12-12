@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Numerics;
+using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2018.Day23 {
 

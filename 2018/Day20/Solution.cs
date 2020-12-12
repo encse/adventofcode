@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-
 namespace AdventOfCode.Y2018.Day20 {
     [ProblemName("A Regular Map")]
     class Solution : Solver {
