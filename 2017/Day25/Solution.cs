@@ -7,8 +7,6 @@ namespace AdventOfCode.Y2017.Day25 {
     [ProblemName("The Halting Problem")]
     class Solution : Solver {
 
-        public object PartTwo(string input) => null;
-
         public object PartOne(string input) {
             var machine = Parse(input);
             var tape = new Dictionary<int, int>();
@@ -23,6 +21,8 @@ namespace AdventOfCode.Y2017.Day25 {
             }
             return tape.Select(kvp => kvp.Value).Sum();
         }
+
+        public object PartTwo(string input) => null;
 
         Machine Parse(string input) {
             var lines = input.Split('\n').Where(line => !string.IsNullOrEmpty(line)).ToArray();

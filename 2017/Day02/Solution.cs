@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Collections.Generic;
 
 namespace AdventOfCode.Y2017.Day02 {
 

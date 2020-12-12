@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-
 using ChildToParent = System.Collections.Generic.Dictionary<string, string>;
 
 namespace AdventOfCode.Y2019.Day06 {

@@ -1,6 +1,6 @@
 using System;
-using System.Text.RegularExpressions;
 using System.Numerics;
+using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2019.Day22 {
 

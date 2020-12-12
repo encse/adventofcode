@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using AsteroidsByDir = System.Collections.Generic.Dictionary<
-    (int drow, int dcol),
-    System.Collections.Generic.List<(int irow, int icol)>
+    (int drow, int dcol), System.Collections.Generic.List<(int irow, int icol)>
 >;
 
 namespace AdventOfCode.Y2019.Day10 {

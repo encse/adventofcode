@@ -3,7 +3,7 @@ using System;
 
 namespace AdventOfCode.Y2020 {
 
-    class SplashScreenImpl : AdventOfCode.SplashScreen {
+    class SplashScreenImpl : SplashScreen {
 
         public void Show() {
 

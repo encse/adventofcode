@@ -1,8 +1,7 @@
-using System.Collections.Generic;
-using System.Linq;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
-
+using System.Linq;
 using Packets = System.Collections.Generic.List<(long address, long x, long y)>;
 
 namespace AdventOfCode.Y2019.Day23 {
