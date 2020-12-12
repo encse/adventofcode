@@ -3,9 +3,6 @@ using System.Collections.Generic;
 
 namespace AdventOfCode.Y2020.Day12 {
 
-    record Point(int x, int y);
-    record State(Point p, Point wp);
-
     [ProblemName("Rain Risk")]
     class Solution : Solver {
 
@@ -14,41 +11,45 @@ namespace AdventOfCode.Y2020.Day12 {
             yield return PartTwo(input);
         }
 
-        int PartOne(string input) => MoveShip(input, new Point(1, 0), false);
-        int PartTwo(string input) => MoveShip(input, new Point(10, 1), true);
+        int PartOne(string input) => MoveShip(input, new State(new Vec2(0, 0), new Vec2(1, 0)), false);
+        int PartTwo(string input) => MoveShip(input, new State(new Vec2(0, 0), new Vec2(10, 1)), true);
 
-        int MoveShip(string input, Point wp, bool part2) {
-            var state = new State(new Point(0, 0), wp);
-
+        int MoveShip(string input, State state, bool part2) {
             foreach (var line in input.Split("\n")) {
                 var (ch, arg) = (line[0], int.Parse(line.Substring(1)));
 
-                Point NSEW(Point p) => ch switch {
-                    'N' => new Point(p.x, p.y + arg),
-                    'S' => new Point(p.x, p.y - arg),
-                    'E' => new Point(p.x + arg, p.y),
-                    'W' => new Point(p.x - arg, p.y),
-                    _ => p
-                };
-
-                if (part2) {
-                    state = state with {wp = NSEW(state.wp)};
-                } else {
-                    state = state with {p = NSEW(state.p)};
-                }
-                
-                state = (ch, arg) switch {
-                    ('F',   _) => state with { p = new Point( state.p.x + state.wp.x * arg, state.p.y + state.wp.y * arg)},
-                    ('R',  90) => state with {wp = new Point( state.wp.y, -state.wp.x)},
-                    ('R', 180) => state with {wp = new Point(-state.wp.x, -state.wp.y)},
-                    ('R', 270) => state with {wp = new Point(-state.wp.y, state.wp.x)},
-                    ('L',  90) => state with {wp = new Point(-state.wp.y, state.wp.x)},
-                    ('L', 180) => state with {wp = new Point(-state.wp.x, -state.wp.y)},
-                    ('L', 270) => state with {wp = new Point( state.wp.y, -state.wp.x)},
-                    _ => state
+                state = ch switch {
+                    'N' when part2 => state with { dir = state.dir + new Vec2(0, arg) },
+                    'N'            => state with { pos = state.pos + new Vec2(0, arg) },
+                    'S' when part2 => state with { dir = state.dir + new Vec2(0, -arg) },
+                    'S'            => state with { pos = state.pos + new Vec2(0, -arg) },
+                    'E' when part2 => state with { dir = state.dir + new Vec2(arg, 0) }, 
+                    'E'            => state with { pos = state.pos + new Vec2(arg, 0) },
+                    'W' when part2 => state with { dir = state.dir + new Vec2(-arg, 0) }, 
+                    'W'            => state with { pos = state.pos + new Vec2(-arg, 0) },
+                    'F'            => state with { pos = state.pos + arg * state.dir },
+                    'L'            => state with { dir = state.dir.Rotate(arg) },
+                    'R'            => state with { dir = state.dir.Rotate(360 - arg) },
+                    _ => throw new Exception()
                 };
             }
-            return Math.Abs(state.p.x) + Math.Abs(state.p.y);
+            return Math.Abs(state.pos.x) + Math.Abs(state.pos.y);
         }
     }
+    
+    record Vec2(int x, int y) {
+
+        public static Vec2 operator +(Vec2 a, Vec2 b) => new Vec2(a.x + b.x, a.y + b.y);
+
+        public static Vec2 operator *(int m, Vec2 v) => new Vec2(m * v.x, m * v.y);
+
+        public Vec2 Rotate(int arg) => arg switch {
+            90 => new Vec2(-y, x),
+            180 => new Vec2(-x, -y),
+            270 => new Vec2(y, -x),
+            _ => throw new Exception()
+        };
+    }
+
+    record State(Vec2 pos, Vec2 dir);
 }
