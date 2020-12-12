@@ -7,7 +7,7 @@ Because there isn't much space on Pluto, the civilization that used to live here
 This maze is shaped like a [donut](https://en.wikipedia.org/wiki/Torus). Portals along the inner and outer edge of the donut can instantly teleport you from one side to the other.  For example:
 
 ```
-`         A           
+         A           
          A           
   #######.#########  
   #######.........#  
@@ -26,7 +26,6 @@ FG..#########.....#
   ###########.#####  
              Z       
              Z       
-`
 ```
 
 This map of the maze shows solid walls (`#`) and open passages (`.`). Every maze on Pluto has a start (the open tile next to `AA`) and an end (the open tile next to `ZZ`). Mazes on Pluto also have portals; this maze has three pairs of portals: `BC`, `DE`, and `FG`. When on an open tile next to one of these labels, a single step can take you to the other tile with the same label. (You can only walk on `.` tiles; labels and empty space are not traversable.)
@@ -38,7 +37,7 @@ However, there is a shorter path:  You could walk from `AA` to the inner `BC` po
 Here is a larger example:
 
 ```
-`                   A               
+                   A               
                    A               
   #################.#############  
   #.#...#...................#.#.#  
@@ -75,7 +74,6 @@ YN......#               VT..#....QG
   #########.###.###.#############  
            B   J   C               
            U   P   P               
-`
 ```
 
 Here, `AA` has no direct path to `ZZ`, but it does connect to `AS` and `CP`. By passing through `AS`, `QG`, `BU`, and `JO`, you can reach `ZZ` in *58* steps.
@@ -99,7 +97,7 @@ In the second example above, there is no path that brings you to `ZZ` at the out
 Here is a more interesting example:
 
 ```
-`             Z L X W       C                 
+             Z L X W       C                 
              Z P Q B       K                 
   ###########.#.#.#.#######.###############  
   #...#.......#.#.......#.#.......#.#.#...#  
@@ -136,7 +134,6 @@ RE....#.#                           #......RF
   #############.#.#.###.###################  
                A O F   N                     
                A A D   M                     
-`
 ```
 
 One shortest path through the maze is the following:

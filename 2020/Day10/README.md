@@ -19,7 +19,7 @@ If you *use every adapter in your bag* at once, what is the distribution of jolt
 For example, suppose that in your bag, you have adapters with the following joltage ratings:
 
 ```
-`16
+16
 10
 15
 5
@@ -30,7 +30,6 @@ For example, suppose that in your bag, you have adapters with the following jolt
 6
 12
 4
-`
 ```
 
 With these adapters, your device's built-in joltage adapter would be rated for `19 + 3 = *22*` jolts, 3 higher than the highest-rated adapter.
@@ -52,7 +51,7 @@ In this example, when using every adapter, there are *`7`* differences of 1 jolt
 Here is a larger example:
 
 ```
-`28
+28
 33
 18
 42
@@ -83,7 +82,6 @@ Here is a larger example:
 34
 10
 3
-`
 ```
 
 In this larger example, in a chain that uses all of the adapters, there are *`22`* differences of 1 jolt and *`10`* differences of 3 jolts.
@@ -97,7 +95,7 @@ To completely determine whether you have enough adapters, you'll need to figure 
 The first example above (the one that starts with `16`, `10`, `15`) supports the following arrangements:
 
 ```
-`(0), 1, 4, 5, 6, 7, 10, 11, 12, 15, 16, 19, (22)
+(0), 1, 4, 5, 6, 7, 10, 11, 12, 15, 16, 19, (22)
 (0), 1, 4, 5, 6, 7, 10, 12, 15, 16, 19, (22)
 (0), 1, 4, 5, 7, 10, 11, 12, 15, 16, 19, (22)
 (0), 1, 4, 5, 7, 10, 12, 15, 16, 19, (22)
@@ -105,7 +103,6 @@ The first example above (the one that starts with `16`, `10`, `15`) supports the
 (0), 1, 4, 6, 7, 10, 12, 15, 16, 19, (22)
 (0), 1, 4, 7, 10, 11, 12, 15, 16, 19, (22)
 (0), 1, 4, 7, 10, 12, 15, 16, 19, (22)
-`
 ```
 
 (The charging outlet and your device's built-in adapter are shown in parentheses.) Given the adapters from the first example, the total number of arrangements that connect the charging outlet to your device is *`8`*.
@@ -113,7 +110,7 @@ The first example above (the one that starts with `16`, `10`, `15`) supports the
 The second example above (the one that starts with `28`, `33`, `18`) has many arrangements. Here are a few:
 
 ```
-`(0), 1, 2, 3, 4, 7, 8, 9, 10, 11, 14, 17, 18, 19, 20, 23, 24, 25, 28, 31,
+(0), 1, 2, 3, 4, 7, 8, 9, 10, 11, 14, 17, 18, 19, 20, 23, 24, 25, 28, 31,
 32, 33, 34, 35, 38, 39, 42, 45, 46, 47, 48, 49, (52)
 
 (0), 1, 2, 3, 4, 7, 8, 9, 10, 11, 14, 17, 18, 19, 20, 23, 24, 25, 28, 31,
@@ -142,7 +139,6 @@ The second example above (the one that starts with `28`, `33`, `18`) has many ar
 
 (0), 3, 4, 7, 10, 11, 14, 17, 20, 23, 25, 28, 31, 34, 35, 38, 39, 42, 45,
 48, 49, (52)
-`
 ```
 
 In total, this set of adapters can connect the charging outlet to your device in *`19208`* distinct arrangements.

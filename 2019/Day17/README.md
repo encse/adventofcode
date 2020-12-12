@@ -13,14 +13,13 @@ In the camera output, `#` represents a scaffold and `.` represents open space. T
 In general, the scaffold forms a path, but it sometimes loops back onto itself.  For example, suppose you can see the following view from the cameras:
 
 ```
-`..#..........
+..#..........
 ..#..........
 #######...###
 #.#...#...#.#
 #############
 ..#...#...#..
 ..#####...^..
-`
 ```
 
 Here, the vacuum robot, `^` is facing up and sitting at one end of the scaffold near the bottom-right of the image. The scaffold continues up, loops across itself several times, and ends at the top-left of the image.
@@ -28,14 +27,13 @@ Here, the vacuum robot, `^` is facing up and sitting at one end of the scaffold 
 The first step is to calibrate the cameras by getting the *alignment parameters* of some well-defined points.  Locate all *scaffold intersections*; for each, its alignment parameter is the distance between its left edge and the left edge of the view multiplied by the distance between its top edge and the top edge of the view.  Here, the intersections from the above image are marked `O`:
 
 ```
-`..#..........
+..#..........
 ..#..........
 ##O####...###
 #.#...#...#.#
 ##O###O###O##
 ..#...#...#..
 ..#####...^..
-`
 ```
 
 For these intersections:
@@ -69,7 +67,7 @@ Due to the limited amount of memory in the vacuum robot, the ASCII definitions o
 For example, consider the following camera feed:
 
 ```
-`#######...#####
+#######...#####
 #.....#...#...#
 #.....#...#...#
 ......#...#...#
@@ -84,14 +82,12 @@ For example, consider the following camera feed:
 ....#...#......
 ....#...#......
 ....#####......
-`
 ```
 
 In order for the vacuum robot to *visit every part of the scaffold at least once*, one path it could take is:
 
 ```
-`R,8,R,8,R,4,R,4,R,8,L,6,L,2,R,4,R,4,R,8,R,8,R,8,L,6,L,2`
-```
+R,8,R,8,R,4,R,4,R,8,L,6,L,2,R,4,R,4,R,8,R,8,R,8,L,6,L,2```
 
 Without the memory limit, you could just supply this whole string to function `A` and have the main routine call `A` once.  However, you'll need to split it into smaller parts.
 
@@ -110,7 +106,7 @@ One approach is:
 Visually, this would break the desired path into the following parts:
 
 ```
-`A,        B,            C,        B,            A,        C
+A,        B,            C,        B,            A,        C
 R,8,R,8,  R,4,R,4,R,8,  L,6,L,2,  R,4,R,4,R,8,  R,8,R,8,  L,6,L,2
 
 CCCCCCA...BBBBB
@@ -128,7 +124,6 @@ C.....A...B...B
 ....B...A......
 ....B...A......
 ....BBBBA......
-`
 ```
 
 Of course, the scaffolding outside your ship is much more complex.

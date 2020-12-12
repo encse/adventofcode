@@ -16,7 +16,7 @@ The boot code is represented as a text file with one *instruction* per line of t
 For example, consider the following program:
 
 ```
-`nop +0
+nop +0
 acc +1
 jmp +4
 acc +3
@@ -25,13 +25,12 @@ acc -99
 acc +1
 jmp -4
 acc +6
-`
 ```
 
 These instructions are visited in this order:
 
 ```
-`nop +0  | 1
+nop +0  | 1
 acc +1  | 2, 8(!)
 jmp +4  | 3
 acc +3  | 6
@@ -40,7 +39,6 @@ acc -99 |
 acc +1  | 4
 jmp -4  | 5
 acc +6  |
-`
 ```
 
 First, the `nop +0` does nothing. Then, the accumulator is increased from 0 to 1 (`acc +1`) and `jmp +4` sets the next instruction to the other `acc +1` near the bottom. After it increases the accumulator from 1 to 2, `jmp -4` executes, setting the next instruction to the only `acc +3`. It sets the accumulator to 5, and `jmp -3` causes the program to continue back at the first `acc +1`.
@@ -62,7 +60,7 @@ The program is supposed to terminate by *attempting to execute an instruction im
 For example, consider the same program from above:
 
 ```
-`nop +0
+nop +0
 acc +1
 jmp +4
 acc +3
@@ -71,7 +69,6 @@ acc -99
 acc +1
 jmp -4
 acc +6
-`
 ```
 
 If you change the first instruction from `nop +0` to `jmp +0`, it would create a single-instruction infinite loop, never leaving that instruction.  If you change almost any of the `jmp` instructions, the program will still eventually find another `jmp` instruction and loop forever.
@@ -79,7 +76,7 @@ If you change the first instruction from `nop +0` to `jmp +0`, it would create a
 However, if you change the second-to-last instruction (from `jmp -4` to `nop -4`), the program terminates! The instructions are visited in this order:
 
 ```
-`nop +0  | 1
+nop +0  | 1
 acc +1  | 2
 jmp +4  | 3
 acc +3  |
@@ -88,7 +85,6 @@ acc -99 |
 acc +1  | 4
 *nop* -4  | 5
 acc +6  | 6
-`
 ```
 
 After the last instruction (`acc +6`), the program terminates by attempting to run the instruction below the last instruction in the file.  With this change, after the program terminates, the accumulator contains the value *`8`* (`acc +1`, `acc +1`, `acc +6`).

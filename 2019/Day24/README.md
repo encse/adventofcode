@@ -15,7 +15,7 @@ Otherwise, a bug or empty space remains the same.  (Tiles on the edges of the gr
 Here are the first few minutes of an example scenario:
 
 ```
-`Initial state:
+Initial state:
 ....#
 #..#.
 #..##
@@ -49,18 +49,16 @@ After 4 minutes:
 ##..#
 .....
 ##...
-`
 ```
 
 To understand the nature of the bugs, watch for the first time a layout of bugs and empty spaces *matches any previous layout*. In the example above, the first layout to appear twice is:
 
 ```
-`.....
+.....
 .....
 .....
 #....
 .#...
-`
 ```
 
 To calculate the *biodiversity rating* for this layout, consider each tile left-to-right in the top row, then left-to-right in the second row, and so on. Each of these tiles is worth biodiversity points equal to *increasing powers of two*: 1, 2, 4, 8, 16, 32, and so on.  Add up the biodiversity points for tiles with bugs; in this example, the 16th tile (`32768` points) and 22nd tile (`2097152` points) have bugs, a total biodiversity rating of `*2129920*`.
@@ -76,7 +74,7 @@ Then, you remember: Eris is an old [Plutonian](20) settlement! Clearly, the bugs
 This 5x5 grid is *only one* level in an *infinite* number of recursion levels. The tile in the middle of the grid is actually another 5x5 grid, the grid in your scan is contained as the middle tile of a larger 5x5 grid, and so on. Two levels of grids look like this:
 
 ```
-`     |     |         |     |     
+     |     |         |     |     
      |     |         |     |     
      |     |         |     |     
 -----+-----+---------+-----+-----
@@ -101,7 +99,6 @@ This 5x5 grid is *only one* level in an *infinite* number of recursion levels. T
      |     |         |     |     
      |     |         |     |     
      |     |         |     |     
-`
 ```
 
 (To save space, some of the tiles are not drawn to scale.)  Remember, this is only a small part of the infinitely recursive grid; there is a 5x5 grid that contains this diagram, and a 5x5 grid that contains that one, and so on.  Also, the `?` in the diagram contains another 5x5 grid, which itself contains another 5x5 grid, and so on.
@@ -111,7 +108,7 @@ The scan you took (your puzzle input) shows where the bugs are *on a single leve
 Tiles still count as *adjacent* if they are directly *up, down, left, or right* of a given tile. Some tiles have adjacent tiles at a recursion level above or below its own level. For example:
 
 ```
-`     |     |         |     |     
+     |     |         |     |     
   1  |  2  |    3    |  4  |  5  
      |     |         |     |     
 -----+-----+---------+-----+-----
@@ -136,7 +133,6 @@ Tiles still count as *adjacent* if they are directly *up, down, left, or right* 
      |     |         |     |     
  21  | 22  |    23   |  24 |  25 
      |     |         |     |     
-`
 ```
 
 
@@ -152,18 +148,17 @@ The rules about bugs living and dying are the same as before.
 For example, consider the same initial state as above:
 
 ```
-`....#
+....#
 #..#.
 #.?##
 ..#..
 #....
-`
 ```
 
 The center tile is drawn as `?` to indicate the next recursive grid. Call this level 0; the grid within this one is level 1, and the grid that contains this one is level -1.  Then, after *ten* minutes, the grid at each level would look like this:
 
 ```
-`Depth -5:
+Depth -5:
 ..#..
 .#.#.
 ..?.#
@@ -239,7 +234,6 @@ Depth 5:
 #.?#.
 ####.
 .....
-`
 ```
 
 In this example, after 10 minutes, a total of `*99*` bugs are present.

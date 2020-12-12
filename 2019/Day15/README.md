@@ -28,67 +28,61 @@ You don't know anything about the area around the repair droid, but you can figu
 For example, we can draw the area using `D` for the droid, `#` for walls, `.` for locations the droid can traverse, and empty space for unexplored locations.  Then, the initial state looks like this:
 
 ```
-`      
+      
       
    D  
       
       
-`
 ```
 
 To make the droid go north, send it `1`. If it replies with `0`, you know that location is a wall and that the droid didn't move:
 
 ```
-`      
+      
    #  
    D  
       
       
-`
 ```
 
 To move east, send `4`; a reply of `1` means the movement was successful:
 
 ```
-`      
+      
    #  
    .D 
       
       
-`
 ```
 
 Then, perhaps attempts to move north (`1`), south (`2`), and east (`4`) are all met with replies of `0`:
 
 ```
-`      
+      
    ## 
    .D#
     # 
       
-`
 ```
 
 Now, you know the repair droid is in a dead end. Backtrack with `3` (which you already know will get a reply of `1` because you already know that location is open):
 
 ```
-`      
+      
    ## 
    D.#
     # 
       
-`
 ```
 
 Then, perhaps west (`3`) gets a reply of `0`, south (`2`) gets a reply of `1`, south again (`2`) gets a reply of `0`, and then west (`3`) gets a reply of `2`:
 
 ```
-`      
+      
    ## 
   #..#
   D.# 
    #  
-`
 ```
 
 Now, because of the reply of `2`, you know you've found the *oxygen system*! In this example, it was only `*2*` moves away from the repair droid's starting position.
@@ -104,56 +98,51 @@ Oxygen starts in the location containing the repaired oxygen system. It takes *o
 In the example above, suppose you've used the droid to explore the area fully and have the following map (where locations that currently contain oxygen are marked `O`):
 
 ```
-` ##   
+ ##   
 #..## 
 #.#..#
 #.O.# 
  ###  
-`
 ```
 
 Initially, the only location which contains oxygen is the location of the repaired oxygen system.  However, after one minute, the oxygen spreads to all open (`.`) locations that are adjacent to a location containing oxygen:
 
 ```
-` ##   
+ ##   
 #..## 
 #.#..#
 #OOO# 
  ###  
-`
 ```
 
 After a total of two minutes, the map looks like this:
 
 ```
-` ##   
+ ##   
 #..## 
 #O#O.#
 #OOO# 
  ###  
-`
 ```
 
 After a total of three minutes:
 
 ```
-` ##   
+ ##   
 #O.## 
 #O#OO#
 #OOO# 
  ###  
-`
 ```
 
 And finally, the whole region is full of oxygen after a total of four minutes:
 
 ```
-` ##   
+ ##   
 #OO## 
 #O#OO#
 #OOO# 
  ###  
-`
 ```
 
 So, in this example, all locations contain oxygen after `*4*` minutes.

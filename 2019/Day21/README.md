@@ -32,13 +32,12 @@ For example, the one-instruction program `NOT A J` means "if the tile immediatel
 Or, here is a program that jumps if a three-tile-wide hole (with ground on the other side of the hole) is detected:
 
 ```
-`NOT A J
+NOT A J
 NOT B T
 AND T J
 NOT C T
 AND T J
 AND D J
-`
 ```
 
 The Intcode program expects ASCII inputs and outputs.  It will begin by displaying a prompt; then, input the desired instructions one per line. End each line with a newline (ASCII code `10`). *When you have finished entering your program*, provide the command `WALK` followed by a newline to instruct the springdroid to begin surveying the hull.
@@ -46,15 +45,14 @@ The Intcode program expects ASCII inputs and outputs.  It will begin by displayi
 If the springdroid *falls into space*, an ASCII rendering of the last moments of its life will be produced.  In these, `@` is the springdroid, `#` is hull, and `.` is empty space.  For example, suppose you program the springdroid like this:
 
 ```
-`NOT D J
+NOT D J
 WALK
-`
 ```
 
 This one-instruction program sets `J` to *true* if and only if there is no ground four tiles away.  In other words, it attempts to jump into any hole it finds:
 
 ```
-`.................
+.................
 .................
 *@*................
 #####.###########
@@ -88,7 +86,6 @@ This one-instruction program sets `J` to *true* if and only if there is no groun
 .................
 .................
 #####*@*###########
-`
 ```
 
 However, if the springdroid successfully makes it across, it will use an output instruction to indicate the *amount of damage to the hull* as a single giant integer outside the normal ASCII range.

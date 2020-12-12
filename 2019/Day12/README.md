@@ -15,17 +15,16 @@ Once all gravity has been applied, apply *velocity*: simply add the velocity of 
 For example, suppose your scan reveals the following positions:
 
 ```
-`<x=-1, y=0, z=2>
+<x=-1, y=0, z=2>
 <x=2, y=-10, z=-7>
 <x=4, y=-8, z=8>
 <x=3, y=5, z=-1>
-`
 ```
 
 Simulating the motion of these moons would produce the following:
 
 ```
-`After 0 steps:
+After 0 steps:
 pos=<x=-1, y=  0, z= 2>, vel=<x= 0, y= 0, z= 0>
 pos=<x= 2, y=-10, z=-7>, vel=<x= 0, y= 0, z= 0>
 pos=<x= 4, y= -8, z= 8>, vel=<x= 0, y= 0, z= 0>
@@ -90,19 +89,17 @@ pos=<x= 2, y= 1, z=-3>, vel=<x=-3, y=-2, z= 1>
 pos=<x= 1, y=-8, z= 0>, vel=<x=-1, y= 1, z= 3>
 pos=<x= 3, y=-6, z= 1>, vel=<x= 3, y= 2, z=-3>
 pos=<x= 2, y= 0, z= 4>, vel=<x= 1, y=-1, z=-1>
-`
 ```
 
 Then, it might help to calculate the *total energy in the system*. The total energy for a single moon is its *potential energy* multiplied by its *kinetic energy*. A moon's *potential energy* is the sum of the [absolute values](https://en.wikipedia.org/wiki/Absolute_value) of its `x`, `y`, and `z` position coordinates. A moon's *kinetic energy* is the sum of the absolute values of its velocity coordinates.  Below, each line shows the calculations for a moon's potential energy (`pot`), kinetic energy (`kin`), and total energy:
 
 ```
-`Energy after 10 steps:
+Energy after 10 steps:
 pot: 2 + 1 + 3 =  6;   kin: 3 + 2 + 1 = 6;   total:  6 * 6 = 36
 pot: 1 + 8 + 0 =  9;   kin: 1 + 1 + 3 = 5;   total:  9 * 5 = 45
 pot: 3 + 6 + 1 = 10;   kin: 3 + 2 + 3 = 8;   total: 10 * 8 = 80
 pot: 2 + 0 + 4 =  6;   kin: 1 + 1 + 1 = 3;   total:  6 * 3 = 18
 Sum of total energy: 36 + 45 + 80 + 18 = *179*
-`
 ```
 
 In the above example, adding together the total energy for all moons after 10 steps produces the total energy in the system, `*179*`.
@@ -110,17 +107,16 @@ In the above example, adding together the total energy for all moons after 10 st
 Here's a second example:
 
 ```
-`<x=-8, y=-10, z=0>
+<x=-8, y=-10, z=0>
 <x=5, y=5, z=10>
 <x=2, y=-7, z=3>
 <x=9, y=-8, z=-3>
-`
 ```
 
 Every ten steps of simulation for 100 steps produces:
 
 ```
-`After 0 steps:
+After 0 steps:
 pos=<x= -8, y=-10, z=  0>, vel=<x=  0, y=  0, z=  0>
 pos=<x=  5, y=  5, z= 10>, vel=<x=  0, y=  0, z=  0>
 pos=<x=  2, y= -7, z=  3>, vel=<x=  0, y=  0, z=  0>
@@ -192,7 +188,6 @@ pot: 13 + 16 +  3 = 32;   kin: 3 + 11 + 5 = 19;   total: 32 * 19 = 608
 pot: 29 + 11 +  1 = 41;   kin: 3 +  7 + 4 = 14;   total: 41 * 14 = 574
 pot: 16 + 13 + 23 = 52;   kin: 7 +  1 + 1 =  9;   total: 52 *  9 = 468
 Sum of total energy: 290 + 608 + 574 + 468 = *1940*
-`
 ```
 
 *What is the total energy in the system* after simulating the moons given in your scan for `1000` steps?
@@ -206,7 +201,7 @@ Determine *the number of steps* that must occur before all of the moons' *positi
 For example, the first example above takes `2772` steps before they exactly match a previous point in time; it eventually returns to the initial state:
 
 ```
-`After 0 steps:
+After 0 steps:
 pos=<x= -1, y=  0, z=  2>, vel=<x=  0, y=  0, z=  0>
 pos=<x=  2, y=-10, z= -7>, vel=<x=  0, y=  0, z=  0>
 pos=<x=  4, y= -8, z=  8>, vel=<x=  0, y=  0, z=  0>
@@ -229,17 +224,15 @@ pos=<x= -1, y=  0, z=  2>, vel=<x=  0, y=  0, z=  0>
 pos=<x=  2, y=-10, z= -7>, vel=<x=  0, y=  0, z=  0>
 pos=<x=  4, y= -8, z=  8>, vel=<x=  0, y=  0, z=  0>
 pos=<x=  3, y=  5, z= -1>, vel=<x=  0, y=  0, z=  0>
-`
 ```
 
 Of course, the universe might last for a *very long time* before repeating.  Here's a copy of the second example from above:
 
 ```
-`<x=-8, y=-10, z=0>
+<x=-8, y=-10, z=0>
 <x=5, y=5, z=10>
 <x=2, y=-7, z=3>
 <x=9, y=-8, z=-3>
-`
 ```
 
 This set of initial positions takes `4686774924` steps before it repeats a previous state! Clearly, you might need to *find a more efficient way to simulate the universe*.

@@ -11,29 +11,27 @@ Your job is to figure out which asteroid would be the best place to build a *new
 For example, consider the following map:
 
 ```
-`.#..#
+.#..#
 .....
 #####
 ....#
 ...*#*#
-`
 ```
 
 The best location for a new monitoring station on this map is the highlighted asteroid at `3,4` because it can detect `8` asteroids, more than any other location. (The only asteroid it cannot detect is the one at `1,0`; its view of this asteroid is blocked by the asteroid at `2,2`.) All other asteroids are worse locations; they can detect `7` or fewer other asteroids. Here is the number of other asteroids a monitoring station on each asteroid could detect:
 
 ```
-`.7..7
+.7..7
 .....
 67775
 ....7
 ...87
-`
 ```
 
 Here is an asteroid (`#`) and some examples of the ways its line of sight might be blocked. If there were another asteroid at the location of a capital letter, the locations marked with the corresponding lowercase letter would be blocked and could not be detected:
 
 ```
-`#.........
+#.........
 ...A......
 ...B..a...
 .EDCG....a
@@ -43,7 +41,6 @@ Here is an asteroid (`#`) and some examples of the ways its line of sight might 
 .......c..
 ....f...c.
 ...e..d..c
-`
 ```
 
 Here are some larger examples:
@@ -52,7 +49,7 @@ Here are some larger examples:
  - Best is `5,8` with `33` other asteroids detected:
 
 ```
-`......#.#.
+......#.#.
 #..#.#....
 ..#######.
 .#.#.###..
@@ -62,13 +59,12 @@ Here are some larger examples:
 .##.#..###
 ##...*#*..#.
 .#....####
-`
 ```
 
  - Best is `1,2` with `35` other asteroids detected:
 
 ```
-`#.#...#.#.
+#.#...#.#.
 .###....#.
 .*#*....#...
 ##.#.#.#.#
@@ -78,13 +74,12 @@ Here are some larger examples:
 ..##....##
 ......#...
 .####.###.
-`
 ```
 
  - Best is `6,3` with `41` other asteroids detected:
 
 ```
-`.#..#..###
+.#..#..###
 ####.###.#
 ....###.#.
 ..###.*#*#.#
@@ -94,13 +89,12 @@ Here are some larger examples:
 #..#.#.###
 .##...##.#
 .....#.#..
-`
 ```
 
  - Best is `11,13` with `210` other asteroids detected:
 
 ```
-`.#..##.###...#######
+.#..##.###...#######
 ##.############..##.
 .#.######.########.#
 .###.#######.####.#.
@@ -120,7 +114,6 @@ Here are some larger examples:
 .#.#.###########.###
 #.#.#.#####.####.###
 ###.##.####.##.#..##
-`
 ```
 
 
@@ -139,56 +132,51 @@ If multiple asteroids are *exactly* in line with the station, the laser only has
 For example, consider the following map, where the asteroid with the new monitoring station (and laser) is marked `X`:
 
 ```
-`.#....#####...#..
+.#....#####...#..
 ##...##.#####..##
 ##...#...#.#####.
 ..#.....X...###..
 ..#.#.....#....##
-`
 ```
 
 The first nine asteroids to get vaporized, in order, would be:
 
 ```
-`.#....###*2**4*...#..
+.#....###*2**4*...#..
 ##...##.*1**3*#*6**7*..*9*#
 ##...#...*5*.*8*####.
 ..#.....X...###..
 ..#.#.....#....##
-`
 ```
 
 Note that some asteroids (the ones behind the asteroids marked `1`, `5`, and `7`) won't have a chance to be vaporized until the next full rotation.  The laser continues rotating; the next nine to be vaporized are:
 
 ```
-`.#....###.....#..
+.#....###.....#..
 ##...##...#.....#
 ##...#......*1**2**3**4*.
 ..#.....X...*5*##..
 ..#.*9*.....*8*....*7**6*
-`
 ```
 
 The next nine to be vaporized are then:
 
 ```
-`.*8*....###.....#..
+.*8*....###.....#..
 *5**6*...*9*#...#.....#
 *3**4*...*7*...........
 ..*2*.....X....##..
 ..*1*..............
-`
 ```
 
 Finally, the laser completes its first full rotation (`1` through `3`), a second rotation (`4` through `8`), and vaporizes the last asteroid (`9`) partway through its third rotation:
 
 ```
-`......*2**3**4*.....*6*..
+......*2**3**4*.....*6*..
 ......*1*...*5*.....*7*
 .................
 ........X....*8**9*..
 .................
-`
 ```
 
 In the large example above (the one with the best monitoring station location at `11,13`):

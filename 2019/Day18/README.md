@@ -9,28 +9,25 @@ Only one *entrance* (marked `@`) is present among the *open passages* (marked `.
 For example, suppose you have the following map:
 
 ```
-`#########
+#########
 #b.A.@.a#
 #########
-`
 ```
 
 Starting from the entrance (`@`), you can only access a large door (`A`) and a key (`a`). Moving toward the door doesn't help you, but you can move `2` steps to collect the key, unlocking `A` in the process:
 
 ```
-`#########
+#########
 #b.....@#
 #########
-`
 ```
 
 Then, you can move `6` steps to collect the only other key, `b`:
 
 ```
-`#########
+#########
 #@......#
 #########
-`
 ```
 
 So, collecting every key took a total of `*8*` steps.
@@ -38,56 +35,51 @@ So, collecting every key took a total of `*8*` steps.
 Here is a larger example:
 
 ```
-`########################
+########################
 #f.D.E.e.C.b.A.@.a.B.c.#
 ######################.#
 #d.....................#
 ########################
-`
 ```
 
 The only reasonable move is to take key `a` and unlock door `A`:
 
 ```
-`########################
+########################
 #f.D.E.e.C.b.....@.B.c.#
 ######################.#
 #d.....................#
 ########################
-`
 ```
 
 Then, do the same with key `b`:
 
 ```
-`########################
+########################
 #f.D.E.e.C.@.........c.#
 ######################.#
 #d.....................#
 ########################
-`
 ```
 
 ...and the same with key `c`:
 
 ```
-`########################
+########################
 #f.D.E.e.............@.#
 ######################.#
 #d.....................#
 ########################
-`
 ```
 
 Now, you have a choice between keys `d` and `e`.  While key `e` is closer, collecting it now would be slower in the long run than collecting key `d` first, so that's the best choice:
 
 ```
-`########################
+########################
 #f...E.e...............#
 ######################.#
 #@.....................#
 ########################
-`
 ```
 
 Finally, collect key `e` to unlock door `E`, then collect key `f`, taking a grand total of `*86*` steps.
@@ -96,18 +88,17 @@ Here are a few more examples:
 
 
  - ```
-`########################
+########################
 #...............b.C.D.f#
 #.######################
 #.....@.a.B.c.d.A.e.F.g#
 ########################
-`
 ```
 
 Shortest path is `132` steps: `b`, `a`, `c`, `d`, `f`, `e`, `g`
 
  - ```
-`#################
+#################
 #i.G..c...e..H.p#
 ########.########
 #j.A..b...f..D.o#
@@ -116,20 +107,18 @@ Shortest path is `132` steps: `b`, `a`, `c`, `d`, `f`, `e`, `g`
 ########.########
 #l.F..d...h..C.m#
 #################
-`
 ```
 
 Shortest paths are `136` steps;
 one is: `a`, `f`, `b`, `j`, `g`, `n`, `h`, `d`, `l`, `o`, `e`, `p`, `c`, `i`, `k`, `m`
 
  - ```
-`########################
+########################
 #@..............ac.GI.b#
 ###d#e#f################
 ###A#B#C################
 ###g#h#i################
 ########################
-`
 ```
 
 Shortest paths are `81` steps; one is: `a`, `c`, `f`, `i`, `d`, `g`, `b`, `e`, `h`
@@ -144,32 +133,29 @@ You arrive at the vault only to discover that there is not one vault, but *four*
 On your map, find the area in the middle that looks like this:
 
 ```
-`...
+...
 .@.
 ...
-`
 ```
 
 Update your map to instead use the correct data:
 
 ```
-`@#@
+@#@
 ###
 @#@
-`
 ```
 
 This change will split your map into four separate sections, each with its own entrance:
 
 ```
-`#######       #######
+#######       #######
 #a.#Cd#       #a.#Cd#
 ##...##       ##*@#@*##
 ##.@.##  -->  ##*###*##
 ##...##       ##*@#@*##
 #cB#Ab#       #cB#Ab#
 #######       #######
-`
 ```
 
 Because some of the keys are for doors in other vaults, it would take much too long to collect all of the keys by yourself.  Instead, you deploy four remote-controlled robots. Each starts at one of the entrances (`@`).
@@ -179,53 +165,49 @@ Your goal is still to *collect all of the keys in the fewest steps*, but now, ea
 For example, in the map above, the top-left robot first collects key `a`, unlocking door `A` in the bottom-right vault:
 
 ```
-`#######
+#######
 #@.#Cd#
 ##.#@##
 #######
 ##@#@##
 #cB#.b#
 #######
-`
 ```
 
 Then, the bottom-right robot collects key `b`, unlocking door `B` in the bottom-left vault:
 
 ```
-`#######
+#######
 #@.#Cd#
 ##.#@##
 #######
 ##@#.##
 #c.#.@#
 #######
-`
 ```
 
 Then, the bottom-left robot collects key `c`:
 
 ```
-`#######
+#######
 #@.#.d#
 ##.#@##
 #######
 ##.#.##
 #@.#.@#
 #######
-`
 ```
 
 Finally, the top-right robot collects key `d`:
 
 ```
-`#######
+#######
 #@.#.@#
 ##.#.##
 #######
 ##.#.##
 #@.#.@#
 #######
-`
 ```
 
 In this example, it only took `*8*` steps to collect all of the keys.
@@ -233,14 +215,13 @@ In this example, it only took `*8*` steps to collect all of the keys.
 Sometimes, multiple robots might have keys available, or a robot might have to wait for multiple keys to be collected:
 
 ```
-`###############
+###############
 #d.ABC.#.....a#
 ######@#@######
 ###############
 ######@#@######
 #b.....#.....c#
 ###############
-`
 ```
 
 First, the top-right, bottom-left, and bottom-right robots take turns collecting keys `a`, `b`, and `c`, a total of `6 + 6 + 6 = 18` steps. Then, the top-left robot can access key `d`, spending another `6` steps; collecting all of the keys here takes a minimum of `*24*` steps.
@@ -248,14 +229,13 @@ First, the top-right, bottom-left, and bottom-right robots take turns collecting
 Here's a more complex example:
 
 ```
-`#############
+#############
 #DcBa.#.GhKl#
 #.###@#@#I###
 #e#d#####j#k#
 ###C#@#@###J#
 #fEbA.#.FgHi#
 #############
-`
 ```
 
 
@@ -277,7 +257,7 @@ In the above example, the fewest steps to collect all of the keys is `*32*`.
 Here's an example with more choices:
 
 ```
-`#############
+#############
 #g#f.D#..h#l#
 #F###e#E###.#
 #dCba@#@BcIJ#
@@ -286,7 +266,6 @@ Here's an example with more choices:
 #M###N#H###.#
 #o#m..#i#jk.#
 #############
-`
 ```
 
 One solution with the fewest steps is:

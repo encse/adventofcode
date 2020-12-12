@@ -13,12 +13,11 @@ Each image actually consists of a series of identically-sized *layers* that are 
 For example, given an image `3` pixels wide and `2` pixels tall, the image data `123456789012` corresponds to the following image layers:
 
 ```
-`Layer 1: 123
+Layer 1: 123
          456
 
 Layer 2: 789
          012
-`
 ```
 
 The image you received is *`25` pixels wide and `6` pixels tall*.
@@ -34,7 +33,7 @@ The layers are rendered with the first layer in front and the last layer in back
 For example, given an image `2` pixels wide and `2` pixels tall, the image data `0222112222120000` corresponds to the following image layers:
 
 ```
-`Layer 1: *0*2
+Layer 1: *0*2
          22
 
 Layer 2: 1*1*
@@ -45,7 +44,6 @@ Layer 3: 22
 
 Layer 4: 00
          0*0*
-`
 ```
 
 Then, the full image can be found by determining the top visible pixel in each position:
@@ -59,9 +57,8 @@ Then, the full image can be found by determining the top visible pixel in each p
 So, the final image looks like this:
 
 ```
-`01
+01
 10
-`
 ```
 
 *What message is produced after decoding your image?*

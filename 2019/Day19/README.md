@@ -11,7 +11,7 @@ Then, the program will output whether the drone is *stationary* (`0`) or *being 
 To better understand the tractor beam, it is important to *get a good picture* of the beam itself. For example, suppose you scan the 10x10 grid of points closest to the emitter:
 
 ```
-`       X
+       X
   0->      9
  0#.........
  |.#........
@@ -23,7 +23,6 @@ Y .....####.
   ......####
   .......###
  9........##
-`
 ```
 
 In this example, the *number of points affected by the tractor beam* in the 10x10 area closest to the emitter is `*27*`.
@@ -39,7 +38,7 @@ The beam gets wider as it travels away from the emitter; you'll need to be a min
 For example, suppose you have the following tractor beam readings:
 
 ```
-`#.......................................
+#.......................................
 .#......................................
 ..##....................................
 ...###..................................
@@ -74,7 +73,6 @@ For example, suppose you have the following tractor beam readings:
 ...........................#############
 ............................############
 .............................###########
-`
 ```
 
 In this example, the *10x10* square closest to the emitter that fits entirely within the tractor beam has been marked `O`. Within it, the point closest to the emitter (the only highlighted `*O*`) is at X=`25`, Y=`20`.

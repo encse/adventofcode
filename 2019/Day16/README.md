@@ -17,7 +17,7 @@ After using this process to calculate each element of the output list, the phase
 Given the input signal `12345678`, below are four phases of FFT. Within each phase, each output digit is calculated on a single line with the result at the far right; each multiplication operation shows the input digit on the left and the pattern value on the right:
 
 ```
-`Input signal: 12345678
+Input signal: 12345678
 
 1*1  + 2*0  + 3*-1 + 4*0  + 5*1  + 6*0  + 7*-1 + 8*0  = 4
 1*0  + 2*1  + 3*1  + 4*0  + 5*0  + 6*-1 + 7*-1 + 8*0  = 8
@@ -62,7 +62,6 @@ After 3 phases: 03415518
 0*0  + 3*0  + 4*0  + 1*0  + 5*0  + 5*0  + 1*0  + 8*1  = 8
 
 After 4 phases: 01029498
-`
 ```
 
 Here are the first eight digits of the final output list after 100 phases for some larger inputs:

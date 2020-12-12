@@ -11,13 +11,12 @@ Each reaction gives specific quantities for its inputs and output; reactions can
 Suppose your nanofactory produces the following list of reactions:
 
 ```
-`10 ORE => 10 A
+10 ORE => 10 A
 1 ORE => 1 B
 7 A, 1 B => 1 C
 7 A, 1 C => 1 D
 7 A, 1 D => 1 E
 7 A, 1 E => 1 FUEL
-`
 ```
 
 The first two reactions use only `ORE` as inputs; they indicate that you can produce as much of chemical `A` as you want (in increments of 10 units, each 10 costing 10 `ORE`) and as much of chemical `B` as you want (each costing 1 `ORE`).  To produce 1 `FUEL`, a total of *31* `ORE` is required: 1 `ORE` to produce 1 `B`, then 30 more `ORE` to produce the 7 + 7 + 7 + 7 = 28 `A` (with 2 extra `A` wasted) required in the reactions to convert the `B` into `C`, `C` into `D`, `D` into `E`, and finally `E` into `FUEL`. (30 `A` is produced because its reaction requires that it is created in increments of 10.)
@@ -25,14 +24,13 @@ The first two reactions use only `ORE` as inputs; they indicate that you can pro
 Or, suppose you have the following list of reactions:
 
 ```
-`9 ORE => 2 A
+9 ORE => 2 A
 8 ORE => 3 B
 7 ORE => 5 C
 3 A, 4 B => 1 AB
 5 B, 7 C => 1 BC
 4 C, 1 A => 1 CA
 2 AB, 3 BC, 4 CA => 1 FUEL
-`
 ```
 
 The above list of reactions requires *165* `ORE` to produce 1 `FUEL`:
@@ -52,7 +50,7 @@ Here are some larger examples:
  - *13312* `ORE` for 1 `FUEL`:
 
 ```
-`157 ORE => 5 NZVS
+157 ORE => 5 NZVS
 165 ORE => 6 DCFZ
 44 XJWVT, 5 KHKGT, 1 QDVJ, 29 NZVS, 9 GPVTF, 48 HKGWZ => 1 FUEL
 12 HKGWZ, 1 GPVTF, 8 PSHF => 9 QDVJ
@@ -61,13 +59,12 @@ Here are some larger examples:
 7 DCFZ, 7 PSHF => 2 XJWVT
 165 ORE => 2 GPVTF
 3 DCFZ, 7 NZVS, 5 HKGWZ, 10 PSHF => 8 KHKGT
-`
 ```
 
  - *180697* `ORE` for 1 `FUEL`:
 
 ```
-`2 VPVL, 7 FWMGM, 2 CXFTF, 11 MNCFX => 1 STKFG
+2 VPVL, 7 FWMGM, 2 CXFTF, 11 MNCFX => 1 STKFG
 17 NVRVD, 3 JNWZP => 8 VPVL
 53 STKFG, 6 MNCFX, 46 VJHF, 81 HVMC, 68 CXFTF, 25 GNMV => 1 FUEL
 22 VJHF, 37 MNCFX => 5 FWMGM
@@ -79,13 +76,12 @@ Here are some larger examples:
 1 NVRVD => 8 CXFTF
 1 VJHF, 6 MNCFX => 4 RFSQX
 176 ORE => 6 VJHF
-`
 ```
 
  - *2210736* `ORE` for 1 `FUEL`:
 
 ```
-`171 ORE => 8 CNZTR
+171 ORE => 8 CNZTR
 7 ZLQW, 3 BMBT, 9 XCVML, 26 XMNCP, 1 WPTQ, 2 MZWV, 1 RJRHP => 4 PLWSL
 114 ORE => 4 BHXH
 14 VRPVC => 6 BMBT
@@ -102,7 +98,6 @@ Here are some larger examples:
 121 ORE => 7 VRPVC
 7 XCVML => 6 RJRHP
 5 BHXH, 4 VRPVC => 5 LTCX
-`
 ```
 
 

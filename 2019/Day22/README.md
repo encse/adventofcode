@@ -9,7 +9,7 @@ You've been practicing three different *techniques* that you use while shuffling
 *To `deal into new stack`*, create a new stack of cards by dealing the top card of the deck onto the top of the new stack repeatedly until you run out of cards:
 
 ```
-`Top          Bottom
+Top          Bottom
 0 1 2 3 4 5 6 7 8 9   Your deck
                       New stack
 
@@ -29,7 +29,6 @@ Several steps later...
 
                       Your deck
 9 8 7 6 5 4 3 2 1 0   New stack
-`
 ```
 
 Finally, pick up the new stack you've just created and use it as the deck for the next technique.
@@ -37,7 +36,7 @@ Finally, pick up the new stack you've just created and use it as the deck for th
 *To `cut N` cards*, take the top `N` cards off the top of the deck and move them as a single unit to the bottom of the deck, retaining their order. For example, to `cut 3`:
 
 ```
-`Top          Bottom
+Top          Bottom
 0 1 2 3 4 5 6 7 8 9   Your deck
 
       3 4 5 6 7 8 9   Your deck
@@ -47,13 +46,12 @@ Finally, pick up the new stack you've just created and use it as the deck for th
               0 1 2   Cut cards
 
 3 4 5 6 7 8 9 0 1 2   Your deck
-`
 ```
 
 You've also been getting pretty good at a version of this technique where `N` is negative! In that case, cut (the absolute value of) `N` cards from the bottom of the deck onto the top.  For example, to `cut -4`:
 
 ```
-`Top          Bottom
+Top          Bottom
 0 1 2 3 4 5 6 7 8 9   Your deck
 
 0 1 2 3 4 5           Your deck
@@ -63,7 +61,6 @@ You've also been getting pretty good at a version of this technique where `N` is
 6 7 8 9               Cut cards
 
 6 7 8 9 0 1 2 3 4 5   Your deck
-`
 ```
 
 *To `deal with increment N`*, start by clearing enough space on your table to lay out all of the cards individually in a long line.  Deal the top card into the leftmost position. Then, move `N` positions to the right and deal the next card there. If you would move into a position past the end of the space on your table, wrap around and keep counting from the leftmost card again.  Continue this process until you run out of cards.
@@ -71,7 +68,7 @@ You've also been getting pretty good at a version of this technique where `N` is
 For example, to `deal with increment 3`:
 
 ```
-`
+
 0 1 2 3 4 5 6 7 8 9   Your deck
 . . . . . . . . . .   Space on table
 ^                     Current position
@@ -115,7 +112,6 @@ Move right 3, wrapping around, and deal:
 And so on:
 
 0 7 4 1 8 5 2 9 6 3   Space on table
-`
 ```
 
 Positions on the table which already contain cards are still counted; they're not skipped.  Of course, this technique is carefully designed so it will never put two cards in the same position or leave a position empty.
@@ -125,31 +121,28 @@ Finally, collect the cards on the table so that the leftmost card ends up at the
 The complete shuffle process (your puzzle input) consists of applying many of these techniques.  Here are some examples that combine techniques; they all start with a *factory order* deck of 10 cards:
 
 ```
-`deal with increment 7
+deal with increment 7
 deal into new stack
 deal into new stack
 Result: 0 3 6 9 2 5 8 1 4 7
-`
 ```
 
 ```
-`cut 6
+cut 6
 deal with increment 7
 deal into new stack
 Result: 3 0 7 4 1 8 5 2 9 6
-`
 ```
 
 ```
-`deal with increment 7
+deal with increment 7
 deal with increment 9
 cut -2
 Result: 6 3 0 7 4 1 8 5 2 9
-`
 ```
 
 ```
-`deal into new stack
+deal into new stack
 cut -2
 deal with increment 7
 cut 8
@@ -160,7 +153,6 @@ deal with increment 9
 deal with increment 3
 cut -1
 Result: 9 2 5 8 1 4 7 0 3 6
-`
 ```
 
 Positions within the deck count from `0` at the top, then `1` for the card immediately below the top card, and so on to the bottom.  (That is, cards start in the position matching their number.)
