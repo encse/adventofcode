@@ -7,13 +7,8 @@ namespace AdventOfCode.Y2018.Day20 {
     [ProblemName("A Regular Map")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) => Solver(input).dMax;
-        int PartTwo(string input) => Solver(input).distantRooms;
+        public object PartOne(string input) => Solver(input).dMax;
+        public object PartTwo(string input) => Solver(input).distantRooms;
 
         (int dMax, int distantRooms) Solver(string input) {
             var grid = Doors(input)

@@ -7,14 +7,9 @@ namespace AdventOfCode.Y2017.Day14 {
     [ProblemName("Disk Defragmentation")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
+        public object PartOne(string input) => Extract(input).Select(row => row.Count(ch => ch == '#')).Sum();
 
-        int PartOne(string input) => Extract(input).Select(row => row.Count(ch => ch == '#')).Sum();
-
-        int PartTwo(string input) {
+        public object PartTwo(string input) {
             var mtx = Extract(input).Select(row => row.ToCharArray()).ToArray();
             var regions = 0;
             for (int irow = 0; irow < mtx.Count(); irow++) {

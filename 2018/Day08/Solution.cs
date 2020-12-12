@@ -7,16 +7,11 @@ namespace AdventOfCode.Y2018.Day08 {
     [ProblemName("Memory Maneuver")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) =>
+        public object PartOne(string input) =>
             Parse(input).fold(0, (cur, node) => cur + node.metadata.Sum());
         
 
-        int PartTwo(string input) {
+        public object PartTwo(string input) {
             return Parse(input).value();
         }
 

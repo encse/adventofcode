@@ -7,13 +7,8 @@ namespace AdventOfCode.Y2020.Day11 {
     [ProblemName("Seating System")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) => Solve(input, 4, _ => true);
-        int PartTwo(string input) => Solve(input, 5, place => place != '.');
+        public object PartOne(string input) => Solve(input, 4, _ => true);
+        public object PartTwo(string input) => Solve(input, 5, place => place != '.');
 
         int Solve(string input, int occupiedLimit, Func<char, bool> placeToCheck) {
             var (crow, ccol) = (input.Split("\n").Length, input.IndexOf('\n'));

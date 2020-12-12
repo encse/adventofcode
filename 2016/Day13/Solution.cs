@@ -7,17 +7,12 @@ namespace AdventOfCode.Y2016.Day13 {
     [ProblemName("A Maze of Twisty Little Cubicles")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) => 
+        public object PartOne(string input) => 
             Steps(int.Parse(input))
             .First(s => s.icol == 31 && s.irow == 39)
             .steps;
 
-        int PartTwo(string input) =>
+        public object PartTwo(string input) =>
             Steps(int.Parse(input))
             .TakeWhile(s => s.steps <= 50)
             .Count();

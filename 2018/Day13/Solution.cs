@@ -8,12 +8,7 @@ namespace AdventOfCode.Y2018.Day13 {
     class Solution : Solver {
 
        
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        string PartOne(string input) {
+        public object PartOne(string input) {
             var (mat, carts) = Parse(input);
             while (true) {
                 var newState = Step(mat, carts);
@@ -23,7 +18,7 @@ namespace AdventOfCode.Y2018.Day13 {
             }
         }
 
-        string PartTwo(string input) {
+        public object PartTwo(string input) {
             var (mat, carts) = Parse(input);
             while (carts.Count > 1) {
                 var newState = Step(mat, carts);

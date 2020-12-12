@@ -6,16 +6,11 @@ namespace AdventOfCode.Y2016.Day09 {
     [ProblemName("Explosives in Cyberspace")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        long PartOne(string input) {
+        public object PartOne(string input) {
             return Expand(input, 0, input.Length, false);
         }
 
-        long PartTwo(string input) {
+        public object PartTwo(string input) {
             return Expand(input, 0, input.Length, true);
         }
 

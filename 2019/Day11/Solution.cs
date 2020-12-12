@@ -7,14 +7,9 @@ namespace AdventOfCode.Y2019.Day11 {
     [ProblemName("Space Police")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
+        public object PartOne(string input) => Run(input, 0).Count;
 
-        int PartOne(string input) => Run(input, 0).Count;
-
-        string PartTwo(string input) {
+        public object PartTwo(string input) {
             var dict = Run(input, 1);
             var irowMin = dict.Keys.Select(pos => pos.irow).Min();
             var icolMin = dict.Keys.Select(pos => pos.icol).Min();

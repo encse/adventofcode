@@ -8,16 +8,11 @@ namespace AdventOfCode.Y2020.Day04 {
     [ProblemName("Passport Processing")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) => ValidCount(input, cred => 
+        public object PartOne(string input) => ValidCount(input, cred => 
             rxs.All(kvp => cred.ContainsKey(kvp.Key))
         );
         
-        int PartTwo(string input) => ValidCount(input, cred => 
+        public object PartTwo(string input) => ValidCount(input, cred => 
             rxs.All(kvp =>
                 cred.TryGetValue(kvp.Key, out var value) && Regex.IsMatch(value, "^(" + kvp.Value + ")$")
             )

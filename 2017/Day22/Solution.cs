@@ -13,12 +13,7 @@ namespace AdventOfCode.Y2017.Day22 {
     [ProblemName("Sporifica Virus")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) =>
+        public object PartOne(string input) =>
             Iterate(input, 10000, 
                 (state, drow, dcol) => 
                     state switch {
@@ -28,7 +23,7 @@ namespace AdventOfCode.Y2017.Day22 {
                     }
             );
 
-        int PartTwo(string input) =>
+        public object PartTwo(string input) =>
             Iterate(input, 10000000, 
                 (state, drow, dcol) => 
                     state switch {

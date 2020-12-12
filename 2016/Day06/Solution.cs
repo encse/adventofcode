@@ -6,13 +6,8 @@ namespace AdventOfCode.Y2016.Day06 {
     [ProblemName("Signals and Noise")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        string PartOne(string input) => Decode(input).mostFrequent;
-        string PartTwo(string input) => Decode(input).leastFrequent;
+        public object PartOne(string input) => Decode(input).mostFrequent;
+        public object PartTwo(string input) => Decode(input).leastFrequent;
 
         (string mostFrequent, string leastFrequent) Decode(string input) {
             var lines = input.Split('\n');

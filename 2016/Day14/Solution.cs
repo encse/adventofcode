@@ -12,13 +12,8 @@ namespace AdventOfCode.Y2016.Day14 {
     [ProblemName("One-Time Pad")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) => Solve(Hashes(input, 0));
-        int PartTwo(string input) => Solve(Hashes(input, 2016));
+        public object PartOne(string input) => Solve(Hashes(input, 0));
+        public object PartTwo(string input) => Solve(Hashes(input, 2016));
 
         int Solve(IEnumerable<string> hashes) {
             var found = 0;

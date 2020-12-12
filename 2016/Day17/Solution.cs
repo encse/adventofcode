@@ -8,14 +8,9 @@ namespace AdventOfCode.Y2016.Day17 {
     [ProblemName("Two Steps Forward")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
+        public object PartOne(string input) => Routes(input).First();
 
-        string PartOne(string input) => Routes(input).First();
-
-        int PartTwo(string input) => Routes(input).Last().Length;
+        public object PartTwo(string input) => Routes(input).Last().Length;
 
         IEnumerable<string> Routes(string input) {
 

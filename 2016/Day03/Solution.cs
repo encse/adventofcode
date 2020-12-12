@@ -7,14 +7,9 @@ namespace AdventOfCode.Y2016.Day03 {
     [ProblemName("Squares With Three Sides")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
+        public object PartOne(string input) => ValidTriangles(Parse(input));
 
-        int PartOne(string input) => ValidTriangles(Parse(input));
-
-        int PartTwo(string input) {
+        public object PartTwo(string input) {
             var tripplets = new List<IEnumerable<int>>();
 
             foreach (var lineT in Transpose(Parse(input))) {

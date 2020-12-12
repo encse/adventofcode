@@ -9,17 +9,14 @@ namespace AdventOfCode.Y2017.Day16 {
     [ProblemName("Permutation Promenade")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
+        public object PartOne(string input) {
+            return ParseStep(input)("abcdefghijklmnop");
+        }
+
+        public object PartTwo(string input) {
             var step = ParseStep(input);
             var startState = "abcdefghijklmnop";
 
-            yield return PartOne(step, startState);
-            yield return PartTwo(step, startState);
-        }
-
-        string PartOne(Func<string, string> step, string startState) => step(startState);
-
-        string PartTwo(Func<string, string> step, string startState) {
             var mod = Mod(step, startState);
 
             var state = startState;

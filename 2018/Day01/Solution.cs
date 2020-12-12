@@ -7,16 +7,11 @@ namespace AdventOfCode.Y2018.Day01 {
     [ProblemName("Chronal Calibration")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) {
+        public object PartOne(string input) {
             return Frequencies(input).ElementAt(input.Split("\n").Count() - 1);
         }
 
-        int PartTwo(string input) {
+        public object PartTwo(string input) {
             var seen = new HashSet<int>();
             foreach (var f in Frequencies(input)) {
                 if (seen.Contains(f)) {

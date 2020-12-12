@@ -8,13 +8,8 @@ namespace AdventOfCode.Y2015.Day13 {
     [ProblemName("Knights of the Dinner Table")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) => Happiness(input, false).Max();
-        int PartTwo(string input) => Happiness(input, true).Max();
+        public object PartOne(string input) => Happiness(input, false).Max();
+        public object PartTwo(string input) => Happiness(input, true).Max();
 
         IEnumerable<int> Happiness(string input, bool includeMe) {
             var dh = new Dictionary<(string, string), int>();

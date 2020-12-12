@@ -7,14 +7,9 @@ namespace AdventOfCode.Y2015.Day24 {
     [ProblemName("It Hangs in the Balance")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
+        public object PartOne(string input) => Solve(Parse(input), 3);
 
-        long PartOne(string input) => Solve(Parse(input), 3);
-
-        long PartTwo(string input) => Solve(Parse(input), 4);
+        public object PartTwo(string input) => Solve(Parse(input), 4);
 
         int[] Parse(string input) =>
             input.Split("\n").Select(int.Parse).ToArray();

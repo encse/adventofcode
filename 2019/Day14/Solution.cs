@@ -7,13 +7,8 @@ namespace AdventOfCode.Y2019.Day14 {
     [ProblemName("Space Stoichiometry")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        long PartOne(string input) => Parse(input)(1);
-        long PartTwo(string input) {
+        public object PartOne(string input) => Parse(input)(1);
+        public object PartTwo(string input) {
             var oreForFuel = Parse(input);
 
             var ore = 1000000000000L;

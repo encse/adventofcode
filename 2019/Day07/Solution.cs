@@ -7,13 +7,8 @@ namespace AdventOfCode.Y2019.Day07 {
     [ProblemName("Amplification Circuit")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        long PartOne(string prg) => Solve(prg, false, new[] { 0, 1, 2, 3, 4 });
-        long PartTwo(string prg) => Solve(prg, true, new[] { 5, 6, 7, 8, 9 });
+        public object PartOne(string prg) => Solve(prg, false, new[] { 0, 1, 2, 3, 4 });
+        public object PartTwo(string prg) => Solve(prg, true, new[] { 5, 6, 7, 8, 9 });
 
         long Solve(string prg, bool loop, int[] prgids) {
             var amps = Enumerable.Range(0, 5).Select(x => new IntCodeMachine(prg)).ToArray();

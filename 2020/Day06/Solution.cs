@@ -8,13 +8,8 @@ namespace AdventOfCode.Y2020.Day06 {
     [ProblemName("Custom Customs")]      
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) => Solve(input, (a,b) => a.Union(b));
-        int PartTwo(string input) => Solve(input, (a,b) => a.Intersect(b));
+        public object PartOne(string input) => Solve(input, (a,b) => a.Union(b));
+        public object PartTwo(string input) => Solve(input, (a,b) => a.Intersect(b));
 
         int Solve(string input, Func<ImmutableHashSet<char>, ImmutableHashSet<char>, ImmutableHashSet<char>> combine) {
             return (

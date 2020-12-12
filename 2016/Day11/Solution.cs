@@ -19,13 +19,8 @@ namespace AdventOfCode.Y2016.Day11 {
     [ProblemName("Radioisotope Thermoelectric Generators")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) => Solve(Parse(input));
-        int PartTwo(string input) => Solve(Parse(input)
+        public object PartOne(string input) => Solve(Parse(input));
+        public object PartTwo(string input) => Solve(Parse(input)
             .AddGenerator(0, Element.Elerium).AddChip(0, Element.Elerium)
             .AddGenerator(0, Element.Dilithium).AddChip(0, Element.Dilithium)
             );

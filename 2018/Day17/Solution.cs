@@ -9,13 +9,8 @@ namespace AdventOfCode.Y2018.Day17 {
     [ProblemName("Reservoir Research")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) => Regex.Matches(Fill(input), "[~|]").Count;
-        int PartTwo(string input) => Regex.Matches(Fill(input), "[~]").Count;
+        public object PartOne(string input) => Regex.Matches(Fill(input), "[~|]").Count;
+        public object PartTwo(string input) => Regex.Matches(Fill(input), "[~]").Count;
 
         string Fill(string input) {
             var (width, height) = (2000, 2000);

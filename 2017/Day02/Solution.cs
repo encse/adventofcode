@@ -6,12 +6,7 @@ namespace AdventOfCode.Y2017.Day02 {
     [ProblemName("Corruption Checksum")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) {
+        public object PartOne(string input) {
             return (
                 from line in input.Split('\n')
                 let numbers = line.Split('\t').Select(int.Parse)
@@ -19,7 +14,7 @@ namespace AdventOfCode.Y2017.Day02 {
             ).Sum();
         }
 
-        int PartTwo(string input) {
+        public object PartTwo(string input) {
             return (
                 from line in input.Split('\n')
                 let numbers = line.Split('\t').Select(int.Parse)

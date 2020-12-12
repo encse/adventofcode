@@ -8,15 +8,10 @@ namespace AdventOfCode.Y2016.Day10 {
     [ProblemName("Balance Bots")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        string PartOne(string input) =>
+        public object PartOne(string input) =>
             Execute(Parse(input)).Single(v => v.min == 17 && v.max == 61).id.Split(' ')[1];
 
-        int PartTwo(string input) {
+        public object PartTwo(string input) {
             var m = Execute(Parse(input)).Last().machine;
             return m["output 0"].values.Single() * m["output 1"].values.Single() * m["output 2"].values.Single();
         }

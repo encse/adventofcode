@@ -7,14 +7,9 @@ namespace AdventOfCode.Y2016.Day12 {
     [ProblemName("Leonardo's Monorail")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
+        public object PartOne(string input) => Solve(input, 0);
 
-        int PartOne(string input) => Solve(input, 0);
-
-        int PartTwo(string input) => Solve(input, 1);
+        public object PartTwo(string input) => Solve(input, 1);
 
         int Solve(string input, int c) {
             var regs = new Dictionary<string, int>();

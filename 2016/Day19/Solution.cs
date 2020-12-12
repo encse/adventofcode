@@ -7,18 +7,13 @@ namespace AdventOfCode.Y2016.Day19 {
     [ProblemName("An Elephant Named Joseph")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) {
+        public object PartOne(string input) {
             var elves = Elves(int.Parse(input));
             return Solve(elves[0], elves[1], elves.Length, 
                 (elfVictim, count) => elfVictim.next.next);
         }
 
-        int PartTwo(string input) {
+        public object PartTwo(string input) {
             var elves = Elves(int.Parse(input));
             return Solve(elves[0], elves[elves.Length / 2], elves.Length, 
                 (elfVictim, count) => count % 2 == 1 ? elfVictim.next : elfVictim.next.next);

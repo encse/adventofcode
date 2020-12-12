@@ -7,13 +7,8 @@ namespace AdventOfCode.Y2019.Day04 {
     [ProblemName("Secure Container")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) => Solve(input, true);
-        int PartTwo(string input) => Solve(input, false);
+        public object PartOne(string input) => Solve(input, true);
+        public object PartTwo(string input) => Solve(input, false);
         private int Solve(string input, bool trippletsAllowed) {
 
             var args = input.Split("-").Select(int.Parse).ToArray();

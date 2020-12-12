@@ -6,15 +6,10 @@ namespace AdventOfCode.Y2015.Day18 {
     [ProblemName("Like a GIF For Your Yard")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) =>
+        public object PartOne(string input) =>
             Enumerable.Range(0, 100).Aggregate(Parse(input), (acc, _) => Step(acc, false)).Select(row => row.Sum()).Sum();
 
-        int PartTwo(string input) =>
+        public object PartTwo(string input) =>
             Enumerable.Range(0, 100).Aggregate(Parse(input), (acc, _) => Step(acc, true)).Select(row => row.Sum()).Sum();
 
         int[][] Step(int[][] input, bool stuck) {

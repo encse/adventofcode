@@ -8,12 +8,7 @@ namespace AdventOfCode.Y2019.Day17 {
     [ProblemName("Set and Forget")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) {
+        public object PartOne(string input) {
             var mx = Screenshot(input);
 
             var crow = mx.Length;
@@ -34,7 +29,7 @@ namespace AdventOfCode.Y2019.Day17 {
             ).Sum();
         }
 
-        long PartTwo(string input) {
+        public object PartTwo(string input) {
             var program = GeneratePrograms(Path(input)).First();
 
             var icm = new IntCodeMachine(input);

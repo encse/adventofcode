@@ -7,14 +7,9 @@ namespace AdventOfCode.Y2020.Day09 {
     [ProblemName("Encoding Error")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
         IEnumerable<int> Range(int min, int lim) => Enumerable.Range(min, lim - min);
 
-        long PartOne(string input) {
+        public object PartOne(string input) {
             var numbers = input.Split("\n").Select(long.Parse).ToArray();
 
             bool Mismatch(int i) => (
@@ -26,8 +21,8 @@ namespace AdventOfCode.Y2020.Day09 {
             return numbers[Range(25, input.Length).First(Mismatch)];
         }
 
-        long PartTwo(string input) {
-            var d = PartOne(input);
+        public object PartTwo(string input) {
+            var d = (long)PartOne(input);
             var lines = input.Split("\n").Select(long.Parse).ToList();
 
             foreach (var j in Range(0, lines.Count)) {

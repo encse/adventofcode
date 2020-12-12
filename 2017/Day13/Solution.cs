@@ -12,18 +12,14 @@ namespace AdventOfCode.Y2017.Day13 {
     [ProblemName("Packet Scanners")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
+        public object PartOne(string input) => Severities(Parse(input), 0).Sum();
+
+        public object PartTwo(string input) {
             var layers = Parse(input);
-            yield return PartOne(layers);
-            yield return PartTwo(layers);
+            return Enumerable
+                .Range(0, int.MaxValue)
+                .First(n => !Severities(layers, n).Any());
         }
-
-        int PartOne( Layers layers) => Severities(layers, 0).Sum();
-
-        int PartTwo(Layers layers) =>
-            Enumerable
-            .Range(0, int.MaxValue)
-            .First(n => !Severities(layers, n).Any());
 
         Layers Parse(string input) =>
             new Layers(

@@ -7,11 +7,6 @@ namespace AdventOfCode.Y2019.Day19 {
     [ProblemName("Tractor Beam")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
         Func<int, int, bool> Detector(string input) {
             var icm = new ImmutableIntCodeMachine(input);
             return (int x, int y) => {
@@ -20,7 +15,7 @@ namespace AdventOfCode.Y2019.Day19 {
             };
         }
 
-        int PartOne(string input) {
+        public object PartOne(string input) {
             var detector = Detector(input);
             return (from x in Enumerable.Range(0, 50)
                     from y in Enumerable.Range(0, 50)
@@ -28,7 +23,7 @@ namespace AdventOfCode.Y2019.Day19 {
                     select 1).Count();
         }
 
-        int PartTwo(string input) {
+        public object PartTwo(string input) {
 
             var detector = Detector(input);
 

@@ -7,14 +7,9 @@ namespace AdventOfCode.Y2017.Day05 {
     [ProblemName("A Maze of Twisty Trampolines, All Alike")]
     class Solution : Solver {
         
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
+        public object PartOne(string input) => GetStepCount(input, x => x + 1);
 
-        int PartOne(string input) => GetStepCount(input, x => x + 1);
-
-        int PartTwo(string input) => GetStepCount(input, x => x < 3 ? x + 1 : x - 1);
+        public object PartTwo(string input) => GetStepCount(input, x => x < 3 ? x + 1 : x - 1);
 
         int GetStepCount(string input, Func<int, int> update) {
             var numbers = input.Split('\n').Select(int.Parse).ToArray();

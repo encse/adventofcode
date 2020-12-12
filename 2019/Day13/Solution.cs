@@ -6,19 +6,14 @@ namespace AdventOfCode.Y2019.Day13 {
     [ProblemName("Care Package")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) {
+        public object PartOne(string input) {
             var icm = new IntCodeMachine(input);
             var output = icm.Run();
             var chunks = Chunk(output, 3);
             return chunks.Count(x => x[2] == 2);
         }
 
-        int PartTwo(string input) {
+        public object PartTwo(string input) {
             var icm = new IntCodeMachine(input);
             icm.memory[0] = 2;
             var score = 0;

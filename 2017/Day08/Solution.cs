@@ -6,14 +6,9 @@ namespace AdventOfCode.Y2017.Day08 {
 
     [ProblemName("I Heard You Like Registers")]
     class Solution : Solver {
-
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-        
-        int PartOne(string input) => Run(input).lastMax;
-        int PartTwo(string input) => Run(input).runningMax;
+ 
+        public object PartOne(string input) => Run(input).lastMax;
+        public object PartTwo(string input) => Run(input).runningMax;
 
         (int runningMax, int lastMax) Run(string input) {
             var regs = new Dictionary<string, int>();

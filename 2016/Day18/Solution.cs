@@ -7,14 +7,9 @@ namespace AdventOfCode.Y2016.Day18 {
     [ProblemName("Like a Rogue")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
+        public object PartOne(string input) => SafeCount(input, 40);
 
-        int PartOne(string input) => SafeCount(input, 40);
-
-        int PartTwo(string input) => SafeCount(input, 400000);
+        public object PartTwo(string input) => SafeCount(input, 400000);
 
         int SafeCount(string input, int lines) {
             var rowPrev = input;

@@ -7,11 +7,9 @@ namespace AdventOfCode.Y2016.Day25 {
     [ProblemName("Clock Signal")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-        }
+        public object PartTwo(string input) => null;
 
-        int PartOne(string input) {
+        public object PartOne(string input) {
             for (int a = 0; ; a++) {
                 var length = 0;
                 var expectedBit = 0;

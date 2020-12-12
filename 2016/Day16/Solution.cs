@@ -8,14 +8,9 @@ namespace AdventOfCode.Y2016.Day16 {
     [ProblemName("Dragon Checksum")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
+        public object PartOne(string input) => Checksum(input, 272);
 
-        string PartOne(string input) => Checksum(input, 272);
-
-        string PartTwo(string input) => Checksum(input, 35651584);
+        public object PartTwo(string input) => Checksum(input, 35651584);
 
         string Checksum(string st, int length) {
 

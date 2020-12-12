@@ -8,11 +8,6 @@ namespace AdventOfCode.Y2018.Day24 {
     [ProblemName("Immune System Simulator 20XX")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
         (bool immuneSystem, int units) Fight(string input, int boost) {
             var army = Parse(input);
             foreach (var g in army) {
@@ -51,9 +46,9 @@ namespace AdventOfCode.Y2018.Day24 {
             return (army.All(x => x.immuneSystem), army.Select(x => x.units).Sum());
         }
 
-        int PartOne(string input) => Fight(input, 0).units;
+        public object PartOne(string input) => Fight(input, 0).units;
 
-        int PartTwo(string input) {
+        public object PartTwo(string input) {
             var l = 0;
             var h = int.MaxValue / 2;
             while (h - l > 1) {

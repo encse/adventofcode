@@ -6,12 +6,7 @@ namespace AdventOfCode.Y2018.Day02 {
     [ProblemName("Inventory Management System")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) {
+        public object PartOne(string input) {
             var doubles = (
                 from line in input.Split("\n")
                 where CheckLine(line, 2)
@@ -31,7 +26,7 @@ namespace AdventOfCode.Y2018.Day02 {
                     select g.Count()).Any(cch => cch == n);
         }
 
-        string PartTwo(string input) {
+        public object PartTwo(string input) {
             var lines = input.Split("\n");
             return (from i in Enumerable.Range(0, lines.Length)
                     from j in Enumerable.Range(i + 1, lines.Length - i - 1)

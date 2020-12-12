@@ -7,15 +7,9 @@ namespace AdventOfCode.Y2018.Day14 {
     [ProblemName("Chocolate Charts")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-            
-        }
+        public object PartOne(string input) => Window(10).ElementAt(int.Parse(input)).st;
 
-        string PartOne(string input) => Window(10).ElementAt(int.Parse(input)).st;
-
-        int PartTwo(string input) => Window(input.Length).First(item => item.st == input).i;
+        public object PartTwo(string input) => Window(input.Length).First(item => item.st == input).i;
 
         IEnumerable<(int i, string st)> Window(int w) {
             var st = "";

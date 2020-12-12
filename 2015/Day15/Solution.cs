@@ -8,13 +8,8 @@ namespace AdventOfCode.Y2015.Day15 {
     [ProblemName("Science for Hungry People")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        long PartOne(string input) => Solve(input, null);
-        long PartTwo(string input) => Solve(input, 500);
+        public object PartOne(string input) => Solve(input, null);
+        public object PartTwo(string input) => Solve(input, 500);
 
         long Solve(string input, int? calories) {
             var ingredients = Parse(input);

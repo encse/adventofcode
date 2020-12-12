@@ -6,14 +6,9 @@ namespace AdventOfCode.Y2015.Day01 {
     [ProblemName("Not Quite Lisp")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
+        public object PartOne(string input) => Levels(input).Last().level;
 
-        int PartOne(string input) => Levels(input).Last().level;
-
-        int PartTwo(string input) => Levels(input).First(p => p.level == -1).idx;
+        public object PartTwo(string input) => Levels(input).First(p => p.level == -1).idx;
 
         IEnumerable<(int idx, int level)> Levels(string input){
             var level = 0;

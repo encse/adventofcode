@@ -8,19 +8,14 @@ namespace AdventOfCode.Y2019.Day12 {
     [ProblemName("The N-Body Problem")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) => (
+        public object PartOne(string input) => (
                 from planet in Simulate(input).ElementAt(999)
                 let pot = planet.pos.Select(Math.Abs).Sum()
                 let kin = planet.vel.Select(Math.Abs).Sum()
                 select pot * kin
             ).Sum();
 
-        long PartTwo(string input) {
+        public object PartTwo(string input) {
             var statesByDim = new long[3];
             for (var dim = 0; dim < 3; dim++) {
                 var states = new HashSet<(int,int,int,int,int,int,int,int)>();

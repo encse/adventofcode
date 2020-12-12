@@ -7,13 +7,8 @@ namespace AdventOfCode.Y2015.Day11 {
     [ProblemName("Corporate Policy")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        string PartOne(string input) => Passwords(input).First();
-        string PartTwo(string input) => Passwords(input).Skip(1).First();
+        public object PartOne(string input) => Passwords(input).First();
+        public object PartTwo(string input) => Passwords(input).Skip(1).First();
 
         IEnumerable<string> Passwords(string pwd) =>
             from word in Words(pwd) 

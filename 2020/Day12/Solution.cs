@@ -1,19 +1,13 @@
 using System;
 using System.Linq;
-using System.Collections.Generic;
 
 namespace AdventOfCode.Y2020.Day12 {
 
     [ProblemName("Rain Risk")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) => MoveShip(input, true);
-        int PartTwo(string input) => MoveShip(input, false);
+        public object PartOne(string input) => MoveShip(input, true);
+        public object PartTwo(string input) => MoveShip(input, false);
 
         int MoveShip(string input, bool part1) =>
             input

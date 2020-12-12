@@ -7,13 +7,8 @@ namespace AdventOfCode.Y2017.Day24 {
     [ProblemName("Electromagnetic Moat")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) => StrongestBridge(input, (a, b) => a.strength - b.strength);
-        int PartTwo(string input) => StrongestBridge(input, (a, b) => a.CompareTo(b));
+        public object PartOne(string input) => StrongestBridge(input, (a, b) => a.strength - b.strength);
+        public object PartTwo(string input) => StrongestBridge(input, (a, b) => a.CompareTo(b));
 
         int StrongestBridge(string input, Func<(int length, int strength), (int length, int strength), int> compare) {
 

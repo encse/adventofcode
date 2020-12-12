@@ -5,19 +5,28 @@ using System.Collections.Generic;
 using System.Reflection;
 
 namespace AdventOfCode {
-    
+
     class ProblemName : Attribute {
         public readonly string Name;
-        public ProblemName(string name){
+        public ProblemName(string name) {
             this.Name = name;
         }
     }
 
     interface Solver {
-        IEnumerable<object> Solve(string input);
+        public object PartOne(string input);
+        public object PartTwo(string input);
     }
 
     static class SolverExtensions {
+
+        public static IEnumerable<object> Solve(this Solver solver, string input) {
+            yield return solver.PartOne(input);
+            var res = solver.PartTwo(input);
+            if (res != null) {
+                yield return res;
+            }
+        }
 
         public static string GetName(this Solver solver) {
             return (
@@ -70,7 +79,7 @@ namespace AdventOfCode {
 
     class Runner {
 
-        private static string GetNormalizedInput(string file){
+        private static string GetNormalizedInput(string file) {
             var input = File.ReadAllText(file);
             if (input.EndsWith("\n")) {
                 input = input.Substring(0, input.Length - 1);
@@ -84,7 +93,7 @@ namespace AdventOfCode {
             WriteLine(ConsoleColor.White, $"{solver.DayName()}: {solver.GetName()}");
             WriteLine();
             var dir = workingDir;
-            var file = Path.Combine(workingDir,  "input.in");
+            var file = Path.Combine(workingDir, "input.in");
             var refoutFile = file.Replace(".in", ".refout");
             var refout = File.Exists(refoutFile) ? File.ReadAllLines(refoutFile) : null;
             var input = GetNormalizedInput(file);

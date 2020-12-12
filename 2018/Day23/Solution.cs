@@ -9,14 +9,9 @@ namespace AdventOfCode.Y2018.Day23 {
     [ProblemName("Experimental Emergency Teleportation")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
         int Dist((int x, int y, int z) a, (int x, int y, int z) b) => Math.Abs(a.x - b.x) + Math.Abs(a.y - b.y) + Math.Abs(a.z - b.z);
 
-        int PartOne(string input) {
+        public object PartOne(string input) {
             var drones = Parse(input);
             var maxRange = drones.Select(drone => drone.r).Max();
             var maxDrone = drones.Single(drone => drone.r == maxRange);
@@ -38,7 +33,7 @@ namespace AdventOfCode.Y2018.Day23 {
             select new Drone((parts[0], parts[1], parts[2]), parts[3])
         ).ToArray();
 
-        int PartTwo(string input) {
+        public object PartTwo(string input) {
             var drones = Parse(input);
             var minX = drones.Select(drone => drone.pos.x).Min();
             var minY = drones.Select(drone => drone.pos.y).Min();

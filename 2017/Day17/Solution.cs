@@ -5,12 +5,7 @@ namespace AdventOfCode.Y2017.Day17 {
     [ProblemName("Spinlock")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) {
+        public object PartOne(string input) {
             var step = int.Parse(input);
             var nums = new List<int>() { 0 };
             var pos = 0;
@@ -21,7 +16,7 @@ namespace AdventOfCode.Y2017.Day17 {
             return nums[(pos + 1) % nums.Count];
         }
 
-        int PartTwo(string input) {
+        public object PartTwo(string input) {
             var step = int.Parse(input);
             var pos = 0;
             var numsCount = 1;

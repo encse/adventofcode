@@ -11,12 +11,7 @@ namespace AdventOfCode.Y2019.Day24 {
     [ProblemName("Planet of Discord")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) {
+        public object PartOne(string input) {
             int[] levels = Parse(input);
 
             var seen = new HashSet<int>();
@@ -29,7 +24,7 @@ namespace AdventOfCode.Y2019.Day24 {
             return biodiversity;
         }
 
-        int PartTwo(string input) {
+        public object PartTwo(string input) {
             int[] levels = Parse(input);
 
             for (var i = 0; i < 200; i++) {

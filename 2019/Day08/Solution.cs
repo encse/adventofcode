@@ -7,12 +7,7 @@ namespace AdventOfCode.Y2019.Day08 {
     [ProblemName("Space Image Format")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) {
+        public object PartOne(string input) {
             var zeroMin = int.MaxValue;
             var checksum = 0;
             foreach (var layer in Layers(input)) {
@@ -28,7 +23,7 @@ namespace AdventOfCode.Y2019.Day08 {
             return checksum;
         }
 
-        string PartTwo(string input) {
+        public object PartTwo(string input) {
             var img = new int[6 * 25];
             foreach (var layer in Layers(input).Reverse()) {
                 for (var i = 0; i < img.Length; i++) {

@@ -8,14 +8,9 @@ namespace AdventOfCode.Y2018.Day10 {
     [ProblemName("The Stars Align")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
+        public object PartOne(string input) => OCR(Solver(input).mx);
 
-        string PartOne(string input) => OCR(Solver(input).mx);
-
-        int PartTwo(string input) => Solver(input).seconds;
+        public object PartTwo(string input) => Solver(input).seconds;
 
         (bool[,] mx, int seconds) Solver(string input) {
             // position=< 21992, -10766> velocity=<-2,  1>

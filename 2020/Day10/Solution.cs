@@ -7,12 +7,7 @@ namespace AdventOfCode.Y2020.Day10 {
     [ProblemName("Adapter Array")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) {
+        public object PartOne(string input) {
             var jolts = Parse(input);
             var window = jolts.Skip(1).Zip(jolts).Select(p => (current: p.First, prev: p.Second));
 
@@ -21,7 +16,7 @@ namespace AdventOfCode.Y2020.Day10 {
                  window.Count(pair => pair.current - pair.prev == 3);
         }
 
-        long PartTwo(string input) {
+        public object PartTwo(string input) {
             var jolts = Parse(input);
 
             // dynamic programming with rolling variables a, b, c for the function values at i + 1, i + 2 and i + 3.

@@ -7,13 +7,8 @@ namespace AdventOfCode.Y2015.Day14 {
     [ProblemName("Reindeer Olympics")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) => Race(Parse(input)).Skip(2502).First().Max();
-        int PartTwo(string input) => Race2(Parse(input)).Skip(2502).First().Max();
+        public object PartOne(string input) => Race(Parse(input)).Skip(2502).First().Max();
+        public object PartTwo(string input) => Race2(Parse(input)).Skip(2502).First().Max();
 
         IEnumerable<int>[] Parse(string input) => input.Split('\n').Select(Reindeer).ToArray();
 

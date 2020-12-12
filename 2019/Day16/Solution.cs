@@ -8,12 +8,7 @@ namespace AdventOfCode.Y2019.Day16 {
     [ProblemName("Flawed Frequency Transmission")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        string PartOne(string input) {
+        public object PartOne(string input) {
 
             int[] Fft(int[] digits) {
                 IEnumerable<int> Pattern(int digit) {
@@ -44,7 +39,7 @@ namespace AdventOfCode.Y2019.Day16 {
             return string.Join("", digits.Take(8));
         }
 
-        string PartTwo(string input) {
+        public object PartTwo(string input) {
             /* 
                 Let's introduce the following matrix:
                         FFT = [

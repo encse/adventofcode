@@ -6,20 +6,16 @@ namespace AdventOfCode.Y2017.Day03 {
 
     [ProblemName("Spiral Memory")]
     class Solution : Solver {
-        
-        public IEnumerable<object> Solve(string input) {
-            var num = int.Parse(input);
-            yield return PartOne(num);
-            yield return PartTwo(num);
-        }
 
-        int PartOne(int num) {
-            var (x, y) = SpiralCoordinates().ElementAt(num - 1);
+        public object PartOne(string input) {
+            var (x, y) = SpiralCoordinates().ElementAt(int.Parse(input) - 1);
             return Math.Abs(x) + Math.Abs(y);
         }
 
-        int PartTwo(int num) =>
-            SpiralSums().First(v => v > num);
+        public object PartTwo(string input) {
+            var num = int.Parse(input);
+           return SpiralSums().First(v => v > num);
+        }
 
         IEnumerable<(int, int)> SpiralCoordinates() {
             var (x, y) = (0, 0);

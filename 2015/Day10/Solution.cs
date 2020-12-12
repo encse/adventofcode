@@ -7,13 +7,8 @@ namespace AdventOfCode.Y2015.Day10 {
     [ProblemName("Elves Look, Elves Say")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) => LookAndSay(input).Skip(39).First().Length;
-        int PartTwo(string input) => LookAndSay(input).Skip(49).First().Length;
+        public object PartOne(string input) => LookAndSay(input).Skip(39).First().Length;
+        public object PartTwo(string input) => LookAndSay(input).Skip(49).First().Length;
 
         IEnumerable<string> LookAndSay(string input) {
             while (true) {

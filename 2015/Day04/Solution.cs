@@ -3,21 +3,14 @@ using System.Text;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 
 namespace AdventOfCode.Y2015.Day04 {
 
     [ProblemName("The Ideal Stocking Stuffer")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-
-        }
-
-        int PartOne(string input) => ParallelFind(input, "00000");
-        int PartTwo(string input) => ParallelFind(input, "000000");
+        public object PartOne(string input) => ParallelFind(input, "00000");
+        public object PartTwo(string input) => ParallelFind(input, "000000");
 
         int ParallelFind(string input, string prefix) {
             var q = new ConcurrentQueue<int>();

@@ -9,17 +9,12 @@ namespace AdventOfCode.Y2020.Day02 {
     [ProblemName("Password Philosophy")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) => ValidCount(input, (PasswordEntry pe) => {
+        public object PartOne(string input) => ValidCount(input, (PasswordEntry pe) => {
             var count = pe.password.Count(ch => ch == pe.ch);
             return pe.a <= count && count <= pe.b;
         });
 
-        int PartTwo(string input) => ValidCount(input, (PasswordEntry pe) => {
+        public object PartTwo(string input) => ValidCount(input, (PasswordEntry pe) => {
             return (pe.password[pe.a - 1] == pe.ch) ^ (pe.password[pe.b - 1] == pe.ch);
         });
 

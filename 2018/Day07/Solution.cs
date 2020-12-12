@@ -7,12 +7,7 @@ namespace AdventOfCode.Y2018.Day07 {
     [ProblemName("The Sum of Its Parts")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        string PartOne(string input) {
+        public object PartOne(string input) {
 
             var sb = new StringBuilder();
             var graph = Parse(input);
@@ -34,7 +29,7 @@ namespace AdventOfCode.Y2018.Day07 {
             return sb.ToString();
         }
 
-        int PartTwo(string input) {
+        public object PartTwo(string input) {
             var time = 0;
             var graph = Parse(input);
 

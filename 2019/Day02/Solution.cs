@@ -6,14 +6,9 @@ namespace AdventOfCode.Y2019.Day02 {
     [ProblemName("1202 Program Alarm")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
+        public object PartOne(string input) => ExecIntCode(new IntCodeMachine(input), 12, 2);
 
-        long PartOne(string input) => ExecIntCode(new IntCodeMachine(input), 12, 2);
-
-        int PartTwo(string input) {
+        public object PartTwo(string input) {
             var icm = new IntCodeMachine(input);
 
             for (var sum = 0; ; sum++) {

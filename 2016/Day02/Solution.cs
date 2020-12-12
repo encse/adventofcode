@@ -6,13 +6,8 @@ namespace AdventOfCode.Y2016.Day02 {
     [ProblemName("Bathroom Security")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        string PartOne(string input) => Solve(input, "123\n456\n789");
-        string PartTwo(string input) => Solve(input, "  1  \n 234 \n56789\n ABC \n  D  ");
+        public object PartOne(string input) => Solve(input, "123\n456\n789");
+        public object PartTwo(string input) => Solve(input, "  1  \n 234 \n56789\n ABC \n  D  ");
 
         string Solve(string input, string keypad) {
             var res = "";
