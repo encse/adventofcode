@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace AdventOfCode.Y2020.Day03 {
 
     [ProblemName("Toboggan Trajectory")]

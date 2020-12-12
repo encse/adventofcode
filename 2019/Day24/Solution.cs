@@ -4,9 +4,7 @@ using System.Linq;
 
 namespace AdventOfCode.Y2019.Day24 {
 
-    record Position(int ilevel, int irow, int icol) {
-
-    }
+    record Position(int ilevel, int irow, int icol) {}
 
     [ProblemName("Planet of Discord")]
     class Solution : Solver {
