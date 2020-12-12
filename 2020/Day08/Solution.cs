@@ -9,14 +9,9 @@ namespace AdventOfCode.Y2020.Day08 {
     [ProblemName("Handheld Halting")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
+        public object PartOne(string input) => Run(Parse(input)).acc;
 
-        int PartOne(string input) => Run(Parse(input)).acc;
-
-        int PartTwo(string input) =>
+        public object PartTwo(string input) =>
             Patches(Parse(input))
                 .Select(Run)
                 .First(res => res.terminated).acc;

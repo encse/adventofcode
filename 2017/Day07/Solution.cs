@@ -17,7 +17,18 @@ namespace AdventOfCode.Y2017.Day07 {
     [ProblemName("Recursive Circus")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
+        public object PartOne(string input) => Root(Parse(input)).Id;
+
+        public object PartTwo(string input) {
+            var tree = Parse(input);
+            var root = Root(tree);
+            ComputeTreeWeights(root, tree);
+            var bogusChild = BogusChild(root, tree);
+            var desiredWeight = tree[root.Children.First(childId => childId != bogusChild.Id)].TreeWeight;
+            return Fix(bogusChild, desiredWeight, tree);
+        }
+
+        Tree Parse(string input) {
             var tree = new Tree();
             foreach (var line in input.Split('\n')) {
                 var parts = Regex.Match(line, @"(?<id>[a-z]+) \((?<weight>[0-9]+)\)( -> (?<children>.*))?");
@@ -32,19 +43,7 @@ namespace AdventOfCode.Y2017.Day07 {
                             : Regex.Split(parts.Groups["children"].Value, ", "),
                     });
             }
-
-            yield return PartOne(tree);
-            yield return PartTwo(tree);
-        }
-
-        string PartOne(Tree tree) => Root(tree).Id;
-
-        int PartTwo(Tree tree) {
-            var root = Root(tree);
-            ComputeTreeWeights(root, tree);
-            var bogusChild = BogusChild(root, tree);
-            var desiredWeight = tree[root.Children.First(childId => childId != bogusChild.Id)].TreeWeight;
-            return Fix(bogusChild, desiredWeight, tree);
+            return tree;
         }
 
         Node Root(Tree tree) =>

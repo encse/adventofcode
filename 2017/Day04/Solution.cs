@@ -7,15 +7,10 @@ namespace AdventOfCode.Y2017.Day04 {
     [ProblemName("High-Entropy Passphrases")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string lines) =>
+        public object PartOne(string lines) =>
             ValidLineCount(lines, word => word);
 
-        int PartTwo(string lines) =>
+        public object PartTwo(string lines) =>
             ValidLineCount(lines, word => string.Concat(word.OrderBy(ch => ch)));
 
         int ValidLineCount(string lines, Func<string, string> normalizer) =>

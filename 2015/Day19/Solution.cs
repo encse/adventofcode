@@ -7,17 +7,12 @@ namespace AdventOfCode.Y2015.Day19 {
     [ProblemName("Medicine for Rudolph")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) {
+        public object PartOne(string input) {
             var (rules, m) = Parse(input);
             return ReplaceAll(rules, m).ToHashSet().Count;
         }
 
-        int PartTwo(string input) {
+        public object PartTwo(string input) {
             var (rules, m) = Parse(input);
             Random r = new Random();
             var st = m;

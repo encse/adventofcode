@@ -7,12 +7,7 @@ namespace AdventOfCode.Y2018.Day19 {
     [ProblemName("Go With The Flow")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) {
+        public object PartOne(string input) {
             var ip = 0;
             var ipReg = int.Parse(input.Split("\n").First().Substring("#ip ".Length));
             var prg = input.Split("\n").Skip(1).ToArray();
@@ -27,7 +22,7 @@ namespace AdventOfCode.Y2018.Day19 {
             return regs[0];
         }
 
-        int PartTwo(string input) {
+        public object PartTwo(string input) {
             var t = 10551292;
             var r0 = 0;
             for (var x = 1; x <= t; x++) {

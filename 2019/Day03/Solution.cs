@@ -7,14 +7,9 @@ namespace AdventOfCode.Y2019.Day03 {
     [ProblemName("Crossed Wires")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
+        public object PartOne(string input) => Solve(input, (x) => Math.Abs(x.irow) + Math.Abs(x.icol));
 
-        int PartOne(string input) => Solve(input, (x) => Math.Abs(x.irow) + Math.Abs(x.icol));
-
-        int PartTwo(string input) => Solve(input, (x) => x.distance1 + x.distance2);
+        public object PartTwo(string input) => Solve(input, (x) => x.distance1 + x.distance2);
 
         int Solve(string input, Func<(int irow, int icol, int distance1, int distance2), int> distance) {
             var paths = input.Split("\n");

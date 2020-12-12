@@ -7,17 +7,12 @@ namespace AdventOfCode.Y2017.Day18 {
     [ProblemName("Duet")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        long PartOne(string input) =>
+        public object PartOne(string input) =>
             new Machine1()
                 .Execute(input)
                 .First(received => received != null).Value;
 
-        int PartTwo(string input) {
+        public object PartTwo(string input) {
             var p0Input = new Queue<long>();
             var p1Input = new Queue<long>();
 

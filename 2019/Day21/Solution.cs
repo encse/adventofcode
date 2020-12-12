@@ -6,12 +6,7 @@ namespace AdventOfCode.Y2019.Day21 {
     [ProblemName("Springdroid Adventure")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        long PartOne(string input) {
+        public object PartOne(string input) {
             var icm = new IntCodeMachine(input);
             
             // J = (¬A ∨ ¬B ∨ ¬C) ∧ D  
@@ -26,7 +21,7 @@ namespace AdventOfCode.Y2019.Day21 {
             ).Last();
         }
 
-        long PartTwo(string input) {
+        public object PartTwo(string input) {
 
              // J = (¬A ∨ ¬B ∨ ¬C) ∧ D ∧ (H ∨ E) 
              // same as part 1, but also check that D is not a dead end

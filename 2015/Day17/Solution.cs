@@ -7,13 +7,8 @@ namespace AdventOfCode.Y2015.Day17 {
     [ProblemName("No Such Thing as Too Much")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) => Fill(Parse(input)).Count();
-        int PartTwo(string input) {
+        public object PartOne(string input) => Fill(Parse(input)).Count();
+        public object PartTwo(string input) {
             var combinations = Fill(Parse(input)).ToArray();
             var shortest = combinations.Select(combination => combination.Count()).Min();
             return combinations.Count(combination => combination.Count() == shortest);

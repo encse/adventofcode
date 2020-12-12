@@ -6,14 +6,9 @@ namespace AdventOfCode.Y2017.Day19 {
     [ProblemName("A Series of Tubes")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
+        public object PartOne(string input) => FollowPath(input).msg;
 
-        string PartOne(string input) => FollowPath(input).msg;
-
-        int PartTwo(string input) => FollowPath(input).steps;
+        public object PartTwo(string input) => FollowPath(input).steps;
 
         (string msg, int steps) FollowPath(string input){
             var map = input.Split('\n');

@@ -9,14 +9,9 @@ namespace AdventOfCode.Y2016.Day21 {
     [ProblemName("Scrambled Letters and Hash")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
+        public object PartOne(string input) => string.Join("", Parse(input)("abcdefgh"));
 
-        string PartOne(string input) => string.Join("", Parse(input)("abcdefgh"));
-
-        string PartTwo(string input) {
+        public object PartTwo(string input) {
             var scramble = Parse(input);
             return string.Join("", Permutations("abcdefgh".ToArray()).First(p => scramble(p).SequenceEqual("fbgdceah")));
         }

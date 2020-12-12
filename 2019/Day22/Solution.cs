@@ -8,19 +8,14 @@ namespace AdventOfCode.Y2019.Day22 {
     [ProblemName("Slam Shuffle")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        BigInteger PartOne(string input) {
+        public object PartOne(string input) {
             var m = 10007;
             var iter = 1;
             var (a, b) = Parse(input, m, iter);
             return Mod(a * 2019 + b, m);
         }
 
-        BigInteger PartTwo(string input) {
+        public object PartTwo(string input) {
             var m = 119315717514047;
             var iter = 101741582076661;
             var (a, b) = Parse(input, m, iter);

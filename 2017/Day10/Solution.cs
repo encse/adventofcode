@@ -6,18 +6,13 @@ namespace AdventOfCode.Y2017.Day10 {
     [ProblemName("Knot Hash")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) {
+        public object PartOne(string input) {
             var chars = input.Split(',').Select(int.Parse);
             var hash = KnotHash(chars, 1);
             return hash[0] * hash[1];
         }
 
-        string PartTwo(string input) {
+        public object PartTwo(string input) {
             var suffix = new [] { 17, 31, 73, 47, 23 };
             var chars = input.ToCharArray().Select(b => (int)b).Concat(suffix);
 

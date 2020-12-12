@@ -8,17 +8,12 @@ namespace AdventOfCode.Y2016.Day01 {
     [ProblemName("No Time for a Taxicab")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) {
+        public object PartOne(string input) {
             var (irow, icol) = Travel(input).Last();
             return irow + icol;
         }
 
-        int PartTwo(string input) {
+        public object PartTwo(string input) {
             var seen = new HashSet<(int, int)>();
             foreach (var pos in Travel(input)) {
                 if (seen.Contains(pos)) {

@@ -7,11 +7,9 @@ namespace AdventOfCode.Y2017.Day25 {
     [ProblemName("The Halting Problem")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-        }
+        public object PartTwo(string input) => null;
 
-        int PartOne(string input) {
+        public object PartOne(string input) {
             var machine = Parse(input);
             var tape = new Dictionary<int, int>();
             var pos = 0;

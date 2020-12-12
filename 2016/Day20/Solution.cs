@@ -6,12 +6,7 @@ namespace AdventOfCode.Y2016.Day20 {
     [ProblemName("Firewall Rules")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        long PartOne(string input) {
+        public object PartOne(string input) {
             var k = 0L;
             foreach (var range in Parse(input)) {
                 if (k < range.min) {
@@ -23,7 +18,7 @@ namespace AdventOfCode.Y2016.Day20 {
             return k;
         }
 
-        long PartTwo(string input) {
+        public object PartTwo(string input) {
             var k = 0L;
             var sum = 0L;
             foreach (var range in Parse(input)) {

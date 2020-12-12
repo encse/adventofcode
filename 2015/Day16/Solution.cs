@@ -20,15 +20,10 @@ namespace AdventOfCode.Y2015.Day16 {
             ["perfumes"] = 1,
         };
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) =>
+        public object PartOne(string input) =>
             Parse(input).FindIndex(p => p.Keys.All(k => p[k] == target[k])) + 1;
 
-        int PartTwo(string input) =>
+        public object PartTwo(string input) =>
             Parse(input).FindIndex(p => p.Keys.All(k => {
                 if (k == "cats" || k == "trees") {
                     return p[k] > target[k];

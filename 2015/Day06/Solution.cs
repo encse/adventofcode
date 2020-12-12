@@ -8,13 +8,8 @@ namespace AdventOfCode.Y2015.Day06 {
     [ProblemName("Probably a Fire Hazard")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) => Run(input, _ => 1, _ => 0, v => 1 - v);
-        int PartTwo(string input) => Run(input, v => v + 1, v => v > 0 ? v - 1 : 0, v => v + 2);
+        public object PartOne(string input) => Run(input, _ => 1, _ => 0, v => 1 - v);
+        public object PartTwo(string input) => Run(input, v => v + 1, v => v > 0 ? v - 1 : 0, v => v + 2);
 
         int Run(string input, Func<int, int> turnOn, Func<int, int> turnOff, Func<int, int> toggle) {
             int[] apply(int[] grid, string line, string pattern, Func<int, int> dg) {

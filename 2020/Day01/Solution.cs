@@ -6,12 +6,7 @@ namespace AdventOfCode.Y2020.Day01 {
     [ProblemName("Report Repair")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        long PartOne(string input) {
+        public object PartOne(string input) {
             var numbers = Numbers(input);
             return (
                 from x in numbers 
@@ -21,7 +16,7 @@ namespace AdventOfCode.Y2020.Day01 {
             ).First();
         }
 
-        long PartTwo(string input) {
+        public object PartTwo(string input) {
             var numbers = Numbers(input);
             return (
                 from x in numbers 

@@ -6,14 +6,9 @@ namespace AdventOfCode.Y2017.Day01 {
     [ProblemName("Inverse Captcha")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
+        public object PartOne(string input) => InverseCaptcha(input, 1);
 
-        int PartOne(string input) => InverseCaptcha(input, 1);
-
-        int PartTwo(string input) => InverseCaptcha(input, input.Length / 2);
+        public object PartTwo(string input) => InverseCaptcha(input, input.Length / 2);
 
         int InverseCaptcha(string input, int skip) {
             return (

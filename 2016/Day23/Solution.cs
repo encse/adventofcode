@@ -7,13 +7,8 @@ namespace AdventOfCode.Y2016.Day23 {
     [ProblemName("Safe Cracking")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) => Solve(input, 7);
-        int PartTwo(string input) => Solve(input, 12);
+        public object PartOne(string input) => Solve(input, 7);
+        public object PartTwo(string input) => Solve(input, 12);
         
         int Solve(string input, int a) {
             var prg = Parse(Patch(input));

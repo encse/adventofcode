@@ -7,14 +7,9 @@ namespace AdventOfCode.Y2018.Day09 {
     [ProblemName("Marble Mania")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
+        public object PartOne(string input) => Solve(input, 1);
 
-        long PartOne(string input) => Solve(input, 1);
-
-        long PartTwo(string input) => Solve(input, 100);
+        public object PartTwo(string input) => Solve(input, 100);
 
         long Solve(string input, int mul) {
 

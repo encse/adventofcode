@@ -11,16 +11,11 @@ namespace AdventOfCode.Y2019.Day20 {
     [ProblemName("Donut Maze")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) {
+        public object PartOne(string input) {
             return Solve(input, false);
         }
 
-        int PartTwo(string input) {
+        public object PartTwo(string input) {
             return Solve(input, true);
         }
 

@@ -7,12 +7,7 @@ namespace AdventOfCode.Y2018.Day06 {
     [ProblemName("Chronal Coordinates")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) {
+        public object PartOne(string input) {
             var coords = Parse(input);
 
             var minX = coords.Min(coord => coord.x) - 1;
@@ -49,7 +44,7 @@ namespace AdventOfCode.Y2018.Day06 {
             return area.Max();
         }
 
-        int PartTwo(string input) {
+        public object PartTwo(string input) {
             var coords = Parse(input);
 
             var minX = coords.Min(coord => coord.x) - 1;

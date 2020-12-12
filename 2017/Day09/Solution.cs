@@ -6,13 +6,8 @@ namespace AdventOfCode.Y2017.Day09 {
     [ProblemName("Stream Processing")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-        
-        int PartOne(string input) => BlockScores(input).Sum();
-        int PartTwo(string input) => Classify(input).Where((x) => x.garbage).Count();
+        public object PartOne(string input) => BlockScores(input).Sum();
+        public object PartTwo(string input) => Classify(input).Where((x) => x.garbage).Count();
 
         IEnumerable<int> BlockScores(string input) {
             var score = 0;

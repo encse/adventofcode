@@ -12,14 +12,9 @@ namespace AdventOfCode.Y2015.Day07 {
         class Calc : Dictionary<string, Func<State, int>> { }
 
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
+        public object PartOne(string input) => Parse(input)["a"](new State());
 
-        int PartOne(string input) => Parse(input)["a"](new State());
-
-        int PartTwo(string input) {
+        public object PartTwo(string input) {
             var calc = Parse(input);
             return calc["a"](new State() { ["b"] = calc["a"](new State()) });
         }

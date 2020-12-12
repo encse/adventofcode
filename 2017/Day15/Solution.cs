@@ -6,15 +6,10 @@ namespace AdventOfCode.Y2017.Day15 {
     [ProblemName("Dueling Generators")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) =>
+        public object PartOne(string input) =>
             MatchCount(Combine(ParseGenerators(input)).Take(40000000));
 
-        int PartTwo(string input) {
+        public object PartTwo(string input) {
             var generators = ParseGenerators(input);
             return MatchCount(Combine((generators.a.Where(a => (a & 3) == 0), generators.b.Where(a => (a & 7) == 0))).Take(5000000));
         }

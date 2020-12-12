@@ -7,12 +7,7 @@ namespace AdventOfCode.Y2016.Day04 {
     [ProblemName("Security Through Obscurity")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) => (
+        public object PartOne(string input) => (
             from i in Parse(input)
             let name = i.name.Replace("-", "")
             let computedChecksum = string.Join("", (from ch in name group ch by ch into g orderby -g.Count(), g.Key select g.Key).Take(5))
@@ -20,7 +15,7 @@ namespace AdventOfCode.Y2016.Day04 {
             select i.sectorid
         ).Sum();
 
-        int PartTwo(string input) => (
+        public object PartTwo(string input) => (
             from i in Parse(input)
             let name = string.Join("", from ch in i.name select ch == '-' ? ' ' : (char)('a' + (ch - 'a' + i.sectorid) % 26))
             where name.Contains("northpole")

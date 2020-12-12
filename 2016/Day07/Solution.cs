@@ -6,15 +6,10 @@ namespace AdventOfCode.Y2016.Day07 {
     [ProblemName("Internet Protocol Version 7")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) =>
+        public object PartOne(string input) =>
             input.Split('\n').Count(TLS);
 
-        int PartTwo(string input) =>
+        public object PartTwo(string input) =>
             input.Split('\n').Count(SSL);
 
 

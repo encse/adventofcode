@@ -7,11 +7,7 @@ namespace AdventOfCode.Y2018.Day25 {
     [ProblemName("Four-Dimensional Adventure")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-        }
-
-        int PartOne(string input) {
+        public object PartOne(string input) {
             var sets = new List<HashSet<int[]>>();
 
             foreach (var line in input.Split("\n")) {
@@ -43,6 +39,7 @@ namespace AdventOfCode.Y2018.Day25 {
             return sets.Count;
         }
 
+        public object PartTwo(string input) => null;
         int Dist(int[] a, int[] b) => Enumerable.Range(0, a.Length).Select(i => Math.Abs(a[i] - b[i])).Sum();
 
     }

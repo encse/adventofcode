@@ -8,12 +8,7 @@ namespace AdventOfCode.Y2019.Day06 {
     [ProblemName("Universal Orbit Map")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) {
+        public object PartOne(string input) {
             var childToParent = ParseTree(input);
             return (
                 from node in childToParent.Keys
@@ -21,7 +16,7 @@ namespace AdventOfCode.Y2019.Day06 {
             ).Sum();
         }
 
-        int PartTwo(string input) {
+        public object PartTwo(string input) {
             var childToParent = ParseTree(input);
             var ancestors1 = new Stack<string>(GetAncestors(childToParent, "YOU"));
             var ancestors2 = new Stack<string>(GetAncestors(childToParent, "SAN"));

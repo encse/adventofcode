@@ -6,13 +6,8 @@ namespace AdventOfCode.Y2015.Day23 {
     [ProblemName("Opening the Turing Lock")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        long PartOne(string input) => Solve(input, 0);
-        long PartTwo(string input) => Solve(input, 1);
+        public object PartOne(string input) => Solve(input, 0);
+        public object PartTwo(string input) => Solve(input, 1);
 
         long Solve(string input, long a) {
             var regs = new Dictionary<string, long>();

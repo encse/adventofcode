@@ -9,14 +9,9 @@ namespace AdventOfCode.Y2017.Day21 {
     [ProblemName("Fractal Art")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
+        public object PartOne(string input) => Iterate(input, 5);
 
-        int PartOne(string input) => Iterate(input, 5);
-
-        int PartTwo(string input) => Iterate(input, 18);
+        public object PartTwo(string input) => Iterate(input, 18);
 
         int Iterate(string input, int iterations) {
             var mtx = Mtx.FromString(".#./..#/###");

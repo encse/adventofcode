@@ -6,14 +6,9 @@ namespace AdventOfCode.Y2015.Day03 {
     [ProblemName("Perfectly Spherical Houses in a Vacuum")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
+        public object PartOne(string input) => Run(input, 1);
 
-        int PartOne(string input) => Run(input, 1);
-
-        int PartTwo(string input) => Run(input, 2);
+        public object PartTwo(string input) => Run(input, 2);
 
         int Run(string input, int actors) {
 

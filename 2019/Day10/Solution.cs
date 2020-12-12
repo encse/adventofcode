@@ -12,14 +12,9 @@ namespace AdventOfCode.Y2019.Day10 {
     [ProblemName("Monitoring Station")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
+        public object PartOne(string input) => SelectStationPosition(input).asteroidsByDir.Count;
 
-        int PartOne(string input) => SelectStationPosition(input).asteroidsByDir.Count;
-
-        int PartTwo(string input) {
+        public object PartTwo(string input) {
             var asteroid = Destroy(input).ElementAt(199);
             return (asteroid.icol * 100 + asteroid.irow);
         }

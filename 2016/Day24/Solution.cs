@@ -7,14 +7,9 @@ namespace AdventOfCode.Y2016.Day24 {
     [ProblemName("Air Duct Spelunking")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
+        public object PartOne(string input) => Routes(input, false).Min();
 
-        int PartOne(string input) => Routes(input, false).Min();
-
-        int PartTwo(string input) => Routes(input, true).Min();
+        public object PartTwo(string input) => Routes(input, true).Min();
 
         IEnumerable<int> Routes(string input, bool loop) {
             var map = new Map(input);

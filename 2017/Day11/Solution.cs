@@ -7,14 +7,9 @@ namespace AdventOfCode.Y2017.Day11 {
     [ProblemName("Hex Ed")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
+        public object PartOne(string input) => Distances(input).Last();
 
-        int PartOne(string input) => Distances(input).Last();
-
-        int PartTwo(string input) => Distances(input).Max();
+        public object PartTwo(string input) => Distances(input).Max();
 
         IEnumerable<int> Distances(string input) => 
             from w in Wander(input) select (Math.Abs(w.x) + Math.Abs(w.y) + Math.Abs(w.z))/2;

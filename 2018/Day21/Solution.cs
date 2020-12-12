@@ -17,13 +17,8 @@ namespace AdventOfCode.Y2018.Day21 {
     [ProblemName("Chronal Conversion")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) => Run("one", input).First();
-        int PartTwo(string input) => Run("two", input).Last();
+        public object PartOne(string input) => Run("one", input).First();
+        public object PartTwo(string input) => Run("two", input).Last();
 
         IEnumerable<int> Run(string name, string input) {
             var run = Compile<int[], IEnumerable<int[]>>(name, input, new int[]{28});

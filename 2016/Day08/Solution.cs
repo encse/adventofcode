@@ -7,12 +7,7 @@ namespace AdventOfCode.Y2016.Day08 {
     [ProblemName("Two-Factor Authentication")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) {
+        public object PartOne(string input) {
             var mtx = Execute(input);
             return (
                 from irow in Enumerable.Range(0, mtx.GetLength(0))
@@ -22,7 +17,7 @@ namespace AdventOfCode.Y2016.Day08 {
             ).Count();
         }
 
-        string PartTwo(string input) {
+        public object PartTwo(string input) {
             var mtx = Execute(input);
             var map = new Dictionary<int, char>() {
                 [0x19297A52] = 'A', [0x392E4A5C] = 'B', [0x1928424C] = 'C', [0x39294A5C] = 'D', [0x3D0E421E] = 'E',

@@ -8,12 +8,7 @@ namespace AdventOfCode.Y2018.Day16 {
     [ProblemName("Chronal Classification")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) {
+        public object PartOne(string input) {
             var res = 0;
             var (testCases, prg) = Parse(input);
             foreach (var testCase in testCases) {
@@ -32,7 +27,7 @@ namespace AdventOfCode.Y2018.Day16 {
             return res;
         }
 
-        int PartTwo(string input) {
+        public object PartTwo(string input) {
 
             var constraints = Enumerable.Range(0, 16).ToDictionary(i => i, i => Enumerable.Range(0, 16).ToList());
             var (testCases, prg) = Parse(input);

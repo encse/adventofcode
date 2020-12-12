@@ -6,17 +6,15 @@ namespace AdventOfCode.Y2017.Day06 {
     [ProblemName("Memory Reallocation")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input.Split('\t').Select(int.Parse).ToList());
-            yield return PartTwo(input.Split('\t').Select(int.Parse).ToList());
-        }
+        public object PartOne(string input) => GetStepCount(Parse(input));
 
-        int PartOne(List<int> numbers) => GetStepCount(numbers);
-
-        int PartTwo(List<int> numbers) {
+        public object PartTwo(string input) {
+            var numbers = Parse(input);
             GetStepCount(numbers);
             return GetStepCount(numbers);
         }
+
+        List<int> Parse(string input) => input.Split('\t').Select(int.Parse).ToList();
 
         int GetStepCount(List<int> numbers) {
             var stepCount = 0;

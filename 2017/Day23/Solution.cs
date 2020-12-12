@@ -6,12 +6,7 @@ namespace AdventOfCode.Y2017.Day23 {
     [ProblemName("Coprocessor Conflagration")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) {
+        public object PartOne(string input) {
             var regs = new Dictionary<string, int>();
             int ip = 0;
             int getReg(string reg) {
@@ -51,7 +46,7 @@ namespace AdventOfCode.Y2017.Day23 {
             return mulCount;
         }
 
-        int PartTwo(string input) {
+        public object PartTwo(string input) {
             var c = 0;
             for (int b = 107900; b <= 124900; b += 17) {
                 if (!IsPrime(b)) {

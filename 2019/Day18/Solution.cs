@@ -89,12 +89,7 @@ namespace AdventOfCode.Y2019.Day18 {
     [ProblemName("Many-Worlds Interpretation")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) {
+        public object PartOne(string input) {
             var maze = new Maze(input);
 
 
@@ -103,7 +98,7 @@ namespace AdventOfCode.Y2019.Day18 {
         }
 
 
-        int PartTwo(string input) {
+        public object PartTwo(string input) {
             var d = 0;
             foreach (var subMaze in GenerateSubMazes(input)) {
                 var maze = new Maze(subMaze);

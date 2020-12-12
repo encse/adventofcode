@@ -7,14 +7,9 @@ namespace AdventOfCode.Y2020.Day05 {
     [ProblemName("Binary Boarding")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
+        public object PartOne(string input) => Seats(input).Max();
 
-        int PartOne(string input) => Seats(input).Max();
-
-        int PartTwo(string input) {
+        public object PartTwo(string input) {
             var seats = Seats(input);
             var (min, max) = (seats.Min(), seats.Max());
             return Enumerable.Range(min, max - min + 1).Single(id => !seats.Contains(id));

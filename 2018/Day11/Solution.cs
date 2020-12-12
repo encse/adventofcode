@@ -5,17 +5,12 @@ namespace AdventOfCode.Y2018.Day11 {
     [ProblemName("Chronal Charge")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        string PartOne(string input) {
+        public object PartOne(string input) {
             var res = Solver(int.Parse(input), 3);
             return $"{res.xMax},{res.yMax}";
         }
 
-        string PartTwo(string input) {
+        public object PartTwo(string input) {
             var res = Solver(int.Parse(input), 300);
             return $"{res.xMax},{res.yMax},{res.dMax}";
         }

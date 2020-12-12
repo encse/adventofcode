@@ -8,12 +8,7 @@ namespace AdventOfCode.Y2018.Day04 {
     [ProblemName("Repose Record")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) {
+        public object PartOne(string input) {
             var foo = from day in Parse(input)
                     group day by day.guard into g
                     select new { 
@@ -28,7 +23,7 @@ namespace AdventOfCode.Y2018.Day04 {
             return fooT.guard * min;
         }
 
-        int PartTwo(string input) {
+        public object PartTwo(string input) {
             var foo = from day in Parse(input)
                     group day by day.guard into g
                     select new { 

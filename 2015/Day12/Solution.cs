@@ -7,13 +7,8 @@ namespace AdventOfCode.Y2015.Day12 {
     [ProblemName("JSAbacusFramework.io")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) => Solve(input, false);
-        int PartTwo(string input) => Solve(input, true);
+        public object PartOne(string input) => Solve(input, false);
+        public object PartTwo(string input) => Solve(input, true);
 
         int Solve(string input, bool skipRed) {
             int Traverse(JsonElement t) {

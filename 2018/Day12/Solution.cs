@@ -6,14 +6,9 @@ namespace AdventOfCode.Y2018.Day12 {
     [ProblemName("Subterranean Sustainability")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
+        public object PartOne(string input) => Iterate(input, 20);
 
-        long PartOne(string input) => Iterate(input, 20);
-
-        long PartTwo(string input) => Iterate(input, 50000000000);
+        public object PartTwo(string input) => Iterate(input, 50000000000);
 
         long Iterate(string input, long iterations) {
             var (state, rules) = Parse(input);

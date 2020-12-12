@@ -7,12 +7,7 @@ namespace AdventOfCode.Y2020.Day07 {
     [ProblemName("Handy Haversacks")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) {
+        public object PartOne(string input) {
             var parentsOf = new Dictionary<string, HashSet<string>>();
             foreach (var line in input.Split("\n")) {
                 var descr = ParseLine(line);
@@ -40,7 +35,7 @@ namespace AdventOfCode.Y2020.Day07 {
             return PathsToRoot("shiny gold bag").ToHashSet().Count - 1;
         }
 
-        long PartTwo(string input) {
+        public object PartTwo(string input) {
             var childrenOf = new Dictionary<string, List<(int count, string bag)>>();
             foreach (var line in input.Split("\n")) {
                 var descr = ParseLine(line);

@@ -8,13 +8,8 @@ namespace AdventOfCode.Y2015.Day09 {
     [ProblemName("All in a Single Night")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) => Routes(input).Min();
-        int PartTwo(string input) => Routes(input).Max();
+        public object PartOne(string input) => Routes(input).Min();
+        public object PartTwo(string input) => Routes(input).Max();
 
         IEnumerable<int> Routes(string input) {
             var distances = input.Split('\n').SelectMany(line => {

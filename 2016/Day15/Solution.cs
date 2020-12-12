@@ -7,14 +7,9 @@ namespace AdventOfCode.Y2016.Day15 {
     [ProblemName("Timing is Everything")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
+        public object PartOne(string input) => Iterate(Parse(input)).First(v => v.ok).t;
 
-        int PartOne(string input) => Iterate(Parse(input)).First(v => v.ok).t;
-
-        int PartTwo(string input) => Iterate(Parse(input).Concat(new []{(pos: 0, mod: 11)}).ToArray()).First(v => v.ok).t;
+        public object PartTwo(string input) => Iterate(Parse(input).Concat(new []{(pos: 0, mod: 11)}).ToArray()).First(v => v.ok).t;
 
         (int pos, int mod)[] Parse(string input) => (
                 from line in input.Split('\n')

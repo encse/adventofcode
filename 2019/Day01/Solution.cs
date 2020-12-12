@@ -7,13 +7,8 @@ namespace AdventOfCode.Y2019.Day01 {
     [ProblemName("The Tyranny of the Rocket Equation")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) => Solve(input, false);
-        int PartTwo(string input) => Solve(input, true);
+        public object PartOne(string input) => Solve(input, false);
+        public object PartTwo(string input) => Solve(input, true);
 
         int Solve(string input, bool recursive) {
             var weights = new Queue<int>(input.Split("\n").Select(x => int.Parse(x)));

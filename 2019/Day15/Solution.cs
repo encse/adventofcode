@@ -13,17 +13,12 @@ namespace AdventOfCode.Y2019.Day15 {
             O2 = 2,
         }
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) {
+        public object PartOne(string input) {
             var iicm = new ImmutableIntCodeMachine(input);
             return Bfs(iicm).First(s => s.tile == Tile.O2).path.Count;
         }
 
-        int PartTwo(string input) {
+        public object PartTwo(string input) {
             var iicm = Bfs(new ImmutableIntCodeMachine(input)).First(s => s.tile == Tile.O2).iicm;
             return Bfs(iicm).Last().path.Count;
         }

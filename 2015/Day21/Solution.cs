@@ -7,12 +7,7 @@ namespace AdventOfCode.Y2015.Day21 {
     [ProblemName("RPG Simulator 20XX")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) {
+        public object PartOne(string input) {
             var boss = Parse(input);
             var minGold = int.MaxValue;
             foreach (var c in Buy()) {
@@ -23,7 +18,7 @@ namespace AdventOfCode.Y2015.Day21 {
             return minGold;
         }
 
-        int PartTwo(string input) {
+        public object PartTwo(string input) {
             var boss = Parse(input);
             var maxGold = 0;
             foreach (var c in Buy()) {

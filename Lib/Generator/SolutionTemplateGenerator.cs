@@ -16,16 +16,11 @@ namespace AdventOfCode.Generator {
                  |    [ProblemName(""{problem.Title}"")]      
                  |    class Solution : Solver {{
                  |
-                 |        public IEnumerable<object> Solve(string input) {{
-                 |            yield return PartOne(input);
-                 |            yield return PartTwo(input);
-                 |        }}
-                 |
-                 |        int PartOne(string input) {{
+                 |        public object PartOne(string input) {{
                  |            return 0;
                  |        }}
                  |
-                 |        int PartTwo(string input) {{
+                 |        public object PartTwo(string input) {{
                  |            return 0;
                  |        }}
                  |    }}

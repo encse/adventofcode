@@ -7,14 +7,9 @@ namespace AdventOfCode.Y2018.Day03 {
     [ProblemName("No Matter How You Slice It")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
+        public object PartOne(string input) => Decorate(input).overlapArea;
 
-        int PartOne(string input) => Decorate(input).overlapArea;
-
-        int PartTwo(string input) => Decorate(input).intactId;
+        public object PartTwo(string input) => Decorate(input).intactId;
 
         (int overlapArea, int intactId) Decorate(string input) {
             // #1 @ 55,885: 22x10

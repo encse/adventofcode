@@ -8,12 +8,7 @@ namespace AdventOfCode.Y2017.Day20 {
     [ProblemName("Particle Swarm")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) {
+        public object PartOne(string input) {
             var particles = Parse(input);
             return (
                 from particle in particles
@@ -22,7 +17,7 @@ namespace AdventOfCode.Y2017.Day20 {
             ).First().i;
         }
 
-        int PartTwo(string input) {
+        public object PartTwo(string input) {
             var particles = Parse(input);
             var collisionTimes = (
                 from p1 in particles

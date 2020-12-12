@@ -6,17 +6,12 @@ namespace AdventOfCode.Y2015.Day22 {
     [ProblemName("Wizard Simulator 20XX")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) {
+        public object PartOne(string input) {
             var state0 = Parse(input);
             return BinarySearch(mana => TrySolve(state0.WithManaLimit(mana), false));
         }
 
-        int PartTwo(string input) {
+        public object PartTwo(string input) {
             var state0 = Parse(input);
             return BinarySearch(mana => TrySolve(state0.WithManaLimit(mana), true));
         }

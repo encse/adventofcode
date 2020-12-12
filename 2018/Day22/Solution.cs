@@ -8,12 +8,7 @@ namespace AdventOfCode.Y2018.Day22 {
     [ProblemName("Mode Maze")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) {
+        public object PartOne(string input) {
             var (targetX, targetY, regionType) = Parse(input);
             var riskLevel = 0;
             for (var y = 0; y <= targetY; y++) {
@@ -25,7 +20,7 @@ namespace AdventOfCode.Y2018.Day22 {
         }
 
 
-        int PartTwo(string input) {
+        public object PartTwo(string input) {
             var (targetX, targetY, regionType) = Parse(input);
             var q = new PQueue<((int x, int y) pos, Tool tool, int t)>();
             var seen = new HashSet<((int x, int y), Tool tool)>();

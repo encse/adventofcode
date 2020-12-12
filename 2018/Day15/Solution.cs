@@ -7,16 +7,11 @@ namespace AdventOfCode.Y2018.Day15 {
     [ProblemName("Beverage Bandits")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) {
+        public object PartOne(string input) {
             return Outcome(input, 3, 3, false).score;
         }
 
-        int PartTwo(string input) {
+        public object PartTwo(string input) {
             var elfAp = 4;
             while (true) {
                 var outcome = Outcome(input, 3, elfAp, false);

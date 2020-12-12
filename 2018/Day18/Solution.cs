@@ -6,13 +6,8 @@ namespace AdventOfCode.Y2018.Day18 {
     [ProblemName("Settlers of The North Pole")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) => Iterate(input, 10);
-        int PartTwo(string input) => Iterate(input, 1000000000);
+        public object PartOne(string input) => Iterate(input, 10);
+        public object PartTwo(string input) => Iterate(input, 1000000000);
 
         int Iterate(string input, int lim) {
             var seen = new Dictionary<string, int>();

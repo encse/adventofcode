@@ -10,13 +10,8 @@ namespace AdventOfCode.Y2019.Day23 {
     [ProblemName("Category Six")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        long PartOne(string input) => Solve(input, false);
-        long PartTwo(string input) => Solve(input, true);
+        public object PartOne(string input) => Solve(input, false);
+        public object PartTwo(string input) => Solve(input, true);
 
         long Solve(string input, bool hasNat) {
             var machines = (

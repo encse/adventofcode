@@ -9,12 +9,7 @@ namespace AdventOfCode.Y2016.Day22 {
     [ProblemName("Grid Computing")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) {
+        public object PartOne(string input) {
             var nodes = Parse(input);
             var r = 0;
             foreach (var nodeA in nodes) {
@@ -29,7 +24,7 @@ namespace AdventOfCode.Y2016.Day22 {
             return r;
         }
 
-        int PartTwo(string input) {
+        public object PartTwo(string input) {
             var nodes = Parse(input);
             var grid = new Grid(nodes);
             

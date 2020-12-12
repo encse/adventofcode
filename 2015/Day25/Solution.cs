@@ -6,11 +6,9 @@ namespace AdventOfCode.Y2015.Day25 {
     [ProblemName("Let It Snow")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-        }
-
-        long PartOne(string input) {
+        public object PartTwo(string input) => null;
+        
+        public object PartOne(string input) {
             var m = 20151125L;
             var (irow, icol) = (1, 1);
             var (irowDst, icolDst) = Parse(input);

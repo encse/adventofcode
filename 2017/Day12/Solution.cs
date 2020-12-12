@@ -12,13 +12,8 @@ namespace AdventOfCode.Y2017.Day12 {
     [ProblemName("Digital Plumber")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) => GetPartitions(input).Single(x => x.Contains("0")).Count();
-        int PartTwo(string input) => GetPartitions(input).Count();
+        public object PartOne(string input) => GetPartitions(input).Single(x => x.Contains("0")).Count();
+        public object PartTwo(string input) => GetPartitions(input).Count();
 
         IEnumerable<HashSet<string>> GetPartitions(string input) {
             var nodes = Parse(input);

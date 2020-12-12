@@ -5,17 +5,12 @@ namespace AdventOfCode.Y2015.Day20 {
     [ProblemName("Infinite Elves and Infinite Houses")]
     class Solution : Solver {
 
-        public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input);
-            yield return PartTwo(input);
-        }
-
-        int PartOne(string input) {
+        public object PartOne(string input) {
             var l = int.Parse(input);
             return PresentsByHouse(1000000, 10, l);
         }
 
-        int PartTwo(string input) {
+        public object PartTwo(string input) {
             var l = int.Parse(input);
             return PresentsByHouse(50, 11, l);
         }
