@@ -8,14 +8,14 @@ namespace AdventOfCode.Y2020.Day13 {
 
         public object PartOne(string input) {
             var lines = input.Split("\n");
-            var t = int.Parse(lines[0]);
+            var earliestDepart = int.Parse(lines[0]);
             return lines[1].Split(",")
-                .Where(x => x != "x")
+                .Where(part => part != "x")
                 .Select(int.Parse)
                 .Aggregate(
                     (wait: int.MaxValue, bus: int.MaxValue),
                     (min, bus) => {
-                        var busArrivesIn = (bus - (t % bus)) % bus; 
+                        var busArrivesIn = (bus - (earliestDepart % bus)) % bus; 
                         return busArrivesIn < min.wait ? (busArrivesIn, bus) : min;
                     },
                     min => min.wait * min.bus
@@ -37,12 +37,12 @@ namespace AdventOfCode.Y2020.Day13 {
         // https://rosettacode.org/wiki/Chinese_remainder_theorem#C.23
         long ChineseRemainderTheorem((long mod, long a)[] items) {
             var prod = items.Aggregate(1L, (acc, item) => acc * item.mod);
-            var sm = items.Select((item, i) => {
+            var sum = items.Select((item, i) => {
                 var p = prod / item.mod;
                 return item.a * ModInv(p, item.mod) * p;
             }).Sum();
 
-            return sm % prod;
+            return sum % prod;
         }
 
         long ModInv(long a, long m) => (long)BigInteger.ModPow(a, m - 2, m);
