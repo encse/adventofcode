@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 
@@ -9,42 +8,38 @@ namespace AdventOfCode.Y2020.Day13 {
 
         public object PartOne(string input) {
             var lines = input.Split("\n");
-            var t0 = int.Parse(lines[0]);
-            var minWait = int.MaxValue;
-            var res = 0;
-            foreach (var bus in lines[1].Replace("x,", "").Split(",").Select(int.Parse)) {
-                var wait = (bus - (t0 % bus)) % bus;
-                if (wait < minWait) {
-                    res = bus * wait;
-                    minWait = wait;
-                }
-
-            }
-            return res;
+            var t = int.Parse(lines[0]);
+            return lines[1].Split(",")
+                .Where(x => x != "x")
+                .Select(int.Parse)
+                .Aggregate(
+                    (wait: int.MaxValue, bus: int.MaxValue),
+                    (min, bus) => {
+                        var busArrivesIn = (bus - (t % bus)) % bus; 
+                        return busArrivesIn < min.wait ? (busArrivesIn, bus) : min;
+                    },
+                    min => min.wait * min.bus
+                );
         }
 
-        public object PartTwo(string input) {
-            var lines = input.Split("\n");
-            var buses = new List<long>();
-            var waits = new List<long>();
-            var parts = lines[1].Split(",");
-            for (var i = 0; i < parts.Length; i++) {
-                if (parts[i] != "x") {
-                    var bus = long.Parse(parts[i]);
-                    buses.Add(bus);
-                    waits.Add(bus - i);
-                }
-            }
-
-            return ChineseRemainderTheorem(buses.ToArray(), waits.ToArray());
-        }
+        public object PartTwo(string input) =>
+            ChineseRemainderTheorem(
+                input.Split("\n").ElementAt(1).Split(",")
+                    .Select((part, i) => (part, i))
+                    .Where(x => x.part != "x")
+                    .Select(x => {
+                        var bus = long.Parse(x.part);
+                        return (mod: bus, a: bus - x.i);
+                    })
+                    .ToArray()
+            );
 
         // https://rosettacode.org/wiki/Chinese_remainder_theorem#C.23
-        long ChineseRemainderTheorem(long[] mods, long[] bs) {
-            var prod = mods.Aggregate(1L, (acc, j) => acc * j);
-            var sm = mods.Select((n, i) => {
-                var p = prod / n;
-                return bs[i] * ModInv(p, n) * p;
+        long ChineseRemainderTheorem((long mod, long a)[] items) {
+            var prod = items.Aggregate(1L, (acc, item) => acc * item.mod);
+            var sm = items.Select((item, i) => {
+                var p = prod / item.mod;
+                return item.a * ModInv(p, item.mod) * p;
             }).Sum();
 
             return sm % prod;
