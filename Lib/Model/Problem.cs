@@ -57,14 +57,10 @@ namespace AdventOfCode.Model {
                     yield return UnparseList("", node) + "\n";
                     break;
                 case "em":
-                    yield return "*" + UnparseList("", node) + "*";
+                    yield return "<em>" + UnparseList("", node) + "</em>";
                     break;
                 case "code":
-                    if (node.ParentElement.NodeName.ToLower() == "pre") {
-                        yield return UnparseList("", node);
-                    } else {
-                        yield return "`" + UnparseList("", node) + "`";
-                    }
+                    yield return "<code>" + UnparseList("", node) + "</code>";
                     break;
                 case "span":
                     yield return UnparseList("", node);
@@ -81,7 +77,7 @@ namespace AdventOfCode.Model {
                     yield return " - " + UnparseList("", node);
                     break;
                 case "pre":
-                    yield return "```\n";
+                    yield return "<pre>\n";
                     var freshLine = true;
                     foreach (var item in node.ChildNodes) {
                         foreach (var unparsed in Unparse(item)) {
@@ -90,9 +86,9 @@ namespace AdventOfCode.Model {
                         }
                     }
                     if (freshLine) {
-                        yield return "```\n";
+                        yield return "</pre>\n";
                     } else {
-                        yield return "\n```\n";
+                        yield return "\n</pre>\n";
                     }
                     break;
                 case "a":

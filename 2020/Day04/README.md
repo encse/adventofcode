@@ -6,24 +6,24 @@ It seems like you're not the only one having problems, though; a very long line 
 
 Due to some questionable network security, you realize you might be able to solve both of these problems at the same time.
 
-The automatic passport scanners are slow because they're having trouble *detecting which passports have all required fields*. The expected fields are as follows:
+The automatic passport scanners are slow because they're having trouble <em>detecting which passports have all required fields</em>. The expected fields are as follows:
 
 
- - `byr` (Birth Year)
- - `iyr` (Issue Year)
- - `eyr` (Expiration Year)
- - `hgt` (Height)
- - `hcl` (Hair Color)
- - `ecl` (Eye Color)
- - `pid` (Passport ID)
- - `cid` (Country ID)
+ - <code>byr</code> (Birth Year)
+ - <code>iyr</code> (Issue Year)
+ - <code>eyr</code> (Expiration Year)
+ - <code>hgt</code> (Height)
+ - <code>hcl</code> (Hair Color)
+ - <code>ecl</code> (Eye Color)
+ - <code>pid</code> (Passport ID)
+ - <code>cid</code> (Country ID)
 
-Passport data is validated in batch files (your puzzle input). Each passport is represented as a sequence of `key:value` pairs separated by spaces or newlines. Passports are separated by blank lines.
+Passport data is validated in batch files (your puzzle input). Each passport is represented as a sequence of <code>key:value</code> pairs separated by spaces or newlines. Passports are separated by blank lines.
 
 Here is an example batch file containing four passports:
 
-```
-ecl:gry pid:860033327 eyr:2020 hcl:#fffffd
+<pre>
+<code>ecl:gry pid:860033327 eyr:2020 hcl:#fffffd
 byr:1937 iyr:2017 cid:147 hgt:183cm
 
 iyr:2013 ecl:amb cid:350 eyr:2023 pid:028048884
@@ -36,43 +36,44 @@ hgt:179cm
 
 hcl:#cfa07d eyr:2025 pid:166559648
 iyr:2011 ecl:brn hgt:59in
-```
+</code>
+</pre>
 
-The first passport is *valid* - all eight fields are present. The second passport is *invalid* - it is missing `hgt` (the Height field).
+The first passport is <em>valid</em> - all eight fields are present. The second passport is <em>invalid</em> - it is missing <code>hgt</code> (the Height field).
 
-The third passport is interesting; the *only missing field* is `cid`, so it looks like data from North Pole Credentials, not a passport at all! Surely, nobody would mind if you made the system temporarily ignore missing `cid` fields.  Treat this "passport" as *valid*.
+The third passport is interesting; the <em>only missing field</em> is <code>cid</code>, so it looks like data from North Pole Credentials, not a passport at all! Surely, nobody would mind if you made the system temporarily ignore missing <code>cid</code> fields.  Treat this "passport" as <em>valid</em>.
 
-The fourth passport is missing two fields, `cid` and `byr`. Missing `cid` is fine, but missing any other field is not, so this passport is *invalid*.
+The fourth passport is missing two fields, <code>cid</code> and <code>byr</code>. Missing <code>cid</code> is fine, but missing any other field is not, so this passport is <em>invalid</em>.
 
-According to the above rules, your improved system would report `*2*` valid passports.
+According to the above rules, your improved system would report <code><em>2</em></code> valid passports.
 
-Count the number of *valid* passports - those that have all required fields. Treat `cid` as optional. *In your batch file, how many passports are valid?*
+Count the number of <em>valid</em> passports - those that have all required fields. Treat <code>cid</code> as optional. <em>In your batch file, how many passports are valid?</em>
 
 
 ## --- Part Two ---
 The line is moving more quickly now, but you overhear airport security talking about how passports with invalid data are getting through. Better add some data validation, quick!
 
-You can continue to ignore the `cid` field, but each other field has strict rules about what values are valid for automatic validation:
+You can continue to ignore the <code>cid</code> field, but each other field has strict rules about what values are valid for automatic validation:
 
 
- - `byr` (Birth Year) - four digits; at least `1920` and at most `2002`.
- - `iyr` (Issue Year) - four digits; at least `2010` and at most `2020`.
- - `eyr` (Expiration Year) - four digits; at least `2020` and at most `2030`.
- - `hgt` (Height) - a number followed by either `cm` or `in`:
+ - <code>byr</code> (Birth Year) - four digits; at least <code>1920</code> and at most <code>2002</code>.
+ - <code>iyr</code> (Issue Year) - four digits; at least <code>2010</code> and at most <code>2020</code>.
+ - <code>eyr</code> (Expiration Year) - four digits; at least <code>2020</code> and at most <code>2030</code>.
+ - <code>hgt</code> (Height) - a number followed by either <code>cm</code> or <code>in</code>:
   
-   - If `cm`, the number must be at least `150` and at most `193`.
-   - If `in`, the number must be at least `59` and at most `76`.
+   - If <code>cm</code>, the number must be at least <code>150</code> and at most <code>193</code>.
+   - If <code>in</code>, the number must be at least <code>59</code> and at most <code>76</code>.
   
 
- - `hcl` (Hair Color) - a `#` followed by exactly six characters `0`-`9` or `a`-`f`.
- - `ecl` (Eye Color) - exactly one of: `amb` `blu` `brn` `gry` `grn` `hzl` `oth`.
- - `pid` (Passport ID) - a nine-digit number, including leading zeroes.
- - `cid` (Country ID) - ignored, missing or not.
+ - <code>hcl</code> (Hair Color) - a <code>#</code> followed by exactly six characters <code>0</code>-<code>9</code> or <code>a</code>-<code>f</code>.
+ - <code>ecl</code> (Eye Color) - exactly one of: <code>amb</code> <code>blu</code> <code>brn</code> <code>gry</code> <code>grn</code> <code>hzl</code> <code>oth</code>.
+ - <code>pid</code> (Passport ID) - a nine-digit number, including leading zeroes.
+ - <code>cid</code> (Country ID) - ignored, missing or not.
 
-Your job is to count the passports where all required fields are both *present* and *valid* according to the above rules. Here are some example values:
+Your job is to count the passports where all required fields are both <em>present</em> and <em>valid</em> according to the above rules. Here are some example values:
 
-```
-byr valid:   2002
+<pre>
+<code>byr valid:   2002
 byr invalid: 2003
 
 hgt valid:   60in
@@ -89,12 +90,13 @@ ecl invalid: wat
 
 pid valid:   000000001
 pid invalid: 0123456789
-```
+</code>
+</pre>
 
 Here are some invalid passports:
 
-```
-eyr:1972 cid:100
+<pre>
+<code>eyr:1972 cid:100
 hcl:#18171d ecl:amb hgt:170 pid:186cm iyr:2018 byr:1926
 
 iyr:2019
@@ -107,12 +109,13 @@ ecl:brn hgt:182cm pid:021572410 eyr:2020 byr:1992 cid:277
 hgt:59cm ecl:zzz
 eyr:2038 hcl:74454a iyr:2023
 pid:3556412378 byr:2007
-```
+</code>
+</pre>
 
 Here are some valid passports:
 
-```
-pid:087499704 hgt:74in ecl:grn iyr:2012 eyr:2030 byr:1980
+<pre>
+<code>pid:087499704 hgt:74in ecl:grn iyr:2012 eyr:2030 byr:1980
 hcl:#623a2f
 
 eyr:2029 ecl:blu cid:129 byr:1989
@@ -124,8 +127,9 @@ pid:545766238 ecl:hzl
 eyr:2022
 
 iyr:2010 hgt:158cm hcl:#b6652a ecl:blu byr:1944 eyr:2021 pid:093154719
-```
+</code>
+</pre>
 
-Count the number of *valid* passports - those that have all required fields *and valid values*. Continue to treat `cid` as optional. *In your batch file, how many passports are valid?*
+Count the number of <em>valid</em> passports - those that have all required fields <em>and valid values</em>. Continue to treat <code>cid</code> as optional. <em>In your batch file, how many passports are valid?</em>
 
 

@@ -6,27 +6,27 @@ Though the port is non-standard, you manage to connect it to your computer throu
 
 The data appears to be encrypted with the eXchange-Masking Addition System (XMAS) which, conveniently for you, is an old cypher with an important weakness.
 
-XMAS starts by transmitting a *preamble* of 25 numbers. After that, each number you receive should be the sum of any two of the 25 immediately previous numbers. The two numbers will have different values, and there might be more than one such pair.
+XMAS starts by transmitting a <em>preamble</em> of 25 numbers. After that, each number you receive should be the sum of any two of the 25 immediately previous numbers. The two numbers will have different values, and there might be more than one such pair.
 
-For example, suppose your preamble consists of the numbers `1` through `25` in a random order. To be valid, the next number must be the sum of two of those numbers:
-
-
- - `26` would be a *valid* next number, as it could be `1` plus `25` (or many other pairs, like `2` and `24`).
- - `49` would be a *valid* next number, as it is the sum of `24` and `25`.
- - `100` would *not* be valid; no two of the previous 25 numbers sum to `100`.
- - `50` would also *not* be valid; although `25` appears in the previous 25 numbers, the two numbers in the pair must be different.
-
-Suppose the 26th number is `45`, and the first number (no longer an option, as it is more than 25 numbers ago) was `20`. Now, for the next number to be valid, there needs to be some pair of numbers among `1`-`19`, `21`-`25`, or `45` that add up to it:
+For example, suppose your preamble consists of the numbers <code>1</code> through <code>25</code> in a random order. To be valid, the next number must be the sum of two of those numbers:
 
 
- - `26` would still be a *valid* next number, as `1` and `25` are still within the previous 25 numbers.
- - `65` would *not* be valid, as no two of the available numbers sum to it.
- - `64` and `66` would both be *valid*, as they are the result of `19+45` and `21+45` respectively.
+ - <code>26</code> would be a <em>valid</em> next number, as it could be <code>1</code> plus <code>25</code> (or many other pairs, like <code>2</code> and <code>24</code>).
+ - <code>49</code> would be a <em>valid</em> next number, as it is the sum of <code>24</code> and <code>25</code>.
+ - <code>100</code> would <em>not</em> be valid; no two of the previous 25 numbers sum to <code>100</code>.
+ - <code>50</code> would also <em>not</em> be valid; although <code>25</code> appears in the previous 25 numbers, the two numbers in the pair must be different.
 
-Here is a larger example which only considers the previous *5* numbers (and has a preamble of length 5):
+Suppose the 26th number is <code>45</code>, and the first number (no longer an option, as it is more than 25 numbers ago) was <code>20</code>. Now, for the next number to be valid, there needs to be some pair of numbers among <code>1</code>-<code>19</code>, <code>21</code>-<code>25</code>, or <code>45</code> that add up to it:
 
-```
-35
+
+ - <code>26</code> would still be a <em>valid</em> next number, as <code>1</code> and <code>25</code> are still within the previous 25 numbers.
+ - <code>65</code> would <em>not</em> be valid, as no two of the available numbers sum to it.
+ - <code>64</code> and <code>66</code> would both be <em>valid</em>, as they are the result of <code>19+45</code> and <code>21+45</code> respectively.
+
+Here is a larger example which only considers the previous <em>5</em> numbers (and has a preamble of length 5):
+
+<pre>
+<code>35
 20
 15
 25
@@ -46,25 +46,26 @@ Here is a larger example which only considers the previous *5* numbers (and has 
 277
 309
 576
-```
+</code>
+</pre>
 
-In this example, after the 5-number preamble, almost every number is the sum of two of the previous 5 numbers; the only number that does not follow this rule is *`127`*.
+In this example, after the 5-number preamble, almost every number is the sum of two of the previous 5 numbers; the only number that does not follow this rule is <em><code>127</code></em>.
 
-The first step of attacking the weakness in the XMAS data is to find the first number in the list (after the preamble) which is *not* the sum of two of the 25 numbers before it. *What is the first number that does not have this property?*
+The first step of attacking the weakness in the XMAS data is to find the first number in the list (after the preamble) which is <em>not</em> the sum of two of the 25 numbers before it. <em>What is the first number that does not have this property?</em>
 
 
 ## --- Part Two ---
-The final step in breaking the XMAS encryption relies on the invalid number you just found: you must *find a contiguous set of at least two numbers* in your list which sum to the invalid number from step 1.
+The final step in breaking the XMAS encryption relies on the invalid number you just found: you must <em>find a contiguous set of at least two numbers</em> in your list which sum to the invalid number from step 1.
 
 Again consider the above example:
 
-```
-35
+<pre>
+<code>35
 20
-*15*
-*25*
-*47*
-*40*
+<em>15</em>
+<em>25</em>
+<em>47</em>
+<em>40</em>
 62
 55
 65
@@ -79,12 +80,13 @@ Again consider the above example:
 277
 309
 576
-```
+</code>
+</pre>
 
-In this list, adding up all of the numbers from `15` through `40` produces the invalid number from step 1, `127`. (Of course, the contiguous set of numbers in your actual list might be much longer.)
+In this list, adding up all of the numbers from <code>15</code> through <code>40</code> produces the invalid number from step 1, <code>127</code>. (Of course, the contiguous set of numbers in your actual list might be much longer.)
 
-To find the *encryption weakness*, add together the *smallest* and *largest* number in this contiguous range; in this example, these are `15` and `47`, producing *`62`*.
+To find the <em>encryption weakness</em>, add together the <em>smallest</em> and <em>largest</em> number in this contiguous range; in this example, these are <code>15</code> and <code>47</code>, producing <em><code>62</code></em>.
 
-*What is the encryption weakness in your XMAS-encrypted list of numbers?*
+<em>What is the encryption weakness in your XMAS-encrypted list of numbers?</em>
 
 
