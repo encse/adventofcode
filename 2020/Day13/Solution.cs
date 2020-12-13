@@ -7,32 +7,34 @@ namespace AdventOfCode.Y2020.Day13 {
     class Solution : Solver {
 
         public object PartOne(string input) {
-            var lines = input.Split("\n");
-            var earliestDepart = int.Parse(lines[0]);
-            return lines[1].Split(",")
-                .Where(part => part != "x")
-                .Select(int.Parse)
-                .Aggregate(
-                    (wait: int.MaxValue, bus: int.MaxValue),
-                    (min, bus) => {
-                        var busArrivesIn = (bus - (earliestDepart % bus)) % bus; 
-                        return busArrivesIn < min.wait ? (busArrivesIn, bus) : min;
-                    },
-                    min => min.wait * min.bus
-                );
+            var problem = Parse(input);
+            return problem.buses.Aggregate(
+                (wait: long.MaxValue, bus: long.MaxValue),
+                (min, bus) => {
+                    var wait = bus.period - (problem.earliestDepart % bus.period); 
+                    return wait < min.wait ? (wait, bus.period) : min;
+                },
+                min => min.wait * min.bus
+            );
         }
 
         public object PartTwo(string input) =>
             ChineseRemainderTheorem(
-                input.Split("\n").ElementAt(1).Split(",")
-                    .Select((part, i) => (part, i))
-                    .Where(x => x.part != "x")
-                    .Select(x => {
-                        var bus = long.Parse(x.part);
-                        return (mod: bus, a: bus - x.i);
-                    })
+                Parse(input).buses
+                    .Select(bus => (mod: bus.period, a: bus.period - bus.delay))
                     .ToArray()
             );
+
+        (int earliestDepart, (long period, int delay)[] buses) Parse(string input) {
+            var lines = input.Split("\n");
+            var earliestDepart = int.Parse(lines[0]);
+            var buses = lines[1].Split(",")
+                .Select((part, idx) => (part, idx))
+                .Where(item => item.part != "x")
+                .Select(item => (period: long.Parse(item.part), delay: item.idx))
+                .ToArray();
+            return (earliestDepart, buses);
+        }
 
         // https://rosettacode.org/wiki/Chinese_remainder_theorem#C.23
         long ChineseRemainderTheorem((long mod, long a)[] items) {
