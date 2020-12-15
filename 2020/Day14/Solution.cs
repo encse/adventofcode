@@ -34,7 +34,7 @@ namespace AdventOfCode.Y2020.Day14 {
                 } else {
                     var num = Regex.Matches(line, "\\d+").Select(match => long.Parse(match.Value)).ToArray();
                     var (baseAddr, value) = (num[0], num[1]);
-                    foreach (var addr in Addresses(baseAddr, mask.PadLeft(36, '0'), 35)) {
+                    foreach (var addr in Addresses(baseAddr, mask, 35)) {
                         mem[addr] = value;
                     }
 
