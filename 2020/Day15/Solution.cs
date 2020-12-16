@@ -10,10 +10,12 @@ namespace AdventOfCode.Y2020.Day15 {
 
         public int NumberAt(string input, int count) {
             var numbers = input.Split(",").Select(int.Parse).ToArray();
-            var lastSeen = numbers.Select((num, i) => (num, i)).ToDictionary(kvp => kvp.num, kvp => kvp.i + 1);
-            var number = numbers.Last();
-            for (var round = lastSeen.Count; round < count; round++) {
-                (lastSeen[number], number) = (round, lastSeen.ContainsKey(number) ? round - lastSeen[number] : 0);
+            var (lastSeen, number) = (new int[count], numbers[0]);
+            for (var round = 1; round <= count; round++) {
+                (lastSeen[number], number) = (round, 
+                    round <= numbers.Length ? numbers[round-1] : 
+                    lastSeen[number] == 0 ? 0 : 
+                    round - lastSeen[number]);
             }
             return number;
         }
