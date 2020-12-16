@@ -25,6 +25,7 @@ namespace AdventOfCode.Y2020.Day16 {
         }
 
         public object PartTwo(string input) {
+
             var problem = Parse(input);
             var tickets = (
                 from ticket in problem.tickets 
@@ -32,7 +33,7 @@ namespace AdventOfCode.Y2020.Day16 {
                 select ticket
             ).ToArray();
 
-            // The problem is set up in a way that we can always find a column of values
+            // The problem is set up in a way that we can always find a column of
             // that must belong to single field. 
 
             var fields = problem.fields.ToHashSet();
