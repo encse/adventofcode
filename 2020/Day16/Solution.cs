@@ -16,7 +16,7 @@ namespace AdventOfCode.Y2020.Day16 {
 
         public object PartOne(string input) {
             var problem = Parse(input);
-            // sum values that cannot be associated with any of the fields
+            // add the values that cannot be associated with any of the fields
             return (
                 from ticket in problem.tickets 
                 from value in ticket 
@@ -61,31 +61,33 @@ namespace AdventOfCode.Y2020.Day16 {
         }
 
         Problem Parse(string input) {
-            int[] parseNumbers(string line) => (      // to ignore separator:
-                from m in Regex.Matches(line, "\\d+") // take the consecutive range of digits
+            int[] parseNumbers(string line) => (      
+                from m in Regex.Matches(line, "\\d+") // take the consecutive ranges of digits
                 select int.Parse(m.Value)             // convert them to numbers
             ).ToArray();
 
             var blocks = (
-                from block in input.Split("\n\n")   // blocks are delimited by empty lines
-                select block.Split("\n")            // convert blocks to lines
+                from block in input.Split("\n\n")     // blocks are delimited by empty lines
+                select block.Split("\n")              // convert them to lines
             ).ToArray();
             
-            var fields = (
-                from line in blocks.First()         // line <- "departure location: 49-920 or 932-950"
-                let bounds = parseNumbers(line)     // bounds <- [49, 920, 932, 950]
+            var fields = (                          
+                from line in blocks.First()           // line <- ["departure location: 49-920 or 932-950", ...]
+                let bounds = parseNumbers(line)       // bounds = [49, 920, 932, 950]
                 select 
                     new Field(
-                        line.Split(":")[0],         // "departure location"
-                        n => n >= bounds[0] && n <= bounds[1] || n >= bounds[2] && n <= bounds[3]
+                        line.Split(":")[0],           // "departure location"
+                        n => 
+                            n >= bounds[0] && n <= bounds[1] || 
+                            n >= bounds[2] && n <= bounds[3]
                     )
             ).ToArray();
 
             var tickets = (                         
-                from block in blocks.Skip(1)        // Combine the second and third groups containing the ticket infos
-                let numbers = block.Skip(1)         // skip "your ticket:" and "nearby tickets:"
-                from line in numbers                // line <- "337,687,607,98,229,737,512,521,..."
-                select parseNumbers(line)           // [337, 687, 607, 98, 229, 737, 512, 521...]
+                from block in blocks.Skip(1)          // ticket information is in the second and third blocks 
+                let numbers = block.Skip(1)           // skip "your ticket:" / "nearby tickets:"
+                from line in numbers                  // line <- ["337,687,...", "223,323,...", ...]
+                select parseNumbers(line)             // [337, 687, 607]
             ).ToArray();
 
             return new Problem(fields, tickets);
