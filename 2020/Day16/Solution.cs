@@ -5,49 +5,49 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2020.Day16 {
 
-    record Ticket(int[] values);
     record Field(string name, Func<int, bool> isValid);
-    record Problem(Field[] fields, Ticket ticket, Ticket[] tickets);
+    record Problem(Field[] fields, int[][] tickets);
 
     [ProblemName("Ticket Translation")]
     class Solution : Solver {
 
-        IEnumerable<Field> FieldsMatchingValue(int v, IEnumerable<Field> fields) => FieldsMatchingAllValues(new int[] { v }, fields);
-        IEnumerable<Field> FieldsMatchingAllValues(IEnumerable<int> vs, IEnumerable<Field> fields) => fields.Where(field => vs.All(field.isValid));
+        Field[] FieldCandidates(IEnumerable<Field> fields, params int[] values) =>
+            fields.Where(field => values.All(field.isValid)).ToArray();
 
         public object PartOne(string input) {
-            var p = Parse(input);
-            var res = 0;
-            foreach (var ticket in p.tickets) {
-                res += ticket.values.Where(value => !FieldsMatchingValue(value, p.fields).Any()).Sum();
-            }
-            return res;
+            var problem = Parse(input);
+            return (
+                from ticket in problem.tickets 
+                from value in ticket 
+                where !FieldCandidates(problem.fields, value).Any() 
+                select value
+            ).Sum();
         }
 
         public object PartTwo(string input) {
-            var p = Parse(input);
-            var tickets = new List<Ticket>();
-            tickets.Add(p.ticket);
-            tickets.AddRange(p.tickets.Where(ticket => ticket.values.All(v => FieldsMatchingValue(v, p.fields).Any())));
+            var problem = Parse(input);
+            var tickets = (
+                from ticket in problem.tickets 
+                where ticket.All(value => FieldCandidates(problem.fields, value).Any()) 
+                select ticket
+            ).ToArray();
 
-            // It turns out the problem is set up in a way, 
-            // that we can always find a column that can be associated with a single field, 
-            // we just need to assign them one by one...
+            // The problem is set up in a way that we can always find a column of values
+            // that must belong to single field. 
 
-            var fields = new HashSet<Field>(p.fields);
-            var columns = Enumerable.Range(0, p.fields.Count()).ToHashSet();
+            var fields = problem.fields.ToHashSet();
+            var columns = Enumerable.Range(0, fields.Count).ToHashSet();
 
             var res = 1L;
-            while (fields.Any()) {
+            while (columns.Any()) {
                 foreach (var column in columns) {
-                    var values = from ticket in tickets select ticket.values[column];
-                    var fieldsForColumn = FieldsMatchingAllValues(values, fields).ToArray();
-                    if (fieldsForColumn.Length == 1) {
-                        var field = fieldsForColumn[0];
-                        fields.Remove(field);
+                    var values = (from ticket in tickets select ticket[column]).ToArray();
+                    var candidates = FieldCandidates(fields, values);
+                    if (candidates.Length == 1) {
+                        fields.Remove(candidates[0]);
                         columns.Remove(column);
-                        if (field.name.StartsWith("departure")) {
-                            res *= p.ticket.values[column];
+                        if (candidates[0].name.StartsWith("departure")) {
+                            res *= problem.tickets.First()[column];
                         }
                         break;
                     }
@@ -57,19 +57,34 @@ namespace AdventOfCode.Y2020.Day16 {
         }
 
         Problem Parse(string input) {
-            var parts = input.Split("\n\n");
-            var fields = parts[0].Split("\n").Select(line => {
-                var name = line.Split(":")[0];
-                var nums = Regex.Matches(line, "\\d+").Select(m => int.Parse(m.Value)).ToArray();
-                Func<int, bool> check = (int n) => (n >= nums[0] && n <= nums[1]) || (n >= nums[2] && n <= nums[3]);
-                return new Field(name, check);
-            }).ToArray();
+            int[] parseNumbers(string line) => (      // to ignore separator:
+                from m in Regex.Matches(line, "\\d+") // take the consecutive range of digits
+                select int.Parse(m.Value)             // convert them to numbers
+            ).ToArray();
 
-            Ticket parseTicket(string line) => new Ticket(line.Split(",").Select(int.Parse).ToArray());
+            var blocks = (
+                from block in input.Split("\n\n")   // blocks are delimited by empty lines
+                select block.Split("\n")            // convert blocks to lines
+            ).ToArray();
+            
+            var fields = (
+                from line in blocks.First()         // line <- "departure location: 49-920 or 932-950"
+                let bounds = parseNumbers(line)     // bounds <- [49, 920, 932, 950]
+                select 
+                    new Field(
+                        line.Split(":")[0],         // "departure location"
+                        n => n >= bounds[0] && n <= bounds[1] || n >= bounds[2] && n <= bounds[3]
+                    )
+            ).ToArray();
 
-            var ticket = parseTicket(parts[1].Split("\n")[1]);
-            var tickets = parts[2].Split("\n").Skip(1).Select(parseTicket).ToArray();
-            return new Problem(fields, ticket, tickets);
+            var tickets = (                         
+                from block in blocks.Skip(1)        // Combine the second and third groups containing the ticket infos
+                let numbers = block.Skip(1)         // skip "your ticket:" and "nearby tickets:"
+                from line in numbers                // line <- "337,687,607,98,229,737,512,521,..."
+                select parseNumbers(line)           // [337, 687, 607, 98, 229, 737, 512, 521...]
+            ).ToArray();
+
+            return new Problem(fields, tickets);
         }
     }
 }
