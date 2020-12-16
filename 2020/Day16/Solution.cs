@@ -12,11 +12,14 @@ namespace AdventOfCode.Y2020.Day16 {
     [ProblemName("Ticket Translation")]
     class Solution : Solver {
 
+        IEnumerable<Field> FieldsMatchingValue(int v, IEnumerable<Field> fields) => FieldsMatchingAllValues(new int[] { v }, fields);
+        IEnumerable<Field> FieldsMatchingAllValues(IEnumerable<int> vs, IEnumerable<Field> fields) => fields.Where(field => vs.All(field.isValid));
+
         public object PartOne(string input) {
             var p = Parse(input);
             var res = 0;
             foreach (var ticket in p.tickets) {
-                res += ticket.values.Where(v => p.fields.All(field => !field.isValid(v))).Sum();
+                res += ticket.values.Where(value => !FieldsMatchingValue(value, p.fields).Any()).Sum();
             }
             return res;
         }
@@ -25,41 +28,29 @@ namespace AdventOfCode.Y2020.Day16 {
             var p = Parse(input);
             var tickets = new List<Ticket>();
             tickets.Add(p.ticket);
-            tickets.AddRange(p.tickets.Where(ticket => ticket.values.All(v => p.fields.Any(field => field.isValid(v)))));
+            tickets.AddRange(p.tickets.Where(ticket => ticket.values.All(v => FieldsMatchingValue(v, p.fields).Any())));
 
-            List<Field> rec(Queue<Field> fields, int ifield) {
-                var cfield = fields.Count;
+            // It turns out the problem is set up in a way, 
+            // that we can always find a column that can be associated with a single field, 
+            // we just need to assign them one by one...
 
-                if (cfield == 0) {
-                    return new List<Field>();
-                }
+            var fields = new HashSet<Field>(p.fields);
+            var columns = Enumerable.Range(0, p.fields.Count()).ToHashSet();
 
-                for (var i = 0; i < cfield; i++) {
-                    var field = fields.Dequeue();
-
-                    if (tickets.All(ticket => field.isValid(ticket.values[ifield]))) {
-
-                        var orderedFields = rec(fields, ifield + 1);
-                        if (orderedFields != null) {
-                            orderedFields.Insert(0, field);
-                            return orderedFields;
-                        }
-
-                    }
-
-                    fields.Enqueue(field);
-                }
-
-                return null;
-
-            }
-
-            var orderedFields = rec(new Queue<Field>(p.fields), 0);
             var res = 1L;
-            for (var i = 0; i < orderedFields.Count; i++) {
-                var field = orderedFields[i];
-                if (field.name.StartsWith("departure")) {
-                    res *= p.ticket.values[i];
+            while (fields.Any()) {
+                foreach (var column in columns) {
+                    var values = from ticket in tickets select ticket.values[column];
+                    var fieldsForColumn = FieldsMatchingAllValues(values, fields).ToArray();
+                    if (fieldsForColumn.Length == 1) {
+                        var field = fieldsForColumn[0];
+                        fields.Remove(field);
+                        columns.Remove(column);
+                        if (field.name.StartsWith("departure")) {
+                            res *= p.ticket.values[column];
+                        }
+                        break;
+                    }
                 }
             }
             return res;
