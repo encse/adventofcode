@@ -11,11 +11,11 @@ namespace AdventOfCode.Y2020.Day15 {
         public int NumberAt(string input, int count) {
             var numbers = input.Split(",").Select(int.Parse).ToArray();
             var (lastSeen, number) = (new int[count], numbers[0]);
-            for (var round = 1; round <= count; round++) {
-                (lastSeen[number], number) = (round, 
-                    round <= numbers.Length ? numbers[round-1] : 
-                    lastSeen[number] == 0 ? 0 : 
-                    round - lastSeen[number]);
+            for (var round = 0; round < count; round++) {
+                (lastSeen[number], number) = (round,
+                    round < numbers.Length ? numbers[round] :
+                    lastSeen[number] == 0  ? 0 :
+                    /* otherwise */          round - lastSeen[number]);
             }
             return number;
         }
