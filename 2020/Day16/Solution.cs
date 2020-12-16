@@ -16,6 +16,7 @@ namespace AdventOfCode.Y2020.Day16 {
 
         public object PartOne(string input) {
             var problem = Parse(input);
+            // sum values that cannot be associated with any of the fields
             return (
                 from ticket in problem.tickets 
                 from value in ticket 
@@ -27,14 +28,15 @@ namespace AdventOfCode.Y2020.Day16 {
         public object PartTwo(string input) {
 
             var problem = Parse(input);
+            // keep valid tickets only
             var tickets = (
                 from ticket in problem.tickets 
                 where ticket.All(value => FieldCandidates(problem.fields, value).Any()) 
                 select ticket
             ).ToArray();
 
-            // The problem is set up in a way that we can always find a column of
-            // that must belong to single field. 
+            // The problem is set up in a way that we can always find a column
+            // that has just one field-candidate left.
 
             var fields = problem.fields.ToHashSet();
             var columns = Enumerable.Range(0, fields.Count).ToHashSet();
@@ -42,13 +44,14 @@ namespace AdventOfCode.Y2020.Day16 {
             var res = 1L;
             while (columns.Any()) {
                 foreach (var column in columns) {
-                    var values = (from ticket in tickets select ticket[column]).ToArray();
-                    var candidates = FieldCandidates(fields, values);
+                    var valuesInColumn = (from ticket in tickets select ticket[column]).ToArray();
+                    var candidates = FieldCandidates(fields, valuesInColumn);
                     if (candidates.Length == 1) {
-                        fields.Remove(candidates[0]);
+                        var field = candidates.Single();
+                        fields.Remove(field);
                         columns.Remove(column);
-                        if (candidates[0].name.StartsWith("departure")) {
-                            res *= problem.tickets.First()[column];
+                        if (field.name.StartsWith("departure")) {
+                            res *= valuesInColumn.First();
                         }
                         break;
                     }
