@@ -51,11 +51,11 @@ namespace AdventOfCode.Generator {
             var year = years[r.Next(years.Length)];
 
             lines.Insert(0, new[]{new CalendarToken {
-                ConsoleColor = 0xffff66,
+                ConsoleColor = 0x00cc00,
                 Text = $@"
-                    | ▄█▄ ▄▄█ ▄ ▄ ▄▄▄ ▄▄ ▄█▄  ▄▄▄ ▄█  ▄▄ ▄▄▄ ▄▄█ ▄▄▄
-                    | █▄█ █ █ █ █ █▄█ █ █ █   █ █ █▄  █  █ █ █ █ █▄█
-                    | █ █ █▄█ █▄█ █▄▄ █ █ █▄  █▄█ █   █▄ █▄█ █▄█ █▄▄  {year}
+                    |       ▄█▄ ▄▄█ ▄ ▄ ▄▄▄ ▄▄ ▄█▄  ▄▄▄ ▄█  ▄▄ ▄▄▄ ▄▄█ ▄▄▄
+                    |       █▄█ █ █ █ █ █▄█ █ █ █   █ █ █▄  █  █ █ █ █ █▄█
+                    |       █ █ █▄█ █▄█ █▄▄ █ █ █▄  █▄█ █   █▄ █▄█ █▄█ █▄▄  {year}
                     |"
                 .StripMargin()
             }});
