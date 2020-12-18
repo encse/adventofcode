@@ -11,7 +11,7 @@ namespace AdventOfCode.Y2020.Day18 {
         public object PartTwo(string input) => Solve(input, (line) => Eval(line, true));
 
         long Solve(string input, Func<string, long> eval) =>
-            (from line in input.Replace(" ", "").Split("\n") select eval(line)).Sum();
+            (from line in input.Split("\n") select eval(line)).Sum();
 
         long Eval(string line, bool p2) {
             // https://en.wikipedia.org/wiki/Shunting-yard_algorithm
@@ -32,6 +32,8 @@ namespace AdventOfCode.Y2020.Day18 {
 
             foreach (var ch in line) {
                 switch (ch) {
+                    case ' ':
+                        break;
                     case '*':
                         evalUntil("(");
                         opStack.Push('*');
