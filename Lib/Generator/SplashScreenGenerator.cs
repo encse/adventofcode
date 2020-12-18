@@ -34,11 +34,28 @@ namespace AdventOfCode.Generator {
 
             var lines = calendar.Lines.Select(line =>
                 new[] { new CalendarToken { Text = "           " } }.Concat(line)).ToList();
+
+            var r = new Random();
+            var years = new []{
+                $@"0x0000 | {calendar.Year}",
+                $@"/*{calendar.Year}*/",
+                $@"int y={calendar.Year};",
+                $@"/^{calendar.Year}$/",
+                $@"λy.{calendar.Year}",
+                $@"{{:year {calendar.Year}}}",
+                $@"sub y{{{calendar.Year}}}",
+                $@"//{calendar.Year}",
+                $@"{{'year':{calendar.Year}}}",
+                $@"$year={calendar.Year}"
+            };
+            var year = years[r.Next(years.Length)];
+
             lines.Insert(0, new[]{new CalendarToken {
                 ConsoleColor = 0xffff66,
                 Text = $@"
-                    | /\   _|     _  ._ _|_    _ _|_   /   _   _|  _  
-                    |/--\ (_| \/ (/_ | | |_   (_) |    \_ (_) (_| (/_  {calendar.Year}
+                    | ▄█▄ ▄▄█ ▄ ▄ ▄▄▄ ▄▄ ▄█▄  ▄▄▄ ▄█  ▄▄ ▄▄▄ ▄▄█ ▄▄▄
+                    | █▄█ █ █ █ █ █▄█ █ █ █   █ █ █▄  █  █ █ █ █ █▄█
+                    | █ █ █▄█ █▄█ █▄▄ █ █ █▄  █▄█ █   █▄ █▄█ █▄█ █▄▄  {year}
                     |"
                 .StripMargin()
             }});
