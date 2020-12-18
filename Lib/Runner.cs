@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Diagnostics;
 
 namespace AdventOfCode {
 
@@ -97,13 +98,13 @@ namespace AdventOfCode {
             var refoutFile = file.Replace(".in", ".refout");
             var refout = File.Exists(refoutFile) ? File.ReadAllLines(refoutFile) : null;
             var input = GetNormalizedInput(file);
-            var dt = DateTime.Now;
             var iline = 0;
             var answers = new List<string>();
             var errors = new List<string>();
+            var stopwatch = Stopwatch.StartNew();
             foreach (var line in solver.Solve(input)) {
+                var ticks = stopwatch.ElapsedTicks;
                 answers.Add(line.ToString());
-                var now = DateTime.Now;
                 var (statusColor, status, err) =
                     refout == null || refout.Length <= iline ? (ConsoleColor.Cyan, "?", null) :
                     refout[iline] == line.ToString() ? (ConsoleColor.DarkGreen, "✓", null) :
@@ -115,15 +116,16 @@ namespace AdventOfCode {
 
                 Write(statusColor, $"  {status}");
                 Console.Write($" {line} ");
-                var diff = (now - dt).TotalMilliseconds;
+                var diff = ticks * 1000.0 / Stopwatch.Frequency;
+
                 WriteLine(
                     diff > 1000 ? ConsoleColor.Red :
                     diff > 500 ? ConsoleColor.Yellow :
                     ConsoleColor.DarkGreen,
                     $"({diff.ToString("F3")} ms)"
                 );
-                dt = now;
                 iline++;
+                stopwatch.Restart();
             }
 
             return new SolverResult(answers.ToArray(), errors.ToArray());
