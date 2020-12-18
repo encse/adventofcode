@@ -33,16 +33,15 @@ namespace AdventOfCode.Y2020.Day17 {
         }
 
         private int Solve<T>(string input, Func<int, int, T> create, Func<T, IEnumerable<T>> neighbours) {
-            var activePoints = new HashSet<T>();
             var lines = input.Split("\n");
-            var (height, width) = (lines.Length, lines[0].Length);
-            for (var y = 0; y < height; y++) {
-                for (var x = 0; x < width; x++) {
-                    if (lines[y][x] == '#') {
-                        activePoints.Add(create(x, y));
-                    }
-                }
-            }
+            var (width, height) = (lines[0].Length, lines.Length);
+            var activePoints = new HashSet<T>(
+                from x in Enumerable.Range(0, width) 
+                from y in Enumerable.Range(0, height) 
+                where lines[y][x] == '#' 
+                select create(x,y)
+            );
+            
             for (var i = 0; i < 6; i++) {
                 var newActivePoints = new HashSet<T>();
                 var inactivePoints = new Dictionary<T, int>();
