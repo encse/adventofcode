@@ -7,57 +7,60 @@ namespace AdventOfCode.Y2020.Day18 {
     [ProblemName("Operation Order")]
     class Solution : Solver {
 
-        public object PartOne(string input) => Solve(input, (line) => Eval(line, false));
-        public object PartTwo(string input) => Solve(input, (line) => Eval(line, true));
+        public object PartOne(string input) => Solve(input, true);
+        public object PartTwo(string input) => Solve(input, false);
 
-        long Solve(string input, Func<string, long> eval) =>
-            input.Split("\n").Select(eval).Sum();
+        long Solve(string input, bool part1) {
+            var sum = 0L;
+            foreach (var line in input.Split("\n")) {
+                // https://en.wikipedia.org/wiki/Shunting-yard_algorithm
 
-        long Eval(string line, bool p2) {
-            // https://en.wikipedia.org/wiki/Shunting-yard_algorithm
+                var opStack = new Stack<char>();
+                var valStack = new Stack<long>();
 
-            var opStack = new Stack<char>();
-            var valStack = new Stack<long>();
-
-            void evalUntil(string ops) {
-                while (!ops.Contains(opStack.Peek())) {
-                    if (opStack.Pop() == '+') {
-                        valStack.Push(valStack.Pop() + valStack.Pop());
-                    } else {
-                        valStack.Push(valStack.Pop() * valStack.Pop());
+                void evalUntil(string ops) {
+                    while (!ops.Contains(opStack.Peek())) {
+                        if (opStack.Pop() == '+') {
+                            valStack.Push(valStack.Pop() + valStack.Pop());
+                        } else {
+                            valStack.Push(valStack.Pop() * valStack.Pop());
+                        }
                     }
                 }
-            }
-            opStack.Push('(');
 
-            foreach (var ch in line) {
-                switch (ch) {
-                    case ' ':
-                        break;
-                    case '*':
-                        evalUntil("(");
-                        opStack.Push('*');
-                        break;
-                    case '+':
-                        evalUntil(p2 ? "(*" : "(");
-                        opStack.Push('+');
-                        break;
-                    case '(':
-                        opStack.Push('(');
-                        break;
-                    case ')':
-                        evalUntil("(");
-                        opStack.Pop();
-                        break;
-                    default:
-                        valStack.Push(long.Parse(ch.ToString()));
-                        break;
+                opStack.Push('(');
+
+                foreach (var ch in line) {
+                    switch (ch) {
+                        case ' ':
+                            break;
+                        case '*':
+                            evalUntil("(");
+                            opStack.Push('*');
+                            break;
+                        case '+':
+                            evalUntil(part1 ? "(" : "(*");
+                            opStack.Push('+');
+                            break;
+                        case '(':
+                            opStack.Push('(');
+                            break;
+                        case ')':
+                            evalUntil("(");
+                            opStack.Pop();
+                            break;
+                        default:
+                            valStack.Push(long.Parse(ch.ToString()));
+                            break;
+                    }
                 }
+
+                evalUntil("(");
+
+                sum += valStack.Single();
             }
 
-            evalUntil("(");
-
-            return valStack.Single();
+            return sum;
         }
     }
 }
