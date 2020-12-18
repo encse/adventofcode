@@ -4,10 +4,10 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2020.Day18 {
 
-    record Node;
-    record Add(Node left, Node right) : Node;
-    record Mul(Node left, Node right) : Node;
-    record Num(long value) : Node;
+    record Expr;
+    record Add(Expr left, Expr right) : Expr;
+    record Mul(Expr left, Expr right) : Expr;
+    record Num(long value) : Expr;
 
     [ProblemName("Operation Order")]
     class Solution : Solver {
@@ -15,40 +15,39 @@ namespace AdventOfCode.Y2020.Day18 {
         public object PartOne(string input) => Solve(input, Parse1);
         public object PartTwo(string input) => Solve(input, Parse2);
         
-        long Solve(string input, Func<string, Node> parse) => 
-            (from line in input.Split("\n") select Eval(parse(line))).Sum();
+        long Solve(string input, Func<string, Expr> parse) => 
+            (from line in input.Replace(" ", "").Split("\n") select Eval(parse(line))).Sum();
 
-        long Eval(Node node) {
-            return node switch {
+        long Eval(Expr expr) =>
+            expr switch {
                 Add add => Eval(add.left) + Eval(add.right),
                 Mul mul => Eval(mul.left) * Eval(mul.right),
                 Num num => num.value,
                 _ => throw new Exception()
             };
-        }
 
-        Node Parse1(string input) {
+        Expr Parse1(string line) {
             bool accept(string st) {
-                if (input.StartsWith(st)) {
-                    input = input.Substring(st.Length);
+                if (line.StartsWith(st)) {
+                    line = line.Substring(st.Length);
                     return true;
                 }
                 return false;
             }
 
-            Node primary() {
+            Expr primary() {
                 if (accept("(")) {
                     var res = expr();
                     accept(")");
                     return res;
                 } else {
-                    var m = Regex.Match(input, "^[0-9]+").Value;
-                    input = input.Substring(m.Length);
+                    var m = Regex.Match(line, "^[0-9]+").Value;
+                    line = line.Substring(m.Length);
                     return new Num(long.Parse(m));
                 }
             }
 
-            Node expr() {
+            Expr expr() {
                 var res = primary();
                 while (true) {
                     if (accept("*")) {
@@ -62,21 +61,19 @@ namespace AdventOfCode.Y2020.Day18 {
                 return res;
             }
 
-            input = input.Replace(" ", "");
-            var res = expr();
-            return res;
+            return expr();
         }
 
-        Node Parse2(string input) {
+        Expr Parse2(string line) {
             bool accept(string st) {
-                if (input.StartsWith(st)) {
-                    input = input.Substring(st.Length);
+                if (line.StartsWith(st)) {
+                    line = line.Substring(st.Length);
                     return true;
                 }
                 return false;
             }
 
-            Node add() {
+            Expr add() {
                 var res = primary();
                 while (accept("+")) {
                     res = new Add(res, add());
@@ -84,29 +81,27 @@ namespace AdventOfCode.Y2020.Day18 {
                 return res;
             }
 
-            Node primary() {
+            Expr primary() {
                 if (accept("(")) {
                     var res = expr();
                     accept(")");
                     return res;
                 } else {
-                    var m = Regex.Match(input, "^[0-9]+").Value;
-                    input = input.Substring(m.Length);
+                    var m = Regex.Match(line, "^[0-9]+").Value;
+                    line = line.Substring(m.Length);
                     return new Num(long.Parse(m));
                 }
             }
 
-            Node expr() {
+            Expr expr() {
                 var res = add();
                 while (accept("*")) {
                     res = new Mul(res, add());
                 }
                 return res;
             }
-
-            input = input.Replace(" ", "");
-            var res = expr();
-            return res;
+            
+            return expr();
         }
     }
 }
