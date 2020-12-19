@@ -1,7 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using Parser = System.Func<string, (bool, string)>;
+using Parser = System.Func<string, System.Collections.Generic.IEnumerable<string>>;
 
 namespace AdventOfCode.Y2020.Day19 {
 
@@ -15,6 +14,11 @@ namespace AdventOfCode.Y2020.Day19 {
             var rules = input.Split("\n\n")[0]
                 .Split("\n")
                 .ToDictionary(line => int.Parse(line.Split(":")[0]), line => line);
+
+            if (!part1) {
+                rules[8] = "8: 42 | 42 8";
+                rules[11] = "11: 42 31 | 42 11 31";
+            }
 
             Dictionary<int, Parser> parsers = new Dictionary<int, Parser>();
 
@@ -36,74 +40,53 @@ namespace AdventOfCode.Y2020.Day19 {
 
                         orParsers.Add(seqParsers.Count == 1 ? seqParsers.Single() : seq(seqParsers.ToArray()));
                     }
-                    
+
                     parsers[i] = orParsers.Count == 1 ? orParsers.Single() : or(orParsers.ToArray());
 
                 }
                 return parsers[i];
             }
 
-            Func<string, bool> valid = (input) => {
-                var orig = input;
-                var parse42 = parser(42);
-                var parse31 = parser(31);
-
-                var res = parse42(input);
-                var n = 0;
-                while (res.Item1) {
-                    n++;
-                    input = res.Item2;
-                    res = parse42(input);
-                }
-
-                res = parse31(input);
-                var m = 0;
-                while (res.Item1) {
-                    m++;
-                    input = res.Item2;
-                    res = parse31(input);
-                }
-
-                return input == "" && 
-                    n >= 2 && m >= 1 && m < n && 
-                    (!part1 || n == 2 && m == 1);
-            };
+            bool valid(string st) {
+                return parser(0)(st).Any(st => st.Length == 0);
+            }
 
             return input.Split("\n\n")[1].Split("\n").Count(valid);
         }
 
-        private Parser seq(Parser[] parsers) =>
-          (string input) => {
-              var inputT = input;
-              foreach (var parser in parsers) {
-                  var res = parser(inputT);
-                  if (!res.Item1) {
-                      return (false, input);
-                  } else {
-                      inputT = res.Item2;
-                  }
-              }
-              return (true, inputT);
-          };
-
-        private Parser literal(string st) =>
-            (string input) => {
-                return input.StartsWith(st) ? (true, input.Substring(st.Length)) : (false, input);
-            };
-
-        private Parser or(Parser[] parsers) {
-            if (parsers.Length < 2) {
-                throw new Exception();
+        private Parser literal(string st) {
+            IEnumerable<string> p(string input) {
+                if (input.StartsWith(st)) {
+                    yield return input.Substring(st.Length);
+                }
             }
-            return (string input) => {
-                foreach (var parser in parsers) {
-                    var res = parser(input);
-                    if (res.Item1) {
-                        return res;
+            return p;
+        }
+
+        private Parser seq(Parser[] parsers) {
+            IEnumerable<string> p(int i, string input) {
+                if (i == parsers.Length) {
+                    yield return input;
+                } else {
+                    foreach (var inputT in parsers[i](input)) {
+                        foreach (var inputTT in p(i + 1, inputT)) {
+                            yield return inputTT;
+                        }
                     }
                 }
-                return (false, input);
             };
+            return (string input) => p(0, input);
+        }
+
+        private Parser or(Parser[] parsers) {
+            IEnumerable<string> p(string input) {
+                foreach (var parser in parsers) {
+                    foreach (var res in parser(input)) {
+                        yield return res;
+                    }
+                }
+            };
+            return p;
         }
     }
 }
