@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System;
 using Parser = System.Func<string, System.Collections.Generic.IEnumerable<string>>;
 
 namespace AdventOfCode.Y2020.Day19 {
@@ -11,82 +12,69 @@ namespace AdventOfCode.Y2020.Day19 {
         public object PartTwo(string input) => Solve(input, false);
 
         private int Solve(string input, bool part1) {
-            var rules = input.Split("\n\n")[0]
-                .Split("\n")
-                .ToDictionary(line => int.Parse(line.Split(":")[0]), line => line);
+            var blocks = (
+                from block in input.Split("\n\n") 
+                select block.Split("\n")
+            ).ToArray();
+
+            var rules = new Dictionary<int, string>(
+                from line in blocks[0]
+                    let parts = line.Split(": ")
+                    let index = int.Parse(parts[0])
+                    let rule = parts[1]
+                select new KeyValuePair<int, string>(index, rule)
+            );
 
             if (!part1) {
-                rules[8] = "8: 42 | 42 8";
-                rules[11] = "11: 42 31 | 42 11 31";
+                rules[8] = "42 | 42 8";
+                rules[11] = "42 31 | 42 11 31";
             }
 
             Dictionary<int, Parser> parsers = new Dictionary<int, Parser>();
 
             Parser parser(int i) {
                 if (!parsers.ContainsKey(i)) {
-                    var rule = rules[i].Trim();
-                    var right = rule.Split(": ")[1];
-                    var ors = right.Split("|");
-                    var orParsers = new List<Parser>();
-                    foreach (var or in ors) {
-                        var seqParsers = new List<Parser>();
-                        foreach (var item in or.Trim().Split(" ")) {
-                            if (item.StartsWith("\"")) {
-                                seqParsers.Add(literal(item.Substring(1, item.Length - 2)));
-                            } else {
-                                seqParsers.Add((st) => parser(int.Parse(item))(st));
-                            }
-                        }
-
-                        orParsers.Add(seqParsers.Count == 1 ? seqParsers.Single() : seq(seqParsers.ToArray()));
-                    }
-
-                    parsers[i] = orParsers.Count == 1 ? orParsers.Single() : or(orParsers.ToArray());
-
+                    parsers[i] = alt(
+                        from alternative in rules[i].Split(" | ") 
+                        select seq(
+                            from item in alternative.Split(" ")
+                            select
+                                item.StartsWith("\"") ?
+                                    literal(item.Substring(1, item.Length - 2)) :
+                                    int.Parse(item) switch { var i => (input) => parser(i)(input)}
+                        ));
                 }
                 return parsers[i];
             }
 
-            bool valid(string st) {
-                return parser(0)(st).Any(st => st.Length == 0);
-            }
-
-            return input.Split("\n\n")[1].Split("\n").Count(valid);
+            var parse = parser(0);
+            return blocks[1].Count(data => parse(data).Any(st => st.Length == 0));
         }
 
-        private Parser literal(string st) {
-            IEnumerable<string> p(string input) {
-                if (input.StartsWith(st)) {
-                    yield return input.Substring(st.Length);
-                }
-            }
-            return p;
-        }
+        private Parser literal(string st) =>
+            input => input.StartsWith(st) ? new[] { input.Substring(st.Length) } : new string[0];
 
-        private Parser seq(Parser[] parsers) {
-            IEnumerable<string> p(int i, string input) {
-                if (i == parsers.Length) {
-                    yield return input;
-                } else {
-                    foreach (var inputT in parsers[i](input)) {
-                        foreach (var inputTT in p(i + 1, inputT)) {
-                            yield return inputTT;
-                        }
-                    }
-                }
+        private static Func<IEnumerable<Parser>, Parser> seq = combine(parsers => {
+            var head = parsers[0];
+            var tail = seq(parsers.Skip(1));
+            return input => 
+                from suffix in head(input)
+                from suffixT in tail(suffix)
+                select suffixT;
+        });
+
+        private Func<IEnumerable<Parser>, Parser> alt = 
+            combine(parsers => input =>
+                from parser in parsers
+                from suffix in parser(input)
+                select suffix
+            );
+
+        private static Func<IEnumerable<Parser>, Parser> combine(Func<Parser[], Parser> c) {
+            return parsers => {
+                var parserArray = parsers.ToArray();
+                return parserArray.Length == 1 ? parserArray[0]: c(parserArray);
             };
-            return (string input) => p(0, input);
-        }
-
-        private Parser or(Parser[] parsers) {
-            IEnumerable<string> p(string input) {
-                foreach (var parser in parsers) {
-                    foreach (var res in parser(input)) {
-                        yield return res;
-                    }
-                }
-            };
-            return p;
         }
     }
 }
