@@ -115,14 +115,17 @@ namespace AdventOfCode.Y2020.Day19 {
                 }
 
 
-                parsers[0] = (input) => {
+                parsers[0] = parsers[8] = parsers[11] = (input) => {
+                    throw new Exception();
+                };
+
+
+                return (input) => {
                     var orig = input;
                     var p42 = buildParserPart(42);
                     var p31 = buildParserPart(31);
+
                     var res = p42(input);
-                    if(!res.Item1){
-                        return (false, input);
-                    }
                     var n = 0;
                     while (res.Item1){
                         n++;
@@ -137,73 +140,23 @@ namespace AdventOfCode.Y2020.Day19 {
                         input = res.Item2;
                         res = p31(input);
                     }
-                    if(m>0 && m <= n){
-                        return (true, input);
+
+                    if (n >= 2 && m >= 1 && m < n){
+                        return input == "";
                     } else {
-                        return (false, orig);
+                        return false;
                     }
-                };
-
-                parsers[8] = parsers[11] = (input) => {
-                    throw new Exception();
-                    // var orig = input;
-                    // var p42 = buildParserPart(42);
-                    // var p31 = buildParserPart(31);
-                    // var res = p42(input);
-                    // if(!res.Item1){
-                    //     return (false, input);
-                    // }
-                    // var n = 0;
-                    // while (res.Item1){
-                    //     n++;
-                    //     input = res.Item2;
-                    //     res = p42(input);
-                    // }
-
-                    // res = p31(input);
-                    // var m = 0;
-                    // while (res.Item1){
-                    //     m++;
-                    //     input = res.Item2;
-                    //     res = p31(input);
-                    // }
-                    // if(m == n){
-                    //     return (true, input);
-                    // } else {
-                    //     return (false, orig);
-                    // }
-                };
-
-
-                return (st) => {
-                    var res = buildParserPart(0)(st);
-                    return res.Item1 && res.Item2 == "";
                 };
             }
 
             var parser = buildParser();
-
-            var x = parser("aaaabbaaaabbaaa");
-
-            // x = parser("bbabbbbaabaabba");
-            // x = parser("babbbbaabbbbbabbbbbbaabaaabaaa");
-            // x = parser("aaabbbbbbaaaabaababaabababbabaaabbababababaaa");
-            // x = parser("bbbbbbbaaaabbbbaaabbabaaa");
-            // x = parser("bbbababbbbaaaaaaaabbababaaababaabab");
-            // x = parser("ababaaaaaabaaab");
-            // x = parser("ababaaaaabbbaba");
-            // x = parser("baabbaaaabbaaaababbaababb");
-            // x = parser("abbbbabbbbaaaababbbbbbaaaababb");
-            // x = parser("aaaaabbaabaaaaababaa");
-            // x = parser("aaaabbaabbaaaaaaabbbabbbaaabbaabaaa");
-            // x = parser("aabbbbbaabbbaaaaaabbbbbababaaaaabbaaabba");
 
             var c = 0;
             var data = input.Split("\n\n")[1].Split("\n");
 
             foreach (var line in data) {
                 if (parser(line)) {
-                    Console.WriteLine(line);
+                   // Console.WriteLine(line);
                     c++;
                 }
             }
