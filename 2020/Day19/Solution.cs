@@ -11,7 +11,7 @@ namespace AdventOfCode.Y2020.Day19 {
         public object PartOne(string input) => Solve(input, true);
         public object PartTwo(string input) => Solve(input, false);
 
-        private int Solve(string input, bool part1) {
+        int Solve(string input, bool part1) {
             var blocks = (
                 from block in input.Split("\n\n") 
                 select block.Split("\n")
@@ -30,47 +30,43 @@ namespace AdventOfCode.Y2020.Day19 {
                 rules[11] = "42 31 | 42 11 31";
             }
 
-            Dictionary<int, Parser> parsers = new Dictionary<int, Parser>();
+            var parsers = new Dictionary<int, Parser>();
 
-            Parser parser(int i) {
-                if (!parsers.ContainsKey(i)) {
-                    parsers[i] = alt(
-                        from alternative in rules[i].Split(" | ") 
-                        select seq(
-                            from item in alternative.Split(" ")
-                            select
-                                item.StartsWith("\"") ?
-                                    literal(item.Substring(1, item.Length - 2)) :
-                                    int.Parse(item) switch { var i => (input) => parser(i)(input)}
+            Parser getParser(int index) {
+                if (!parsers.ContainsKey(index)) {
+                    parsers[index] = (input) => getParser(index)(input);
+
+                    parsers[index] = 
+                        alt(rules[index].Split(" | ").Select(sequence =>
+                            seq(sequence.Split(" ").Select(item =>
+                                item[0] == '"'                ? literal(item.Trim('"')) :
+                                int.TryParse(item, out var i) ? getParser(i) :
+                                throw new Exception()
+                            ))
                         ));
                 }
-                return parsers[i];
+                return parsers[index];
             }
 
-            var parse = parser(0);
-            return blocks[1].Count(data => parse(data).Any(st => st.Length == 0));
+            return blocks[1].Count(data => getParser(0)(data).Any(st => !st.Any()));
         }
 
-        private Parser literal(string st) =>
+        static Parser literal(string st) =>
             input => input.StartsWith(st) ? new[] { input.Substring(st.Length) } : new string[0];
 
-        private static Func<IEnumerable<Parser>, Parser> seq = combine(parsers => {
-            var head = parsers[0];
-            var tail = seq(parsers.Skip(1));
+        static Func<IEnumerable<Parser>, Parser> seq = combine(parsers => {
+            var parseHead = parsers[0];
+            var parseTail = seq(parsers.Skip(1));
             return input => 
-                from suffix in head(input)
-                from suffixT in tail(suffix)
-                select suffixT;
+                from tail in parseHead(input)
+                from rest in parseTail(tail)
+                select rest;
         });
 
-        private Func<IEnumerable<Parser>, Parser> alt = 
-            combine(parsers => input =>
-                from parser in parsers
-                from suffix in parser(input)
-                select suffix
-            );
+        static Func<IEnumerable<Parser>, Parser> alt = 
+            combine(parsers => input => parsers.SelectMany(parser => parser(input)));
 
-        private static Func<IEnumerable<Parser>, Parser> combine(Func<Parser[], Parser> c) {
+        static Func<IEnumerable<Parser>, Parser> combine(Func<Parser[], Parser> c) {
             return parsers => {
                 var parserArray = parsers.ToArray();
                 return parserArray.Length == 1 ? parserArray[0]: c(parserArray);
