@@ -11,42 +11,7 @@ namespace AdventOfCode.Y2020.Day19 {
     class Solution : Solver {
 
         public object PartOne(string input) {
-            var rules = input.Split("\n\n")[0].Split("\n").OrderBy(rule => int.Parse(rule.Split(":")[0]))
-                .ToDictionary(line => int.Parse(line.Split(":")[0]), line => line);
-            var data = input.Split("\n\n")[1].Split("\n");
-            var c = 0;
-
-            string buildRegex() {
-                string buildRegexPart(int i) {
-                    var rule = rules[i].Trim();
-                    var right = rule.Split(": ")[1];
-                    var ors = right.Split("|");
-                    var rx =
-                        string.Join("|", right.Split("|").Select(or => {
-                            var rx = "";
-                            foreach (var item in or.Trim().Split(" ")) {
-                                if (item.StartsWith("\"")) {
-                                    rx += item.Substring(1, item.Length - 2);
-                                } else {
-                                    rx += buildRegexPart(int.Parse(item));
-                                }
-                            }
-                            return rx;
-                        }));
-                    return "(" + rx + ")";
-                }
-                return "^" + buildRegexPart(0) + "$";
-            }
-
-            var rx = buildRegex();
-
-            foreach (var line in data) {
-                if (Regex.Match(line, rx).Success) {
-                    c++;
-                }
-            }
-            return c;
-
+            return  Solve(input, false);
         }
 
         private Parser seq(Parser[] parsers) =>
@@ -84,6 +49,11 @@ namespace AdventOfCode.Y2020.Day19 {
         }
 
         public object PartTwo(string input) {
+            return Solve(input, true);
+        }
+
+
+        private int Solve(string input, bool part2){
             var rules = input.Split("\n\n")[0].Split("\n").OrderBy(rule => int.Parse(rule.Split(":")[0]))
                 .ToDictionary(line => int.Parse(line.Split(":")[0]), line => line);
 
@@ -121,6 +91,7 @@ namespace AdventOfCode.Y2020.Day19 {
 
 
                 return (input) => {
+                    
                     var orig = input;
                     var p42 = buildParserPart(42);
                     var p31 = buildParserPart(31);
@@ -141,7 +112,9 @@ namespace AdventOfCode.Y2020.Day19 {
                         res = p31(input);
                     }
 
-                    if (n >= 2 && m >= 1 && m < n){
+                    if (part2 && n >= 2 && m >= 1 && m < n){
+                        return input == "";
+                    } else if (!part2 && n == 2 && m == 1){
                         return input == "";
                     } else {
                         return false;
