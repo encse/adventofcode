@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2020.Day20 {
 
@@ -9,16 +10,15 @@ namespace AdventOfCode.Y2020.Day20 {
 
         public object PartOne(string input) {
             var tiles = AssemblePuzzle(input);
-            var size = tiles.GetLength(0);
-
-            return (long)tiles[0, 0].id *
-                tiles[size - 1, size - 1].id *
-                tiles[0, size - 1].id *
-                tiles[size - 1, 0].id;
+            return 
+                tiles.First().First().id *
+                tiles.First().Last().id *
+                tiles.Last().First().id *
+                tiles.Last().Last().id;
         }
 
         public object PartTwo(string input) {
-            var image = CombineTiles(-1, AssemblePuzzle(input));
+            var image = MergeTiles(AssemblePuzzle(input));
 
             var monster = new string[]{
                 "                  # ",
@@ -37,18 +37,18 @@ namespace AdventOfCode.Y2020.Day20 {
             }
         }
 
-        private Tile[] Parse(string input) {
+        private Tile[] ParseTiles(string input) {
             return (
                 from block in input.Split("\n\n")
                 let lines = block.Split("\n")
-                let id = lines[0].Trim(':').Split(" ")[1]
+                let id = Regex.Match(lines[0], "\\d+").Value
                 let image = lines.Skip(1).Where(x => x != "").ToArray()
                 select new Tile(int.Parse(id), image)
             ).ToArray();
         }
 
-        private Tile[,] AssemblePuzzle(string input) {
-            var tiles = Parse(input);
+        private Tile[][] AssemblePuzzle(string input) {
+            var tiles = ParseTiles(input);
 
             // Collects tiles sharing a common edge. 
             // Due to the way the input is created, the list contains
@@ -66,17 +66,15 @@ namespace AdventOfCode.Y2020.Day20 {
                 }
             }
 
-            Tile getNeighbour(Tile tile, string pattern) =>
-                pairs[pattern].SingleOrDefault(tileB => tileB != tile);
+            bool isEdge(string pattern) => pairs[pattern].Count == 1;
+            Tile getNeighbour(Tile tile, string pattern) => pairs[pattern].SingleOrDefault(other => other != tile);
 
             Tile putTileInPlace(Tile above, Tile left) {
                 if (above == null && left == null) {
                     // find top-left corner
                     foreach (var tile in tiles) {
                         for (var i = 0; i < 8; i++) {
-                            if (getNeighbour(tile, tile.Top()) == null && 
-                                getNeighbour(tile, tile.Left()) == null
-                            ) {
+                            if (isEdge(tile.Top()) && isEdge(tile.Left())) {
                                 return tile;
                             }
                             tile.ChangeOrientation();
@@ -85,9 +83,9 @@ namespace AdventOfCode.Y2020.Day20 {
                 } else {
                     // we know the tile from the inversion structure, just need to find its orientation
                     var tile = above != null ? getNeighbour(above, above.Bottom()) : getNeighbour(left, left.Right());
-                    for (var i = 0; i < 8; i++) {
-                        var topMatch = above == null ? getNeighbour(tile, tile.Top()) == null : tile.Top() == above.Bottom();
-                        var leftMatch = left == null ? getNeighbour(tile, tile.Left()) == null : tile.Left() == left.Right();
+                    while (true) {
+                        var topMatch = above == null ? isEdge(tile.Top())  : tile.Top() == above.Bottom();
+                        var leftMatch = left == null ? isEdge(tile.Left()) : tile.Left() == left.Right();
 
                         if (topMatch && leftMatch) {
                             return tile;
@@ -102,69 +100,59 @@ namespace AdventOfCode.Y2020.Day20 {
             // once the corner is fixed we can always find a unique tile that matches the one to the left & above
             // just fill up the tileset one by one
             var size = (int)Math.Sqrt(tiles.Length);
-            var tileset = new Tile[size, size];
-            for (var irow = 0; irow < size; irow++)
+            var puzzle = new Tile[size][];
+            for (var irow = 0; irow < size; irow++) {
+                puzzle[irow] = new Tile[size];
                 for (var icol = 0; icol < size; icol++) {
-                    var tileAbove = irow == 0 ? null : tileset[irow - 1, icol];
-                    var tileLeft = icol == 0 ? null : tileset[irow, icol - 1];
-                    tileset[irow, icol] = putTileInPlace(tileAbove, tileLeft);
+                    var above = irow == 0 ? null : puzzle[irow - 1][icol];
+                    var left  = icol == 0 ? null : puzzle[irow][icol - 1];
+                    puzzle[irow][icol] = putTileInPlace(above, left);
                 }
-
-            return tileset;
+            }
+            return puzzle;
         }
 
-        private Tile CombineTiles(int id, Tile[,] tiles) {
+        private Tile MergeTiles(Tile[][] tiles) {
             // create a big tile leaving out the borders
             var image = new List<string>();
-            var tileSize = tiles[0, 0].size;
-            for (var irow = 0; irow < tiles.GetLength(0); irow++) {
+            var tileSize = tiles[0][0].size;
+            var tileCount = tiles.Length;
+            for (var irow = 0; irow < tileCount; irow++) {
                 for (var i = 1; i < tileSize - 1; i++) {
                     var st = "";
-                    for (var icol = 0; icol < tiles.GetLength(1); icol++) {
-                        st += tiles[irow, icol].Row(i).Substring(1, tileSize - 2);
+                    for (var icol = 0; icol < tileCount; icol++) {
+                        st += tiles[irow][icol].Row(i).Substring(1, tileSize - 2);
                     }
                     image.Add(st);
                 }
             }
-            return new Tile(id, image.ToArray());
+            return new Tile(42, image.ToArray());
         }
 
         int MatchCount(Tile image, params string[] pattern) {
             var res = 0;
-            for (var irow = 0; irow < image.size; irow++) {
-                for (var icol = 0; icol < image.size; icol++) {
-                    if (Matches(image, pattern, irow, icol)) {
-                        res++;
+            var (ccolP, crowP) = (pattern[0].Length, pattern.Length);
+            for (var irow = 0; irow < image.size - crowP; irow++) 
+            for (var icol = 0; icol < image.size - ccolP ; icol++) {
+                bool match() {
+                    for (var icolP = 0; icolP < ccolP; icolP++)
+                    for (var irowP = 0; irowP < crowP; irowP++) {
+                        if (pattern[irowP][icolP] == '#' && image[irow + irowP, icol + icolP] != '#') {
+                            return false;
+                        }
                     }
+                    return true;
+                }
+                if(match()) {
+                    res++;
                 }
             }
             return res;
         }
-
-        bool Matches(Tile tile, string[] pattern, int irow, int icol) {
-            var (ccolP, crowP) = (pattern[0].Length, pattern.Length);
-
-            if (irow + crowP >= tile.size) {
-                return false;
-            }
-
-            if (icol + ccolP >= tile.size) {
-                return false;
-            }
-
-            for (var icolP = 0; icolP < ccolP; icolP++) {
-                for (var irowP = 0; irowP < crowP; irowP++) {
-                    if (pattern[irowP][icolP] == '#' && tile[irow + irowP, icol + icolP] != '#') {
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
     }
 
     class Tile {
-        public int id;
+        public long id;
         public int size;
         string[] image;
 
@@ -179,8 +167,8 @@ namespace AdventOfCode.Y2020.Day20 {
         // Checking each 8 possible orientation for a tile requires just 7 incrementation of this value.
         int orentation = 0;
 
-        public Tile(int title, string[] image) {
-            this.id = title;
+        public Tile(long id, string[] image) {
+            this.id = id;
             this.image = image;
             this.size = image.Length;
         }
@@ -204,10 +192,11 @@ namespace AdventOfCode.Y2020.Day20 {
         }
 
         public string Row(int irow) => GetSlice(irow, 0, 0, 1);
-        public string Top() => GetSlice(0, 0, 0, 1);
-        public string Right() => GetSlice(0, size - 1, 1, 0);
-        public string Left() => GetSlice(0, 0, 1, 0);
-        public string Bottom() => GetSlice(size - 1, 0, 0, 1);
+        public string Col(int icol) => GetSlice(0, icol, 1, 0);
+        public string Top() => Row(0);
+        public string Bottom() => Row(size - 1);
+        public string Left() => Col(0);
+        public string Right() => Col(size - 1);
 
         public override string ToString() {
             return $"Tile {id}:\n" + string.Join("\n", Enumerable.Range(0, size).Select(i => Row(i)));
