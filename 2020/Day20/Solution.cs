@@ -2,156 +2,24 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Text;
 
 namespace AdventOfCode.Y2020.Day20 {
-
-    class Tile {
-        public int id;
-        string[] image;
-        public int size;
-        // int orientation = 0;
-        // int flip = 0;
-
-        int position = 0;
-
-        public string[] edges;
-
-        public Tile(int title, string[] image) {
-            this.id = title;
-            this.image = image;
-            this.size = image.Length;
-
-            if (image.Length == 11) {
-                Console.WriteLine("x");
-            }
-            this.edges = new[] {
-                edge(0,0,0,1),
-                edge(0,0,1,0),
-                edge(size-1,0,0,1),
-                edge(size-1,0,-1,0),
-                edge(0,size-1,0,-1),
-                edge(0,size-1,1,0),
-                edge(size-1,size-1,0,-1),
-                edge(size-1,size-1,-1,0),
-            };
-        }
-
-        public void ChangePosition() {
-            this.position++;
-            this.position %= 8;
-        }
-
-        // public void Rotate() {
-        //     this.orientation++;
-        //     this.orientation %= 4;
-        // }
-
-        // public void Flip() {
-        //     this.flip++;
-        //     this.orientation %= 2;
-        // }
-
-        public char this[int irow, int icol] {
-            get {
-
-
-                for (var i = 0; i < position % 4; i++) {
-                    (irow, icol) = (icol, size - 1 - irow);
-                }
-
-                if (position % 8 >= 4) {
-                    icol = size - 1 - icol;
-                }
-
-                return this.image[irow][icol];
-            }
-        }
-
-        string edge(int irow, int icol, int drow, int dcol) {
-            var st = "";
-            for (var i = 0; i < size; i++) {
-                st += this[irow, icol];
-                irow += drow;
-                icol += dcol;
-            }
-            return st;
-        }
-
-        public string row(int irow) => edge(irow, 0, 0, 1);
-        public string top() => edge(0, 0, 0, 1);
-        public string bottom() => edge(size - 1, 0, 0, 1);
-        public string left() => edge(0, 0, 1, 0);
-        public string right() => edge(0, size - 1, 1, 0);
-    }
 
     [ProblemName("Jurassic Jigsaw")]
     class Solution : Solver {
 
         public object PartOne(string input) {
-            var tiles = RestoreTiles(input);
+            var tiles = AssemblePuzzle(input);
+            var size = tiles.GetLength(0);
 
-            return (long)tiles[0,0].id * tiles[11,11].id * tiles[0,11].id *tiles[11,0].id;
-        }
-
-        private Tile[] Parse(string input) {
-            return (
-                from block in input.Split("\n\n")
-                let lines = block.Split("\n")
-                select new Tile(int.Parse(lines[0].Trim(':').Split(" ")[1]), lines.Skip(1).Where(x => x != "").ToArray())
-            ).ToArray();
-        }
-
-        private Tile[,] RestoreTiles(string input) {
-            var tiles = Parse(input).ToList();
-
-            Tile findTile(string topPattern, string leftPattern) {
-                foreach (var tile in tiles) {
-
-                    for (var i = 0; i < 8; i++) {
-                        var topMatch = topPattern != null ? tile.top() == topPattern :
-                            !tiles.Any(tileB => tileB.id != tile.id && tileB.edges.Contains(tile.top()));
-                        var leftMatch = leftPattern != null ? tile.left() == leftPattern :
-                            !tiles.Any(tileB => tileB.id != tile.id && tileB.edges.Contains(tile.left()));
-
-                        if (topMatch && leftMatch) {
-                            return tile;
-                        }
-                        tile.ChangePosition();
-                    }
-                }
-                throw new Exception();
-            }
-
-            var mtx = new Tile[12, 12];
-            for (var irow = 0; irow < 12; irow++) {
-                for (var icol = 0; icol < 12; icol++) {
-                    var topPattern = irow == 0 ? null : mtx[irow - 1, icol].bottom();
-                    var leftPattern = icol == 0 ? null : mtx[irow, icol - 1].right();
-
-                    var tile = findTile(topPattern, leftPattern);
-                    mtx[irow, icol] = tile;
-                    tiles.Remove(tile);
-                }
-            }
-
-            return mtx;
+            return (long)tiles[0, 0].id *
+                tiles[size - 1, size - 1].id *
+                tiles[0, size - 1].id *
+                tiles[size - 1, 0].id;
         }
 
         public object PartTwo(string input) {
-            var mtx = RestoreTiles(input);
-            var image = new List<string>();
-            for (var irow = 0; irow < 12; irow++) {
-                for (var i = 1; i < 9; i++) {
-                    var st = "";
-                    for (var icol = 0; icol < 12; icol++) {
-                        st += mtx[irow, icol].row(i).Substring(1, 8);
-                    }
-                    image.Add(st);
-                }
-            }
-            var bigTile = new Tile(-1, image.ToArray());
+            var image = CombineTiles(-1, AssemblePuzzle(input));
 
             var monster = new string[]{
                 "                  # ",
@@ -160,55 +28,178 @@ namespace AdventOfCode.Y2020.Day20 {
             };
 
             for (var i = 0; i < 9; i++) {
-                int matches() {
-                    var res = 0;
-                    for (var irow = 0; irow < bigTile.size; irow++) {
-                        for (var icol = 0; icol < bigTile.size; icol++) {
-                            bool match() {
-                                var ccolM = monster[0].Length;
-                                var crowM = monster.Length;
-                                if (icol + ccolM >= bigTile.size) {
-                                    return false;
-                                }
-                                if (irow + crowM >= bigTile.size) {
-                                    return false;
-                                }
-
-                                for (var icolM = 0; icolM < ccolM; icolM++) {
-                                    for (var irowM = 0; irowM < crowM; irowM++) {
-                                        if (monster[irowM][icolM] == '#' && bigTile[irow + irowM, icol + icolM] != '#') {
-                                            return false;
-                                        }
-                                    }
-                                }
-                                return true;
-                            }
-
-                            if (match()) {
-                                res++;
-                            }
-                        }
-                    }
-                    return res;
+                var monsterCount = MatchCount(image, monster);
+                if (monsterCount > 0) {
+                    var hashCountInImage = image.ToString().Count(ch => ch == '#');
+                    var hashCountInMonster = string.Join("\n", monster).Count(ch => ch == '#');
+                    return hashCountInImage - monsterCount * hashCountInMonster;
                 }
-
-                var cmatch = matches();
-                if (cmatch > 0) {
-                    var hashCount = 0;
-                    for (var irow = 0; irow < bigTile.size; irow++) {
-                        for (var icol = 0; icol < bigTile.size; icol++) {
-                            if (bigTile[irow, icol] == '#')
-                                hashCount++;
-                        }
-                    }
-
-                    return hashCount - cmatch * 15;
-                }
-
-                bigTile.ChangePosition();
+                image.ChangeOrientation();
             }
 
             throw new Exception();
+        }
+         
+        private Tile[] Parse(string input) {
+            return (
+                from block in input.Split("\n\n")
+                    let lines = block.Split("\n")
+                    let id = lines[0].Trim(':').Split(" ")[1]
+                    let image = lines.Skip(1).Where(x => x != "").ToArray()
+                select new Tile(int.Parse(id), image)
+            ).ToArray();
+        }
+
+        private Tile[,] AssemblePuzzle(string input) {
+            var tiles = Parse(input).ToList();
+
+            var edges = new Dictionary<Tile, string[]>(
+                from tile in tiles select
+                    new KeyValuePair<Tile, string[]>(
+                        tile,
+                        new string[] {
+                            tile.Top(),
+                            tile.Right(),
+                            tile.Bottom(),
+                            tile.Left(),
+                            string.Join("", tile.Top().Reverse()),
+                            string.Join("", tile.Right().Reverse()),
+                            string.Join("", tile.Bottom().Reverse()),
+                            string.Join("", tile.Left().Reverse()),
+                        }
+                    ));
+
+            Tile findMatchingTile(string topPattern, string leftPattern) {
+                foreach (var tile in tiles) {
+                    for (var i = 0; i < 8; i++) {
+                        var topMatch = topPattern != null ? tile.Top() == topPattern :
+                            !tiles.Any(tileB => tileB.id != tile.id && edges[tileB].Contains(tile.Top()));
+                        var leftMatch = leftPattern != null ? tile.Left() == leftPattern :
+                            !tiles.Any(tileB => tileB.id != tile.id && edges[tileB].Contains(tile.Left()));
+
+                        if (topMatch && leftMatch) {
+                            return tile;
+                        }
+                        tile.ChangeOrientation();
+                    }
+                }
+                throw new Exception();
+            }
+
+            var tilesetSize = (int)Math.Sqrt(tiles.Count);
+            var tileset = new Tile[tilesetSize, tilesetSize];
+            for (var irow = 0; irow < tilesetSize; irow++)
+                for (var icol = 0; icol < tilesetSize; icol++) {
+                    var topPattern = irow == 0 ? null : tileset[irow - 1, icol].Bottom();
+                    var leftPattern = icol == 0 ? null : tileset[irow, icol - 1].Right();
+
+                    var tile = findMatchingTile(topPattern, leftPattern);
+                    tiles.Remove(tile);
+                    tileset[irow, icol] = tile;
+                }
+
+            return tileset;
+        }
+
+        private Tile CombineTiles(int id, Tile[,] tiles) {
+            var image = new List<string>();
+            var tileSize = tiles[0, 0].size;
+            for (var irow = 0; irow < tiles.GetLength(0); irow++) {
+                for (var i = 1; i < tileSize - 1; i++) {
+                    var st = "";
+                    for (var icol = 0; icol < tiles.GetLength(1); icol++) {
+                        st += tiles[irow, icol].Row(i).Substring(1, tileSize - 2);
+                    }
+                    image.Add(st);
+                }
+            }
+            return new Tile(id, image.ToArray());
+        }
+
+        int MatchCount(Tile image, params string[] pattern) {
+            var res = 0;
+            for (var irow = 0; irow < image.size; irow++) {
+                for (var icol = 0; icol < image.size; icol++) {
+                    if (Matches(image, pattern, irow, icol)) {
+                        res++;
+                    }
+                }
+            }
+            return res;
+        }
+
+        bool Matches(Tile tile, string[] pattern, int irow, int icol) {
+            var (ccolP, crowP) = (pattern[0].Length, pattern.Length);
+
+            if (irow + crowP >= tile.size) {
+                return false;
+            }
+
+            if (icol + ccolP >= tile.size) {
+                return false;
+            }
+
+            for (var icolP = 0; icolP < ccolP; icolP++) {
+                for (var irowP = 0; irowP < crowP; irowP++) {
+                    if (pattern[irowP][icolP] == '#' && tile[irow + irowP, icol + icolP] != '#') {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+    }
+
+    class Tile {
+        public int id;
+        public int size;
+
+        string[] image;
+        int orentation = 0;
+
+        public Tile(int title, string[] image) {
+            this.id = title;
+            this.image = image;
+            this.size = image.Length;
+        }
+
+        public void ChangeOrientation() {
+            this.orentation++;
+            this.orentation %= 8;
+        }
+
+        public char this[int irow, int icol] {
+            get {
+                for (var i = 0; i < orentation % 4; i++) {
+                    (irow, icol) = (icol, size - 1 - irow);
+                }
+
+                if (orentation % 8 >= 4) {
+                    icol = size - 1 - icol;
+                }
+
+                return this.image[irow][icol];
+            }
+        }
+
+        public string Row(int irow) => GetSlice(irow, 0, 0, 1);
+        public string Top() => GetSlice(0, 0, 0, 1);
+        public string Right() => GetSlice(0, size - 1, 1, 0);
+        public string Left() => GetSlice(0, 0, 1, 0);
+        public string Bottom() => GetSlice(size - 1, 0, 0, 1);
+
+        public override string ToString() {
+            return $"Tile {id}:\n" + string.Join("\n", Enumerable.Range(0, size).Select(i => Row(i)));
+        }
+
+        string GetSlice(int irow, int icol, int drow, int dcol) {
+            var st = "";
+            for (var i = 0; i < size; i++) {
+                st += this[irow, icol];
+                irow += drow;
+                icol += dcol;
+            }
+            return st;
         }
     }
 }
