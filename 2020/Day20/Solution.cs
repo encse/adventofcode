@@ -168,7 +168,7 @@ namespace AdventOfCode.Y2020.Day20 {
         public int size;
         string[] image;
 
-        // This is a bit tricky one, but makes operations fast and easy to implement.
+        // This is a bit tricky, but makes operations fast and easy to implement.
         //
         // - orentation % 4 specifies the rotation of the tile
         // - orientation % 8 >= 4 means the tile is flipped.
@@ -176,7 +176,7 @@ namespace AdventOfCode.Y2020.Day20 {
         // The actual rotation and flipping happens in the indexer, 
         // where the input coordinates are adjusted accordingly.
         //
-        // Checking each 8 possible orientation for a tile requires 8 incrementation of this value.
+        // Checking each 8 possible orientation for a tile requires just 7 incrementation of this value.
         int orentation = 0;
 
         public Tile(int title, string[] image) {
