@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 
 namespace AdventOfCode.Y2020.Day20 {
@@ -51,7 +50,9 @@ namespace AdventOfCode.Y2020.Day20 {
         private Tile[,] AssemblePuzzle(string input) {
             var tiles = Parse(input);
 
-            // map the tiles sharing a common edge, it will be either one item for tiles on the edge or two for inner pieces
+            // Collects tiles sharing a common edge. 
+            // Due to the way the input is created the list contains either
+            // one item for tiles on the edge or two for inner pieces.
             var pairs = new Dictionary<string, List<Tile>>();
             foreach (var tile in tiles) {
                 for (var i = 0; i < 8; i++) {
@@ -67,7 +68,7 @@ namespace AdventOfCode.Y2020.Day20 {
             Tile getConnectingTile(Tile tile, string pattern) =>
                 pairs[pattern].SingleOrDefault(tileB => tileB != tile);
 
-            // once the corner is fixed we can always find a unique tile that matches the one to the left/above
+            // once the corner is fixed we can always find a unique tile that matches the one to the left & above
             Tile putMatchingTileInPlace(Tile above, Tile left) {
                 if (above == null && left == null) {
                     // find top-left corner
@@ -162,8 +163,17 @@ namespace AdventOfCode.Y2020.Day20 {
     class Tile {
         public int id;
         public int size;
-
         string[] image;
+
+        // This is a bit tricky one, but makes operations fast and easy to implement.
+        //
+        // - orentation % 4 specifies the rotation of the tile
+        // - orientation % 8 >= 4 means the tile is flipped.
+        //
+        // The actual rotation and flipping happens in the indexer, 
+        // where the input coordinates are adjusted accordingly.
+        //
+        // Checking each 8 possible orientation for a tile requires 8 incrementation of this value.
         int orentation = 0;
 
         public Tile(int title, string[] image) {
@@ -174,17 +184,16 @@ namespace AdventOfCode.Y2020.Day20 {
 
         public void ChangeOrientation() {
             this.orentation++;
-            this.orentation %= 8;
         }
 
         public char this[int irow, int icol] {
             get {
                 for (var i = 0; i < orentation % 4; i++) {
-                    (irow, icol) = (icol, size - 1 - irow);
+                    (irow, icol) = (icol, size - 1 - irow); // rotate
                 }
 
                 if (orentation % 8 >= 4) {
-                    icol = size - 1 - icol;
+                    icol = size - 1 - icol; // flip vertical axis
                 }
 
                 return this.image[irow][icol];
