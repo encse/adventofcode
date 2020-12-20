@@ -27,7 +27,7 @@ namespace AdventOfCode.Y2020.Day20 {
                 " #  #  #  #  #  #   "
             };
 
-            for (var i = 0; i < 9; i++) {
+            while (true) {
                 var monsterCount = MatchCount(image, monster);
                 if (monsterCount > 0) {
                     var hashCountInImage = image.ToString().Count(ch => ch == '#');
@@ -36,16 +36,14 @@ namespace AdventOfCode.Y2020.Day20 {
                 }
                 image.ChangeOrientation();
             }
-
-            throw new Exception();
         }
-         
+
         private Tile[] Parse(string input) {
             return (
                 from block in input.Split("\n\n")
-                    let lines = block.Split("\n")
-                    let id = lines[0].Trim(':').Split(" ")[1]
-                    let image = lines.Skip(1).Where(x => x != "").ToArray()
+                let lines = block.Split("\n")
+                let id = lines[0].Trim(':').Split(" ")[1]
+                let image = lines.Skip(1).Where(x => x != "").ToArray()
                 select new Tile(int.Parse(id), image)
             ).ToArray();
         }
@@ -53,29 +51,38 @@ namespace AdventOfCode.Y2020.Day20 {
         private Tile[,] AssemblePuzzle(string input) {
             var tiles = Parse(input).ToList();
 
-            var edges = new Dictionary<Tile, string[]>(
-                from tile in tiles select
-                    new KeyValuePair<Tile, string[]>(
-                        tile,
-                        new string[] {
-                            tile.Top(),
-                            tile.Right(),
-                            tile.Bottom(),
-                            tile.Left(),
-                            string.Join("", tile.Top().Reverse()),
-                            string.Join("", tile.Right().Reverse()),
-                            string.Join("", tile.Bottom().Reverse()),
-                            string.Join("", tile.Left().Reverse()),
-                        }
-                    ));
+            var pairs = new Dictionary<string, List<Tile>>();
+            foreach (var tile in tiles) {
+                for (var i = 0; i < 8; i++) {
+                    var pattern = tile.Top();
+                    if (!pairs.ContainsKey(pattern)) {
+                        pairs[pattern] = new List<Tile>();
+                    }
+                    pairs[pattern].Add(tile);
+                    tile.ChangeOrientation();
+                }
+            }
 
-            Tile findMatchingTile(string topPattern, string leftPattern) {
-                foreach (var tile in tiles) {
+            Tile getPair(Tile tile, string pattern) =>
+                pairs[pattern].SingleOrDefault(tileB => tileB != tile);
+
+            Tile findMatchingTile(Tile above, Tile left) {
+                if (above == null && left == null) {
+                    //find top-left corner
+                    foreach (var tile in tiles) {
+                        for (var i = 0; i < 8; i++) {
+                            if (getPair(tile, tile.Top()) == null && getPair(tile, tile.Left()) == null) {
+                                return tile;
+                            }
+                            tile.ChangeOrientation();
+                        }
+                    }
+                } else {
+                    //we know the tile from the inversion structure, just need to find its orientation
+                    var tile = above != null ? getPair(above, above.Bottom()) : getPair(left, left.Right());
                     for (var i = 0; i < 8; i++) {
-                        var topMatch = topPattern != null ? tile.Top() == topPattern :
-                            !tiles.Any(tileB => tileB.id != tile.id && edges[tileB].Contains(tile.Top()));
-                        var leftMatch = leftPattern != null ? tile.Left() == leftPattern :
-                            !tiles.Any(tileB => tileB.id != tile.id && edges[tileB].Contains(tile.Left()));
+                        var topMatch = above == null ? getPair(tile, tile.Top()) == null : tile.Top() == above.Bottom();
+                        var leftMatch = left == null ? getPair(tile, tile.Left()) == null : tile.Left() == left.Right();
 
                         if (topMatch && leftMatch) {
                             return tile;
@@ -83,17 +90,18 @@ namespace AdventOfCode.Y2020.Day20 {
                         tile.ChangeOrientation();
                     }
                 }
+
                 throw new Exception();
             }
 
-            var tilesetSize = (int)Math.Sqrt(tiles.Count);
-            var tileset = new Tile[tilesetSize, tilesetSize];
-            for (var irow = 0; irow < tilesetSize; irow++)
-                for (var icol = 0; icol < tilesetSize; icol++) {
-                    var topPattern = irow == 0 ? null : tileset[irow - 1, icol].Bottom();
-                    var leftPattern = icol == 0 ? null : tileset[irow, icol - 1].Right();
+            var size = (int)Math.Sqrt(tiles.Count);
+            var tileset = new Tile[size, size];
+            for (var irow = 0; irow < size; irow++)
+                for (var icol = 0; icol < size; icol++) {
+                    var tileAbove = irow == 0 ? null : tileset[irow - 1, icol];
+                    var tileLeft = icol == 0 ? null : tileset[irow, icol - 1];
 
-                    var tile = findMatchingTile(topPattern, leftPattern);
+                    var tile = findMatchingTile(tileAbove, tileLeft);
                     tiles.Remove(tile);
                     tileset[irow, icol] = tile;
                 }
