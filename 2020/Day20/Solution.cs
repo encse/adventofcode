@@ -51,8 +51,9 @@ namespace AdventOfCode.Y2020.Day20 {
             var tiles = Parse(input);
 
             // Collects tiles sharing a common edge. 
-            // Due to the way the input is created the list contains either
-            // one item for tiles on the edge or two for inner pieces.
+            // Due to the way the input is created, the list contains
+            // - one item for tiles on the edge or 
+            // - two for inner pieces.
             var pairs = new Dictionary<string, List<Tile>>();
             foreach (var tile in tiles) {
                 for (var i = 0; i < 8; i++) {
@@ -65,16 +66,17 @@ namespace AdventOfCode.Y2020.Day20 {
                 }
             }
 
-            Tile getConnectingTile(Tile tile, string pattern) =>
+            Tile getNeighbour(Tile tile, string pattern) =>
                 pairs[pattern].SingleOrDefault(tileB => tileB != tile);
 
-            // once the corner is fixed we can always find a unique tile that matches the one to the left & above
-            Tile putMatchingTileInPlace(Tile above, Tile left) {
+            Tile putTileInPlace(Tile above, Tile left) {
                 if (above == null && left == null) {
                     // find top-left corner
                     foreach (var tile in tiles) {
                         for (var i = 0; i < 8; i++) {
-                            if (getConnectingTile(tile, tile.Top()) == null && getConnectingTile(tile, tile.Left()) == null) {
+                            if (getNeighbour(tile, tile.Top()) == null && 
+                                getNeighbour(tile, tile.Left()) == null
+                            ) {
                                 return tile;
                             }
                             tile.ChangeOrientation();
@@ -82,10 +84,10 @@ namespace AdventOfCode.Y2020.Day20 {
                     }
                 } else {
                     // we know the tile from the inversion structure, just need to find its orientation
-                    var tile = above != null ? getConnectingTile(above, above.Bottom()) : getConnectingTile(left, left.Right());
+                    var tile = above != null ? getNeighbour(above, above.Bottom()) : getNeighbour(left, left.Right());
                     for (var i = 0; i < 8; i++) {
-                        var topMatch = above == null ? getConnectingTile(tile, tile.Top()) == null : tile.Top() == above.Bottom();
-                        var leftMatch = left == null ? getConnectingTile(tile, tile.Left()) == null : tile.Left() == left.Right();
+                        var topMatch = above == null ? getNeighbour(tile, tile.Top()) == null : tile.Top() == above.Bottom();
+                        var leftMatch = left == null ? getNeighbour(tile, tile.Left()) == null : tile.Left() == left.Right();
 
                         if (topMatch && leftMatch) {
                             return tile;
@@ -97,6 +99,7 @@ namespace AdventOfCode.Y2020.Day20 {
                 throw new Exception();
             }
 
+            // once the corner is fixed we can always find a unique tile that matches the one to the left & above
             // just fill up the tileset one by one
             var size = (int)Math.Sqrt(tiles.Length);
             var tileset = new Tile[size, size];
@@ -104,7 +107,7 @@ namespace AdventOfCode.Y2020.Day20 {
                 for (var icol = 0; icol < size; icol++) {
                     var tileAbove = irow == 0 ? null : tileset[irow - 1, icol];
                     var tileLeft = icol == 0 ? null : tileset[irow, icol - 1];
-                    tileset[irow, icol] = putMatchingTileInPlace(tileAbove, tileLeft);
+                    tileset[irow, icol] = putTileInPlace(tileAbove, tileLeft);
                 }
 
             return tileset;
