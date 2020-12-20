@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using System;
 using Parser = System.Func<string, System.Collections.Generic.IEnumerable<string>>;
 
 namespace AdventOfCode.Y2020.Day19 {
@@ -31,11 +30,11 @@ namespace AdventOfCode.Y2020.Day19 {
                 rules[11] = "42 31 | 42 11 31";
             }
 
+            // a parser will process some prefix of the input and return the possible remainders (nothing in case of error).
             var parsers = new Dictionary<int, Parser>();
-
             Parser getParser(int index) {
                 if (!parsers.ContainsKey(index)) {
-                    parsers[index] = (input) => getParser(index)(input); 
+                    parsers[index] = (input) => getParser(index)(input); //avoid stack overflows in case of recursion in the grammar
 
                     parsers[index] = 
                         alt(
@@ -44,18 +43,18 @@ namespace AdventOfCode.Y2020.Day19 {
                                 seq(
                                     from item in sequence.Split(" ") 
                                     select
-                                        item[0] == '"'                ? literal(item.Trim('"')) :
-                                        int.TryParse(item, out var i) ? getParser(i) :
-                                        throw new Exception()
+                                        int.TryParse(item, out var i) ? getParser(i) : literal(item.Trim('"'))
                                 )
                         );
                 }
                 return parsers[index];
             }
 
-            return blocks[1].Count(data => getParser(0)(data).Any(st => st == ""));
+            var parser = getParser(0);
+            return blocks[1].Count(data => parser(data).Any(st => st == ""));
         }
 
+        // Parser combinators
         static Parser literal(string st) =>
             input => input.StartsWith(st) ? new[] { input.Substring(st.Length) } : new string[0];
 
@@ -78,7 +77,7 @@ namespace AdventOfCode.Y2020.Day19 {
                 return parsers.Single();
             }
             
-            var arr = parsers.ToArray();
+            var arr = parsers.ToArray(); // don't recalc the enumerable in the parse phase
             return input => 
                 from parser in arr
                 from rest in parser(input)
