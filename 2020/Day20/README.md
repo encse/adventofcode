@@ -175,3 +175,114 @@ To check that you've assembled the image correctly, multiply the IDs of the four
 Assemble the tiles into an image. <em>What do you get if you multiply together the IDs of the four corner tiles?</em>
 
 
+## --- Part Two ---
+Now, you're ready to <em>check the image for sea monsters</em>.
+
+The borders of each tile are not part of the actual image; start by removing them.
+
+In the example above, the tiles become:
+
+<pre>
+<code>.#.#..#. ##...#.# #..#####
+###....# .#....#. .#......
+##.##.## #.#.#..# #####...
+###.#### #...#.## ###.#..#
+##.#.... #.##.### #...#.##
+...##### ###.#... .#####.#
+....#..# ...##..# .#.###..
+.####... #..#.... .#......
+
+#..#.##. .#..###. #.##....
+#.####.. #.####.# .#.###..
+###.#.#. ..#.#### ##.#..##
+#.####.. ..##..## ######.#
+##..##.# ...#...# .#.#.#..
+...#..#. .#.#.##. .###.###
+.#.#.... #.##.#.. .###.##.
+###.#... #..#.##. ######..
+
+.#.#.### .##.##.# ..#.##..
+.####.## #.#...## #.#..#.#
+..#.#..# ..#.#.#. ####.###
+#..####. ..#.#.#. ###.###.
+#####..# ####...# ##....##
+#.##..#. .#...#.. ####...#
+.#.###.. ##..##.. ####.##.
+...###.. .##...#. ..#..###
+</code>
+</pre>
+
+Remove the gaps to form the actual image:
+
+<pre>
+<code>.#.#..#.##...#.##..#####
+###....#.#....#..#......
+##.##.###.#.#..######...
+###.#####...#.#####.#..#
+##.#....#.##.####...#.##
+...########.#....#####.#
+....#..#...##..#.#.###..
+.####...#..#.....#......
+#..#.##..#..###.#.##....
+#.####..#.####.#.#.###..
+###.#.#...#.######.#..##
+#.####....##..########.#
+##..##.#...#...#.#.#.#..
+...#..#..#.#.##..###.###
+.#.#....#.##.#...###.##.
+###.#...#..#.##.######..
+.#.#.###.##.##.#..#.##..
+.####.###.#...###.#..#.#
+..#.#..#..#.#.#.####.###
+#..####...#.#.#.###.###.
+#####..#####...###....##
+#.##..#..#...#..####...#
+.#.###..##..##..####.##.
+...###...##...#...#..###
+</code>
+</pre>
+
+Now, you're ready to search for sea monsters! Because your image is monochrome, a sea monster will look like this:
+
+<pre>
+<code>                  # 
+#    ##    ##    ###
+ #  #  #  #  #  #   
+</code>
+</pre>
+
+When looking for this pattern in the image, <em>the spaces can be anything</em>; only the <code>#</code> need to match. Also, you might need to rotate or flip your image before it's oriented correctly to find sea monsters. In the above image, <em>after flipping and rotating it</em> to the appropriate orientation, there are <em>two</em> sea monsters (marked with <code><em>O</em></code>):
+
+<pre>
+<code>.####...#####..#...###..
+#####..#..#.#.####..#.#.
+.#.#...#.###...#.##.<em>O</em>#..
+#.<em>O</em>.##.<em>O</em><em>O</em>#.#.<em>O</em><em>O</em>.##.<em>O</em><em>O</em><em>O</em>##
+..#<em>O</em>.#<em>O</em>#.<em>O</em>##<em>O</em>..<em>O</em>.#<em>O</em>##.##
+...#.#..##.##...#..#..##
+#.##.#..#.#..#..##.#.#..
+.###.##.....#...###.#...
+#.####.#.#....##.#..#.#.
+##...#..#....#..#...####
+..#.##...###..#.#####..#
+....#.##.#.#####....#...
+..##.##.###.....#.##..#.
+#...#...###..####....##.
+.#.##...#.##.#.#.###...#
+#.###.#..####...##..#...
+#.###...#.##...#.##<em>O</em>###.
+.<em>O</em>##.#<em>O</em><em>O</em>.###<em>O</em><em>O</em>##..<em>O</em><em>O</em><em>O</em>##.
+..<em>O</em>#.<em>O</em>..<em>O</em>..<em>O</em>.#<em>O</em>##<em>O</em>##.###
+#.#..##.########..#..##.
+#.#####..#.#...##..#....
+#....##..#.#########..##
+#...#.....#..##...###.##
+#..###....##.#...##.##.#
+</code>
+</pre>
+
+Determine how rough the waters are in the sea monsters' habitat by counting the number of <code>#</code> that are <em>not</em> part of a sea monster. In the above example, the habitat's water roughness is <em><code>273</code></em>.
+
+<em>How many <code>#</code> are not part of a sea monster?</em>
+
+
