@@ -13,15 +13,17 @@ namespace AdventOfCode.Y2020.Day21 {
 
         public object PartOne(string input) {
             var problem = Parse(input);
-            var suspiciousIngredients = UnionAll(GetIngredientsByAllergene(problem).Values);
-            return problem.mapping.Select(entry => entry.ingredients.Except(suspiciousIngredients).Count()).Sum();
+            var suspiciousIngredients = GetIngredientsByAllergene(problem).SelectMany(kvp => kvp.Value).ToHashSet();
+            return problem.mapping
+                .Select(entry => entry.ingredients.Count(ingredient => !suspiciousIngredients.Contains(ingredient)))
+                .Sum();
         }
 
         public object PartTwo(string input) {
             var problem = Parse(input);
             var ingredientsByAllergene = GetIngredientsByAllergene(problem);
             
-            // The problem is set up in a way that we identify the allergene - ingredient pairs one by one. 
+            // The problem is set up in a way that we can identify the allergene - ingredient pairs one by one. 
             while (ingredientsByAllergene.Values.Any(ingredients => ingredients.Count > 1)) {
                 foreach (var allergen in problem.allergens) {
                     var candidates = ingredientsByAllergene[allergen];
@@ -48,8 +50,8 @@ namespace AdventOfCode.Y2020.Day21 {
             ).ToArray();
 
             return new Problem(
-                UnionAll(from line in mapping select line.allergens),
-                UnionAll(from line in mapping select line.ingredients),
+                mapping.SelectMany(entry => entry.allergens).ToHashSet(),
+                mapping.SelectMany(entry => entry.ingredients).ToHashSet(),
                 mapping
             );
         }
@@ -63,8 +65,5 @@ namespace AdventOfCode.Y2020.Day21 {
                         problem.ingredients as IEnumerable<string>,
                         (res, entry) => res.Intersect(entry.ingredients))
                     .ToHashSet());
-
-        private HashSet<string> UnionAll(IEnumerable<HashSet<string>> sets) =>
-            sets.Aggregate<IEnumerable<string>>((result, set) => result.Union(set)).ToHashSet();
     }
 }
