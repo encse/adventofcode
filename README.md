@@ -5,10 +5,10 @@ Check out https://adventofcode.com.
 
 ![](demo.gif)
 
-I worked as a .Net developer for more than 10 years before switching to TypeScript. This repository is to
+This repository is to
 keep my C# knowledge fresh and to follow the latest changes of the language.
 
-No rules are written in stone but I definitely don't use any external dependencies only what .Net provides.
+No rules are written in stone but I at least I don't use external dependencies only what .Net provides.
 No fancy libraries to make things short or predefined algorithms to parameterize.
 
 Everything is self contained. Each problem is solved by plain C# classes without any 'base' to derive from.
@@ -18,15 +18,18 @@ but code sharing between part 1 and 2 is important to me. (Unless it makes thing
 I prefer to use functional style, local or anonymous functions, immutability and linq over the state manipulation 
 style of oop, but I'm not very strict about this. Whatever I see fit for the problem.
 
-One thing that you dont see much in C# projects is K&R indentation. Sorry about that...
+One thing that you will not see much in C# projects is K&R indentation. Sorry about that...
 
-My programming style should be pretty consistent during an event but I'm sure there are changes between 
+The way I solve the puzzles should be pretty consistent during an event but there are small changes between 
 the years as I find something new or forget about stuff I learned last year.
 
 I try to keep things tight and golf the solution to a certain level, but don't want to overgolf it. (Sometimes I fail.)
 
 I don't use many comments, but if I find that the solution is not straightforward, the algorithm has a name, or it is 
 using some special property of the input I might explain it in a line or two. 
+
+You can browse my solutions as they are or fork the repo, remove everything and use just the lib part to 
+start working on your own. The framework part is pretty stable and you get testing, scaffolding etc for free.
 
 ## Dependencies
 
