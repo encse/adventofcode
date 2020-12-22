@@ -2,6 +2,7 @@
 # Advent of Code (2015-2020)
 C# solutions to the Advent of Code problems.
 Check out https://adventofcode.com.
+
 ![](demo.gif)
 
 I worked as a .Net developer for more than 10 years before switching to TypeScript. This repository is to
@@ -17,7 +18,7 @@ but code sharing between part 1 and 2 is important to me. (Unless it makes thing
 I prefer to use functional style, local or anonymous functions, immutability and linq over the state manipulation 
 style of oop, but I'm not very strict about this. Whatever I see fit for the problem.
 
-One thing that you dont see much in C# projects is K-R style parentheses alignment. Sorry about that...
+One thing that you dont see much in C# projects is K&R indentation. Sorry about that...
 
 My programming style should be pretty consistent during an event but I'm sure there are changes between 
 the years as I find something new or forget about stuff I learned last year.
