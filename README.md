@@ -8,10 +8,8 @@ Check out https://adventofcode.com.
 This repository is to
 keep my C# knowledge fresh and to follow the latest changes of the language.
 
-No rules are written in stone but I at least I don't use external dependencies only what .Net provides.
-No fancy libraries to make things short or predefined algorithms to parameterize.
-
-Everything is self contained. Each problem is solved by plain C# classes without any 'base' to derive from.
+Everything is self contained. I don't use any libraries to make things short or predefined algorithms 
+to parameterize. Just stick to what .Net provides. Each problem is solved by plain C# classes without any 'base' to derive from.
 The solvers have distinct entry points for part 1 and 2. There is no local state, part 2 starts from scratch, 
 but code sharing between part 1 and 2 is important to me. (Unless it makes things hard to read.)
 
