@@ -91,7 +91,8 @@ namespace AdventOfCode {
         public static SolverResult RunSolver(Solver solver) {
 
             var workingDir = solver.WorkingDir();
-            WriteLine(ConsoleColor.White, $"{solver.DayName()}: {solver.GetName()}");
+            var indent = "    ";
+            Write(ConsoleColor.White, $"{indent}{solver.DayName()}: {solver.GetName()}");
             WriteLine();
             var dir = workingDir;
             var file = Path.Combine(workingDir, "input.in");
@@ -114,7 +115,7 @@ namespace AdventOfCode {
                     errors.Add(err);
                 }
 
-                Write(statusColor, $"  {status}");
+                Write(statusColor, $"{indent}  {status}");
                 Console.Write($" {line} ");
                 var diff = ticks * 1000.0 / Stopwatch.Frequency;
 

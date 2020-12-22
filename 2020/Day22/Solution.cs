@@ -36,7 +36,7 @@ namespace AdventOfCode.Y2020.Day22 {
                 while (deck1.Any() && deck2.Any()) {
                     var hash = string.Join(",", deck1) + ";" + string.Join(",", deck2);
                     if (seen.Contains(hash)) {
-                        return true;
+                        return true; // player 1 wins;
                     }
                     seen.Add(hash);
 
@@ -57,7 +57,7 @@ namespace AdventOfCode.Y2020.Day22 {
                         deck2.Enqueue(card1);
                     }
                 }
-                return deck1.Any();
+                return deck1.Any(); // player1 wins?
             }
 
             Game(deck1, deck2);
@@ -70,10 +70,10 @@ namespace AdventOfCode.Y2020.Day22 {
 
         (Queue<int> deck1, Queue<int> deck2) Parse(string input) {
 
-            var parts = input.Split("\n\n");
+            var decks = input.Split("\n\n");
             return (
-                new Queue<int>(parts[0].Split("\n").Skip(1).Select(int.Parse)),
-                new Queue<int>(parts[1].Split("\n").Skip(1).Select(int.Parse))
+                new Queue<int>(decks[0].Split("\n").Skip(1).Select(int.Parse)),
+                new Queue<int>(decks[1].Split("\n").Skip(1).Select(int.Parse))
             );
         }
     }
