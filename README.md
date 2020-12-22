@@ -9,7 +9,7 @@ The goal is to keep my C# knowledge fresh and to follow the latest changes of th
 
 Everything is self contained. I don't use any libraries to make things short or predefined algorithms 
 to parameterize. Just stick to what .Net provides. Each problem is solved by plain C# classes without any 'base' to derive from.
-The solvers have distinct entry points for part 1 and 2. There is no local state, part 2 starts from scratch, 
+The solvers have different entry points for part 1 and 2. There is no local state, part 2 starts from scratch, 
 but code sharing between part 1 and 2 is important to me. (Unless it makes things hard to read.)
 
 I prefer to use functional style, local or anonymous functions, immutability and linq over the state manipulation 
