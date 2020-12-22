@@ -5,8 +5,7 @@ Check out https://adventofcode.com.
 
 ![](demo.gif)
 
-This repository is to
-keep my C# knowledge fresh and to follow the latest changes of the language.
+The goal is to keep my C# knowledge fresh and to follow the latest changes of the language.
 
 Everything is self contained. I don't use any libraries to make things short or predefined algorithms 
 to parameterize. Just stick to what .Net provides. Each problem is solved by plain C# classes without any 'base' to derive from.
