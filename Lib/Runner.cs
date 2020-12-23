@@ -15,8 +15,8 @@ namespace AdventOfCode {
     }
 
     interface Solver {
-        public object PartOne(string input);
-        public object PartTwo(string input);
+        object PartOne(string input);
+        object PartTwo(string input) => null;
     }
 
     static class SolverExtensions {

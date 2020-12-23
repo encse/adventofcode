@@ -24,8 +24,6 @@ namespace AdventOfCode.Y2016.Day25 {
                 }
             }
         }
-
-        public object PartTwo(string input) => null;
         
         IEnumerable<int> Run(string input, int a) {
             var prg = Parse(input);
