@@ -17,6 +17,7 @@ namespace AdventOfCode.Y2020.Day23 {
         private IEnumerable<long> Solve(string input, int maxLabel, int rotate) {
             var digits = input.Select(d => int.Parse(d.ToString())).ToArray();
 
+            // A compact linked list representation. The cup's label can be used as the index into the array. 
             int[] next = Enumerable.Range(1, maxLabel + 1).ToArray();
             next[0] = -1; // not used
 
@@ -47,6 +48,7 @@ namespace AdventOfCode.Y2020.Day23 {
                 current = next[current];
             }
 
+            // return the labels starting from the first cup.
             var cup = next[1];
             while (true) {
                 yield return cup;
