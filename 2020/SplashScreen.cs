@@ -9,8 +9,7 @@ namespace AdventOfCode.Y2020 {
 
             var color = Console.ForegroundColor;
             Write(0xcc00, false, "\n       ▄█▄ ▄▄█ ▄ ▄ ▄▄▄ ▄▄ ▄█▄  ▄▄▄ ▄█  ▄▄ ▄▄▄ ▄▄█ ▄▄▄\n       █▄█ █ █ █ █ █▄█ █ █ █   █ █ █▄  █  █ █");
-            Write(0xcc00, false, " █ █ █▄█\n       █ █ █▄█ ▀▄▀ █▄▄ █ █ █▄  █▄█ █   █▄ █▄█ █▄█ █▄▄  0x0000 | 2020\n\n                     ");
-            Write(0xcc00, false, "    ");
+            Write(0xcc00, false, " █ █ █▄█\n       █ █ █▄█ ▀▄▀ █▄▄ █ █ █▄  █▄█ █   █▄ █▄█ █▄█ █▄▄  /*2020*/\n\n                         ");
             Write(0xccccff, false, "..........");
             Write(0xff0000, false, "|");
             Write(0xccccff, false, "..........                ");
@@ -192,9 +191,8 @@ namespace AdventOfCode.Y2020 {
             Write(0xffcc99, false, "~ ~ ~ ~ ~ ");
             Write(0xcc00, false, ",");
             Write(0xcccccc, false, "[]");
-            Write(0xcc00, false, ":");
-            Write(0x666666, false, "     ~     ");
-            Write(0x333399, false, "~  ");
+            Write(0xcc00, false, ":     ");
+            Write(0x333399, false, "~     ~  ");
             Write(0xcccccc, false, "\\__    /");
             Write(0x333399, false, "~      ~      ");
             Write(0xcccccc, false, "21 ");
@@ -210,12 +208,10 @@ namespace AdventOfCode.Y2020 {
             Write(0x333399, false, "~         ~    ~   ");
             Write(0xcccccc, false, "22 ");
             Write(0xffff66, false, "**\n             ");
-            Write(0xcc00, false, ".....'''");
-            Write(0x666666, false, "           ~     ");
-            Write(0x333399, false, "~");
+            Write(0xcc00, false, ".....'''           ");
+            Write(0x333399, false, "~     ~");
             Write(0xcccccc, false, "\\____                  23 ");
-            Write(0xffff66, false, "*");
-            Write(0x666666, false, "*\n           ");
+            Write(0xffff66, false, "**\n           ");
             Write(0xcc00, false, "''         ");
             Write(0x333399, false, "~                 ");
             Write(0xcc00, false, ".");
@@ -227,8 +223,8 @@ namespace AdventOfCode.Y2020 {
             Write(0xcc00, false, "..       ");
             Write(0x333399, false, "~  ");
             Write(0x666666, false, "24\n                ");
-            Write(0x333399, false, "~");
-            Write(0x333333, false, "          ~        ~    ");
+            Write(0x333399, false, "~          ~");
+            Write(0x333333, false, "        ~    ");
             Write(0xcc00, false, "'.");
             Write(0x333333, false, "'  :        ");
             Write(0x333399, false, "~    \n           \n");
