@@ -29,62 +29,48 @@ namespace AdventOfCode.Y2020.Day23 {
     }
 
     class Cups {
-        Cup currentCup;
-        public Dictionary<long, Cup> cupsByLabel = new Dictionary<long, Cup>();
-        int maxLabel;
+        int currentCup;
+        public int[] next;
 
         public Cups(string input, int maxLabel) {
-            this.maxLabel = maxLabel;
+            next = Enumerable.Range(1, maxLabel + 1).ToArray();
+            next[0] = -1;
 
-            var numbers = 
-                input.ToCharArray().Select(v => int.Parse(v.ToString()))
-                    .Concat(Enumerable.Range(input.Length + 1, maxLabel - input.Length))
-                    .Select(v => new Cup(v))
-                    .ToArray();
+            var digits = input.Select(d => int.Parse(d.ToString())).ToArray();
+            for (var i = 0; i < digits.Length - 1; i++) {
+                next[digits[i]] = digits[i + 1];
+            }
+            next[digits.Last()] = digits.First();
 
-            for (var i = 0; i < numbers.Length; i++) {
-                numbers[i].next = numbers[(i + 1) % numbers.Length];
+            if (maxLabel > input.Length) {
+                (next[digits.Last()], next[maxLabel]) = (input.Length + 1, next[digits.Last()]);
             }
 
-            this.currentCup = numbers[0];
-            var cup = numbers[0];
-            for (var i = 0; i < maxLabel; i++) {
-                cupsByLabel[cup.label] = cup;
-                cup = cup.next;
-            }
+            currentCup = digits.First();
         }
 
         public IEnumerable<long> Labels() {
-            var cup = cupsByLabel[1].next;
+            var cup = next[1];
             while (true) {
-                yield return cup.label;
-                cup = cup.next;
+                yield return cup;
+                cup = next[cup];
             }
         }
 
         public void Rotate() {
-            var removed = currentCup.next;
-            currentCup.next = currentCup.next.next.next.next;
-            var destinationCup = currentCup.label;
-            destinationCup = destinationCup == 1 ? maxLabel : destinationCup - 1;
-            while (destinationCup == removed.label ||
-               destinationCup == removed.next.label ||
-               destinationCup == removed.next.next.label
-            ) {
-                destinationCup = destinationCup == 1 ? maxLabel : destinationCup - 1;
-            }
-            var cup = cupsByLabel[destinationCup];
-            removed.next.next.next = cup.next;
-            cup.next = removed;
-            currentCup = currentCup.next;
-        }
-    }
+            var removed = next[currentCup];
+            next[currentCup] = next[next[next[removed]]];
+            var destinationCup = currentCup == 1 ? next.Length - 1: currentCup - 1;
 
-    class Cup {
-        public long label;
-        public Cup next;
-        public Cup(int item) {
-            this.label = item;
+            while (destinationCup == removed ||
+               destinationCup == next[removed] ||
+               destinationCup == next[next[removed]]
+            ) {
+                destinationCup = destinationCup == 1 ? next.Length - 1 : destinationCup - 1;
+            }
+
+            (next[destinationCup], next[next[next[removed]]]) = (removed, next[destinationCup]);
+            currentCup = next[currentCup];
         }
     }
 }
