@@ -6,71 +6,52 @@ namespace AdventOfCode.Y2020.Day23 {
     [ProblemName("Crab Cups")]
     class Solution : Solver {
 
-        public object PartOne(string input) {
-
-            var cups = new Cups(input, 9);
-            for (var i = 0; i < 100; i++) {
-                cups.Rotate();
-            }
-
-            return string.Join("", cups.Labels().Take(8));
-        }
+        public object PartOne(string input) =>
+            string.Join("", Solve(input, 9, 100).Take(8));
 
         public object PartTwo(string input) {
-
-            var cups = new Cups(input, 1000000);
-            for (var i = 0; i < 10000000; i++) {
-                cups.Rotate();
-            }
-
-            var labels = cups.Labels().Take(2).ToArray();
+            var labels = Solve(input, 1000000, 10000000).Take(2).ToArray();
             return labels[0] * labels[1];
         }
-    }
 
-    class Cups {
-        int currentCup;
-        public int[] next;
-
-        public Cups(string input, int maxLabel) {
-            next = Enumerable.Range(1, maxLabel + 1).ToArray();
-            next[0] = -1;
-
+        private IEnumerable<long> Solve(string input, int maxLabel, int rotate) {
             var digits = input.Select(d => int.Parse(d.ToString())).ToArray();
-            for (var i = 0; i < digits.Length - 1; i++) {
-                next[digits[i]] = digits[i + 1];
+
+            int[] next = Enumerable.Range(1, maxLabel + 1).ToArray();
+            next[0] = -1; // not used
+
+            for (var i = 0; i < digits.Length; i++) {
+                next[digits[i]] = digits[(i + 1) % digits.Length];
             }
-            next[digits.Last()] = digits.First();
 
             if (maxLabel > input.Length) {
-                (next[digits.Last()], next[maxLabel]) = (input.Length + 1, next[digits.Last()]);
+                next[maxLabel] = next[digits.Last()];
+                next[digits.Last()] = input.Length + 1;
             }
 
-            currentCup = digits.First();
-        }
+            var current = digits.First();
 
-        public IEnumerable<long> Labels() {
+            for (var i = 0; i < rotate; i++) {
+                var removed1 = next[current];
+                var removed2 = next[removed1];
+                var removed3 = next[removed2];
+                next[current] = next[removed3];
+
+                // omg
+                var destination = current;
+                do destination = destination == 1 ? maxLabel : destination - 1;
+                while (destination == removed1 || destination == removed2 || destination == removed3);
+
+                next[removed3] = next[destination];
+                next[destination] = removed1;
+                current = next[current];
+            }
+
             var cup = next[1];
             while (true) {
                 yield return cup;
                 cup = next[cup];
             }
-        }
-
-        public void Rotate() {
-            var removed = next[currentCup];
-            next[currentCup] = next[next[next[removed]]];
-            var destinationCup = currentCup == 1 ? next.Length - 1: currentCup - 1;
-
-            while (destinationCup == removed ||
-               destinationCup == next[removed] ||
-               destinationCup == next[next[removed]]
-            ) {
-                destinationCup = destinationCup == 1 ? next.Length - 1 : destinationCup - 1;
-            }
-
-            (next[destinationCup], next[next[next[removed]]]) = (removed, next[destinationCup]);
-            currentCup = next[currentCup];
         }
     }
 }
