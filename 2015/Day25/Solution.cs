@@ -21,8 +21,6 @@ namespace AdventOfCode.Y2015.Day25 {
             return m;
         }
 
-        public object PartTwo(string input) => null;
-
         (int irowDst, int icolDst) Parse(string  input){
             var m = Regex.Match(input, @"To continue, please consult the code grid in the manual.  Enter the code at row (\d+), column (\d+).");
             return (int.Parse(m.Groups[1].Value), int.Parse(m.Groups[2].Value));

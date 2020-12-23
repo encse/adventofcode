@@ -53,8 +53,6 @@ namespace AdventOfCode.Y2019.Day25 {
             }
         }
 
-        public object PartTwo(string input) => null;
-        
         List<string> directions = new List<string>() { "south", "east", "west", "north" };
         string ReverseDir(string direction) => directions[3 - directions.IndexOf(direction)];
 

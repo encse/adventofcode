@@ -22,8 +22,6 @@ namespace AdventOfCode.Y2017.Day25 {
             return tape.Select(kvp => kvp.Value).Sum();
         }
 
-        public object PartTwo(string input) => null;
-
         Machine Parse(string input) {
             var lines = input.Split('\n').Where(line => !string.IsNullOrEmpty(line)).ToArray();
             int iline = 0;

@@ -38,8 +38,6 @@ namespace AdventOfCode.Y2018.Day25 {
 
             return sets.Count;
         }
-
-        public object PartTwo(string input) => null;
        
         int Dist(int[] a, int[] b) => Enumerable.Range(0, a.Length).Select(i => Math.Abs(a[i] - b[i])).Sum();
 
