@@ -3,7 +3,7 @@ using System.Collections.Immutable;
 using System.Linq;
 
 namespace AdventOfCode.Y2020.Day24 {
-    record Tile(int q, int r);
+    record Tile(int x, int y);
 
     [ProblemName("Lobby Layout")]
     class Solution : Solver {
@@ -15,19 +15,18 @@ namespace AdventOfCode.Y2020.Day24 {
                 .Aggregate(ParseBlackTiles(input), (blackTiles, _) => Flip(blackTiles))
                 .Count();
 
-        // https://www.redblobgames.com/grids/hexagons/#coordinates-axial
-        Dictionary<string, (int q, int r)> HexDirections = new Dictionary<string, (int q, int r)>{
+        Dictionary<string, (int x, int y)> HexDirections = new Dictionary<string, (int x, int y)> {
             {"o",  ( 0,  0)},
-            {"e",  ( 1,  0)},
-            {"se", ( 0,  1)},
-            {"sw", (-1,  1)},
-            {"w",  (-1,  0)},
-            {"nw", ( 0, -1)},
-            {"ne", ( 1, -1)}
+            {"ne", ( 1,  1)},
+            {"nw", (-1,  1)},
+            {"e",  ( 2,  0)},
+            {"w",  (-2,  0)},
+            {"se", ( 1, -1)},
+            {"sw", (-1, -1)},
         };
 
         IEnumerable<Tile> Neighbourhood(Tile tile) =>
-            from dir in HexDirections.Values select new Tile(tile.q + dir.q, tile.r + dir.r);
+            from dir in HexDirections.Values select new Tile(tile.x + dir.x, tile.y + dir.y);
 
         HashSet<Tile> Flip(HashSet<Tile> blackTiles) {
             var tiles = (
@@ -56,16 +55,16 @@ namespace AdventOfCode.Y2020.Day24 {
         }
 
         Tile Walk(string line) {
-            var (q, r) = (0, 0);
+            var (x, y) = (0, 0);
             while (line != "") {
                 foreach (var kvp in HexDirections) {
                     if (line.StartsWith(kvp.Key)) {
                         line = line.Substring(kvp.Key.Length);
-                        (q, r) = (q + kvp.Value.q, r + kvp.Value.r);
+                        (x, y) = (x + kvp.Value.x, y + kvp.Value.y);
                     }
                 }
             }
-            return new Tile(q, r);
+            return new Tile(x, y);
         }
     }
 }
