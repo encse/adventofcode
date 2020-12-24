@@ -26,8 +26,8 @@ namespace AdventOfCode.Y2020.Day24 {
             {"ne", ( 1, -1)}
         };
 
-        IEnumerable<Tile> Neighbourhood(Tile point) =>
-            from dir in HexDirections.Values select new Tile(point.q + dir.q, point.r + dir.r);
+        IEnumerable<Tile> Neighbourhood(Tile tile) =>
+            from dir in HexDirections.Values select new Tile(tile.q + dir.q, tile.r + dir.r);
 
         HashSet<Tile> Flip(HashSet<Tile> blackTiles) {
             var tiles = (
