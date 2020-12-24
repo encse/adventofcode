@@ -18,12 +18,12 @@ namespace AdventOfCode.Y2020.Day24 {
         // https://www.redblobgames.com/grids/hexagons/#coordinates-axial
         Dictionary<string, (int q, int r)> HexDirections = new Dictionary<string, (int q, int r)>{
             {"o",  ( 0,  0)},
-            {"e",  ( 0,  1)},
-            {"se", ( 1,  0)},
-            {"sw", ( 1, -1)},
-            {"w",  ( 0, -1)},
-            {"nw", (-1,  0)},
-            {"ne", (-1,  1)}
+            {"e",  ( 1,  0)},
+            {"se", ( 0,  1)},
+            {"sw", (-1,  1)},
+            {"w",  (-1,  0)},
+            {"nw", ( 0, -1)},
+            {"ne", ( 1, -1)}
         };
 
         IEnumerable<Tile> Neighbourhood(Tile point) =>
