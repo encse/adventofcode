@@ -3,7 +3,7 @@ using System.Collections.Immutable;
 using System.Linq;
 
 namespace AdventOfCode.Y2020.Day24 {
-    record Tile(int x, int y, int z);
+    record Tile(int q, int r);
 
     [ProblemName("Lobby Layout")]
     class Solution : Solver {
@@ -15,19 +15,19 @@ namespace AdventOfCode.Y2020.Day24 {
                 .Aggregate(ParseBlackTiles(input), (blackTiles, _) => Flip(blackTiles))
                 .Count();
 
-        Dictionary<string, (int x, int y, int z)> HexDirections = new Dictionary<string, (int x, int y, int z)>{
-            {"x", (0, 0, 0)},
-            {"e", (0, 1, -1)},
-            {"se", (1, 0, -1)},
-            {"sw", (1, -1, 0)},
-            {"w", (0, -1, 1)},
-            {"nw", (-1, 0, 1)},
-            {"ne", (-1, 1, 0)}
+        // https://www.redblobgames.com/grids/hexagons/#coordinates-axial
+        Dictionary<string, (int q, int r)> HexDirections = new Dictionary<string, (int q, int r)>{
+            {"o",  ( 0,  0)},
+            {"e",  ( 0,  1)},
+            {"se", ( 1,  0)},
+            {"sw", ( 1, -1)},
+            {"w",  ( 0, -1)},
+            {"nw", (-1,  0)},
+            {"ne", (-1,  1)}
         };
 
         IEnumerable<Tile> Neighbourhood(Tile point) =>
-            from dir in HexDirections.Values
-            select new Tile(point.x + dir.x, point.y + dir.y, point.z + dir.z);
+            from dir in HexDirections.Values select new Tile(point.q + dir.q, point.r + dir.r);
 
         HashSet<Tile> Flip(HashSet<Tile> blackTiles) {
             var tiles = (
@@ -56,17 +56,16 @@ namespace AdventOfCode.Y2020.Day24 {
         }
 
         Tile Walk(string line) {
-            var (x, y, z) = (0, 0, 0);
+            var (q, r) = (0, 0);
             while (line != "") {
                 foreach (var kvp in HexDirections) {
                     if (line.StartsWith(kvp.Key)) {
                         line = line.Substring(kvp.Key.Length);
-                        (x, y, z) = (x + kvp.Value.x, y + kvp.Value.y, z + kvp.Value.z);
+                        (q, r) = (q + kvp.Value.q, r + kvp.Value.r);
                     }
                 }
             }
-            return new Tile(x, y, z);
+            return new Tile(q, r);
         }
-
     }
 }
