@@ -11,7 +11,7 @@ namespace AdventOfCode.Generator {
                > C# solutions to the Advent of Code problems.
                > Check out https://adventofcode.com.
                > 
-               > ![](demo.gif)
+               > ![]({lastYear}/calendar.svg)
                > 
                > The goal is to keep my C# knowledge fresh and to follow the latest changes of the language.
                > 
