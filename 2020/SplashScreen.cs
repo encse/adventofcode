@@ -223,10 +223,11 @@ namespace AdventOfCode.Y2020 {
             Write(0xffff66, false, "**\n                ");
             Write(0x333399, false, "~          ~        ~    ");
             Write(0xcc00, false, "'.'  : ");
-            Write(0xcccccc, false, "[]");
-            Write(0x333333, false, " .'  ");
+            Write(0xcccccc, false, "[] ");
+            Write(0xcc00, false, ".'  ");
             Write(0x333399, false, "~      ");
-            Write(0x666666, false, "25\n           \n");
+            Write(0xcccccc, false, "25 ");
+            Write(0xffff66, false, "**\n           \n");
             
             Console.ForegroundColor = color;
             Console.WriteLine();
