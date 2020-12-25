@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Text;
 using AngleSharp.Dom;
 
 namespace AdventOfCode.Model {
 
     public class CalendarToken {
         public string Text { get; set; }
+        public string RgbaColor { get; set; }
         public int ConsoleColor { get; set; }
         public bool Bold { get; set; }
     }
@@ -63,7 +65,7 @@ namespace AdventOfCode.Model {
             foreach (var textNode in GetText(calendar)) {
                 var text = textNode.Text();
                 var style = textNode.ParentElement.ComputeCurrentStyle();
-                var consoleColor = ParseRgbaColor(style["color"]);
+                var rgbaColor = style["color"];
                 var bold = !string.IsNullOrEmpty(style["text-shadow"]);
 
                 if (style["position"] == "absolute" || 
@@ -94,7 +96,8 @@ namespace AdventOfCode.Model {
 
                     line.Add(new CalendarToken {
                         Text = text.Substring(i, iNext - i),
-                        ConsoleColor = consoleColor,
+                        ConsoleColor = ParseRgbaColor(rgbaColor),
+                        RgbaColor = rgbaColor,
                         Bold = bold
                     });
 
@@ -135,6 +138,28 @@ namespace AdventOfCode.Model {
                 return (r << 16) + (g << 8) + b;
             }
             return 0x888888;
+        }
+
+        public string ToSvg(){
+            var sb = new StringBuilder(); 
+            sb.AppendLine(@"<svg viewBox=""-20 -20 470 430"" style=""background-color:black"" xmlns=""http://www.w3.org/2000/svg"">
+                    <style>
+                        text {
+                             font-family: monospace;
+                        }
+                    </style>");
+            sb.AppendLine(@"<text xml:space=""preserve"">");
+            foreach(var line in this.Lines){
+                sb.Append($@"<tspan x=""0"" dy=""1.2em"">");
+                foreach(var token in line){
+                    sb.Append($@"<tspan fill=""{token.RgbaColor}"">{token.Text}</tspan>");
+                }
+                sb.AppendLine("</tspan>");
+            }
+            sb.AppendLine("</text>");
+            sb.AppendLine(@"</svg>");
+
+            return sb.ToString();
         }
     }
 
