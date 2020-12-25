@@ -68,7 +68,7 @@ namespace AdventOfCode.Model {
                 var rgbaColor = style["color"];
                 var bold = !string.IsNullOrEmpty(style["text-shadow"]);
 
-                if (style["position"] == "absolute" || 
+                if (style["position"] == "absolute" ||
                     textNode.ParentElement.ParentElement.ComputeCurrentStyle()["position"] == "absolute"
                 ) {
                     continue;
@@ -140,26 +140,37 @@ namespace AdventOfCode.Model {
             return 0x888888;
         }
 
-        public string ToSvg(){
-            var sb = new StringBuilder(); 
-            sb.AppendLine(@"<svg viewBox=""-20 -20 470 430"" style=""background-color:black"" xmlns=""http://www.w3.org/2000/svg"">
+        public string ToSvg() {
+            var sb = new StringBuilder();
+            var height = 0;
+            var width = 0;
+            sb.AppendLine(@"
                     <style>
                         text {
                              font-family: monospace;
                         }
                     </style>");
             sb.AppendLine(@"<text xml:space=""preserve"">");
-            foreach(var line in this.Lines){
+            foreach (var line in this.Lines) {
                 sb.Append($@"<tspan x=""0"" dy=""1.2em"">");
-                foreach(var token in line){
-                    sb.Append($@"<tspan fill=""{token.RgbaColor}"">{token.Text}</tspan>");
+                var lineWidth = 0;
+                foreach (var token in line) {
+                    var text = token.Text
+                        .Replace("<", "&lt;")
+                        .Replace(">", "&gt;");
+                    sb.Append($@"<tspan fill=""{token.RgbaColor}"">{text}</tspan>");
+
+                    lineWidth += token.Text.Length;
                 }
+                width = Math.Max(width, lineWidth);
                 sb.AppendLine("</tspan>");
+                height++;
             }
             sb.AppendLine("</text>");
-            sb.AppendLine(@"</svg>");
 
-            return sb.ToString();
+            return $@"<svg viewBox=""-16 -16 {(width + 2) * 8} {(height + 2) * 16}"" style=""background-color:black"" xmlns=""http://www.w3.org/2000/svg"">
+                {sb.ToString()}
+            </svg>";
         }
     }
 
