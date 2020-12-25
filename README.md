@@ -50,6 +50,8 @@ Usage: dotnet run [arguments]
  [year]                Solve the whole year
  all                   Solve everything
 
+ calendars             Show the calendars
+
 2) To start working on new problems:
 login to https://adventofcode.com, then copy your session cookie, and export 
 it in your console like this

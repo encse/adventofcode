@@ -194,6 +194,9 @@ namespace AdventOfCode {
         void UpdateReadmeForYear(Calendar calendar) {
             var file = Path.Combine(SolverExtensions.WorkingDir(calendar.Year), "README.md");
             WriteFile(file, new ReadmeGeneratorForYear().Generate(calendar));
+
+            var svg = Path.Combine(SolverExtensions.WorkingDir(calendar.Year), "calendar.svg");
+            WriteFile(svg, calendar.ToSvg());
         }
 
         void UpdateSplashScreen(Calendar calendar) {
