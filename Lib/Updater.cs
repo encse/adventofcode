@@ -128,7 +128,7 @@ namespace AdventOfCode {
                 article = Regex.Replace(article, @"\(You guessed.*", "", RegexOptions.Singleline);
                 article = Regex.Replace(article, @"  ", "\n", RegexOptions.Singleline);
                    
-                if (article.StartsWith("That's the right answer")) {
+                if (article.StartsWith("That's the right answer") || article.Contains("You've finished every puzzle")) {
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine(article);
                     Console.ForegroundColor = color;
