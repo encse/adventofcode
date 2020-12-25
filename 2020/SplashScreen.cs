@@ -9,8 +9,8 @@ namespace AdventOfCode.Y2020 {
 
             var color = Console.ForegroundColor;
             Write(0xcc00, false, "           ▄█▄ ▄▄█ ▄ ▄ ▄▄▄ ▄▄ ▄█▄  ▄▄▄ ▄█  ▄▄ ▄▄▄ ▄▄█ ▄▄▄\n           █▄█ █ █ █ █ █▄█ █ █ █   █ █ █▄ ");
-            Write(0xcc00, false, " █  █ █ █ █ █▄█\n           █ █ █▄█ ▀▄▀ █▄▄ █ █ █▄  █▄█ █   █▄ █▄█ █▄█ █▄▄  /* 2020 */\n            \n ");
-            Write(0xcc00, false, "                        ");
+            Write(0xcc00, false, " █  █ █ █ █ █▄█\n           █ █ █▄█ ▀▄▀ █▄▄ █ █ █▄  █▄█ █   █▄ █▄█ █▄█ █▄▄  // 2020\n            \n    ");
+            Write(0xcc00, false, "                     ");
             Write(0xccccff, false, "..........");
             Write(0xff0000, false, "|");
             Write(0xccccff, false, "..........                ");
