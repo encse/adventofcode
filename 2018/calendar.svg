@@ -1,4 +1,5 @@
-<svg viewBox="-20 -20 470 430" style="background-color:black" xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="-16 -16 464 448" style="background-color:black" xmlns="http://www.w3.org/2000/svg">
+                
                     <style>
                         text {
                              font-family: monospace;
@@ -32,4 +33,5 @@
 <tspan x="0" dy="1.2em"><tspan fill="rgba(204, 204, 204, 1)">_'~~~~~~~~~~~~~'_________</tspan><tspan fill="rgba(102, 102, 102, 1)"> </tspan><tspan fill="rgba(204, 204, 204, 1)">___</tspan><tspan fill="rgba(102, 102, 102, 1)"> </tspan><tspan fill="rgba(204, 204, 204, 1)">__</tspan><tspan fill="rgba(102, 102, 102, 1)"> </tspan><tspan fill="rgba(204, 204, 204, 1)">_</tspan><tspan fill="rgba(102, 102, 102, 1)">  </tspan><tspan fill="rgba(204, 204, 204, 1)">_</tspan><tspan fill="rgba(102, 102, 102, 1)">   </tspan><tspan fill="rgba(204, 204, 204, 1)">_</tspan><tspan fill="rgba(102, 102, 102, 1)">    </tspan><tspan fill="rgba(204, 204, 204, 1)">_</tspan><tspan fill="rgba(102, 102, 102, 1)">     </tspan><tspan fill="rgba(204, 204, 204, 1)"> 1</tspan><tspan fill="rgba(102, 102, 102, 1)"> </tspan><tspan fill="rgba(255, 255, 102, 1)">*</tspan><tspan fill="rgba(255, 255, 102, 1)">*</tspan><tspan fill=""></tspan></tspan>
 <tspan x="0" dy="1.2em"></tspan>
 </text>
-</svg>
+
+            </svg>
