@@ -28,8 +28,8 @@ var action =
         var year = int.Parse(m[1]);
         var day = int.Parse(m[2]);
         return () => {
-            var tsolver = tsolvers.First(tsolver => 
-                SolverExtensions.Year(tsolver) == year && 
+            var tsolver = tsolvers.First(tsolver =>
+                SolverExtensions.Year(tsolver) == year &&
                 SolverExtensions.Day(tsolver) == day);
 
             new Updater().Upload(GetSolvers(tsolver)[0]).Wait();
@@ -39,13 +39,13 @@ var action =
         var dt = DateTime.UtcNow.AddHours(-5);
         if (dt is { Month: 12, Day: >= 1 and <= 25 }) {
 
-            var tsolver = tsolvers.First(tsolver => 
-                SolverExtensions.Year(tsolver) == dt.Year && 
+            var tsolver = tsolvers.First(tsolver =>
+                SolverExtensions.Year(tsolver) == dt.Year &&
                 SolverExtensions.Day(tsolver) == dt.Day);
 
-            return () => 
+            return () =>
                 new Updater().Upload(GetSolvers(tsolver)[0]).Wait();
-            
+
         } else {
             throw new Exception("Event is not active. This option works in Dec 1-25 only)");
         }
@@ -53,17 +53,17 @@ var action =
     Command(args, Args("([0-9]+)/([0-9]+)"), m => {
         var year = int.Parse(m[0]);
         var day = int.Parse(m[1]);
-        var tsolversSelected = tsolvers.First(tsolver => 
-            SolverExtensions.Year(tsolver) == year && 
+        var tsolversSelected = tsolvers.First(tsolver =>
+            SolverExtensions.Year(tsolver) == year &&
             SolverExtensions.Day(tsolver) == day);
         return () => Runner.RunAll(GetSolvers(tsolversSelected));
     }) ??
         Command(args, Args("[0-9]+"), m => {
-        var year = int.Parse(m[0]);
-        var tsolversSelected = tsolvers.Where(tsolver => 
-            SolverExtensions.Year(tsolver) == year);
-        return () => Runner.RunAll(GetSolvers(tsolversSelected.ToArray()));
-    }) ??
+            var year = int.Parse(m[0]);
+            var tsolversSelected = tsolvers.Where(tsolver =>
+                SolverExtensions.Year(tsolver) == year);
+            return () => Runner.RunAll(GetSolvers(tsolversSelected.ToArray()));
+        }) ??
     Command(args, Args("([0-9]+)/all"), m => {
         var year = int.Parse(m[0]);
         var tsolversSelected = tsolvers.Where(tsolver =>
@@ -73,20 +73,35 @@ var action =
     Command(args, Args("all"), m => {
         return () => Runner.RunAll(GetSolvers(tsolvers));
     }) ??
-    Command(args, Args("today"),  m => {
+    Command(args, Args("today"), m => {
         var dt = DateTime.UtcNow.AddHours(-5);
         if (dt is { Month: 12, Day: >= 1 and <= 25 }) {
 
-            var tsolversSelected = tsolvers.First(tsolver => 
-                SolverExtensions.Year(tsolver) == dt.Year && 
+            var tsolversSelected = tsolvers.First(tsolver =>
+                SolverExtensions.Year(tsolver) == dt.Year &&
                 SolverExtensions.Day(tsolver) == dt.Day);
 
-            return () => 
+            return () =>
                 Runner.RunAll(GetSolvers(tsolversSelected));
-            
+
         } else {
             throw new Exception("Event is not active. This option works in Dec 1-25 only)");
         }
+    }) ??
+    Command(args, Args("calendars"), _ => {
+        return () => {
+            var tsolversSelected = (
+                    from tsolver in tsolvers
+                    group tsolver by SolverExtensions.Year(tsolver) into g
+                    orderby SolverExtensions.Year(g.First()) descending
+                    select g.First()
+                ).ToArray();
+
+            var solvers = GetSolvers(tsolversSelected);
+            foreach (var solver in solvers) {
+                solver.SplashScreen().Show();
+            }
+        };
     }) ??
     new Action(() => {
         Console.WriteLine(Usage.Get());
@@ -108,7 +123,7 @@ Action Command(string[] args, string[] regexes, Func<string[], Action> parse) {
     }
     try {
 
-        return parse(matches.SelectMany(m => m.Groups.Count > 1 ? m.Groups.Cast<Group>().Skip(1).Select(g => g.Value) : new []{m.Value}).ToArray());
+        return parse(matches.SelectMany(m => m.Groups.Count > 1 ? m.Groups.Cast<Group>().Skip(1).Select(g => g.Value) : new[] { m.Value }).ToArray());
     } catch {
         return null;
     }
@@ -119,7 +134,7 @@ string[] Args(params string[] regex) {
 }
 
 public class Usage {
-    public static string Get(){
+    public static string Get() {
         return $@"
             > Usage: dotnet run [arguments]
             > 1) To run the solutions and admire your advent calendar:
@@ -128,6 +143,8 @@ public class Usage {
             >  today                 Shortcut to the above
             >  [year]                Solve the whole year
             >  all                   Solve everything
+
+            >  calendars             Show the calendars
 
             > 2) To start working on new problems:
             > login to https://adventofcode.com, then copy your session cookie, and export 
