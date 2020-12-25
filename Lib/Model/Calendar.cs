@@ -60,15 +60,15 @@ namespace AdventOfCode.Model {
             var r = new Random();
             var years = new []{
                 $@"0x0000 | {year}",
-                $@"/*{year}*/",
-                $@"int y={year};",
+                $@"/* {year} */",
+                $@"int y = {year};",
                 $@"/^{year}$/",
                 $@"λy.{year}",
                 $@"{{:year {year}}}",
                 $@"sub y{{{year}}}",
-                $@"//{year}",
-                $@"{{'year':{year}}}",
-                $@"$year={year}"
+                $@"// {year}",
+                $@"{{'year': {year}}}",
+                $@"$year = {year}"
             };
 
             var stYear = years[r.Next(years.Length)];
@@ -84,6 +84,7 @@ namespace AdventOfCode.Model {
                         new CalendarToken {ConsoleColor = 0x00cc00, RgbaColor = "rgba(0,204,0,1)", Text = $@"█ █ █▄█ ▀▄▀ █▄▄ █ █ █▄  █▄█ █   █▄ █▄█ █▄█ █▄▄  {stYear}"}
                     },
                     new List<CalendarToken>(){
+                        new CalendarToken {ConsoleColor = 0x00cc00, RgbaColor = "rgba(0,204,0,1)", Text = $@" "}
                     }
             };
 
