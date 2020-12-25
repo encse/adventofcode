@@ -9,7 +9,7 @@ namespace AdventOfCode.Y2018 {
 
             var color = Console.ForegroundColor;
             Write(0xcc00, false, "\n       ▄█▄ ▄▄█ ▄ ▄ ▄▄▄ ▄▄ ▄█▄  ▄▄▄ ▄█  ▄▄ ▄▄▄ ▄▄█ ▄▄▄\n       █▄█ █ █ █ █ █▄█ █ █ █   █ █ █▄  █  █ █");
-            Write(0xcc00, false, " █ █ █▄█\n       █ █ █▄█ ▀▄▀ █▄▄ █ █ █▄  █▄█ █   █▄ █▄█ █▄█ █▄▄  //2018\n\n                ");
+            Write(0xcc00, false, " █ █ █▄█\n       █ █ █▄█ ▀▄▀ █▄▄ █ █ █▄  █▄█ █   █▄ █▄█ █▄█ █▄▄  int y=2018;\n\n                ");
             Write(0xcccccc, false, ".         .         .        .        .       25 ");
             Write(0xffff66, false, "**\n            ");
             Write(0xcccccc, false, ".        .         .        .       ");
