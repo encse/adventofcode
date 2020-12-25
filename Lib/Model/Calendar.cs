@@ -57,10 +57,38 @@ namespace AdventOfCode.Model {
 
             var calendar = document.QuerySelector(".calendar");
 
-            var lines = new List<List<CalendarToken>>();
+            var r = new Random();
+            var years = new []{
+                $@"0x0000 | {year}",
+                $@"/*{year}*/",
+                $@"int y={year};",
+                $@"/^{year}$/",
+                $@"λy.{year}",
+                $@"{{:year {year}}}",
+                $@"sub y{{{year}}}",
+                $@"//{year}",
+                $@"{{'year':{year}}}",
+                $@"$year={year}"
+            };
+
+            var stYear = years[r.Next(years.Length)];
+
+            var lines = new List<List<CalendarToken>>(){
+                    new List<CalendarToken>(){
+                        new CalendarToken {ConsoleColor = 0x00cc00, RgbaColor = "rgba(0,204,0,1)", Text = $@"▄█▄ ▄▄█ ▄ ▄ ▄▄▄ ▄▄ ▄█▄  ▄▄▄ ▄█  ▄▄ ▄▄▄ ▄▄█ ▄▄▄"}
+                    },
+                    new List<CalendarToken>(){
+                        new CalendarToken {ConsoleColor = 0x00cc00, RgbaColor = "rgba(0,204,0,1)", Text = $@"█▄█ █ █ █ █ █▄█ █ █ █   █ █ █▄  █  █ █ █ █ █▄█"}
+                    },
+                    new List<CalendarToken>(){
+                        new CalendarToken {ConsoleColor = 0x00cc00, RgbaColor = "rgba(0,204,0,1)", Text = $@"█ █ █▄█ ▀▄▀ █▄▄ █ █ █▄  █▄█ █   █▄ █▄█ █▄█ █▄▄  {stYear}"}
+                    },
+                    new List<CalendarToken>(){
+                    }
+            };
+
             var line = new List<CalendarToken>();
             lines.Add(line);
-
 
             foreach (var textNode in GetText(calendar)) {
                 var text = textNode.Text();
@@ -157,7 +185,8 @@ namespace AdventOfCode.Model {
                 foreach (var token in line) {
                     var text = token.Text
                         .Replace("<", "&lt;")
-                        .Replace(">", "&gt;");
+                        .Replace(">", "&gt;")
+                        .Replace(" ", "&#160;");
                     sb.Append($@"<tspan fill=""{token.RgbaColor}"">{text}</tspan>");
 
                     lineWidth += token.Text.Length;
