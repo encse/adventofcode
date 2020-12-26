@@ -1,4 +1,4 @@
-<svg viewBox="-16 -16 512 614.4" style="background-color:black" xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="-16 -16 488 614.4" style="background-color:black" xmlns="http://www.w3.org/2000/svg">
                 
                     <style>
                         @font-face {
@@ -7,13 +7,13 @@
                         }
                         text {
                              font-family: SourceCodePro;
-                             font-size: 16px;
+                             font-size: 13.2px;
                         }
                     </style>
 <text xml:space="preserve">
 <tspan x="0" dy="1.2em"><tspan fill="rgba(0,204,0,1)">▄█▄&#160;▄▄█&#160;▄&#160;▄&#160;▄▄▄&#160;▄▄&#160;▄█▄&#160;&#160;▄▄▄&#160;▄█&#160;&#160;▄▄&#160;▄▄▄&#160;▄▄█&#160;▄▄▄</tspan></tspan>
 <tspan x="0" dy="1.2em"><tspan fill="rgba(0,204,0,1)">█▄█&#160;█&#160;█&#160;█&#160;█&#160;█▄█&#160;█&#160;█&#160;█&#160;&#160;&#160;█&#160;█&#160;█▄&#160;&#160;█&#160;&#160;█&#160;█&#160;█&#160;█&#160;█▄█</tspan></tspan>
-<tspan x="0" dy="1.2em"><tspan fill="rgba(0,204,0,1)">█&#160;█&#160;█▄█&#160;▀▄▀&#160;█▄▄&#160;█&#160;█&#160;█▄&#160;&#160;█▄█&#160;█&#160;&#160;&#160;█▄&#160;█▄█&#160;█▄█&#160;█▄▄&#160;&#160;{'year':&#160;2018}</tspan></tspan>
+<tspan x="0" dy="1.2em"><tspan fill="rgba(0,204,0,1)">█&#160;█&#160;█▄█&#160;▀▄▀&#160;█▄▄&#160;█&#160;█&#160;█▄&#160;&#160;█▄█&#160;█&#160;&#160;&#160;█▄&#160;█▄█&#160;█▄█&#160;█▄▄&#160;&#160;sub&#160;y{2018}</tspan></tspan>
 <tspan x="0" dy="1.2em"><tspan fill="rgba(0,204,0,1)">&#160;</tspan></tspan>
 <tspan x="0" dy="1.2em"><tspan fill="rgba(102, 102, 102, 1)">&#160;&#160;&#160;&#160;&#160;</tspan><tspan fill="rgba(204, 204, 204, 1)">.</tspan><tspan fill="rgba(102, 102, 102, 1)">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</tspan><tspan fill="rgba(204, 204, 204, 1)">.</tspan><tspan fill="rgba(102, 102, 102, 1)">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</tspan><tspan fill="rgba(204, 204, 204, 1)">.</tspan><tspan fill="rgba(102, 102, 102, 1)">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</tspan><tspan fill="rgba(204, 204, 204, 1)">.</tspan><tspan fill="rgba(102, 102, 102, 1)">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</tspan><tspan fill="rgba(204, 204, 204, 1)">.</tspan><tspan fill="rgba(102, 102, 102, 1)">&#160;&#160;&#160;&#160;&#160;&#160;&#160;</tspan><tspan fill="rgba(204, 204, 204, 1)">25</tspan><tspan fill="rgba(102, 102, 102, 1)">&#160;</tspan><tspan fill="rgba(255, 255, 102, 1)">*</tspan><tspan fill="rgba(255, 255, 102, 1)">*</tspan><tspan fill=""></tspan></tspan>
 <tspan x="0" dy="1.2em"><tspan fill="rgba(102, 102, 102, 1)">&#160;</tspan><tspan fill="rgba(204, 204, 204, 1)">.</tspan><tspan fill="rgba(102, 102, 102, 1)">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</tspan><tspan fill="rgba(204, 204, 204, 1)">.</tspan><tspan fill="rgba(102, 102, 102, 1)">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</tspan><tspan fill="rgba(204, 204, 204, 1)">.</tspan><tspan fill="rgba(102, 102, 102, 1)">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</tspan><tspan fill="rgba(204, 204, 204, 1)">.</tspan><tspan fill="rgba(102, 102, 102, 1)">&#160;&#160;&#160;&#160;&#160;&#160;&#160;</tspan><tspan fill="rgba(136, 102, 85, 1)">\</tspan><tspan fill="rgba(102, 102, 102, 1)">&#160;&#160;</tspan><tspan fill="rgba(136, 102, 85, 1)">/</tspan><tspan fill="rgba(102, 102, 102, 1)">&#160;&#160;&#160;&#160;&#160;&#160;</tspan><tspan fill="rgba(204, 204, 204, 1)">.</tspan><tspan fill="rgba(102, 102, 102, 1)">&#160;&#160;&#160;</tspan><tspan fill="rgba(204, 204, 204, 1)">24</tspan><tspan fill="rgba(102, 102, 102, 1)">&#160;</tspan><tspan fill="rgba(255, 255, 102, 1)">*</tspan><tspan fill="rgba(255, 255, 102, 1)">*</tspan><tspan fill=""></tspan></tspan>
