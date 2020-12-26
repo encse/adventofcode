@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -170,14 +171,21 @@ namespace AdventOfCode.Model {
         }
 
         public string ToSvg() {
+
+            string font = Convert.ToBase64String(File.ReadAllBytes("Lib/SourceCodePro-Regular.woff2"));
+
             var sb = new StringBuilder();
             var height = 0;
             var width = 0;
-            sb.AppendLine(@"
+            sb.AppendLine($@"
                     <style>
-                        text {
-                             font-family: monospace;
-                        }
+                        @font-face {{
+                            font-family: ""SourceCodePro"";
+                            src: url(""data:application/font-woff;charset=utf-8;base64,{font}"");
+                        }}
+                        text {{
+                             font-family: SourceCodePro;
+                        }}
                     </style>");
             sb.AppendLine(@"<text xml:space=""preserve"">");
             foreach (var line in this.Lines) {
