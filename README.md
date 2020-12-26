@@ -3,7 +3,7 @@
 C# solutions to the Advent of Code problems.
 Check out https://adventofcode.com.
 
-![](2020/calendar.svg)
+<img src="2020/calendar.svg" width="80%" />
 
 The goal is to keep my C# knowledge fresh and to follow the latest changes of the language.
 

@@ -11,7 +11,7 @@ namespace AdventOfCode.Generator {
                > C# solutions to the Advent of Code problems.
                > Check out https://adventofcode.com.
                > 
-               > ![]({lastYear}/calendar.svg)
+               > <img src=""{lastYear}/calendar.svg"" width=""80%"" />
                > 
                > The goal is to keep my C# knowledge fresh and to follow the latest changes of the language.
                > 
@@ -71,7 +71,7 @@ namespace AdventOfCode.Generator {
                > # Advent of Code ({calendar.Year})
                > Check out https://adventofcode.com/{calendar.Year}.
 
-               > ![](calendar.svg)
+               > <img src=""calendar.svg"" width=""80%"" />
                
                > ".StripMargin("> ");
         }
