@@ -185,7 +185,7 @@ namespace AdventOfCode.Model {
                         }}
                         text {{
                              font-family: SourceCodePro;
-                             font-size: 16px;
+                             font-size: 13.2px;
                         }}
                     </style>");
             sb.AppendLine(@"<text xml:space=""preserve"">");
@@ -206,7 +206,6 @@ namespace AdventOfCode.Model {
                 height++;
             }
             sb.AppendLine("</text>");
-
             return $@"<svg viewBox=""-16 -16 {(width + 2) * 8} {(height + 2) * 1.2 *16}"" style=""background-color:black"" xmlns=""http://www.w3.org/2000/svg"">
                 {sb.ToString()}
             </svg>";
