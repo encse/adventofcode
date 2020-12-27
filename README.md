@@ -17,8 +17,8 @@ style of oop, but I'm not very strict about this. Whatever I see fit for the pro
 
 One thing that you will not see much in C# projects is K&R indentation. Sorry about that...
 
-The way I solve the puzzles should be pretty consistent during an event but there are small changes over the 
-years as I find something new or forget about stuff I learned last year.
+The way I solve the puzzles should be pretty consistent during an event but there are small changes over 
+the years as I find something new or forget about stuff I learned last year.
 
 I try to keep things tight and golf the solution to a certain level, but don't want to overgolf it. (Sometimes I fail.)
 

@@ -9,8 +9,8 @@ namespace AdventOfCode.Y2016 {
 
             var color = Console.ForegroundColor;
             Write(0xcc00, false, "           ▄█▄ ▄▄█ ▄ ▄ ▄▄▄ ▄▄ ▄█▄  ▄▄▄ ▄█  ▄▄ ▄▄▄ ▄▄█ ▄▄▄\n           █▄█ █ █ █ █ █▄█ █ █ █   █ █ █▄ ");
-            Write(0xcc00, false, " █  █ █ █ █ █▄█\n           █ █ █▄█ ▀▄▀ █▄▄ █ █ █▄  █▄█ █   █▄ █▄█ █▄█ █▄▄  0x0000 | 2016\n           ");
-            Write(0xcc00, false, " \n           ");
+            Write(0xcc00, false, " █  █ █ █ █ █▄█\n           █ █ █▄█ ▀▄▀ █▄▄ █ █ █▄  █▄█ █   █▄ █▄█ █▄█ █▄▄  // 2016\n            \n    ");
+            Write(0xcc00, false, "       ");
             Write(0xffff66, true, "(       (    (  ( ((*)) )  )    )       )               \n           ");
             Write(0x666666, false, "                    |                                   \n                             +-|---+       ");
             Write(0x666666, false, "                        \n                            /  |  /|                               \n       ");
