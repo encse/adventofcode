@@ -17,12 +17,12 @@ style of oop, but I'm not very strict about this. Whatever I see fit for the pro
 
 One thing that you will not see much in C# projects is K&R indentation. Sorry about that...
 
-The way I solve the puzzles should be pretty consistent during an event but there are small changes between 
-the years as I find something new or forget about stuff I learned last year.
+The way I solve the puzzles should be pretty consistent during an event but there are small changes over the 
+years as I find something new or forget about stuff I learned last year.
 
 I try to keep things tight and golf the solution to a certain level, but don't want to overgolf it. (Sometimes I fail.)
 
-I don't use many comments, but if I find that the solution is not straightforward, the algorithm has a name, or it is 
+There aren't many comments, but if I find that the solution is not straightforward, the algorithm has a name, or it is 
 using some special property of the input I might explain it in a line or two. 
 
 You can browse my solutions as they are or fork the repo, remove everything and use just the lib part to 
