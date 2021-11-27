@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 using AngleSharp.Dom;
 
 namespace AdventOfCode.Model;
-public class Problem {
+class Problem {
     public string Title { get; private set; }
     public string ContentMd { get; private set; }
     public int Day { get; private set; }

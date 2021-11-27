@@ -3,6 +3,7 @@ using System.Collections.Immutable;
 using System.Linq;
 
 namespace AdventOfCode.Y2020.Day24;
+
 record Tile(int x, int y);
 
 [ProblemName("Lobby Layout")]
