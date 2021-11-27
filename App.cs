@@ -123,7 +123,10 @@ Action Command(string[] args, string[] regexes, Func<string[], Action> parse) {
     }
     try {
 
-        return parse(matches.SelectMany(m => m.Groups.Count > 1 ? m.Groups.Cast<Group>().Skip(1).Select(g => g.Value) : new[] { m.Value }).ToArray());
+        return parse(matches.SelectMany(m => 
+                m.Groups.Count > 1 ? m.Groups.Cast<Group>().Skip(1).Select(g => g.Value) 
+                                   : new[] { m.Value }
+            ).ToArray());
     } catch {
         return null;
     }
@@ -133,7 +136,7 @@ string[] Args(params string[] regex) {
     return regex;
 }
 
-public class Usage {
+class Usage {
     public static string Get() {
         return $@"
             > Usage: dotnet run [arguments]

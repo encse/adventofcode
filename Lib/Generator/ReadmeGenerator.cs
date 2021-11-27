@@ -3,7 +3,7 @@ using AdventOfCode.Model;
 
 namespace AdventOfCode.Generator;
 
-public class ProjectReadmeGenerator {
+class ProjectReadmeGenerator {
     public string Generate(int firstYear, int lastYear) {
        
         return $@"
@@ -38,7 +38,7 @@ public class ProjectReadmeGenerator {
            > 
            > ## Dependencies
 
-           > - This project is based on `.NET 5`. It should work on Windows, Linux and OS X.
+           > - This project is based on `.NET 6`  and 'C# 10'. It should work on Windows, Linux and OS-X.
            > - `AngleSharp` is used for problem download.
 
            > ## Running
@@ -65,7 +65,7 @@ public class ProjectReadmeGenerator {
     }
 }
 
-public class ReadmeGeneratorForYear {
+class ReadmeGeneratorForYear {
     public string Generate(Calendar calendar) {
         return $@"
            > # Advent of Code ({calendar.Year})
