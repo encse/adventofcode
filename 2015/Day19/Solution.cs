@@ -2,75 +2,74 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AdventOfCode.Y2015.Day19 {
+namespace AdventOfCode.Y2015.Day19;
 
-    [ProblemName("Medicine for Rudolph")]
-    class Solution : Solver {
+[ProblemName("Medicine for Rudolph")]
+class Solution : Solver {
 
-        public object PartOne(string input) {
-            var (rules, m) = Parse(input);
-            return ReplaceAll(rules, m).ToHashSet().Count;
-        }
+    public object PartOne(string input) {
+        var (rules, m) = Parse(input);
+        return ReplaceAll(rules, m).ToHashSet().Count;
+    }
 
-        public object PartTwo(string input) {
-            var (rules, m) = Parse(input);
-            Random r = new Random();
-            var st = m;
-            var depth = 0;
-            var i = 0;
-            while (st != "e") {
-                i++;
-                var replacements = Replacements(rules, st, false).ToArray();
-                if (replacements.Length == 0) {
-                    st = m;
-                    depth = 0;
-                    continue;
-                }
-                var replacement = replacements[r.Next(replacements.Length)];
-                st = Replace(st, replacement.from, replacement.to, replacement.length);
-                depth++;
+    public object PartTwo(string input) {
+        var (rules, m) = Parse(input);
+        Random r = new Random();
+        var st = m;
+        var depth = 0;
+        var i = 0;
+        while (st != "e") {
+            i++;
+            var replacements = Replacements(rules, st, false).ToArray();
+            if (replacements.Length == 0) {
+                st = m;
+                depth = 0;
+                continue;
             }
-            return depth;
+            var replacement = replacements[r.Next(replacements.Length)];
+            st = Replace(st, replacement.from, replacement.to, replacement.length);
+            depth++;
         }
+        return depth;
+    }
 
-        IEnumerable<string> ReplaceAll((string from, string to)[] rules, string m) {
-            foreach (var (from, length, to) in Replacements(rules, m, true)) {
-                yield return Replace(m, from, to, length);
-            }
+    IEnumerable<string> ReplaceAll((string from, string to)[] rules, string m) {
+        foreach (var (from, length, to) in Replacements(rules, m, true)) {
+            yield return Replace(m, from, to, length);
         }
+    }
 
-        string Replace(string m, int from, string to, int length) => m.Substring(0, from) + to + m.Substring(from + length);
+    string Replace(string m, int from, string to, int length) => m.Substring(0, from) + to + m.Substring(from + length);
 
-        IEnumerable<(int from, int length, string to)> Replacements((string from, string to)[] rules, string m, bool forward) {
-            var ich = 0;
-            while (ich < m.Length) {
-                foreach (var (a, b) in rules) {
-                    var (from, to) = forward ? (a, b) : (b, a);
-                    if (ich + from.Length <= m.Length) {
-                        var i = 0;
-                        while (i < from.Length) {
-                            if (m[ich + i] != from[i]) {
-                                break;
-                            }
-                            i++;
+    IEnumerable<(int from, int length, string to)> Replacements((string from, string to)[] rules, string m, bool forward) {
+        var ich = 0;
+        while (ich < m.Length) {
+            foreach (var (a, b) in rules) {
+                var (from, to) = forward ? (a, b) : (b, a);
+                if (ich + from.Length <= m.Length) {
+                    var i = 0;
+                    while (i < from.Length) {
+                        if (m[ich + i] != from[i]) {
+                            break;
                         }
-                        if (i == from.Length) {
-                            yield return (ich, from.Length, to);
-                        }
+                        i++;
+                    }
+                    if (i == from.Length) {
+                        yield return (ich, from.Length, to);
                     }
                 }
-                ich++;
             }
+            ich++;
         }
+    }
 
-        ((string from, string to)[] rules, string m) Parse(string input) {
-            var rules =
-                (from line in input.Split('\n').TakeWhile(line => line.Contains("=>"))
-                 let parts = line.Split(" => ")
-                 select (parts[0], parts[1]))
-                .ToArray();
-            var m = input.Split('\n').Last();
-            return (rules, m);
-        }
+    ((string from, string to)[] rules, string m) Parse(string input) {
+        var rules =
+            (from line in input.Split('\n').TakeWhile(line => line.Contains("=>"))
+             let parts = line.Split(" => ")
+             select (parts[0], parts[1]))
+            .ToArray();
+        var m = input.Split('\n').Last();
+        return (rules, m);
     }
 }

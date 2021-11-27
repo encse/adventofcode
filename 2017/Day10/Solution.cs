@@ -1,46 +1,45 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace AdventOfCode.Y2017.Day10 {
+namespace AdventOfCode.Y2017.Day10;
 
-    [ProblemName("Knot Hash")]
-    class Solution : Solver {
+[ProblemName("Knot Hash")]
+class Solution : Solver {
 
-        public object PartOne(string input) {
-            var chars = input.Split(',').Select(int.Parse);
-            var hash = KnotHash(chars, 1);
-            return hash[0] * hash[1];
-        }
+    public object PartOne(string input) {
+        var chars = input.Split(',').Select(int.Parse);
+        var hash = KnotHash(chars, 1);
+        return hash[0] * hash[1];
+    }
 
-        public object PartTwo(string input) {
-            var suffix = new [] { 17, 31, 73, 47, 23 };
-            var chars = input.ToCharArray().Select(b => (int)b).Concat(suffix);
+    public object PartTwo(string input) {
+        var suffix = new [] { 17, 31, 73, 47, 23 };
+        var chars = input.ToCharArray().Select(b => (int)b).Concat(suffix);
 
-            var hash = KnotHash(chars, 64);
+        var hash = KnotHash(chars, 64);
 
-            return string.Join("", 
-                from blockIdx in Enumerable.Range(0, 16)
-                let block = hash.Skip(16 * blockIdx).Take(16)
-                select block.Aggregate(0, (acc, ch) => acc ^ ch).ToString("x2"));
-        }
+        return string.Join("", 
+            from blockIdx in Enumerable.Range(0, 16)
+            let block = hash.Skip(16 * blockIdx).Take(16)
+            select block.Aggregate(0, (acc, ch) => acc ^ ch).ToString("x2"));
+    }
 
-        int[] KnotHash(IEnumerable<int> input, int rounds) {
-            var output = Enumerable.Range(0, 256).ToArray();
+    int[] KnotHash(IEnumerable<int> input, int rounds) {
+        var output = Enumerable.Range(0, 256).ToArray();
 
-            var current = 0;
-            var skip = 0;
-            for (var round = 0; round < rounds; round++) {
-                foreach (var len in input) {
-                    for (int i = 0; i < len / 2; i++) {
-                        var from = (current + i) % output.Length;
-                        var to = (current + len - 1 - i) % output.Length;
-                        (output[from], output[to]) = (output[to], output[from]);
-                    }
-                    current += len + skip;
-                    skip++;
+        var current = 0;
+        var skip = 0;
+        for (var round = 0; round < rounds; round++) {
+            foreach (var len in input) {
+                for (int i = 0; i < len / 2; i++) {
+                    var from = (current + i) % output.Length;
+                    var to = (current + len - 1 - i) % output.Length;
+                    (output[from], output[to]) = (output[to], output[from]);
                 }
+                current += len + skip;
+                skip++;
             }
-            return output;
         }
+        return output;
     }
 }
