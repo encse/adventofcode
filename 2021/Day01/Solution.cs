@@ -8,7 +8,9 @@ class Solution : Solver {
 
     public object PartOne(string input) => CountIncreases(Numbers(input));
 
-    public object PartTwo(string input) => CountIncreases((from r in Window(3, Numbers(input)) select r.Sum()).ToArray());
+    public object PartTwo(string input) => CountIncreases(Blocks(Numbers(input)));
+
+    int[] Blocks(int[] ns) => (from r in Window(3, ns) select r.Sum()).ToArray();
 
     int CountIncreases(int[] ns) => Window(2, ns).Count(p => p[0] < p[1]);
 
