@@ -6,18 +6,23 @@ namespace AdventOfCode.Y2021.Day01;
 [ProblemName("Sonar Sweep")]
 class Solution : Solver {
 
-    public object PartOne(string input) => DepthIncreaseCount(Numbers(input));
+    public object PartOne(string input) => DepthIncrease(Numbers(input));
 
-    public object PartTwo(string input) => DepthIncreaseCount(ThreeMeasurements(Numbers(input)));
+    public object PartTwo(string input) => DepthIncrease(ThreeMeasurements(Numbers(input)));
 
-    int DepthIncreaseCount(int[] ns) => Window(2, ns).Count(p => p[0] < p[1]);
+    int DepthIncrease(IEnumerable<int> ns) => (
+        from p in Enumerable.Zip(ns, ns.Skip(1)) 
+        where p.First < p.Second 
+        select 1
+    ).Count();
 
     // the sum of elements in a sliding window of 3
-    int[] ThreeMeasurements(int[] ns) => (from r in Window(3, ns) select r.Sum()).ToArray();
+    IEnumerable<int> ThreeMeasurements(IEnumerable<int> ns) => 
+        from t in Enumerable.Zip(ns, ns.Skip(1), ns.Skip(2)) // .Net 6 comes with three way zip
+        select t.First + t.Second + t.Third;
 
     // parse input to array of numbers
-    int[] Numbers(string input) => (from n in input.Split('\n') select int.Parse(n)).ToArray();
-
-    // create a w wide sliding window from the elements of the array
-    IEnumerable<int[]> Window(int w, int[] ns) => Enumerable.Range(0, ns.Length - w + 1).Select(k => ns[k..(k + w)]);
+    IEnumerable<int> Numbers(string input) => 
+        from n in input.Split('\n') 
+        select int.Parse(n);
 }
