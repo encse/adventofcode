@@ -19,7 +19,7 @@ class Solution : Solver {
 
         // followed by an empty line and blocks of 6 lines, each describing a bingo board:
         var boards = (
-            from st in lines.Skip(2).Chunk(6)
+            from st in lines.Skip(2).Chunk(6) // .Net 6 introduced Chunk()
             select new BingoBoard(st)
         ).ToHashSet();
 
