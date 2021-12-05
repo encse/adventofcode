@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 
 namespace AdventOfCode.Y2021.Day05;
@@ -8,8 +7,9 @@ namespace AdventOfCode.Y2021.Day05;
 [ProblemName("Hydrothermal Venture")]
 class Solution : Solver {
 
-    public object PartOne(string input) => GetIntersectionCount(ParseLines(input, skipDiagonal: true));
-    public object PartTwo(string input) => GetIntersectionCount(ParseLines(input, skipDiagonal: false));
+    public object PartOne(string input) => GetIntersectionCount(ParseLines(input, skipDiagonals: true));
+    
+    public object PartTwo(string input) => GetIntersectionCount(ParseLines(input, skipDiagonals: false));
 
     int GetIntersectionCount(IEnumerable<IEnumerable<Vec2>> lines) {
         // build a grid with iterating over all points, counting intersections:
@@ -20,7 +20,7 @@ class Solution : Solver {
         return grid.Count(kvp => kvp.Value > 1);
     }
 
-    IEnumerable<IEnumerable<Vec2>> ParseLines(string input, bool skipDiagonal) =>
+    IEnumerable<IEnumerable<Vec2>> ParseLines(string input, bool skipDiagonals) =>
         from line in input.Split("\n")
             // parse the numbers first:
             let ns = (
@@ -40,7 +40,8 @@ class Solution : Solver {
                 from i in Enumerable.Range(0, length)
                 select new Vec2(start.x + i * dir.x, start.y + i * dir.y)
 
-        where !skipDiagonal || dir.x == 0 || dir.y == 0  // skip diagonals in part 1
+        where !skipDiagonals || dir.x == 0 || dir.y == 0  // skip diagonals in part 1
+
         select points;
 }
 
