@@ -11,38 +11,37 @@ class Solution : Solver {
     public object PartOne(string input) => GetIntersectionCount(ParseLines(input, skipDiagonal: true));
     public object PartTwo(string input) => GetIntersectionCount(ParseLines(input, skipDiagonal: false));
 
-    int GetIntersectionCount(IEnumerable<Line> lines) =>
-        lines.Aggregate(
-            new Dictionary<Vec2, int>(),
-            DrawLine,
-            grid => grid.Count(kvp => kvp.Value > 1)
-        );
-
-    Dictionary<Vec2, int> DrawLine(Dictionary<Vec2, int> grid, Line line) {
-        var dx = Math.Sign(line.to.x - line.from.x);
-        var dy = Math.Sign(line.to.y - line.from.y);
-        var pt = line.from; 
-
-        while (true) {
+    int GetIntersectionCount(IEnumerable<IEnumerable<Vec2>> lines) {
+        // build a grid with iterating over all points, counting intersections:
+        var grid = new Dictionary<Vec2, int>();
+        foreach (var pt in lines.SelectMany(pt => pt)) {
             grid[pt] = grid.GetValueOrDefault(pt, 0) + 1;
-            if (pt == line.to) {
-                break;
-            }
-            pt = pt with {x = pt.x + dx, y = pt.y + dy};
         }
-        return grid;
+        return grid.Count(kvp => kvp.Value > 1);
     }
 
-    IEnumerable<Line> ParseLines(string input, bool skipDiagonal) =>
+    IEnumerable<IEnumerable<Vec2>> ParseLines(string input, bool skipDiagonal) =>
         from line in input.Split("\n")
-        let num = ParseNumbers(line).ToArray()
-        where !skipDiagonal || num[0] == num[2] || num[1] == num[3]
-        select new Line(new Vec2(num[0], num[1]), new Vec2(num[2], num[3]));
+            // parse the numbers first:
+            let ns = (
+                    from st in line.Split(", ->".ToArray(), StringSplitOptions.RemoveEmptyEntries)
+                    select int.Parse(st)
+                ).ToArray()
 
-    IEnumerable<int> ParseNumbers(string stLine) =>
-        from st in stLine.Split(", ->".ToArray(), StringSplitOptions.RemoveEmptyEntries)
-        select int.Parse(st);
+            // line properties:
+            let start = new Vec2(ns[0], ns[1])
+            let end = new Vec2(ns[2], ns[3])
+            let displacement = new Vec2(end.x - start.x, end.y - start.y)
+            let length = 1 + Math.Max(Math.Abs(displacement.x), Math.Abs(displacement.y))
+            let dir = new Vec2(Math.Sign(displacement.x), Math.Sign(displacement.y))
+
+            // represent lines with a set of points:
+            let points =
+                from i in Enumerable.Range(0, length)
+                select new Vec2(start.x + i * dir.x, start.y + i * dir.y)
+
+        where !skipDiagonal || dir.x == 0 || dir.y == 0  // skip diagonals in part 1
+        select points;
 }
 
 record Vec2(int x, int y);
-record Line(Vec2 from, Vec2 to);
