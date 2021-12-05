@@ -11,15 +11,10 @@ class Solution : Solver {
     
     public object PartTwo(string input) => GetIntersectionCount(ParseLines(input, skipDiagonals: false));
 
-    int GetIntersectionCount(IEnumerable<IEnumerable<Vec2>> lines) {
-        // build a grid with iterating over all points, counting intersections:
-        var grid = new Dictionary<Vec2, int>();
-        foreach (var pt in lines.SelectMany(pt => pt)) {
-            grid[pt] = grid.GetValueOrDefault(pt, 0) + 1;
-        }
-        return grid.Count(kvp => kvp.Value > 1);
-    }
-
+    int GetIntersectionCount(IEnumerable<IEnumerable<Vec2>> lines) => 
+        // create groups from all the points and count the intersections:
+        lines.SelectMany(pt => pt).GroupBy(pt => pt).Count(g => g.Count() > 1);
+    
     IEnumerable<IEnumerable<Vec2>> ParseLines(string input, bool skipDiagonals) =>
         from line in input.Split("\n")
             // parse the numbers first:
