@@ -20,6 +20,7 @@ class Solution : Solver {
         //       0123456           78 
         //   ┌──[       ]─<─(+)───[  ]──┐
         //   └──────>────────┴─────>────┘
+        //       grownup        newborn
 
         for (var t = 0; t < days; t++) {
             fishCountByInternalTimer[(t + 7) % 9] += fishCountByInternalTimer[t % 9];
