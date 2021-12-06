@@ -19,8 +19,9 @@ class Solution : Solver {
         // we will model a circular shift register, with an additional feedback:
         //       0123456           78 
         //   ┌──[.......]─<─(+)───[..]──┐
+        //   |               |          |
         //   └──────>────────┴─────>────┘
-        //       grownup        newborn
+        //     reproduction     newborn
 
         for (var t = 0; t < days; t++) {
             fishCountByInternalTimer[(t + 7) % 9] += fishCountByInternalTimer[t % 9];
