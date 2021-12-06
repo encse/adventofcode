@@ -19,7 +19,6 @@ class Solution : Solver {
         // we will model a circular shift register, with an additional feedback:
         //       0123456           78 
         //   ┌──[.......]─<─(+)───[..]──┐
-        //   |               |          |
         //   └──────>────────┴─────>────┘
         //     reproduction     newborn
 
