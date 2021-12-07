@@ -16,7 +16,7 @@ class Solution : Solver {
         var positions = input.Split(",").Select(int.Parse).ToArray();
 
         // Compute the total fuel consumption for each possible target position.
-        // We have about 1000 input positions, an O(n^2) algorithm will suffice.
+        // We have just about 1000 of these, so an O(n^2) algorithm will suffice.
         var minPosition = positions.Min();
         var maxPosition = positions.Max();
 
