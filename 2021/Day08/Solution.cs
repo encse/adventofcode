@@ -7,68 +7,80 @@ namespace AdventOfCode.Y2021.Day08;
 [ProblemName("Seven Segment Search")]
 class Solution : Solver {
 
-    public object PartOne(string input) {
-        var groups =
-        from q in (
-            from line in input.Split("\n")
-            let parts = line.Split(" | ").ToArray()
-            from q in parts[1].Split(" ")
-            select q.Length
-        )
-        group q by q into g
-        select g;
-        var d = groups.ToDictionary(g => g.Key, g => g.Count());
-        return d[2] + d[3] + d[4] + d[7];
+   /*
+              0:      1:      2:      3:      4:
+             aaaa    ....    aaaa    aaaa    ....
+            b    c  .    c  .    c  .    c  b    c
+            b    c  .    c  .    c  .    c  b    c
+             ....    ....    dddd    dddd    dddd
+            e    f  .    f  e    .  .    f  .    f
+            e    f  .    f  e    .  .    f  .    f
+             gggg    ....    gggg    gggg    ....
 
+              5:      6:      7:      8:      9:
+             aaaa    aaaa    aaaa    aaaa    aaaa
+            b    .  b    .  .    c  b    c  b    c
+            b    .  b    .  .    c  b    c  b    c
+             dddd    dddd    ....    dddd    dddd
+            .    f  e    f  .    f  e    f  .    f
+            .    f  e    f  .    f  e    f  .    f
+             gggg    gggg    ....    gggg    gggg
+    */
+
+    public object PartOne(string input) {
+        // we can identify digits 1, 7, 4 and 8 by their active segments count
+        // digit 1 -> two active segments, digit 7 -> three, etc
+        var activeSegmentCounts = new[] { 2, 3, 4, 7 };
+
+        return (
+            from line in input.Split("\n")
+            let parts = line.Split(" | ")
+            from segment in parts[1].Split(" ")
+            where activeSegmentCounts.Contains(segment.Length)
+            select 1
+        ).Count();
     }
 
     public object PartTwo(string input) {
-        var res = 0;
-        
-        foreach (var line in input.Split("\n")) {
-            var parts = line.Split(" | ").ToArray();
-            var left = parts[0].Split(" ").Select(x => x.ToHashSet()).ToArray();
-            var right = parts[1].Split(" ").Select(x => x.ToHashSet()).ToArray();
+        var ns =
+            from line in input.Split("\n")
+            let parts = line.Split(" | ")
 
-            HashSet<char>[] digits = new HashSet<char>[10];
+            // first we need to find a function that decodes the digit from a shuffled segment pattern:
+            let reader = GetSegmentReader(parts[0])
+            
+            // then decode the digits one by one
+            let segments = parts[1].Split(" ")
+            select segments.Aggregate(0, (n, segment) => n * 10 + reader(segment));
 
-            digits[1] = left.Single(x => x.Count() == 2);
-            digits[4] = left.Single(x => x.Count() == 4);
-            digits[7] = left.Single(x => x.Count() == 3);
-            digits[8] = left.Single(x => x.Count() == 7);
-
-            var c235 = left.Where(x => x.Count() == 5).ToArray();
-            var c25 = 
-                c235[0].Union(c235[1]).Count() == 7 ? new [] { c235[0], c235[1] } :
-                c235[1].Union(c235[2]).Count() == 7 ? new [] { c235[1], c235[2] } :
-                c235[0].Union(c235[2]).Count() == 7 ? new [] { c235[0], c235[2] } :
-                                                      throw new Exception();
-            digits[3] = c235.Except(c25).Single();
-
-            var dSegment = digits[3].Except(digits[7]).Intersect(digits[4]).Single();
-
-            var c069 = left.Where(x => x.Count() == 6).ToArray();
-            var c69 = c069.Where(x => x.Contains(dSegment));
-            digits[0] = c069.Except(c69).Single();
-
-            var eSegment = digits[0].Except(digits[4].Union(digits[3])).Single();
-
-            digits[2] = c25.Single(x => x.Contains(eSegment));
-            digits[5] = c25.Single(x => !x.Contains(eSegment));
-            digits[6] = c69.Single(x => x.Contains(eSegment));
-            digits[9] = c69.Single(x => !x.Contains(eSegment));
-
-            var value = (HashSet<char> v) =>
-                Enumerable.Range(0, 10).Single(i => digits[i].SetEquals(v));
-
-            res += 
-                (1000 * value(right[0])) +
-                (100 * value(right[1])) +
-                (10 * value(right[2])) +
-                (1 * value(right[3]));
-
-        }
-        return res;
+        return ns.Sum();
     }
 
+    Func<string, int> GetSegmentReader(string input) {
+     
+        var segments = new[]{
+            "abcefg", "cf", "acdeg", "acdfg", "bcdf", "abdfg", "abdefg", "acf", "abcdefg", "abcdfg"
+        }.Select(x => x.ToHashSet()).ToArray();
+
+        var segmentCount = (HashSet<char> a) => a.Count();
+        var commonSegmentCount = (HashSet<char> a, HashSet<char> b) => a.Intersect(b).Count();
+
+        var left = input.Split(" ").Select(x => x.ToHashSet()).ToArray();
+        
+        // It so happens that we can find the digits with the below A) and B) properties in this order:
+        var shuffledSegments = new Dictionary<int, HashSet<char>>();
+        foreach (var i in new[] { 1, 4, 7, 8, 3, 5, 6, 9, 0, 2 }) {
+            shuffledSegments[i] = left.Single(candidate =>
+                // A) digit i should have the proper active segment count
+                segmentCount(candidate) == segmentCount(segments[i]) &&
+
+                // B) for all digit j: |segments[i] ∩ segments[j]| == |shuffledSegments[i] ∩ shuffledSegments[j]|
+                shuffledSegments.Keys.All(j =>
+                    commonSegmentCount(candidate, shuffledSegments[j]) ==
+                    commonSegmentCount(segments[i], segments[j]))
+            );
+        }
+
+        return (string v) => shuffledSegments.Single(kvp => kvp.Value.SetEquals(v)).Key;
+    }
 }
