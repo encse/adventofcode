@@ -47,18 +47,18 @@ class Solution : Solver {
             let parts = line.Split(" | ")
 
             // first we need to find a function that decodes the digit from a shuffled segment pattern:
-            let reader = GetSegmentReader(parts[0])
+            let reader = GetDigitReader(parts[0])
             
             // then decode the digits one by one
-            let segments = parts[1].Split(" ")
-            select segments.Aggregate(0, (n, segment) => n * 10 + reader(segment));
+            let digits = parts[1].Split(" ")
+            select digits.Aggregate(0, (n, digit) => n * 10 + reader(digit));
 
         return ns.Sum();
     }
 
-    Func<string, int> GetSegmentReader(string input) {
+    Func<string, int> GetDigitReader(string input) {
      
-        var segments = new[]{
+        var digits = new[]{
             "abcefg", "cf", "acdeg", "acdfg", "bcdf", "abdfg", "abdefg", "acf", "abcdefg", "abcdfg"
         }.Select(x => x.ToHashSet()).ToArray();
 
@@ -68,19 +68,19 @@ class Solution : Solver {
         var left = input.Split(" ").Select(x => x.ToHashSet()).ToArray();
         
         // It so happens that we can find the digits with the below A) and B) properties in this order:
-        var shuffledSegments = new Dictionary<int, HashSet<char>>();
+        var shuffledDigits = new Dictionary<int, HashSet<char>>();
         foreach (var i in new[] { 1, 4, 7, 8, 3, 5, 6, 9, 0, 2 }) {
-            shuffledSegments[i] = left.Single(candidate =>
-                // A) digit i should have the proper active segment count
-                segmentCount(candidate) == segmentCount(segments[i]) &&
+            shuffledDigits[i] = left.Single(candidate =>
+                // A) should have the proper active segment count
+                segmentCount(candidate) == segmentCount(digits[i]) &&
 
-                // B) for all digit j: |segments[i] ∩ segments[j]| == |shuffledSegments[i] ∩ shuffledSegments[j]|
-                shuffledSegments.Keys.All(j =>
-                    commonSegmentCount(candidate, shuffledSegments[j]) ==
-                    commonSegmentCount(segments[i], segments[j]))
+                // B) should have the expected number of common segments with the already found digits
+                shuffledDigits.Keys.All(j =>
+                    commonSegmentCount(candidate, shuffledDigits[j]) ==
+                    commonSegmentCount(digits[i], digits[j]))
             );
         }
 
-        return (string v) => shuffledSegments.Single(kvp => kvp.Value.SetEquals(v)).Key;
+        return (string v) => shuffledDigits.Single(kvp => kvp.Value.SetEquals(v)).Key;
     }
 }
