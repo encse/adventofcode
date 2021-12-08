@@ -61,11 +61,11 @@ class Solution : Solver {
             digits[8] = lookup(7, 2, 4);
             digits[9] = lookup(6, 2, 4);
                     
-            var reader = (string v) => 
+            var decode = (string v) => 
                 Enumerable.Range(0, 10).Single(i => digits[i].SetEquals(v));
 
-            // then decode the digits one by one:
-            res += parts[1].Split(" ").Aggregate(0, (n, digit) => n * 10 + reader(digit));
+            // Decode the number, Horner would like this.
+            res += parts[1].Split(" ").Aggregate(0, (n, digit) => n * 10 + decode(digit));
         }
         return res;
     }
