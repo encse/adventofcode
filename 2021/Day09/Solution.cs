@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Text;
 
 namespace AdventOfCode.Y2021.Day09;
 
@@ -11,69 +8,67 @@ namespace AdventOfCode.Y2021.Day09;
 class Solution : Solver {
 
     public object PartOne(string input) {
-        var lines = input.Split("\n");
+        var map = GetMap(input);
 
-        return GetLowPoints(lines).Select(pos => lines[pos.irow][pos.icol] - '0' + 1).Sum();
+        // get the risk values of the low positions:
+        var riskValue = (Pos pos) => 1 + map[pos];
+        return GetLowPositions(map).Select(riskValue).Sum();
     }
-
 
     public object PartTwo(string input) {
+        var map = GetMap(input);
+
+        // find the 3 biggest basins and return a hash computed from their size:
+        return GetLowPositions(map)
+            .Select(p => BasinSize(map, p))
+            .OrderByDescending(basinSize => basinSize)
+            .Take(3)
+            .Aggregate(1, (m, basinSize) => m * basinSize);
+    }
+
+    // store the positions in a dictionary so that we can iterate over them and 
+    // to easily deal with positions outside the area (with GetValueOrDefault)
+    ImmutableDictionary<Pos, int> GetMap(string input) {
         var lines = input.Split("\n");
-        var m = 1;
-        foreach(var x in GetLowPoints(lines).Select(p => BasinSize(lines, p)).OrderBy(x=>-x).Take(3)){
-            m *= x;
-        }
-        return m;
+        return (
+            from irow in Enumerable.Range(0, lines[0].Length)
+            from icol in Enumerable.Range(0, lines.Length)
+            select new KeyValuePair<Pos, int>(new Pos(irow, icol), lines[irow][icol] - '0')
+        ).ToImmutableDictionary();
     }
 
-    public int BasinSize(string[] lines, Pos pos) {
-        var ccol = lines[0].Length;
-        var crow = lines.Length;
-        var q = new Queue<Pos>();
-        var seen = new HashSet<Pos>();
-        seen.Add(pos);
-        q.Enqueue(pos);
+    IEnumerable<Pos> Neighbours(Pos pos) => 
+        new [] {
+           pos with {irow = pos.irow + 1},
+           pos with {irow = pos.irow - 1},
+           pos with {icol = pos.icol + 1},
+           pos with {icol = pos.icol - 1},
+        };
 
-        var res = 0;
-        while (q.Any()) {
-            pos = q.Dequeue();
+    // position is low if each of its neighbours is higher:
+    public IEnumerable<Pos> GetLowPositions(ImmutableDictionary<Pos, int>  map) =>
+        from pos in map.Keys 
+        let height = map[pos]
+        where Neighbours(pos).All(posN => height < map.GetValueOrDefault(posN, 9))
+        select pos;
 
-            res++;
-            foreach (var (dcol, drow) in new[] { (1, 0), (-1, 0), (0, 1), (0, -1) }) {
-                var (irowN, icolN) = (pos.irow + drow, pos.icol + dcol);
-                if (irowN >= 0 && irowN < crow && icolN >= 0 && icolN < ccol && lines[irowN][icolN] != '9') {
-                    var posN = new Pos(irowN, icolN);
-                    if(!seen.Contains(posN)){
-                        q.Enqueue(posN);
-                        seen.Add(posN);
-                    }
-                }
-            }
+    public int BasinSize(ImmutableDictionary<Pos, int> map, Pos pos) {
+        // flood fill algorithm
+        var filled = new HashSet<Pos>{pos};
+        var queue = new Queue<Pos>(filled);
 
-        }
-        return res;
-    }
-
-    public IEnumerable<Pos> GetLowPoints(string[] lines) {
-        var ccol = lines[0].Length;
-        var crow = lines.Length;
-        for (var irow = 0; irow < crow; irow++) {
-            for (var icol = 0; icol < ccol; icol++) {
-                var m = true;
-                foreach (var (dcol, drow) in new[] { (1, 0), (-1, 0), (0, 1), (0, -1) }) {
-                    var (irowN, icolN) = (irow + drow, icol + dcol);
-                    if (irowN >= 0 && irowN < crow && icolN >= 0 && icolN < ccol) {
-                        if (lines[irowN][icolN] <= lines[irow][icol]) {
-                            m = false;
-                            break;
-                        }
-                    }
-                }
-                if (m) {
-                    yield return new Pos(irow, icol);
+        while (queue.Any()) {
+            pos = queue.Dequeue();
+            filled.Add(pos);
+            foreach (var posN in Neighbours(pos)) {
+                if (!filled.Contains(posN) && map.GetValueOrDefault(posN, 9) != 9) {
+                    queue.Enqueue(posN);
+                    filled.Add(posN);
                 }
             }
         }
+
+        return filled.Count;
     }
 }
 
