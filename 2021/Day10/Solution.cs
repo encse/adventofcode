@@ -6,16 +6,16 @@ namespace AdventOfCode.Y2021.Day10;
 [ProblemName("Syntax Scoring")]
 class Solution : Solver {
 
-    public object PartOne(string input) => GetScores(input, syntaxError: true).Sum();
-    public object PartTwo(string input) => Median(GetScores(input, syntaxError: false));
+    public object PartOne(string input) => GetScores(input, getSyntaxErrorScore: true).Sum();
+    public object PartTwo(string input) => Median(GetScores(input, getSyntaxErrorScore: false));
 
     public long Median(IEnumerable<long> items) =>
         items.OrderBy(x => x).ElementAt(items.Count() / 2);
 
-    IEnumerable<long> GetScores(string input, bool syntaxError) =>
-        input.Split("\n").Select(line => GetScore(line, syntaxError)).Where(score => score > 0);
+    IEnumerable<long> GetScores(string input, bool getSyntaxErrorScore) =>
+        input.Split("\n").Select(line => GetScore(line, getSyntaxErrorScore)).Where(score => score > 0);
 
-    long GetScore(string line, bool syntaxErrorScore) {
+    long GetScore(string line, bool getSyntaxErrorScore) {
         // standard stack based approach
         var stack = new Stack<char>();
 
@@ -27,16 +27,16 @@ class Solution : Solver {
                 case ('{', '}'): stack.Pop(); break;
                 case ('<', '>'): stack.Pop(); break;
                 // return early if syntax error found:
-                case (_, ')'): return syntaxErrorScore ? 3     : 0;
-                case (_, ']'): return syntaxErrorScore ? 57    : 0;
-                case (_, '}'): return syntaxErrorScore ? 1197  : 0;
-                case (_, '>'): return syntaxErrorScore ? 25137 : 0;
+                case (_, ')'): return getSyntaxErrorScore ? 3     : 0;
+                case (_, ']'): return getSyntaxErrorScore ? 57    : 0;
+                case (_, '}'): return getSyntaxErrorScore ? 1197  : 0;
+                case (_, '>'): return getSyntaxErrorScore ? 25137 : 0;
                 // otherwise, it's an opening parenthesis:
                 case (_, _): stack.Push(ch); break;
             }
         }
 
-        if (syntaxErrorScore) {
+        if (getSyntaxErrorScore) {
             return 0;
         } else {
             return stack
