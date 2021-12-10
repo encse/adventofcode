@@ -165,7 +165,13 @@ class Updater {
     }
 
     async Task<Problem> DownloadProblem(IBrowsingContext context, Uri baseUri, int year, int day) {
-        var problemStatement = await context.OpenAsync(baseUri + $"{year}/day/{day}");
+        var uri = baseUri + $"{year}/day/{day}";
+        var color = Console.ForegroundColor;
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine("Updating " + uri);
+        Console.ForegroundColor = color;
+
+        var problemStatement = await context.OpenAsync(uri);
         var input = await context.GetService<IDocumentLoader>().FetchAsync(
                 new DocumentRequest(new Url(baseUri + $"{year}/day/{day}/input"))).Task;
         return Problem.Parse(
