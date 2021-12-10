@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Immutable;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,36 +16,34 @@ class Solution : Solver {
         input.Split("\n").Select(int.Parse).ToArray();
 
     long Solve(int[] nums, int groups) {
-        var minLength = int.MaxValue;
-        var min = long.MaxValue;
-        foreach (var part in Pick(nums, 0, nums.Sum() / groups)) {
-            if (part.c < minLength) {
-                minLength = part.c;
-                min = part.mul;
-            } else if (part.c == minLength) {
-                min = Math.Min(min, part.mul);
+        var mul = (ImmutableList<int> l) => l.Aggregate(1L, (m, x) => m*x);
+
+        for(var i =0;i<nums.Length;i++) {
+            var parts = Pick(nums, i, 0, nums.Sum() / groups);
+            if (parts.Any()){
+                return parts.Select(mul).Min();
             }
         }
-        return min;
+        throw new Exception();
     }
     
-    IEnumerable<(int c, long mul)> Pick(int[] nums, int i, int sum) {
+    IEnumerable<ImmutableList<int>> Pick(int[] nums, int count, int i, int sum) {
         if (sum == 0) {
-            yield return (0, 1);
+            yield return ImmutableList.Create<int>();
             yield break;
         }
 
-        if (sum < 0 || i >= nums.Length){
+        if (count < 0 || sum < 0 || i >= nums.Length) {
             yield break;
         }
         
         if (nums[i] <= sum) {
-            foreach (var x in Pick(nums, i + 1, sum - nums[i])) {
-                yield return (x.c + 1, x.mul * nums[i]);
+            foreach (var x in Pick(nums, count-1, i + 1, sum - nums[i])) {
+                yield return x.Add(nums[i]);
             }
         }
 
-        foreach (var x in Pick(nums, i + 1, sum)) {
+        foreach (var x in Pick(nums, count, i + 1, sum)) {
             yield return x;
         }
     }
