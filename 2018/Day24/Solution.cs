@@ -8,7 +8,7 @@ namespace AdventOfCode.Y2018.Day24;
 [ProblemName("Immune System Simulator 20XX")]
 class Solution : Solver {
 
-    (bool immuneSystem, int units) Fight(string input, int boost) {
+    (bool immuneSystem, long units) Fight(string input, int boost) {
         var army = Parse(input);
         foreach (var g in army) {
             if (g.immuneSystem) {
@@ -112,7 +112,7 @@ class Solution : Solver {
 class Group {
     //4 units each with 9798 hit points (immune to bludgeoning) with an attack that does 1151 fire damage at initiative 9
     public bool immuneSystem;
-    public int units;
+    public long units;
     public int hp;
     public int damage;
     public int initiative;
@@ -120,13 +120,13 @@ class Group {
     public HashSet<string> immuneTo = new HashSet<string>();
     public HashSet<string> weakTo = new HashSet<string>();
 
-    public int effectivePower {
+    public long effectivePower {
         get {
             return units * damage;
         }
     }
 
-    public int DamageDealtTo(Group target) {
+    public long DamageDealtTo(Group target) {
         if (target.immuneSystem == immuneSystem) {
             return 0;
         } else if (target.immuneTo.Contains(attackType)) {
