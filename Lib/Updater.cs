@@ -19,10 +19,7 @@ class Updater {
 
     public async Task Update(int year, int day) {
 
-        if (!Environment.GetEnvironmentVariables().Contains("SESSION")) {
-            throw new Exception("Specify SESSION environment variable");
-        }
-        var session = Environment.GetEnvironmentVariable("SESSION");
+        var session = GetSession();
         var baseAddress = new Uri("https://adventofcode.com/");
 
         var context = BrowsingContext.New(Configuration.Default
@@ -59,7 +56,7 @@ class Updater {
 
     private string GetSession() {
         if (!Environment.GetEnvironmentVariables().Contains("SESSION")) {
-            throw new Exception("Specify SESSION environment variable.");
+            throw new AocCommuncationError("Specify SESSION environment variable", null);
         }
         return Environment.GetEnvironmentVariable("SESSION");
     }
@@ -80,7 +77,7 @@ class Updater {
         Console.WriteLine();
         var solverResult = Runner.RunSolver(solver);
         Console.WriteLine();
-       
+
         if (solverResult.errors.Any()) {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("Uhh-ohh the solution doesn't pass the tests...");
@@ -127,7 +124,7 @@ class Updater {
             article = Regex.Replace(article, @"You have completed Day.*", "", RegexOptions.Singleline);
             article = Regex.Replace(article, @"\(You guessed.*", "", RegexOptions.Singleline);
             article = Regex.Replace(article, @"  ", "\n", RegexOptions.Singleline);
-               
+
             if (article.StartsWith("That's the right answer") || article.Contains("You've finished every puzzle")) {
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine(article);
@@ -161,6 +158,9 @@ class Updater {
 
     async Task<Calendar> DownloadCalendar(IBrowsingContext context, Uri baseUri, int year) {
         var document = await context.OpenAsync(baseUri.ToString() + year);
+        if (document.StatusCode != HttpStatusCode.OK) {
+            throw new AocCommuncationError("Could not fetch calendar", document.StatusCode, document.TextContent);
+        }
         return Calendar.Parse(year, document);
     }
 
@@ -174,6 +174,11 @@ class Updater {
         var problemStatement = await context.OpenAsync(uri);
         var input = await context.GetService<IDocumentLoader>().FetchAsync(
                 new DocumentRequest(new Url(baseUri + $"{year}/day/{day}/input"))).Task;
+
+        if (input.StatusCode != HttpStatusCode.OK) {
+            throw new AocCommuncationError("Could not fetch input", input.StatusCode, new StreamReader(input.Content).ReadToEnd());
+        }
+
         return Problem.Parse(
             year, day, baseUri + $"{year}/day/{day}", problemStatement,
             new StreamReader(input.Content).ReadToEnd()
