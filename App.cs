@@ -21,7 +21,7 @@ var action =
         if (dt is { Month: 12, Day: >= 1 and <= 25 }) {
             return () => new Updater().Update(dt.Year, dt.Day).Wait();
         } else {
-            throw new Exception("Event is not active. This option works in Dec 1-25 only)");
+            throw new AocCommuncationError("Event is not active. This option works in Dec 1-25 only)");
         }
     }) ??
     Command(args, Args("upload", "([0-9]+)/([0-9]+)"), m => {
@@ -47,7 +47,7 @@ var action =
                 new Updater().Upload(GetSolvers(tsolver)[0]).Wait();
 
         } else {
-            throw new Exception("Event is not active. This option works in Dec 1-25 only)");
+            throw new AocCommuncationError("Event is not active. This option works in Dec 1-25 only)");
         }
     }) ??
     Command(args, Args("([0-9]+)/([0-9]+)"), m => {
@@ -85,7 +85,7 @@ var action =
                 Runner.RunAll(GetSolvers(tsolversSelected));
 
         } else {
-            throw new Exception("Event is not active. This option works in Dec 1-25 only)");
+            throw new AocCommuncationError("Event is not active. This option works in Dec 1-25 only)");
         }
     }) ??
     Command(args, Args("calendars"), _ => {
@@ -107,7 +107,15 @@ var action =
         Console.WriteLine(Usage.Get());
     });
 
-action();
+try {
+    action();
+} catch (AggregateException a){
+    if (a.InnerExceptions.Count == 1 && a.InnerException is AocCommuncationError){
+        Console.WriteLine(a.InnerException.Message);
+    } else {
+        throw;
+    }
+}
 
 Solver[] GetSolvers(params Type[] tsolver) {
     return tsolver.Select(t => Activator.CreateInstance(t) as Solver).ToArray();
