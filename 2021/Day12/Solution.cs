@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 
 namespace AdventOfCode.Y2021.Day12;
@@ -12,8 +13,8 @@ class Solution : Solver {
     int Explore(string input, bool part2) {
         var map = GetMap(input);
 
-        // Take the recursive approach this time.
-        int pathCount(string currentCave, HashSet<string> visitedCaves, bool anySmallCaveWasVisitedTwice) {
+        // Recursive approach this time.
+        int pathCount(string currentCave, ImmutableHashSet<string> visitedCaves, bool anySmallCaveWasVisitedTwice) {
 
             if (currentCave == "end") {
                 return 1;
@@ -21,29 +22,25 @@ class Solution : Solver {
 
             var res = 0;
             foreach (var cave in map[currentCave]) {
-                // we can visit big caves any number of times, small caves only once
-                // in part 2 we are allowed to visit a single small cave twice (except for start and end)
-
-                var bigCave = cave.ToUpper() == cave;
-                var smallCave = !bigCave && cave != "start" && cave != "end";
+                var isBigCave = cave.ToUpper() == cave;
                 var seen = visitedCaves.Contains(cave);
 
-                if (bigCave || !seen) {
-                    visitedCaves.Add(cave);
-                    res += pathCount(cave, visitedCaves, anySmallCaveWasVisitedTwice);
-                    visitedCaves.Remove(cave);
-                } else if (part2 && smallCave && !anySmallCaveWasVisitedTwice) {
+                if (!seen || isBigCave) {
+                    // we can visit big caves any number of times, small caves only once
+                    res += pathCount(cave, visitedCaves.Add(cave), anySmallCaveWasVisitedTwice);
+                } else if (part2 && !isBigCave && cave != "start" && !anySmallCaveWasVisitedTwice) {
+                    // part 2 also lets us to visit a single small cave twice (except for start and end)
                     res += pathCount(cave, visitedCaves, true);
                 }
             }
             return res;
         }
 
-        return pathCount("start", new HashSet<string> { "start" }, false);
+        return pathCount("start", ImmutableHashSet.Create<string>("start"), false);
     }
 
-    Dictionary<string, List<string>> GetMap(string input) {
-        // taking all connections there and back:
+    Dictionary<string, string[]> GetMap(string input) {
+        // taking all connections 'there and back':
         var connections =
             from line in input.Split("\n")
             let parts = line.Split("-")
@@ -57,6 +54,6 @@ class Solution : Solver {
             from p in connections
             group p by p.From into g
             select g
-        ).ToDictionary(g => g.Key, g => g.Select(connnection => connnection.To).ToList());
+        ).ToDictionary(g => g.Key, g => g.Select(connnection => connnection.To).ToArray());
     }
 }
