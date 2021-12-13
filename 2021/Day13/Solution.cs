@@ -32,8 +32,10 @@ class Solution : Solver {
 
     string ToString(HashSet<Point> d) {
         var res = "";
-        for (var y = 0; y < 6; y++) {
-            for (var x = 0; x < 100; x++) {
+        var height = d.MaxBy(p=>p.y).y;
+        var width = d.MaxBy(p=>p.x).x;
+        for (var y = 0; y <= height; y++) {
+            for (var x = 0; x <= width; x++) {
                 res += d.Contains(new Point(x, y)) ? '#' : ' ';
             }
             res += "\n";
