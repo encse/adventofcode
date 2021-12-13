@@ -12,14 +12,14 @@ class Solution : Solver {
 
     IEnumerable<HashSet<Point>> GetFolds(string input) {
         var blocks = input.Split("\n\n");
-        // parse to points into a hashset
+        // parse points into a hashset
         var points = (
             from line in blocks[0].Split("\n") 
             let coords = line.Split(",")
             select new Point(int.Parse(coords[0]), int.Parse(coords[1]))
         ).ToHashSet();
         
-        // fold line by line, yield result
+        // fold line by line, yielding a new hashset
         foreach (var line in blocks[1].Split("\n")) {
             var rule = line.Split("=");
             if (rule[0].EndsWith("x")) {
