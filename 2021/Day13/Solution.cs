@@ -13,11 +13,11 @@ class Solution : Solver {
         var blocks = input.Split("\n\n");
         // parse points into a hashset
         var points = (
-            from line in blocks[0].Split("\n") 
+            from line in blocks[0].Split("\n")
             let coords = line.Split(",")
             select new Point(int.Parse(coords[0]), int.Parse(coords[1]))
         ).ToHashSet();
-        
+
         // fold line by line, yielding a new hashset
         foreach (var line in blocks[1].Split("\n")) {
             var rule = line.Split("=");
@@ -32,9 +32,8 @@ class Solution : Solver {
 
     string ToString(HashSet<Point> d) {
         var res = "";
-        for(var y= 0;y<6;y++){
-
-            for(var x= 0;x<100;x++){
+        for (var y = 0; y < 6; y++) {
+            for (var x = 0; x < 100; x++) {
                 res += d.Contains(new Point(x, y)) ? '#' : ' ';
             }
             res += "\n";
