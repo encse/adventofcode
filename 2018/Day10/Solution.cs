@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -8,11 +7,11 @@ namespace AdventOfCode.Y2018.Day10;
 [ProblemName("The Stars Align")]
 class Solution : Solver {
 
-    public object PartOne(string input) => OCR(Solver(input).mx);
+    public object PartOne(string input) => Solver(input).st.Ocr(8, 10);
 
     public object PartTwo(string input) => Solver(input).seconds;
 
-    (bool[,] mx, int seconds) Solver(string input) {
+    (string st, int seconds) Solver(string input) {
         // position=< 21992, -10766> velocity=<-2,  1>
         var rx = new Regex(@"position=\<\s*(?<x>-?\d+),\s*(?<y>-?\d+)\> velocity=\<\s*(?<vx>-?\d+),\s*(?<vy>-?\d+)\>");
         var points = (
@@ -54,51 +53,18 @@ class Solution : Solver {
 
             if (areaNew > area) {
                 rect = step(false);
-                var mx = new bool[rect.height, rect.width];
-                foreach (var point in points) {
-                    mx[point.y - rect.top, point.x - rect.left] = true;
-                }
+                var st = "";
+                for(var irow=0;irow<rect.height;irow++){
 
-                return (mx, seconds);
+                    for(var icol=0;icol<rect.width;icol++){
+                        st += points.Any(p => p.x - rect.left == icol && p.y-rect.top == irow) ? '#': ' ';
+                    }
+                    st+= "\n";
+                }
+                return (st, seconds);
             }
             area = areaNew;
         }
-    }
-
-    string OCR(bool[,] mx) {
-        var dict = new Dictionary<long, string>{
-            {0x384104104145138, "J"},
-            {0xF4304104F0C31BA, "G"},
-            {0x1F430C3F430C30FC, "B"},
-            {0xF430410410410BC, "C"},
-            {0x1F8208421084107E, "Z"},
-            {0x114517D145144, "H"},
-            {0x1841041041060, "I"},
-        };
-        var res = "";
-        for (var ch = 0; ch < Math.Ceiling(mx.GetLength(1) / 8.0); ch++) {
-            var hash = 0L;
-            var st = "";
-            for (var irow = 0; irow < mx.GetLength(0); irow++) {
-                for (var i = 0; i < 6; i++) {
-                    var icol = (ch * 8) + i;
-
-                    if (icol < mx.GetLength(1) && mx[irow, icol]) {
-                        hash += 1;
-                        st += "#";
-                    } else {
-                        st += ".";
-                    }
-                    hash <<= 1;
-                }
-                st += "\n";
-            }
-            if (!dict.ContainsKey(hash)) {
-                throw new Exception($"Unrecognized letter with hash: 0x{hash.ToString("X")}\n{st}");
-            }
-            res += dict[hash];
-        }
-        return res;
     }
 }
 
