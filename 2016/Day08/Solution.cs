@@ -19,26 +19,15 @@ class Solution : Solver {
 
     public object PartTwo(string input) {
         var mtx = Execute(input);
-        var map = new Dictionary<int, char>() {
-            [0x19297A52] = 'A', [0x392E4A5C] = 'B', [0x1928424C] = 'C', [0x39294A5C] = 'D', [0x3D0E421E] = 'E',
-            [0x3D0E4210] = 'F', [0x19285A4E] = 'G', [0x252F4A52] = 'H', [0x1C42108E] = 'I', [0x0C210A4C] = 'J',
-            [0x254C5292] = 'K', [0x2108421E] = 'L', [0x19294A4C] = 'O', [0x39297210] = 'P', [0x39297292] = 'R',
-            [0x1D08305C] = 'S', [0x1C421084] = 'T', [0x25294A4C] = 'U', [0x23151084] = 'Y', [0x3C22221E] = 'Z'
-        };
         var res = "";
-        for (int i = 0; i < 46; i += 5) {
-            var hash = 0;
-            for (var irow = 0; irow < 6; irow++) {
-                for (var icol = 0; icol < 5; icol++) {
-                    hash <<= 1;
-                    hash += mtx[irow, i + icol] ? 1 : 0;
-                }
+        foreach (var irow in Enumerable.Range(0, mtx.GetLength(0))) {
+            foreach (var icol in Enumerable.Range(0, mtx.GetLength(1))) {
+                res += mtx[irow, icol] ? "#" : " ";
             }
-            res += map[hash];
+            res += "\n";
         }
-        return res;
+        return res.Ocr();
     }
-
 
     bool[,] Execute(string input) {
         var (crow, ccol) = (6, 50);
