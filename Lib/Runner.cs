@@ -105,6 +105,9 @@ class Runner {
         var stopwatch = Stopwatch.StartNew();
         foreach (var line in solver.Solve(input)) {
             var ticks = stopwatch.ElapsedTicks;
+            if (line is OcrString) {
+                Console.WriteLine("\n" + (line as OcrString).st.Indent(10, firstLine: true));
+            }
             answers.Add(line.ToString());
             var (statusColor, status, err) =
                 refout == null || refout.Length <= iline ? (ConsoleColor.Cyan, "?", null) :
