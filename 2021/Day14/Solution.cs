@@ -13,26 +13,31 @@ class Solution : Solver {
 
         var blocks = input.Split("\n\n");
 
-        // we will start with this polymer:
+        // We will start with this polymer:
         var polymer = blocks[0];
 
+        // These are the 'molecule -> new element' rules
         var generatedElement = (
             from line in blocks[1].Split("\n")
             let parts = line.Split(" -> ")
             select (molecule: parts[0], element: parts[1])
         ).ToDictionary(p => p.molecule, p => p.element);
 
-        // it's enough to maintain the molecule counts in each step, no
-        // need to deal with them one by one.
+        
+        //                        H H H H H           H
+        //                      H-C-C-C-C-C- ....... -C-H
+        //                        H H H H H           H
 
-        // cut the polymer into molecules first:
+        // It's enough to maintain the molecule counts, no need to deal with them individually.
+
+        // Cut the polymer into molecules first:
         var moleculeCount = new Dictionary<string, long>();
         foreach (var i in Enumerable.Range(0, polymer.Length - 1)) {
             var ab = polymer.Substring(i, 2);
             moleculeCount[ab] = moleculeCount.GetValueOrDefault(ab) + 1;
         }
 
-        // update counts in each step:
+        // Update the map in a loop:
         for (var i = 0; i < steps; i++) {
             var updated = new Dictionary<string, long>();
             foreach (var (molecule, count) in moleculeCount) {
@@ -43,14 +48,18 @@ class Solution : Solver {
             moleculeCount = updated;
         }
 
-        // now switch to element counts. It's enough to take just one 
-        // end of each molecule, so that we don't count elements twice.
+        //                        H H H H H           H
+        //                      H-C-C-C-C-C- ....... -C-H
+        //                        H H H H H           H
+
+        // To count the elements consider just one end of each molecule:
         var elementCounts = new Dictionary<char, long>();
         foreach (var (molecule, count) in moleculeCount) {
             var a = molecule[0];
             elementCounts[a] = elementCounts.GetValueOrDefault(a) + count;
         }
-        // but then, the count of the last element of the polymer is off by one:
+
+        // The # of the closing element is off by one:
         elementCounts[polymer.Last()]++;
 
         return elementCounts.Values.Max() - elementCounts.Values.Min();
