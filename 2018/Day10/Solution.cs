@@ -7,7 +7,7 @@ namespace AdventOfCode.Y2018.Day10;
 [ProblemName("The Stars Align")]
 class Solution : Solver {
 
-    public object PartOne(string input) => Solver(input).st.Ocr(8, 10);
+    public object PartOne(string input) => Solver(input).st.Ocr();
 
     public object PartTwo(string input) => Solver(input).seconds;
 
