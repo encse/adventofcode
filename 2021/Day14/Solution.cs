@@ -25,7 +25,10 @@ class Solution : Solver {
             p => new string[] { p.molecule[0] + p.element, p.element + p.molecule[1] }
         );
 
-        // cut the polymer into molecules, to get initial count:
+        // it's enough to maintain the molecule counts in each step, no
+        // need to deal with them one by one.
+
+        // cut the polymer into molecules first:
         var moleculeCount = (
             from i in Enumerable.Range(0, polymer.Length - 1)
 
@@ -48,12 +51,17 @@ class Solution : Solver {
             ).ToDictionary(g => g.newMolecule, g => g.count);
         }
 
-        // get occurrences by element, it's enough to take just one end of each molecule:
+        // now we need to switch to element counts, it's enough to take just one 
+        // end of each molecule, so that we don't count elements twice.
         var elementCounts = (
             from kvp in moleculeCount
-            group kvp.Value by kvp.Key[0] into g
+            let molecule = kvp.Key
+            let count = kvp.Value
+            let element = molecule[0] // take the start of the molecule
+            group count by element into g
             select (element: g.Key, count: g.Sum())
         ).ToDictionary(kvp => kvp.element, kvp => kvp.count);
+
         // but then, the count of the last element of the polymer is off by one:
         elementCounts[polymer.Last()]++;
 
