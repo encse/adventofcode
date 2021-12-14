@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 
 namespace AdventOfCode.Y2021.Day14;
@@ -10,76 +9,54 @@ class Solution : Solver {
     public object PartTwo(string input) => Solve(input, 40);
 
     long Solve(string input, int steps) {
-        var (polymer, elements, polymerFromMolecule) = Parse(input);
 
-        var cache = new Dictionary<(string, int, char), long>();
-
-        // getElementCountAfterNSteps: Determines how many atoms of the element 
-        // are present after N steps, if we are starting from the given polymer. 
-
-        // This function needs to be cached or it will never terminate.
-
-        long getElementCountAfterNSteps(string polymer, int steps, char element) {
-            var key = (polymer, steps, element);
-            if (!cache.ContainsKey(key)) {
-                long res = 0L;
-                if (steps == 0) { 
-                    // no more steps to do, just count the element in the polymer:
-                    res = polymer.Count(ch => ch == element);
-                } else {
-
-                    // The idea is that we can go over the molecules in the polymer, 
-                    // and deal with them one by one. Do one replacement, recurse and
-                    // sum the element counts:
-
-                    for (var j = 0; j < polymer.Length - 1; j++) {
-                        var molecule = polymer.Substring(j, 2);
-
-                        var count = getElementCountAfterNSteps(
-                            polymerFromMolecule[molecule], 
-                            steps - 1, 
-                            element
-                        );
-
-                        // if the molecule ends with the searched element, the next one will include it as well,
-                        // we shouldn't count it twice:
-                        if (element == molecule[1] && j < polymer.Length - 2) {
-                            count--; 
-                        }
-
-                        res += count;
-                    }
-                }
-                cache[key] = res;
-            }
-            return cache[key];
-        }
-
-        // using the above helper, we can just ask for the count of each element, and quickly compute the answer
-        var elementCountsAtTheEnd = (
-            from element in elements
-            select getElementCountAfterNSteps(polymer, steps, element)
-        ).ToArray();
-
-        return elementCountsAtTheEnd.Max() - elementCountsAtTheEnd.Min();
-    }
-
-    (string polymer, HashSet<char> elements, Dictionary<string, string> polymerFromMolecule) Parse(string input) {
         var blocks = input.Split("\n\n");
 
-        // we will start from this polymer
+        // we will start with this polymer:
         var polymer = blocks[0];
 
-        // the map contains the resulted polymer after the replacement, not just the inserted element:
-        var polymerFromMolecule = (
+        // replacement generates two molecules from one:
+        var generatedMolecules = (
             from line in blocks[1].Split("\n")
             let parts = line.Split(" -> ")
             select (molecule: parts[0], element: parts[1])
-        ).ToDictionary(p => p.molecule, p => p.molecule[0] + p.element + p.molecule[1]);
+        ).ToDictionary(
+            p => p.molecule,
+            p => new string[] { p.molecule[0] + p.element, p.element + p.molecule[1] }
+        );
 
-        // set of all elements for convenience:
-        var elements = polymerFromMolecule.Keys.Select(molecule => molecule[0]).ToHashSet();
+        // cut the polymer into molecules, to get initial count:
+        var moleculeCount = (
+            from i in Enumerable.Range(0, polymer.Length - 1)
 
-        return (polymer, elements, polymerFromMolecule);
+            let molecule = polymer.Substring(i, 2)
+            
+            group molecule by molecule into g
+            
+            select (molecule: g.Key, count: (long)g.Count())
+        ).ToDictionary(p => p.molecule, p => p.count);
+
+        // update molecule count in each step:
+        for (var i = 0; i < steps; i++) {
+            moleculeCount = (
+                from kvp in moleculeCount
+                let molecule = kvp.Key 
+                let count = kvp.Value
+                from generatedMolecule in generatedMolecules[molecule]
+                group count by generatedMolecule into g
+                select (newMolecule: g.Key, count: g.Sum())
+            ).ToDictionary(g => g.newMolecule, g => g.count);
+        }
+
+        // get occurrences by element, it's enough to take just one end of each molecule:
+        var elementCounts = (
+            from kvp in moleculeCount
+            group kvp.Value by kvp.Key[0] into g
+            select (element: g.Key, count: g.Sum())
+        ).ToDictionary(kvp => kvp.element, kvp => kvp.count);
+        // but then, the count of the last element of the polymer is off by one:
+        elementCounts[polymer.Last()]++;
+
+        return elementCounts.Values.Max() - elementCounts.Values.Min();
     }
 }
