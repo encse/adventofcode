@@ -18,7 +18,7 @@ class Solution : Solver {
 
     // the sum of elements in a sliding window of 3
     IEnumerable<int> ThreeMeasurements(IEnumerable<int> ns) => 
-        from t in Enumerable.Zip(ns, ns.Skip(1), ns.Skip(2)) // .Net 6 comes with three way zip
+        from t in Enumerable.Zip(ns, ns.Skip(1), ns.Skip(2)) // ⭐ .Net 6 comes with three way zip
         select t.First + t.Second + t.Third;
 
     // parse input to array of numbers

@@ -17,7 +17,7 @@ class Solution : Solver {
         var bottomRight = new Point(riskMap.Keys.MaxBy(p => p.x).x, riskMap.Keys.MaxBy(p => p.y).y);
 
         // Visit points in order of cumulted risk
-        // Net .6 finally has a PriorityQueue collection :)
+        // ⭐ .Net 6 finally has a PriorityQueue collection :)
         var q = new PriorityQueue<Point, int>();
         var totalRiskMap = new Dictionary<Point, int>();
 
@@ -59,8 +59,8 @@ class Solution : Solver {
             let tileDistance = (y / crow) + (x / ccol)
 
             // risk level wraps around from 9 to 1:
-            let level = (tileRiskLevel + tileDistance - 1) % 9 + 1
-            select new KeyValuePair<Point, int>(new Point(x, y), level)
+            let riskLevel = (tileRiskLevel + tileDistance - 1) % 9 + 1
+            select new KeyValuePair<Point, int>(new Point(x, y), riskLevel)
         );
 
         return res;
