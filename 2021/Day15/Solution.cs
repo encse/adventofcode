@@ -32,7 +32,11 @@ class Solution : Solver {
                 if (riskMap.ContainsKey(n) && !totalRiskMap.ContainsKey(n)) {
                     var totalRisk = totalRiskMap[p] + riskMap[n];
                     totalRiskMap[n] = totalRisk;
-                    q.Enqueue(n, totalRisk);
+                    if (n == bottomRight) {
+                        break;
+                    }
+                    var h = 0; //bottomRight.y - n.y + bottomRight.x - n.x;
+                    q.Enqueue(n, totalRisk + h);
                 }
             }
         }
