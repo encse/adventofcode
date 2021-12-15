@@ -7,7 +7,6 @@ namespace AdventOfCode.Y2021.Day15;
 class Solution : Solver {
 
     public object PartOne(string input) => Solve(GetRiskLevelMap(input));
-
     public object PartTwo(string input) => Solve(ScaleUp(GetRiskLevelMap(input)));
 
     int Solve(Dictionary<Point, int> riskMap) {
