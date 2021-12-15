@@ -53,8 +53,8 @@ class Solution : Solver {
     Dictionary<Pos, int> GetMap(string input) {
         var map = input.Split("\n");
         return new Dictionary<Pos, int>(
-            from y in Enumerable.Range(0, map[0].Length)
-            from x in Enumerable.Range(0, map.Length)
+            from y in Enumerable.Range(0, map.Length)
+            from x in Enumerable.Range(0, map[0].Length)
             select new KeyValuePair<Pos, int>(new Pos(x, y), map[y][x] - '0')
         );
     }
