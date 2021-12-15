@@ -16,7 +16,7 @@ class Solution : Solver {
         var topLeft = new Point(0, 0);
         var bottomRight = new Point(riskMap.Keys.MaxBy(p => p.x).x, riskMap.Keys.MaxBy(p => p.y).y);
 
-        // Visit points in order of cumulted risk
+        // Visit points in order of cumulated risk
         // ⭐ .Net 6 finally has a PriorityQueue collection :)
         var q = new PriorityQueue<Point, int>();
         var totalRiskMap = new Dictionary<Point, int>();
