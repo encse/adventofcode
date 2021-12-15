@@ -31,9 +31,9 @@ class Solution : Solver {
 
             foreach (var n in Neighbours(p)) {
                 if (riskMap.ContainsKey(n) && !totalRiskMap.ContainsKey(n)) {
-                    var dist = totalRiskMap[p] + riskMap[n];
-                    totalRiskMap[n] = dist;
-                    q.Enqueue(n, dist);
+                    var totalRisk = totalRiskMap[p] + riskMap[n];
+                    totalRiskMap[n] = totalRisk;
+                    q.Enqueue(n, totalRisk);
                 }
             }
         }
