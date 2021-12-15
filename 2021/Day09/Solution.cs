@@ -30,8 +30,8 @@ class Solution : Solver {
     ImmutableDictionary<Point, int> GetMap(string input) {
         var map = input.Split("\n");
         return (
-            from y in Enumerable.Range(0, map[0].Length)
-            from x in Enumerable.Range(0, map.Length)
+            from y in Enumerable.Range(0, map.Length)
+            from x in Enumerable.Range(0, map[0].Length)
             select new KeyValuePair<Point, int>(new Point(x, y), map[y][x] - '0')
         ).ToImmutableDictionary();
     }
