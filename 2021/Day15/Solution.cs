@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Immutable;
 
 namespace AdventOfCode.Y2021.Day15;
 
@@ -23,20 +24,21 @@ class Solution : Solver {
         totalRiskMap[topLeft] = 0;
         q.Enqueue(topLeft, 0);
 
-        // It would be enough to go until we find the bottom right corner, but computing all 
-        // risk levels is not much more work 
-        while (q.Count > 0) {
+        // Go until we find the bottom right corner
+        while (true) {
             var p = q.Dequeue();
 
+            if (p == bottomRight) {
+                break;
+            }
+
             foreach (var n in Neighbours(p)) {
-                if (riskMap.ContainsKey(n) && !totalRiskMap.ContainsKey(n)) {
-                    var totalRisk = totalRiskMap[p] + riskMap[n];
-                    totalRiskMap[n] = totalRisk;
-                    if (n == bottomRight) {
-                        break;
+                if (riskMap.ContainsKey(n)) {
+                    var totalRiskThroughP = totalRiskMap[p] + riskMap[n];
+                    if (totalRiskThroughP < totalRiskMap.GetValueOrDefault(n, int.MaxValue)) {
+                        totalRiskMap[n] = totalRiskThroughP;
+                        q.Enqueue(n, totalRiskThroughP);
                     }
-                    var h = 0; //bottomRight.y - n.y + bottomRight.x - n.x;
-                    q.Enqueue(n, totalRisk + h);
                 }
             }
         }
@@ -74,8 +76,8 @@ class Solution : Solver {
     Dictionary<Point, int> GetRiskLevelMap(string input) {
         var map = input.Split("\n");
         return new Dictionary<Point, int>(
-            from y in Enumerable.Range(0, map[0].Length)
-            from x in Enumerable.Range(0, map.Length)
+            from y in Enumerable.Range(0, map.Length)
+            from x in Enumerable.Range(0, map[0].Length)
             select new KeyValuePair<Point, int>(new Point(x, y), map[y][x] - '0')
         );
     }
