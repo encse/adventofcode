@@ -79,7 +79,7 @@ class Solution : Solver {
     }
 }
 
-// Rader class with convenience methods to retrieve n-bit integers and subreaders as needed
+// Reader class with convenience methods to retrieve n-bit integers and subreaders as needed
 class BitSequenceReader {
     private BitArray bits;
     private int ptr;
