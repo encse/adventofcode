@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 
 namespace AdventOfCode.Y2021.Day16;
@@ -35,16 +36,15 @@ class Solution : Solver {
 
     // convert hex string to bit sequence reader
     BitSequenceReader GetReader(string input) => new BitSequenceReader(
-         from hexChar in input
-
-         // first get the 4 bits out of a hex char:
-         let value = Convert.ToInt32(hexChar.ToString(), 16)
-         let nibble = Convert.ToString(value, 2).PadLeft(4, '0')
-
-         // then convert them to numbers:
-         from bitChar in nibble
-         select (byte)(bitChar - '0')
-    );
+        new BitArray((
+            from hexChar in input
+            // get the 4 bits out of a hex char:
+            let value = Convert.ToInt32(hexChar.ToString(), 16)
+            // convert to bitmask
+            from mask in new []{8,4,2,1}
+            select (mask & value) != 0
+        ).ToArray()
+    ));
 
     // make sense of the bit sequence:
     Packet GetPacket(BitSequenceReader reader) {
@@ -81,31 +81,30 @@ class Solution : Solver {
 
 // Rader class with convenience methods to retrieve n-bit integers and subreaders as needed
 class BitSequenceReader {
-    private List<byte> bits;
+    private BitArray bits;
     private int ptr;
 
-    public BitSequenceReader(IEnumerable<byte> bits) {
-        // copying the input, and representing each bit with a byte is not very attracitve, 
-        // but it's aoc time....
-        this.bits = bits.ToList();
+    public BitSequenceReader(BitArray bits) {
+        this.bits = bits;
     }
 
     public bool Any() {
-        return ptr < bits.Count();
+        return ptr < bits.Length;
     }
 
     public BitSequenceReader GetBitSequenceReader(int bitCount) {
-        var res = new BitSequenceReader(bits.GetRange(ptr, bitCount));
-        ptr += bitCount;
-        return res;
+        var bitArray = new BitArray(bitCount);
+        for (var i = 0; i < bitCount; i++) {
+            bitArray.Set(i, bits[ptr++]);
+        }
+        return new BitSequenceReader(bitArray);
     }
 
     public int ReadInt(int bitCount) {
         var res = 0;
-        foreach (var bit in bits.GetRange(ptr, bitCount)) {
-            res = res * 2 + bit;
+        for (var i = 0; i < bitCount; i++) {
+            res = res * 2 + (bits[ptr++] ? 1 : 0);
         }
-        ptr += bitCount;
         return res;
     }
 }
