@@ -1,52 +1,55 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Text;
 
 namespace AdventOfCode.Y2021.Day17;
 
 [ProblemName("Trick Shot")]
 class Solution : Solver {
 
-    public object PartOne(string input) {
-        // target area: x=265..287, y=-103..-58
+    public object PartOne(string input) => Solve(input).Max();
+    public object PartTwo(string input) => Solve(input).Count();
 
-        return Solve(265, 287, -103, -58);
-        // return Solve(20, 30, -10, -5);
-    }
+    // For each vx0, vy0 combination that reaches the target, yield the highest y value of the trajectory:
+    IEnumerable<int> Solve(string input) {
+        // Parse the (signed) integers
+        var m = Regex.Matches(input, "-?[0-9]+").Select(m => int.Parse(m.Value)).ToArray();
 
-    int Solve(int xMin, int xMax, int yMin, int yMax) {
-        var maxY = 0;
+        // Get the target rectangle
+        var (xMin, xMax) = (m[0], m[1]);
+        var (yMin, yMax) = (m[2], m[3]);
 
-        var q = 0;
-        foreach (var vx0 in Enumerable.Range(-1000, 2000)) {
-            foreach (var vy0 in Enumerable.Range(-1000, 2000)) {
+        // Bounds for the initial horizontal and vertical speeds:
+        var vx0Min = 0;     // Because vx is non negative
+        var vx0Max = xMax;  // For bigger values we jump too much to the right in the first step
+        var vy0Min = yMin;  // For smaller values we jump too deep in the first step
+        var vy0Max = -yMin; // 🍎 Newton says that when the falling probe reaches y = 0, it's speed is -vy0.
+                            // In the next step we go down to -vy0, which should not be deeper than yMin.
+        
+        // Run the simulation in the given bounds, maintaining maxY
+        for (var vx0 = vx0Min; vx0 <= vx0Max; vx0++) {
+            for (var vy0 = vy0Min; vy0 <= vy0Max; vy0++) {
 
-                var vx = vx0;
-                var vy = vy0;
-                var x = 0;
-                var y = 0;
-                var maxYR = 0;
-                while (x < 1000 && y > -1000) {
+                var (x, y, vx, vy) = (0, 0, vx0, vy0);
+                var maxY = 0;
+
+                // as long as there is any chance to reach the target rectangle:
+                while (x <= xMax && y >= yMin) {
+                   
                     x += vx;
                     y += vy;
+                    vy -= 1;
+                    vx = Math.Max(0, vx - 1);
+                    maxY = Math.Max(y, maxY);
+
+                    // if we are within target, yield maxY:
                     if (x >= xMin && x <= xMax && y >= yMin && y <= yMax) {
-                        maxY = Math.Max(maxY, maxYR);
-                        q++;
+                        yield return maxY;
                         break;
                     }
-                    maxYR = Math.Max(y, maxYR);
-                    vy--;
-                    vx = Math.Max(0, vx - 1);
                 }
             }
         }
-        return q;
-    }
-
-    public object PartTwo(string input) {
-        return 0;
     }
 }
