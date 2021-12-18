@@ -20,8 +20,8 @@ class Solution : Solver {
     public object PartOne(string input) {
         // sum up all the 'numbers' in the input
         return input.Split("\n").Select(ParseNumber).Aggregate(
-            new Number(), 
-            (acc, number) => !acc.Any() ? number : Sum(acc, number), 
+            new Number(),
+            (acc, number) => !acc.Any() ? number : Sum(acc, number),
             Magnitude
         );
     }
@@ -50,7 +50,7 @@ class Solution : Solver {
                 var left = computeRecursive();
                 var right = computeRecursive();
                 itoken++; // don't forget to eat the closing parenthesis
-                return  3 * left + 2 * right;
+                return 3 * left + 2 * right;
             }
         }
 
@@ -58,17 +58,8 @@ class Solution : Solver {
     }
 
 
-    Number Sum(Number numberA, Number numberB) {
-        // just wrap A and B in a new 'number' and reduce:
-
-        var numbers = new Number();
-        numbers.Add(new Token(TokenKind.LeftParenthesis));
-        numbers.AddRange(numberA);
-        numbers.AddRange(numberB);
-        numbers.Add(new Token(TokenKind.RightParenthesis));
-
-        return Reduce(numbers);
-    }
+    // just wrap A and B in a new 'number' and reduce:
+    Number Sum(Number numberA, Number numberB) => Reduce(Number.Pair(numberA, numberB));
 
     Number Reduce(Number number) {
         while (Explode(number) || Split(number)) {
@@ -82,7 +73,7 @@ class Solution : Solver {
         // that is embedded in 4 other pairs and get rid of it:
         var depth = 0;
         for (var i = 0; i < number.Count; i++) {
-            if (number[i].kind == TokenKind.LeftParenthesis) {
+            if (number[i].kind == TokenKind.Open) {
                 depth++;
                 if (depth == 5) {
                     // we are deep enough, let's to the reduce part
@@ -110,7 +101,7 @@ class Solution : Solver {
                     // successful reduce:
                     return true;
                 }
-            } else if (number[i].kind == TokenKind.RightParenthesis) {
+            } else if (number[i].kind == TokenKind.Close) {
                 depth--;
             }
         }
@@ -127,18 +118,13 @@ class Solution : Solver {
 
                 var v = number[i].value;
                 number.RemoveRange(i, 1);
-                number.InsertRange(i, new[]{
-                     new Token(TokenKind.LeftParenthesis),
-                     new Token(TokenKind.Digit, v/2),
-                     new Token(TokenKind.Digit, v-v/2),
-                     new Token(TokenKind.RightParenthesis)
-                });
+                number.InsertRange(i, Number.Pair(Number.Digit(v / 2), Number.Digit((v + 1) / 2)));
 
                 // successful split:
                 return true;
             }
         }
-         // couldn't split:
+        // couldn't split:
         return false;
     }
 
@@ -155,9 +141,9 @@ class Solution : Solver {
                     n = "";
                 }
                 if (ch == '[') {
-                    res.Add(new Token(TokenKind.LeftParenthesis));
+                    res.Add(new Token(TokenKind.Open));
                 } else if (ch == ']') {
-                    res.Add(new Token(TokenKind.RightParenthesis));
+                    res.Add(new Token(TokenKind.Close));
                 }
             }
         }
@@ -172,10 +158,24 @@ class Solution : Solver {
 
 // we will work with a list of tokens directly
 enum TokenKind {
-    LeftParenthesis,
-    RightParenthesis,
+    Open,
+    Close,
     Digit
 }
 record Token(TokenKind kind, int value = 0);
 
-class Number : List<Token>{};
+class Number : List<Token> {
+    public static Number Digit(int value) =>
+        new Number(){
+            new Token(TokenKind.Digit, value)
+        };
+
+    public static Number Pair(Number a, Number b) {
+        var number = new Number();
+        number.Add(new Token(TokenKind.Open));
+        number.AddRange(a);
+        number.AddRange(b);
+        number.Add(new Token(TokenKind.Close));
+        return number;
+    }
+};
