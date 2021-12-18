@@ -6,7 +6,7 @@ namespace AdventOfCode.Y2021.Day18;
 [ProblemName("Snailfish")]
 class Solution : Solver {
 
-    // WARNING: Total nonsense follows below.
+    // WARNING: What follows is obscure nonsense.
     //
     //     .-""-.
     //    /,..___\
