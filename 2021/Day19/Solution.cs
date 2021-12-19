@@ -11,8 +11,7 @@ namespace AdventOfCode.Y2021.Day19;
 class Solution : Solver {
 
     public object PartOne(string input) {
-        return 330;
-        //return GetCoords(input).beacons.Count;
+        return GetCoords(input).beacons.Count;
     }
 
     public object PartTwo(string input) {
@@ -53,7 +52,7 @@ class Solution : Solver {
             foreach (var (posA, scannerA) in fixedScanners) {
                 var ptAs = scannerA.GetBeaconsRelativeTo(posA).ToHashSet();
                 foreach (var ptA in ptAs) {
-                    for (var rotation = 0; rotation < 48; rotation++, scannerB = scannerB.Rotate()) {
+                    for (var rotation = 0; rotation < 24; rotation++, scannerB = scannerB.Rotate()) {
                         foreach (var ptB in scannerB.GetBeaconsRelativeTo(new Coord(0, 0, 0))) {
 
                             var center = new Coord(ptA.x - ptB.x, ptA.y - ptB.y, ptA.z - ptB.z);
@@ -62,7 +61,6 @@ class Solution : Solver {
                             var c = ptAs.Intersect(ptBs).Count();
 
                             if (c >= 12) {
-                                Console.WriteLine("x");
                                 scanners.RemoveAt(i);
                                 return (center, scannerB);
                             }
@@ -92,27 +90,26 @@ record Scanner(int rotation, List<Coord> beacons) {
         Coord transform(Coord coord) {
             var (x, y, z) = coord;
 
+            #pragma warning disable 1717
+            // rotate coordinate system so that x-axis points in the possible 6 directions
             switch (rotation % 6) {
-                case 0: (x, y, z) = (x, y, z); break;
-                case 1: (x, y, z) = (x, z, y); break;
-                case 2: (x, y, z) = (y, x, z); break;
-                case 3: (x, y, z) = (y, z, x); break;
-                case 4: (x, y, z) = (z, x, y); break;
-                case 5: (x, y, z) = (z, y, x); break;
-                default: throw new Exception();
+                case 0: (x, y, z) = (  x,  y,  z); break;
+                case 1: (x, y, z) = ( -x,  y, -z); break;
+                case 2: (x, y, z) = (  y, -x,  z); break;
+                case 3: (x, y, z) = ( -y,  x,  z); break;
+                case 4: (x, y, z) = (  z,  y, -x); break;
+                case 5: (x, y, z) = ( -z,  y,  x); break;
             }
 
-            switch ((rotation / 6) % 8) {
-                case 0: (x, y, z) = (x, y, z); break;
-                case 1: (x, y, z) = (-x, y, z); break;
-                case 2: (x, y, z) = (x, -y, z); break;
-                case 3: (x, y, z) = (-x, -y, z); break;
-                case 4: (x, y, z) = (x, y, -z); break;
-                case 5: (x, y, z) = (-x, y, -z); break;
-                case 6: (x, y, z) = (x, -y, -z); break;
-                case 7: (x, y, z) = (-x, -y, -z); break;
-                default: throw new Exception();
+            // rotate around x-axis:
+            switch ((rotation / 6) % 4) {
+                case  0: (x, y, z) = ( x,  y,  z); break;
+                case  1: (x, y, z) = ( x, -z,  y); break;
+                case  2: (x, y, z) = ( x, -y, -z); break;
+                case  3: (x, y, z) = ( x,  z, -y); break;
             }
+            #pragma warning restore
+
             return new Coord(x, y, z);
         }
         return beacons.Select(beacon => {
