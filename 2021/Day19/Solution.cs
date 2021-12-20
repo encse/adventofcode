@@ -10,67 +10,96 @@ namespace AdventOfCode.Y2021.Day19;
 [ProblemName("Beacon Scanner")]
 class Solution : Solver {
 
-    public object PartOne(string input) {
-        return GetCoords(input).beacons.Count;
-    }
+    public object PartOne(string input) =>
+        LocateScanners(input)
+            .SelectMany(scanner => scanner.GetBeaconsInWorld())
+            .Distinct()
+            .Count();
 
     public object PartTwo(string input) {
-        var scanners = GetCoords(input).scanners;
+        var scanners = LocateScanners(input);
         return (
             from sA in scanners
             from sB in scanners
             where sA != sB
-            select Math.Abs(sA.x - sB.x) + Math.Abs(sA.y - sB.y) + Math.Abs(sA.z - sB.z)
+            select
+                Math.Abs(sA.center.x - sB.center.x) +
+                Math.Abs(sA.center.y - sB.center.y) +
+                Math.Abs(sA.center.z - sB.center.z)
         ).Max();
     }
 
-    (HashSet<Coord> beacons, HashSet<Coord> scanners) GetCoords(string input) {
-        var scanners = new List<Scanner>(Parse(input));
-        var fixedScanners = new Dictionary<Coord, Scanner>();
+    HashSet<Scanner> LocateScanners(string input) {
+        var scanners = new HashSet<Scanner>(Parse(input));
+        var locatedScanners = new HashSet<Scanner>();
+        var q = new Queue<Scanner>();
+        
+        // when a scanner is located, it get's into the queue so that we can
+        // explore its neighbours.
 
-        fixedScanners[new Coord(0, 0, 0)] = scanners[0];
-        scanners.RemoveAt(0);
+        locatedScanners.Add(scanners.First());
+        q.Enqueue(scanners.First()); 
 
-        while (scanners.Any()) {
-            var (posB, scannerB) = GetCenter(fixedScanners, scanners);
-            fixedScanners[posB] = scannerB;
-            Console.WriteLine("found " + scanners.Count);
-        }
+        scanners.Remove(scanners.First());
 
-        var beacons = new HashSet<Coord>();
-        foreach (var (pos, scanner) in fixedScanners) {
-            foreach (var c in scanner.GetBeaconsRelativeTo(pos)) {
-                beacons.Add(c);
+        while (q.Any()) {
+            var scannerA = q.Dequeue();
+            foreach (var scannerB in scanners.ToArray()) {
+                var maybeScannerB = TryToLocate(scannerA, scannerB);
+                if (maybeScannerB != null) {
+
+                    locatedScanners.Add(maybeScannerB);
+                    q.Enqueue(maybeScannerB);
+
+                    scanners.Remove(scannerB); // sic! 
+                }
             }
         }
-        return (beacons, fixedScanners.Keys.ToHashSet());
+
+        return locatedScanners;
     }
 
-    (Coord, Scanner) GetCenter(Dictionary<Coord, Scanner> fixedScanners, List<Scanner> scanners) {
-        for (var i = 0; i < scanners.Count; i++) {
-            var scannerB = scanners[i];
-            foreach (var (posA, scannerA) in fixedScanners) {
-                var ptAs = scannerA.GetBeaconsRelativeTo(posA).ToHashSet();
-                foreach (var ptA in ptAs) {
-                    for (var rotation = 0; rotation < 24; rotation++, scannerB = scannerB.Rotate()) {
-                        foreach (var ptB in scannerB.GetBeaconsRelativeTo(new Coord(0, 0, 0))) {
+    Scanner TryToLocate(Scanner scannerA, Scanner scannerB) {
+        // We will go oveer all possible rotations for B and make pairs of beacons in A and B. 
+        // if they represent the same beacons we should find 12 matching pairs in A and B.
 
-                            var center = new Coord(ptA.x - ptB.x, ptA.y - ptB.y, ptA.z - ptB.z);
-                            var ptBs = scannerB.GetBeaconsRelativeTo(center).ToHashSet();
+        // 🐦 We can considerably speed up the search with pigeonhole principle which says 
+        // that it's enough to take all but 11 beacons from A and B. 
+        // If there is no match amongst those, there cannot be 12 matching pairs:
+        IEnumerable<T> pick<T>(IEnumerable<T> ts) => ts.Take(ts.Count() - 11);
 
-                            var c = ptAs.Intersect(ptBs).Count();
+        var beaconsInA = scannerA.GetBeaconsInWorld().ToHashSet();
 
-                            if (c >= 12) {
-                                scanners.RemoveAt(i);
-                                return (center, scannerB);
-                            }
-                        }
+        foreach (var beaconInA in pick(beaconsInA)) {
+
+            // considering all possible rotations:
+            for (var rotation = 0; rotation < 24; rotation++, scannerB = scannerB.Rotate()) {
+
+                // take the beacons visible by B, and try to match them with beaconInA
+                foreach (var beaconInB in pick(scannerB.GetBeaconsInWorld())) {
+
+                    // Moving scannerB so that A and B overlaps. Are there 12 matches? 
+
+                    var center = new Coord(
+                        beaconInA.x - beaconInB.x,
+                        beaconInA.y - beaconInB.y,
+                        beaconInA.z - beaconInB.z
+                    );
+
+                    if (12 == scannerB.Move(center)
+                        .GetBeaconsInWorld()
+                        .Where(beaconInB => beaconsInA.Contains(beaconInB))
+                        .Take(12)
+                        .Count()
+                    ) {
+                        return scannerB.Move(center);
                     }
                 }
             }
         }
-        Console.WriteLine("---");
-        throw new Exception();
+
+        // no luck
+        return null;
     }
 
     Scanner[] Parse(string input) => (
@@ -79,42 +108,44 @@ class Solution : Solver {
             from line in block.Split("\n").Skip(1)
             let parts = line.Split(",").Select(int.Parse).ToArray()
             select new Coord(parts[0], parts[1], parts[2])
-        select new Scanner(0, beacons.ToList())
+        select new Scanner(new Coord(0, 0, 0), 0, beacons.ToList())
     ).ToArray();
 }
 
 record Coord(int x, int y, int z);
-record Scanner(int rotation, List<Coord> beacons) {
-    public Scanner Rotate() => new Scanner(rotation + 1, beacons);
-    public Coord[] GetBeaconsRelativeTo(Coord coord) {
-        Coord transform(Coord coord) {
+record Scanner(Coord center, int rotation, List<Coord> beaconsInLocal) {
+    public Scanner Rotate() => new Scanner(center, rotation + 1, beaconsInLocal);
+    public Scanner Move(Coord center) => new Scanner(center, rotation, beaconsInLocal);
+
+    public IEnumerable<Coord> GetBeaconsInWorld() {
+        Coord rotate(Coord coord) {
             var (x, y, z) = coord;
 
-            #pragma warning disable 1717
+#pragma warning disable 1717
             // rotate coordinate system so that x-axis points in the possible 6 directions
             switch (rotation % 6) {
-                case 0: (x, y, z) = (  x,  y,  z); break;
-                case 1: (x, y, z) = ( -x,  y, -z); break;
-                case 2: (x, y, z) = (  y, -x,  z); break;
-                case 3: (x, y, z) = ( -y,  x,  z); break;
-                case 4: (x, y, z) = (  z,  y, -x); break;
-                case 5: (x, y, z) = ( -z,  y,  x); break;
+                case 0: (x, y, z) = (x, y, z); break;
+                case 1: (x, y, z) = (-x, y, -z); break;
+                case 2: (x, y, z) = (y, -x, z); break;
+                case 3: (x, y, z) = (-y, x, z); break;
+                case 4: (x, y, z) = (z, y, -x); break;
+                case 5: (x, y, z) = (-z, y, x); break;
             }
 
             // rotate around x-axis:
             switch ((rotation / 6) % 4) {
-                case  0: (x, y, z) = ( x,  y,  z); break;
-                case  1: (x, y, z) = ( x, -z,  y); break;
-                case  2: (x, y, z) = ( x, -y, -z); break;
-                case  3: (x, y, z) = ( x,  z, -y); break;
+                case 0: (x, y, z) = (x, y, z); break;
+                case 1: (x, y, z) = (x, -z, y); break;
+                case 2: (x, y, z) = (x, -y, -z); break;
+                case 3: (x, y, z) = (x, z, -y); break;
             }
-            #pragma warning restore
+#pragma warning restore
 
             return new Coord(x, y, z);
         }
-        return beacons.Select(beacon => {
-            var t = transform(beacon);
-            return new Coord(coord.x + t.x, coord.y + t.y, coord.z + t.z);
-        }).ToArray();
+        return beaconsInLocal.Select(beacon => {
+            var rotated = rotate(beacon);
+            return new Coord(center.x + rotated.x, center.y + rotated.y, center.z + rotated.z);
+        });
     }
 }
