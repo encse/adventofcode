@@ -58,7 +58,7 @@ class Solution : Solver {
     Scanner TryToLocate(Scanner scannerA, Scanner scannerB) {
         var beaconsInA = scannerA.GetBeaconsInWorld().ToArray();
 
-        foreach (var (beaconInA, beaconInB) in PotentialBeaconPairs(scannerA, scannerB)) {
+        foreach (var (beaconInA, beaconInB) in PotentialMatchingBeacons(scannerA, scannerB)) {
             // now try to find the orientation for B:
             var rotatedB = scannerB;
             for (var rotation = 0; rotation < 24; rotation++, rotatedB = rotatedB.Rotate()) {
@@ -81,22 +81,26 @@ class Solution : Solver {
         return null;
     }
 
-    IEnumerable<(Coord beaconInA, Coord beaconInB)> PotentialBeaconPairs(Scanner scannerA, Scanner scannerB) {
+    IEnumerable<(Coord beaconInA, Coord beaconInB)> PotentialMatchingBeacons(Scanner scannerA, Scanner scannerB) {
         // If we had a matching beaconInA and beaconInB and moved the center
-        // of the scanners to these then we would find at least 12 beacons with
-        // the same coordinates in each.
+        // of the scanners to these then we would find at least 12 beacons 
+        // with the same coordinates.
 
         // The only problem is that the rotation of scannerB is not fixed yet.
 
-        // But we could form a sets from each scanner taking the absolute values of the x y and z 
-        // coordinates of their beacons and compare those. 
-        // This metric is invariant under the rotation so if we have a matching beacon pair, 
-        // the two sets should have at least 3 * 12 common values (with multiplicity).
+        // We need to take our check invariant under that.
 
-        IEnumerable<int> diffs(Scanner scanner) =>
+        // After the translation, we could form a set from each scanner 
+        // taking the absolute values of the x y and z coordinates of their beacons 
+        // and compare those. 
+
+        IEnumerable<int> absCoordinates(Scanner scanner) =>
             from coord in scanner.GetBeaconsInWorld()
             from v in new[] { coord.x, coord.y, coord.z }
             select Math.Abs(v);
+
+        // This is the same no matter how we rotate scannerB, so the two sets should 
+        // have at least 3 * 12 common values (with multiplicity).
 
         // 🐦 We can also considerably speed up the search with the pigeonhole principle 
         // which says that it's enough to take all but 11 beacons from A and B. 
@@ -104,11 +108,14 @@ class Solution : Solver {
         IEnumerable<T> pick<T>(IEnumerable<T> ts) => ts.Take(ts.Count() - 11);
 
         foreach (var beaconInA in pick(scannerA.GetBeaconsInWorld())) {
-            var diffsA = diffs(scannerA.Translate(new Coord(-beaconInA.x, -beaconInA.y, -beaconInA.z))).ToHashSet();
+            var diffsA = absCoordinates(
+                scannerA.Translate(new Coord(-beaconInA.x, -beaconInA.y, -beaconInA.z))
+            ).ToHashSet();
 
             foreach (var beaconInB in pick(scannerB.GetBeaconsInWorld())) {
-
-                var diffsB = diffs(scannerB.Translate(new Coord(-beaconInB.x, -beaconInB.y, -beaconInB.z)));
+                var diffsB = absCoordinates(
+                    scannerB.Translate(new Coord(-beaconInB.x, -beaconInB.y, -beaconInB.z)))
+                ;
                 if (diffsB.Count(d => diffsA.Contains(d)) >= 3 * 12) {
                     yield return (beaconInA, beaconInB);
                 }
