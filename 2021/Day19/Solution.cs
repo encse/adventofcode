@@ -31,7 +31,7 @@ class Solution : Solver {
         var locatedScanners = new HashSet<Scanner>();
         var q = new Queue<Scanner>();
 
-        // when a scanner is located, it get's into the queue so that we can
+        // when a scanner is located, it gets into the queue so that we can
         // explore its neighbours.
 
         locatedScanners.Add(scanners.First());
