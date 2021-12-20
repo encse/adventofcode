@@ -88,7 +88,7 @@ class Solution : Solver {
 
         // The only problem is that the rotation of scannerB is not fixed yet.
 
-        // We need to take our check invariant under that.
+        // We need to make our check invariant to that:
 
         // After the translation, we could form a set from each scanner 
         // taking the absolute values of the x y and z coordinates of their beacons 
