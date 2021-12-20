@@ -41,9 +41,11 @@ class Calendar {
             .calendar .calendar-day {{ color: #666666; }}
             .calendar a .calendar-day {{ color: #cccccc; }}
             .calendar a .calendar-mark-complete,
+            .calendar a .calendar-mark-verycomplete {{visibility: hidden;}}
             .calendar a.calendar-complete     .calendar-mark-complete,
-            .calendar a.calendar-verycomplete .calendar-mark-complete {{ color: #ffff66; }}
-            .calendar a.calendar-verycomplete .calendar-mark-verycomplete {{ color: #ffff66; }}
+            .calendar a.calendar-verycomplete .calendar-mark-complete {{ visibility: visible; color: #ffff66; }}
+            .calendar a.calendar-verycomplete .calendar-mark-verycomplete {{ visibility: visible; color: #ffff66; }}
+
         ");
 
         document.Head.Append(q);
