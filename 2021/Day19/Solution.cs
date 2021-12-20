@@ -108,15 +108,16 @@ class Solution : Solver {
         IEnumerable<T> pick<T>(IEnumerable<T> ts) => ts.Take(ts.Count() - 11);
 
         foreach (var beaconInA in pick(scannerA.GetBeaconsInWorld())) {
-            var diffsA = absCoordinates(
+            var absA = absCoordinates(
                 scannerA.Translate(new Coord(-beaconInA.x, -beaconInA.y, -beaconInA.z))
             ).ToHashSet();
 
             foreach (var beaconInB in pick(scannerB.GetBeaconsInWorld())) {
-                var diffsB = absCoordinates(
-                    scannerB.Translate(new Coord(-beaconInB.x, -beaconInB.y, -beaconInB.z)))
-                ;
-                if (diffsB.Count(d => diffsA.Contains(d)) >= 3 * 12) {
+                var absB = absCoordinates(
+                    scannerB.Translate(new Coord(-beaconInB.x, -beaconInB.y, -beaconInB.z))
+                );
+
+                if (absB.Count(d => absA.Contains(d)) >= 3 * 12) {
                     yield return (beaconInA, beaconInB);
                 }
             }
