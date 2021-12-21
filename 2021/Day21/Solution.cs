@@ -11,7 +11,7 @@ class Solution : Solver {
         // ⭐ we can convert 3 consecutive throws to a 3-throw with the new .Net 6 Chunk function:
         var threeRoll = DeterministicThrows().Chunk(3).Select(x => x.Sum());
 
-        // take turns as long as the active player wins:
+        // take turns until the active player wins:
         var round = 0;
         var (active, other) = Parse(input);
         foreach (var steps in threeRoll) {
