@@ -42,8 +42,8 @@ class Solution : Solver {
                 var (activeWins, otherWins) = (0L, 0L);
                 foreach (var steps in DiracThrows()) {
                     var wins = winCounts((players.other, players.active.Move(steps)));
-                    // they are switching roles here ^^^^
-                    // hence the return value needs to be swapped as well:
+                    // they are switching roles here ^
+                    // hence the return value needs to be swapped as well
                     activeWins += wins.otherWins;
                     otherWins += wins.activeWins;
                 }
@@ -54,7 +54,7 @@ class Solution : Solver {
 
         var wins = winCounts(Parse(input));
         
-        // just return which player wins more:
+        // which player wins more:
         return Math.Max(wins.activeWins, wins.otherWins);
     }
 
