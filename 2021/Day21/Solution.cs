@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Text;
 
 namespace AdventOfCode.Y2021.Day21;
 
@@ -11,67 +8,59 @@ namespace AdventOfCode.Y2021.Day21;
 class Solution : Solver {
 
     public object PartOne(string input) {
-        var die = Die();
+        // ⭐ we can convert 3 consecutive throws to a 3-throw with the new .Net 6 Chunk function:
+        var threeRoll = DeterministicThrows().Chunk(3).Select(x => x.Sum());
 
-        var pos = Parse(input);
-        var point = new int[] { 0, 0 };
-        var roll = 0;
-        while (true) {
-            foreach (var i in new[] { 0, 1 }) {
-                var s = 0;
-                for (var k = 0; k < 3; k++) {
-                    die.MoveNext();
-                    roll++;
-                    s += die.Current;
-                }
-                pos[i] = (pos[i] - 1 + s) % 10 + 1;
-                point[i] += pos[i];
-                if (point[i] >= 1000) {
-                    return point[1 - i] * roll;
-                }
+        // take turns as long as the active player wins:
+        var round = 0;
+        var (active, other) = Parse(input);
+        foreach (var steps in threeRoll) {
+            round++;
+            active = active.Move(steps);
+            if (active.score >= 1000) {
+                break;
             }
+            (active, other) = (other, active);
         }
+
+        return other.score * 3 * round;
     }
 
     public object PartTwo(string input) {
+        // win counts tells us how many times the active and the other player wins
+        // if they are starting from the given positions and scores.
 
+        // this function needs to be cached, because we don't have time till eternity.
         var cache = new Dictionary<(Player, Player), (long, long)>();
-
-        (long win1, long win2) winner(Player player1, Player player2) {
-            if (player2.score >= 21) {
-                return (1, 0);
+    
+        (long activeWins, long otherWins) winCounts((Player active, Player other) players) {
+            if (players.other.score >= 21) {
+                return (0, 1);
             }
 
-            var key = (player1, player2);
-            if (!cache.ContainsKey(key)) {
-                var res = (win1: 0L, win2: 0L);
+            if (!cache.ContainsKey(players)) {
+                var (activeWins, otherWins) = (0L, 0L);
                 foreach (var steps in DiracThrows()) {
-                    var w = winner(player2, player1.Move(steps));
-                    res = (win1: res.win1 + w.win2, win2: res.win2 + w.win1);
+                    var wins = winCounts((players.other, players.active.Move(steps)));
+                    // they are switching roles here ^^^^
+                    // hence the return value needs to be swapped as well:
+                    activeWins += wins.otherWins;
+                    otherWins += wins.activeWins;
                 }
-                cache[key] = res;
+                cache[players] = (activeWins, otherWins);
             }
-            return cache[key];
+            return cache[players];
         }
 
-        var foo = Parse(input);
-        var player1 = new Player(0, foo[0]);
-        var player2 = new Player(0, foo[1]);
-
-        var wins = winner(player1, player2);
-        return Math.Max(wins.win1, wins.win2);
+        var wins = winCounts(Parse(input));
+        
+        // just return which player wins more:
+        return Math.Max(wins.activeWins, wins.otherWins);
     }
 
-    IEnumerator<int> Die() {
-        var i = 1;
-        while (true) {
-            yield return i;
-            i++;
-            if (i > 100) {
-                i = 1;
-            }
-        }
-    }
+    IEnumerable<int> DeterministicThrows() =>
+        from i in Enumerable.Range(1, int.MaxValue)
+        select (i - 1) % 100 + 1;
 
     IEnumerable<int> DiracThrows() =>
         from i in new[] { 1, 2, 3 }
@@ -79,11 +68,14 @@ class Solution : Solver {
         from k in new[] { 1, 2, 3 }
         select i + j + k;
 
-    int[] Parse(string input) => (
-        from line in input.Split("\n")
-        let parts = line.Split(": ")
-        select int.Parse(parts[1])
-    ).ToArray();
+    (Player active, Player other) Parse(string input) {
+        var players = (
+            from line in input.Split("\n")
+            let parts = line.Split(": ")
+            select new Player(0, int.Parse(parts[1]))
+        ).ToArray();
+        return (players[0], players[1]);
+    }
 }
 
 record Player(int score, int pos) {
