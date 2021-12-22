@@ -79,17 +79,14 @@ record Section(int from, int to) {
     public bool IsEmpty => from > to;
     public long Length => IsEmpty ? 0 : to - from + 1;
 
-    public Section Intersect(Section that) =>
-        this.from > that.from ? that.Intersect(this) : // switch order
-        that.to < this.from ? new Section(0, -1) :   // empty
-        new Section(that.from, Math.Min(this.to, that.to));
+    public Section Intersect(Section that) => 
+        new Section(Math.Max(this.from, that.from), Math.Min(this.to, that.to));
 }
 
 record Region(Section x, Section y, Section z) {
     public bool IsEmpty => x.IsEmpty || y.IsEmpty || z.IsEmpty;
     public long Volume => x.Length * y.Length * z.Length;
 
-    public Region Intersect(Region that) {
-        return new Region(this.x.Intersect(that.x), this.y.Intersect(that.y), this.z.Intersect(that.z));
-    }
+    public Region Intersect(Region that) =>
+        new Region(this.x.Intersect(that.x), this.y.Intersect(that.y), this.z.Intersect(that.z));
 }
