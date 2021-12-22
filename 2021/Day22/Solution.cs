@@ -26,7 +26,7 @@ class Solution : Solver {
         long activeCubesAfterCmd(int icmd, Region region) {
 
             // empty is empty...
-            if (region.IsEmpty()) {
+            if (region.IsEmpty) {
                 return 0;
             }
 
@@ -34,7 +34,7 @@ class Solution : Solver {
             if (icmd == 0) {
                 // this is also simple, either everything is on or off:
                 if (cmd.on) {
-                    return cmd.region.Intersect(region).Volume();
+                    return cmd.region.Intersect(region).Volume;
                 } else {
                     return 0L;
                 }
@@ -42,7 +42,7 @@ class Solution : Solver {
                 // now the interesting part:
                 if (cmd.on) {
                     var v1 = activeCubesAfterCmd(icmd - 1, region); // before icmd
-                    var v2 = cmd.region.Intersect(region).Volume(); // icmd would turn on these
+                    var v2 = cmd.region.Intersect(region).Volume; // icmd would turn on these
                     var v3 = activeCubesAfterCmd(icmd - 1, cmd.region.Intersect(region)); // but these are already on
                     return v1 + v2 - v3;
                 } else {
@@ -56,8 +56,9 @@ class Solution : Solver {
         return activeCubesAfterCmd(
             cmds.Length - 1,
             new Region(
-                new Coord(-size, -size, -size),
-                new Coord(size, size, size)));
+                new Section(-size, size),
+                new Section(-size, size),
+                new Section(-size, size)));
     }
 
     Cmd[] Parse(string input) {
@@ -66,7 +67,7 @@ class Solution : Solver {
             var on = line.StartsWith("on");
             // get all the numbers with a regexp:
             var m = Regex.Matches(line, "-?[0-9]+").Select(m => int.Parse(m.Value)).ToArray();
-            res.Add(new Cmd(on, new Region(new Coord(m[0], m[2], m[4]), new Coord(m[1], m[3], m[5]))));
+            res.Add(new Cmd(on, new Region(new Section(m[0], m[1]), new Section(m[2], m[3]), new Section(m[4], m[5]))));
         }
         return res.ToArray();
     }
@@ -74,38 +75,21 @@ class Solution : Solver {
 
 record Cmd(bool on, Region region);
 
-record Coord(int x, int y, int z);
+record Section(int from, int to) {
+    public bool IsEmpty => from > to;
+    public long Length => IsEmpty ? 0 : to - from + 1;
 
-record Region(Coord from, Coord to) {
-    public bool IsEmpty() {
-        return this.from.x > this.to.x || this.from.y > this.to.y || this.from.z > this.to.z;
-    }
+    public Section Intersect(Section that) =>
+        this.from > that.from ? that.Intersect(this) : // switch order
+        that.to < this.from ? new Section(0, -1) :   // empty
+        new Section(that.from, Math.Min(this.to, that.to));
+}
 
-    public long Volume() {
-        return IsEmpty() ? 0 : 1L *
-            (this.to.x - this.from.x + 1) *
-            (this.to.y - this.from.y + 1) *
-            (this.to.z - this.from.z + 1);
-    }
+record Region(Section x, Section y, Section z) {
+    public bool IsEmpty => x.IsEmpty || y.IsEmpty || z.IsEmpty;
+    public long Volume => x.Length * y.Length * z.Length;
 
     public Region Intersect(Region that) {
-
-        // [a..b] and [c..d] are two sections [from..to] is the intersection, 
-        // negative length sections are empty
-        (int from, int to) sectionIntersection(int a, int b, int c, int d) {
-            if (a > c) { 
-                return sectionIntersection(c, d, a, b); // switch order
-            } else if (b < c) {
-                return (c, c - 1);
-            } else {
-                return (c, Math.Min(d, b));
-            }
-        }
-
-        var x = sectionIntersection(this.from.x, this.to.x, that.from.x, that.to.x);
-        var y = sectionIntersection(this.from.y, this.to.y, that.from.y, that.to.y);
-        var z = sectionIntersection(this.from.z, this.to.z, that.from.z, that.to.z);
-
-        return new Region(new Coord(x.from, y.from, z.from), new Coord(x.to, y.to, z.to));
+        return new Region(this.x.Intersect(that.x), this.y.Intersect(that.y), this.z.Intersect(that.z));
     }
 }
