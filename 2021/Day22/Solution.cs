@@ -17,14 +17,11 @@ class Solution : Solver {
         // Recursive approach
 
         // If we can determine the number of active cubes in subregions
-        // we can compute the effect of the i-th cmd as well.
-
-        // Specifically we are interested in how things looked before the i-th cmd.
-        // We need the state of the whole region and the intersection with the affected region.
+        // we can compute the effect of the i-th cmd as well:
         long activeCubesAfterIcmd(int icmd, Region region) {
 
             if (region.IsEmpty || icmd < 0) {
-                return 0;
+                return 0; // empty is empty
             } else {
                 var intersection = region.Intersect(cmds[icmd].region);
                 var activeInRegion = activeCubesAfterIcmd(icmd - 1, region);
