@@ -8,10 +8,10 @@ namespace AdventOfCode.Y2021.Day22;
 [ProblemName("Reactor Reboot")]
 class Solution : Solver {
 
-    public object PartOne(string input) => NumberOfActiveCubesInRange(input, 50);
-    public object PartTwo(string input) => NumberOfActiveCubesInRange(input, int.MaxValue);
+    public object PartOne(string input) => ActiveCubesInRange(input, 50);
+    public object PartTwo(string input) => ActiveCubesInRange(input, int.MaxValue);
 
-    public long NumberOfActiveCubesInRange(string input, int size) {
+    public long ActiveCubesInRange(string input, int range) {
         var cmds = Parse(input);
 
         // Recursive approach
@@ -36,9 +36,9 @@ class Solution : Solver {
         return activeCubesAfterIcmd(
             cmds.Length - 1,
             new Region(
-                new Segment(-size, size),
-                new Segment(-size, size),
-                new Segment(-size, size)));
+                new Segment(-range, range),
+                new Segment(-range, range),
+                new Segment(-range, range)));
     }
 
     Cmd[] Parse(string input) {
