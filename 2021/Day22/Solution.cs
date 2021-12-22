@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Numerics;
 
 namespace AdventOfCode.Y2021.Day22;
 
@@ -12,7 +11,7 @@ class Solution : Solver {
     public object PartOne(string input) => NumberOfActiveCubesInRange(input, 50);
     public object PartTwo(string input) => NumberOfActiveCubesInRange(input, int.MaxValue);
 
-    public BigInteger NumberOfActiveCubesInRange(string input, int size) {
+    public long NumberOfActiveCubesInRange(string input, int size) {
         var cmds = Parse(input);
 
         // Recursive approach
