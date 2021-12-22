@@ -19,7 +19,7 @@ class Solution : Solver {
         // If we can determine the number of active cubes in subregions
         // we can compute the effect of the i-th cmd as well.
 
-        // Specifically we are interested how things looked like before the i-th cmd.
+        // Specifically we are interested in how things looked like before the i-th cmd.
         // We need the state of the whole region and the intersection with the region
         // affected by the i-th cmd.
 
