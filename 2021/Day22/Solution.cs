@@ -20,40 +20,23 @@ class Solution : Solver {
         // we can compute the effect of the i-th cmd as well.
 
         // Specifically we are interested in how things looked before the i-th cmd.
-        // We need the state of the whole region and the intersection with the region
-        // affected by the i-th cmd.
+        // We need the state of the whole region and the intersection with the affected region.
+        long activeCubesAfterIcmd(int icmd, Region region) {
 
-        long activeCubesAfterCmd(int icmd, Region region) {
-
-            // empty is empty...
-            if (region.IsEmpty) {
+            if (region.IsEmpty || icmd < 0) {
                 return 0;
-            }
-
-            var cmd = cmds[icmd];
-            if (icmd == 0) {
-                // this is also simple, either everything is on or off:
-                if (cmd.on) {
-                    return cmd.region.Intersect(region).Volume;
-                } else {
-                    return 0L;
-                }
             } else {
-                // now the interesting part:
-                if (cmd.on) {
-                    var v1 = activeCubesAfterCmd(icmd - 1, region); // before icmd
-                    var v2 = cmd.region.Intersect(region).Volume; // icmd would turn on these
-                    var v3 = activeCubesAfterCmd(icmd - 1, cmd.region.Intersect(region)); // but these are already on
-                    return v1 + v2 - v3;
-                } else {
-                    var v1 = activeCubesAfterCmd(icmd - 1, region); // before icmd
-                    var v2 = activeCubesAfterCmd(icmd - 1, cmd.region.Intersect(region)); // but icmd turns off these
-                    return v1 - v2;
-                }
+                var intersection = region.Intersect(cmds[icmd].region);
+                var activeInRegion = activeCubesAfterIcmd(icmd - 1, region);
+                var activeInIntersection = activeCubesAfterIcmd(icmd - 1, intersection);
+                var activeOutsideIntersection = activeInRegion - activeInIntersection;
+
+                // outside the intersection is unaffected, the rest is either on or off:
+                return cmds[icmd].turnOff ? activeOutsideIntersection : activeOutsideIntersection + intersection.Volume;
             }
         }
 
-        return activeCubesAfterCmd(
+        return activeCubesAfterIcmd(
             cmds.Length - 1,
             new Region(
                 new Segment(-size, size),
@@ -64,22 +47,22 @@ class Solution : Solver {
     Cmd[] Parse(string input) {
         var res = new List<Cmd>();
         foreach (var line in input.Split("\n")) {
-            var on = line.StartsWith("on");
+            var turnOff = line.StartsWith("off");
             // get all the numbers with a regexp:
             var m = Regex.Matches(line, "-?[0-9]+").Select(m => int.Parse(m.Value)).ToArray();
-            res.Add(new Cmd(on, new Region(new Segment(m[0], m[1]), new Segment(m[2], m[3]), new Segment(m[4], m[5]))));
+            res.Add(new Cmd(turnOff, new Region(new Segment(m[0], m[1]), new Segment(m[2], m[3]), new Segment(m[4], m[5]))));
         }
         return res.ToArray();
     }
 }
 
-record Cmd(bool on, Region region);
+record Cmd(bool turnOff, Region region);
 
 record Segment(int from, int to) {
     public bool IsEmpty => from > to;
     public long Length => IsEmpty ? 0 : to - from + 1;
 
-    public Segment Intersect(Segment that) => 
+    public Segment Intersect(Segment that) =>
         new Segment(Math.Max(this.from, that.from), Math.Min(this.to, that.to));
 }
 
