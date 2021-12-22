@@ -56,9 +56,9 @@ class Solution : Solver {
         return activeCubesAfterCmd(
             cmds.Length - 1,
             new Region(
-                new Section(-size, size),
-                new Section(-size, size),
-                new Section(-size, size)));
+                new Segment(-size, size),
+                new Segment(-size, size),
+                new Segment(-size, size)));
     }
 
     Cmd[] Parse(string input) {
@@ -67,7 +67,7 @@ class Solution : Solver {
             var on = line.StartsWith("on");
             // get all the numbers with a regexp:
             var m = Regex.Matches(line, "-?[0-9]+").Select(m => int.Parse(m.Value)).ToArray();
-            res.Add(new Cmd(on, new Region(new Section(m[0], m[1]), new Section(m[2], m[3]), new Section(m[4], m[5]))));
+            res.Add(new Cmd(on, new Region(new Segment(m[0], m[1]), new Segment(m[2], m[3]), new Segment(m[4], m[5]))));
         }
         return res.ToArray();
     }
@@ -75,15 +75,15 @@ class Solution : Solver {
 
 record Cmd(bool on, Region region);
 
-record Section(int from, int to) {
+record Segment(int from, int to) {
     public bool IsEmpty => from > to;
     public long Length => IsEmpty ? 0 : to - from + 1;
 
-    public Section Intersect(Section that) => 
-        new Section(Math.Max(this.from, that.from), Math.Min(this.to, that.to));
+    public Segment Intersect(Segment that) => 
+        new Segment(Math.Max(this.from, that.from), Math.Min(this.to, that.to));
 }
 
-record Region(Section x, Section y, Section z) {
+record Region(Segment x, Segment y, Segment z) {
     public bool IsEmpty => x.IsEmpty || y.IsEmpty || z.IsEmpty;
     public long Volume => x.Length * y.Length * z.Length;
 
