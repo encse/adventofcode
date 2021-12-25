@@ -304,3 +304,30 @@ In this example, the sea cucumbers stop moving after <code><em>58</em></code> st
 Find somewhere safe to land your submarine. <em>What is the first step on which no sea cucumbers move?</em>
 
 
+## --- Part Two ---
+Suddenly, the experimental antenna control console lights up:
+
+<pre>
+<code><em>Sleigh keys detected!</em></code>
+</pre>
+
+According to the console, the keys are <em>directly under the submarine</em>. You landed right on them! Using a robotic arm on the submarine, you move the sleigh keys into the airlock.
+
+Now, you just need to get them to Santa in time to save Christmas! You check your clock - it <em>is</em> Christmas. There's no way you can get them back to the surface in time.
+
+Just as you start to lose hope, you notice a button on the sleigh keys: <em>remote start</em>. You can start the sleigh from the bottom of the ocean! You just need some way to <em>boost the signal</em> from the keys so it actually reaches the sleigh. Good thing the submarine has that experimental antenna! You'll definitely need <em>50 stars</em> to boost it that far, though.
+
+The experimental antenna control console lights up again:
+
+<pre>
+<code><em>Energy source detected.
+Integrating energy source from device "sleigh keys"...done.
+Installing device drivers...done.
+Recalibrating experimental antenna...done.
+Boost strength due to matching signal phase: <em>1 star</em>
+</em></code>
+</pre>
+
+Only <em>49 stars</em> to go.
+
+
