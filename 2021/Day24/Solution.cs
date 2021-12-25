@@ -13,34 +13,9 @@ class Solution : Solver {
 
     public object PartOne(string input) {
         var lines = input.Split('\n');
-        // var k = 0;
-        // var code0 = "47963957899999";
-        // Console.WriteLine(Run2("97989681", 0, lines));
-        Console.WriteLine(Run("96979989681495", 0, lines));
-
-        // var code0 = "99999999999999";
-        // for (var i = BigInteger.Parse(code0); i >= 0; i--) {
-        //     var code = string.Join("", i.ToString());
-        //     if (code.Contains('0')) {
-        //         continue;
-        //     }
-        //     k++;
-
-        //     try {
-        //         var z = Run2(code, 0, lines);
-        //         if (z == 0) {
-        //             Console.WriteLine(code);
-        //         }
-        //         if (k % 10000 == 0) {
-        //             Console.WriteLine(code);
-        //         }
-        //     } catch (OverflowException) {
-
-        //     }
-        // }
+        Console.WriteLine(Run("96979989692495", 0, lines));
         return 0;
     }
-
 
     BigInteger Run2(string input, BigInteger z, string[] lines) {
         int from = 0;
@@ -58,29 +33,29 @@ class Solution : Solver {
             z = z / S;
             return z * (25 * x + 1) + (w + U) * x;
         }
+
         var zOrig = z;
-        z = step(0, z, 1, 12, 1);           // 9
-        z = step(1, z, 1, 13, 9);           // 6
+        z = step(0, z, 1, 12, 1);           // 9    ------------\
+        z = step(1, z, 1, 13, 9);           // 6    -------\    |
+                                            //             |    |
+        z = step(2, z, 1, 12, 11);          // 9           |    |
+        z = step(3, z, 26, -13, 6);         // 7           |    |
+                                            //             |    |
+        z = step(4, z, 1, 11, 6);           // 9   ----\   |    |
+                                            //         |   |    |
+        z = step(5, z, 1, 15, 13);          // 9       |   |    |
+        z = step(6, z, 26, -14, 13);        // 8       |   |    |
+                                            //         |   |    |
+        z = step(7, z, 1, 12, 5);           // 9       |   |    |
+        z = step(8, z, 26, -8, 7);          // 6       |   |    |
+                                            //         |   |    |
+        z = step(9, z, 1, 14, 2);           // 9       |   |    |
+        z = step(10, z, 26, -9, 10);        // 2       |   |    |
+                                            //         |   |    |
+        z = step(11, z, 26, -11, 14);       // 4  <----/   |    |
+        z = step(12, z, 26, -6, 7);         // 9  <--------/    |
+        z = step(13, z, 26, -5, 1);         // 5  <-------------/
 
-        z = step(2, z, 1, 12, 11);          // 9
-        z = step(3, z, 26, -13, 6);         // 7
-        
-        z = step(4, z, 1, 11, 6);           // 9
-        z = step(5, z, 1, 15, 13);          // 9 
-        z = step(6, z, 26, -14, 13);        // 8
-        
-        z = step(7, z, 1, 12, 5);           // 9
-        z = step(8, z, 26, -8, 7);          // 6
-
-        z = step(9, z, 1, 14, 2);           // 8
-        z = step(10, z, 26, -9, 10);        // 1
-        z = step(11, z, 26, -11, 14);       // 4
-        z = step(12, z, 26, -6, 7);         // 9
-        z = step(13, z, 26, -5, 1);         // 5
-
-        // if (z != Run(input, (0, 0, zOrig, 0), lines)) {
-        //     throw new Exception("coki");
-        // }
         return z;
     }
 
