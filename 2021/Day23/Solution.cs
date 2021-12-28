@@ -8,23 +8,24 @@ namespace AdventOfCode.Y2021.Day23;
 [ProblemName("Amphipod")]
 class Solution : Solver {
 
-    public object PartOne(string input)  => Solve(input).Min();
-    public object PartTwo(string input)  => Solve(Upscale(input)).Min();
+    public object PartOne(string input) => Solve(input);
+    public object PartTwo(string input) => Solve(Upscale(input));
 
-    string Upscale(string input){
+    string Upscale(string input) {
         var lines = input.Split("\n").ToList();
         lines.Insert(3, "  #D#C#B#A#");
         lines.Insert(4, "  #D#B#A#C#");
         return string.Join("\n", lines);
     }
 
-    IEnumerable<int> Solve(string input) {
+    int Solve(string input) {
         var maze = GetMaze(input);
 
         var q = new PriorityQueue<Maze, int>();
-        var seen = new Dictionary<string, Maze>();
-        q.Enqueue(maze, maze.cost);
-        seen.Add(maze.Tsto(), maze);
+        var cost = new Dictionary<Maze, int>();
+
+        q.Enqueue(maze, 0);
+        cost.Add(maze, 0);
 
         bool finished(Maze maze) {
             bool colMatch(int icol, char c) {
@@ -39,28 +40,36 @@ class Solution : Solver {
         }
 
         while (q.Count > 0) {
-            maze = q.Dequeue();
+            while (cost[q.UnorderedItems.First().Element] != q.UnorderedItems.First().Priority) {
+                q.Dequeue();
+            }
+            
+            maze =  q.Dequeue();;
 
-            foreach (var mazeT in Neighbours(maze)) {
-                if (finished(mazeT)) {
-                    yield return mazeT.cost;
-                } else if (!seen.ContainsKey(mazeT.Tsto()) || seen[mazeT.Tsto()].cost > mazeT.cost) {
-                    seen[mazeT.Tsto()] = mazeT;
-                    q.Enqueue(mazeT with { prev = maze }, mazeT.cost);
+            if (finished(maze)) {
+                return cost[maze];
+            }
+
+            foreach (var n in Neighbours(maze)) {
+                if (n.cost + cost[maze] < cost.GetValueOrDefault(n.maze, int.MaxValue)) {
+                    cost[n.maze] = n.cost + cost[maze];
+                    q.Enqueue(n.maze, cost[n.maze]);
                 }
             }
         }
+
+        throw new Exception();
     }
 
     Maze GetMaze(string input) {
         var map = input.Split("\n");
-        return new Maze((
-                from y in Enumerable.Range(0, map.Length)
-                from x in Enumerable.Range(0, map[0].Length)
-                select new KeyValuePair<Point, char>(new Point(y, x), y < map.Length && x < map[y].Length ? map[y][x] : ' ')
-            ).ToImmutableDictionary(),
-            0
-        );
+        var maze = new Maze(0, 0, 0, 0, map.Length > 6);
+        foreach (var y in Enumerable.Range(0, map.Length)) {
+            foreach (var x in Enumerable.Range(0, map[0].Length)) {
+                maze = maze.SetItem(new Point(y, x), y < map.Length && x < map[y].Length ? map[y][x] : '#');
+            }
+        }
+        return maze;
     }
 
     int stepCost(char actor) {
@@ -97,7 +106,7 @@ class Solution : Solver {
         return true;
     }
 
-    IEnumerable<Maze> Neighbours(Maze maze) {
+    IEnumerable<(Maze maze, int cost)> Neighbours(Maze maze) {
 
         bool columnIsClean(int icol, char ch) {
             var pt = new Point(2, icol);
@@ -125,7 +134,7 @@ class Solution : Solver {
         }
 
         // le-e lehet menni?
-        Maze Lemegy(Maze maze) {
+        (Maze maze, int cost) Lemegy(Maze maze) {
             for (var icol = 1; icol < 12; icol++) {
                 var ch = maze.ItemAt(new Point(1, icol));
 
@@ -144,17 +153,16 @@ class Solution : Solver {
                         steps++;
                     }
 
-                    return Lemegy(maze with {
-                        map = maze.map.SetItem(new Point(1, icol), '.').SetItem(pt, ch),
-                        cost = maze.cost + steps * stepCost(ch)
-                    });
+                    var l = Lemegy(maze.SetItem(new Point(1, icol), '.').SetItem(pt, ch));
+                    return (l.maze, l.cost + steps * stepCost(ch));
                 }
             }
-            return maze;
+            return (maze, 0);
         }
 
-        if (Lemegy(maze).Tsto() != maze.Tsto()) {
-            yield return Lemegy(maze);
+        var lemegy = Lemegy(maze);
+        if (lemegy.cost != 0) {
+            yield return lemegy;
             yield break;
         }
         var allowedHColumns = new int[] { 1, 2, 4, 6, 8, 10, 11 };
@@ -184,10 +192,10 @@ class Solution : Solver {
                 while (maze.ItemAt(ptDst) == '.') {
 
                     if (allowedHColumns.Contains(ptDst.icol)) {
-                        yield return maze with {
-                            map = maze.map.SetItem(ptSrc, '.').SetItem(ptDst, ch),
-                            cost = maze.cost + (stepsV + stepsH) * stepCost(ch)
-                        };
+                        yield return (
+                            maze.SetItem(ptSrc, '.').SetItem(ptDst, ch),
+                            (stepsV + stepsH) * stepCost(ch)
+                        );
                     }
 
                     if (dj == -1) {
@@ -209,19 +217,78 @@ record Point(int irow, int icol) {
     public Point Left => new Point(irow, icol - 1);
     public Point Right => new Point(irow, icol + 1);
 }
-record Maze(ImmutableDictionary<Point, char> map, int cost, Maze prev = null) {
+record Maze(int a, int b, int c, int d, bool big) {
 
-    public char ItemAt(Point pt) => map.GetValueOrDefault(pt, '#');
+    int BitFromPoint(Point pt) =>
+        (big, pt.irow, pt.icol) switch {
+            (_, 1, 1) => 1 << 0,
+            (_, 1, 2) => 1 << 1,
+            (_, 1, 3) => 1 << 2,
+            (_, 1, 4) => 1 << 3,
+            (_, 1, 5) => 1 << 4,
+            (_, 1, 6) => 1 << 5,
+            (_, 1, 7) => 1 << 6,
+            (_, 1, 8) => 1 << 7,
+            (_, 1, 9) => 1 << 8,
+            (_, 1, 10) => 1 << 9,
+            (_, 1, 11) => 1 << 10,
 
-    public string Tsto() {
-        var st = "";
-        for (var irow = 0; irow < 7; irow++) {
-            for (var icol = 0; icol < 13; icol++) {
-                st += map.GetValueOrDefault(new Point(irow, icol), ' ');
-            }
-            st += "\n";
+            (_, 2, 3) => 1 << 11,
+            (_, 2, 5) => 1 << 12,
+            (_, 2, 7) => 1 << 13,
+            (_, 2, 9) => 1 << 14,
+
+            (_, 3, 3) => 1 << 15,
+            (_, 3, 5) => 1 << 16,
+            (_, 3, 7) => 1 << 17,
+            (_, 3, 9) => 1 << 18,
+
+            (true, 4, 3) => 1 << 19,
+            (true, 4, 5) => 1 << 20,
+            (true, 4, 7) => 1 << 21,
+            (true, 4, 9) => 1 << 22,
+
+            (true, 5, 3) => 1 << 23,
+            (true, 5, 5) => 1 << 24,
+            (true, 5, 7) => 1 << 25,
+            (true, 5, 9) => 1 << 26,
+
+            _ => 1 << 31,
+        };
+
+    public char ItemAt(Point pt) {
+        var bit = BitFromPoint(pt);
+        return
+            bit == 1 << 31 ? '#' :
+            (a & bit) != 0 ? 'A' :
+            (b & bit) != 0 ? 'B' :
+            (c & bit) != 0 ? 'C' :
+            (d & bit) != 0 ? 'D' :
+            (d & bit) != 0 ? 'D' :
+            '.';
+    }
+
+    public Maze SetItem(Point pt, char ch) {
+        var bit = BitFromPoint(pt);
+        if (bit == 1 << 31) {
+            if (ch != '#' && ch != ' ')
+                throw new Exception();
+            return this;
         }
-        st += "---\n";
-        return st;
+
+        return ch switch {
+            '.' =>
+                this with {
+                    a = a & ~bit,
+                    b = b & ~bit,
+                    c = c & ~bit,
+                    d = d & ~bit
+                },
+            'A' => this with { a = a | bit },
+            'B' => this with { b = b | bit },
+            'C' => this with { c = c | bit },
+            'D' => this with { d = d | bit },
+            _ => throw new Exception()
+        };
     }
 }
