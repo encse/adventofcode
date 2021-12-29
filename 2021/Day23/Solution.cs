@@ -19,7 +19,7 @@ class Solution : Solver {
     }
 
     int Solve(string input) {
-        var maze = GetMaze(input);
+        var maze = Maze.Parse(input);
 
         var q = new PriorityQueue<Maze, int>();
         var cost = new Dictionary<Maze, int>();
@@ -43,18 +43,6 @@ class Solution : Solver {
         }
 
         throw new Exception();
-    }
-
-    Maze GetMaze(string input) {
-        var map = input.Split("\n");
-        var maze = new Maze();
-        foreach (var irow in Enumerable.Range(0, map.Length)) {
-            foreach (var icol in Enumerable.Range(0, map[0].Length)) {
-                maze = maze.SetItem(
-                    new Point(irow, icol), irow < map.Length && icol < map[irow].Length ? map[irow][icol] : '#');
-            }
-        }
-        return maze;
     }
 
     int stepCost(char actor) {
@@ -97,16 +85,16 @@ class Solution : Solver {
     }
 
     IEnumerable<(Maze maze, int cost)> RoomToHallway(Maze maze) {
-        var allowedHColumns = new int[] { 1, 2, 4, 6, 8, 10, 11 };
+        var hallwayColumns = new int[] { 1, 2, 4, 6, 8, 10, 11 };
 
-        foreach (var icol in new[] { 3, 5, 7, 9 }) {
+        foreach (var roomColumn in new[] { 3, 5, 7, 9 }) {
 
-            if (maze.FinishedColumn(icol)) {
+            if (maze.FinishedColumn(roomColumn)) {
                 continue;
             }
 
             var stepsV = 0;
-            var ptSrc = new Point(1, icol);
+            var ptSrc = new Point(1, roomColumn);
             while (maze.ItemAt(ptSrc) == '.') {
                 ptSrc = ptSrc.Below;
                 stepsV++;
@@ -119,10 +107,10 @@ class Solution : Solver {
 
             foreach (var dj in new[] { -1, 1 }) {
                 var stepsH = 0;
-                var ptDst = new Point(1, icol);
+                var ptDst = new Point(1, roomColumn);
                 while (maze.ItemAt(ptDst) == '.') {
 
-                    if (allowedHColumns.Contains(ptDst.icol)) {
+                    if (hallwayColumns.Contains(ptDst.icol)) {
                         yield return (maze.Move(ptSrc, ptDst), (stepsV + stepsH) * stepCost(ch));
                     }
 
@@ -153,16 +141,26 @@ record Point(int irow, int icol) {
 
 record Maze {
 
-    int a, b, c, d;
+    const int columnMaskA = (1 << 11) | (1 << 15) | (1 << 19) | (1 << 23);
+    const int columnMaskB = (1 << 12) | (1 << 16) | (1 << 20) | (1 << 24);
+    const int columnMaskC = (1 << 13) | (1 << 17) | (1 << 21) | (1 << 25);
+    const int columnMaskD = (1 << 14) | (1 << 18) | (1 << 22) | (1 << 26);
 
-    public Maze() {
-        a = ColumnMask('A');
-        b = ColumnMask('B');
-        c = ColumnMask('C');
-        d = ColumnMask('D');
+    public static Maze Parse(string input) {
+        var maze = new Maze(columnMaskA, columnMaskB, columnMaskC, columnMaskD);
+        var map = input.Split("\n");
+        foreach (var irow in Enumerable.Range(0, map.Length)) {
+            foreach (var icol in Enumerable.Range(0, map[0].Length)) {
+                maze = maze.SetItem(
+                    new Point(irow, icol), irow < map.Length && icol < map[irow].Length ? map[irow][icol] : '#');
+            }
+        }
+        return maze;
     }
 
-    private Maze(int a, int b, int c, int d) {
+    int a, b, c, d;
+
+    Maze(int a, int b, int c, int d) {
         this.a = a;
         this.b = b;
         this.c = c;
@@ -206,25 +204,14 @@ record Maze {
             _ => 1 << 31,
         };
 
-    private int ColumnMask(char ch) =>
+    public bool CanEnterRoom(char ch) =>
         ch switch {
-            'A' => (1 << 11) | (1 << 15) | (1 << 19) | (1 << 23),
-            'B' => (1 << 12) | (1 << 16) | (1 << 20) | (1 << 24),
-            'C' => (1 << 13) | (1 << 17) | (1 << 21) | (1 << 25),
-            'D' => (1 << 14) | (1 << 18) | (1 << 22) | (1 << 26),
+            'A' => (b & columnMaskA) == 0 && (c & columnMaskA) == 0 && (d & columnMaskA) == 0,
+            'B' => (a & columnMaskB) == 0 && (c & columnMaskB) == 0 && (d & columnMaskB) == 0,
+            'C' => (a & columnMaskC) == 0 && (b & columnMaskC) == 0 && (d & columnMaskC) == 0,
+            'D' => (a & columnMaskD) == 0 && (b & columnMaskD) == 0 && (c & columnMaskD) == 0,
             _ => throw new Exception()
         };
-
-    public bool CanEnterRoom(char ch) {
-        var mask = ColumnMask(ch);
-        return ch switch {
-            'A' => (b & mask) == 0 && (c & mask) == 0 && (d & mask) == 0,
-            'B' => (a & mask) == 0 && (c & mask) == 0 && (d & mask) == 0,
-            'C' => (a & mask) == 0 && (b & mask) == 0 && (d & mask) == 0,
-            'D' => (a & mask) == 0 && (b & mask) == 0 && (c & mask) == 0,
-            _ => throw new Exception()
-        };
-    }
 
     public bool CanMoveToDoor(int icolFrom, int icolTo) {
         Point step(Point pt) {
@@ -242,10 +229,10 @@ record Maze {
 
     public bool FinishedColumn(int icol) =>
         icol switch {
-            3 => (a & ColumnMask('A')) == ColumnMask('A'),
-            5 => (b & ColumnMask('B')) == ColumnMask('B'),
-            7 => (c & ColumnMask('C')) == ColumnMask('C'),
-            9 => (d & ColumnMask('D')) == ColumnMask('D'),
+            3 => a == columnMaskA,
+            5 => b == columnMaskB,
+            7 => c == columnMaskC,
+            9 => d == columnMaskD,
             _ => throw new Exception()
         };
 
@@ -266,7 +253,7 @@ record Maze {
     public Maze Move(Point from, Point to) =>
         SetItem(to, ItemAt(from)).SetItem(from, '.');
 
-    public Maze SetItem(Point pt, char ch) {
+    private Maze SetItem(Point pt, char ch) {
         if (ch == '#') {
             return this;
         }
