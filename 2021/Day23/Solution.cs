@@ -47,7 +47,7 @@ class Solution : Solver {
 
     Maze GetMaze(string input) {
         var map = input.Split("\n");
-        var maze = new Maze(map.Length > 6);
+        var maze = new Maze();
         foreach (var irow in Enumerable.Range(0, map.Length)) {
             foreach (var icol in Enumerable.Range(0, map[0].Length)) {
                 maze = maze.SetItem(
@@ -71,32 +71,6 @@ class Solution : Solver {
     }
 
     (Maze maze, int cost) HallwayToRoom(Maze maze) {
-
-        bool columnIsClean(int icol, char ch) {
-            var pt = new Point(2, icol);
-            while (maze.ItemAt(pt) != '#') {
-                if (maze.ItemAt(pt) != ch && maze.ItemAt(pt) != '.') {
-                    return false;
-                }
-                pt = pt.Below;
-            }
-            return true;
-        }
-
-        bool rowIsClean(int icolFrom, int icolTo) {
-            Point step(Point pt) {
-                return icolFrom < icolTo ? pt.Right : pt.Left;
-            }
-            var pt = step(new Point(1, icolFrom));
-            while (pt.icol != icolTo) {
-                if (maze.ItemAt(pt) != '.') {
-                    return false;
-                }
-                pt = step(pt);
-            }
-            return true;
-        }
-
         for (var icol = 1; icol < 12; icol++) {
             var ch = maze.ItemAt(new Point(1, icol));
 
@@ -106,7 +80,7 @@ class Solution : Solver {
 
             var icolDst = getIcolDst(ch);
 
-            if (rowIsClean(icol, icolDst) && columnIsClean(icolDst, ch)) {
+            if (maze.CanMoveToDoor(icol, icolDst) && maze.CanEnterRoom(ch)) {
                 var steps = Math.Abs(icolDst - icol);
                 var pt = new Point(1, icolDst);
 
@@ -115,7 +89,7 @@ class Solution : Solver {
                     steps++;
                 }
 
-                var l = HallwayToRoom(maze.SetItem(new Point(1, icol), '.').SetItem(pt, ch));
+                var l = HallwayToRoom(maze.Move(new Point(1, icol), pt));
                 return (l.maze, l.cost + steps * stepCost(ch));
             }
         }
@@ -125,7 +99,6 @@ class Solution : Solver {
     IEnumerable<(Maze maze, int cost)> RoomToHallway(Maze maze) {
         var allowedHColumns = new int[] { 1, 2, 4, 6, 8, 10, 11 };
 
-        // fel lehet-e menni
         foreach (var icol in new[] { 3, 5, 7, 9 }) {
 
             if (maze.FinishedColumn(icol)) {
@@ -150,11 +123,7 @@ class Solution : Solver {
                 while (maze.ItemAt(ptDst) == '.') {
 
                     if (allowedHColumns.Contains(ptDst.icol)) {
-                        var mazeT = maze.SetItem(ptSrc, '.').SetItem(ptDst, ch);
-                        var c = (stepsV + stepsH) * stepCost(ch);
-                        // (mazeT, c) = (Lemegy(mazeT).maze, c + Lemegy(mazeT).cost);
-
-                        yield return (mazeT, c);
+                        yield return (maze.Move(ptSrc, ptDst), (stepsV + stepsH) * stepCost(ch));
                     }
 
                     if (dj == -1) {
@@ -184,74 +153,91 @@ record Point(int irow, int icol) {
 
 record Maze {
 
-    bool big;
     int a, b, c, d;
 
-    public Maze(bool big) : this(0, 0, 0, 0, big) {
+    public Maze() {
+        a = ColumnMask('A');
+        b = ColumnMask('B');
+        c = ColumnMask('C');
+        d = ColumnMask('D');
     }
 
-    private Maze(int a, int b, int c, int d, bool big) {
+    private Maze(int a, int b, int c, int d) {
         this.a = a;
         this.b = b;
         this.c = c;
         this.d = d;
-        this.big = big;
     }
 
     int BitFromPoint(Point pt) =>
-        (big, pt.irow, pt.icol) switch {
-            (_, 1, 1) => 1 << 0,
-            (_, 1, 2) => 1 << 1,
-            (_, 1, 3) => 1 << 2,
-            (_, 1, 4) => 1 << 3,
-            (_, 1, 5) => 1 << 4,
-            (_, 1, 6) => 1 << 5,
-            (_, 1, 7) => 1 << 6,
-            (_, 1, 8) => 1 << 7,
-            (_, 1, 9) => 1 << 8,
-            (_, 1, 10) => 1 << 9,
-            (_, 1, 11) => 1 << 10,
+        (pt.irow, pt.icol) switch {
+            (1, 1) => 1 << 0,
+            (1, 2) => 1 << 1,
+            (1, 3) => 1 << 2,
+            (1, 4) => 1 << 3,
+            (1, 5) => 1 << 4,
+            (1, 6) => 1 << 5,
+            (1, 7) => 1 << 6,
+            (1, 8) => 1 << 7,
+            (1, 9) => 1 << 8,
+            (1, 10) => 1 << 9,
+            (1, 11) => 1 << 10,
 
-            (_, 2, 3) => 1 << 11,
-            (_, 2, 5) => 1 << 12,
-            (_, 2, 7) => 1 << 13,
-            (_, 2, 9) => 1 << 14,
+            (2, 3) => 1 << 11,
+            (2, 5) => 1 << 12,
+            (2, 7) => 1 << 13,
+            (2, 9) => 1 << 14,
 
-            (_, 3, 3) => 1 << 15,
-            (_, 3, 5) => 1 << 16,
-            (_, 3, 7) => 1 << 17,
-            (_, 3, 9) => 1 << 18,
+            (3, 3) => 1 << 15,
+            (3, 5) => 1 << 16,
+            (3, 7) => 1 << 17,
+            (3, 9) => 1 << 18,
 
-            (true, 4, 3) => 1 << 19,
-            (true, 4, 5) => 1 << 20,
-            (true, 4, 7) => 1 << 21,
-            (true, 4, 9) => 1 << 22,
+            (4, 3) => 1 << 19,
+            (4, 5) => 1 << 20,
+            (4, 7) => 1 << 21,
+            (4, 9) => 1 << 22,
 
-            (true, 5, 3) => 1 << 23,
-            (true, 5, 5) => 1 << 24,
-            (true, 5, 7) => 1 << 25,
-            (true, 5, 9) => 1 << 26,
+            (5, 3) => 1 << 23,
+            (5, 5) => 1 << 24,
+            (5, 7) => 1 << 25,
+            (5, 9) => 1 << 26,
 
             _ => 1 << 31,
         };
 
-    private int ColumnMask(char ch) {
-        if (big) {
-            switch (ch) {
-                case 'A': return (1 << 11) | (1 << 15) | (1 << 19) | (1 << 23);
-                case 'B': return (1 << 12) | (1 << 16) | (1 << 20) | (1 << 24);
-                case 'C': return (1 << 13) | (1 << 17) | (1 << 21) | (1 << 25);
-                case 'D': return (1 << 14) | (1 << 18) | (1 << 22) | (1 << 26);
-            }
-        } else {
-            switch (ch) {
-                case 'A': return (1 << 11) | (1 << 15);
-                case 'B': return (1 << 12) | (1 << 16);
-                case 'C': return (1 << 13) | (1 << 17);
-                case 'D': return (1 << 14) | (1 << 18);
-            }
+    private int ColumnMask(char ch) =>
+        ch switch {
+            'A' => (1 << 11) | (1 << 15) | (1 << 19) | (1 << 23),
+            'B' => (1 << 12) | (1 << 16) | (1 << 20) | (1 << 24),
+            'C' => (1 << 13) | (1 << 17) | (1 << 21) | (1 << 25),
+            'D' => (1 << 14) | (1 << 18) | (1 << 22) | (1 << 26),
+            _ => throw new Exception()
+        };
+
+    public bool CanEnterRoom(char ch) {
+        var mask = ColumnMask(ch);
+        return ch switch {
+            'A' => (b & mask) == 0 && (c & mask) == 0 && (d & mask) == 0,
+            'B' => (a & mask) == 0 && (c & mask) == 0 && (d & mask) == 0,
+            'C' => (a & mask) == 0 && (b & mask) == 0 && (d & mask) == 0,
+            'D' => (a & mask) == 0 && (b & mask) == 0 && (c & mask) == 0,
+            _ => throw new Exception()
+        };
+    }
+
+    public bool CanMoveToDoor(int icolFrom, int icolTo) {
+        Point step(Point pt) {
+            return icolFrom < icolTo ? pt.Right : pt.Left;
         }
-        throw new Exception();
+        var pt = step(new Point(1, icolFrom));
+        while (pt.icol != icolTo) {
+            if (this.ItemAt(pt) != '.') {
+                return false;
+            }
+            pt = step(pt);
+        }
+        return true;
     }
 
     public bool FinishedColumn(int icol) =>
@@ -277,11 +263,15 @@ record Maze {
             '.';
     }
 
+    public Maze Move(Point from, Point to) =>
+        SetItem(to, ItemAt(from)).SetItem(from, '.');
+
     public Maze SetItem(Point pt, char ch) {
+        if (ch == '#') {
+            return this;
+        }
         var bit = BitFromPoint(pt);
         if (bit == 1 << 31) {
-            if (ch != '#' && ch != ' ')
-                throw new Exception();
             return this;
         }
 
@@ -290,13 +280,12 @@ record Maze {
                 a & ~bit,
                 b & ~bit,
                 c & ~bit,
-                d & ~bit,
-                big
+                d & ~bit
             ),
-            'A' => new Maze(a | bit, b, c, d, big),
-            'B' => new Maze(a, b | bit, c, d, big),
-            'C' => new Maze(a, b, c | bit, d, big),
-            'D' => new Maze(a, b, c, d | bit, big),
+            'A' => new Maze(a | bit, b & ~bit, c & ~bit, d & ~bit),
+            'B' => new Maze(a & ~bit, b | bit, c & ~bit, d & ~bit),
+            'C' => new Maze(a & ~bit, b & ~bit, c | bit, d & ~bit),
+            'D' => new Maze(a & ~bit, b & ~bit, c & ~bit, d | bit),
             _ => throw new Exception()
         };
     }
