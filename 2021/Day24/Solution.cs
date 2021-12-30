@@ -14,18 +14,22 @@ class Solution : Solver {
 
         var digits = Enumerable.Range(1, 9).ToArray();
 
-        var max = Enumerable.Repeat(int.MinValue, 14).ToArray();
-        var min = Enumerable.Repeat(int.MaxValue, 14).ToArray();
-        var stack = new Stack<int>();
-        var stmBlocks = input.Split("inp w\n")[1..]; // the input has of 14 'blocks', reading one digit into w
+        var stmBlocks = input.Split("inp w\n")[1..]; // The input has 14 code blocks, each dealing with one digit.
 
-        // Extracts the numeric argument of a statement of the block at the given line
+        // Extracts the numeric argument of a statement:
         var getArgFromLine = (int iblock, Index iline) =>   
             int.Parse(stmBlocks[iblock].Split('\n')[iline].Split(' ')[^1]);
 
         // The blocks define 7 pairs of `a`, `b` digits and a `shift` between them.
         // The input is valid if for each pair the condition `a + shift = b` holds.
 
+        // A stack will contain the index of an `a` digit when we find it's corresponding `b`.
+        var stack = new Stack<int>();
+       
+        // We will fill up the result when `b` is found.
+        var max = Enumerable.Repeat(int.MinValue, 14).ToArray();
+        var min = Enumerable.Repeat(int.MaxValue, 14).ToArray();
+        
         for (var j = 0; j < 14; j++) {
             if (stmBlocks[j].Contains("div z 1")) { 
                 // j points to an `a` digit.
@@ -33,9 +37,10 @@ class Solution : Solver {
             } else { 
                 // j points to a `b` digit. 
               
-                var i = stack.Pop();  // The stack points to the index of the corresponding `a`.
+                // `a` is at i.
+                var i = stack.Pop(); 
 
-                // Shift is split into two, both blocks contain a part:
+                // A part of shift is hidden in each of the two blocks:
                 var shift = getArgFromLine(i, ^4) + getArgFromLine(j, 4);
 
                 // Find the best a and b so that the equation holds
