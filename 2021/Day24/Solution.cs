@@ -23,7 +23,7 @@ class Solution : Solver {
         var getArgFromLine = (int iblock, Index iline) =>   
             int.Parse(stmBlocks[iblock].Split('\n')[iline].Split(' ')[^1]);
 
-        // A stack will contain the index of an `a` digit when we find it's corresponding `b`.
+        // A stack will contain the index of an `a` digit when we find its corresponding `b`.
         var stack = new Stack<int>();
        
         // We will fill up the result when `b` is found.
