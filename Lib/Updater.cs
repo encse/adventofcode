@@ -22,7 +22,10 @@ class Updater {
         var session = GetSession();
         var baseAddress = new Uri("https://adventofcode.com/");
 
+        var requester = new DefaultHttpRequester("github.com/encse/adventofcode by encse@csokavar.hu");
+
         var context = BrowsingContext.New(Configuration.Default
+            .With(requester)
             .WithDefaultLoader()
             .WithCss()
             .WithDefaultCookies()
