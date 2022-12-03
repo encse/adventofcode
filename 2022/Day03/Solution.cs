@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace AdventOfCode.Y2022.Day03;
@@ -8,7 +9,7 @@ class Solution : Solver {
 
     public object PartOne(string input) =>
         input.Split("\n")
-            .Select(line => new []{line.Substring(0, line.Length / 2), line.Substring(line.Length / 2)})
+            .Select(line => line.Chunk(line.Length/2)) // 🥩 
             .Select(GetCommonItemPriority)
             .Sum();
 
@@ -18,7 +19,7 @@ class Solution : Solver {
             .Select(GetCommonItemPriority)
             .Sum();
 
-    private int GetCommonItemPriority(params string[] texts) => (
+    private int GetCommonItemPriority(IEnumerable<IEnumerable<char>> texts) => (
         from ch in texts.First()
         where texts.All(text => text.Contains(ch))
         select ch < 'a' ? ch - 'A' + 27 : ch - 'a' + 1
