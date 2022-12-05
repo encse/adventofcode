@@ -14,14 +14,13 @@ class Solution : Solver {
     record struct Move(int count, Stack<char> source, Stack<char> target);
 
     void CrateMover9000(Move move) {
-        // move 'count' elements from one stack to the other
         for (var i = 0; i < move.count; i++) {
             move.target.Push(move.source.Pop());
         }
     }
 
     void CrateMover9001(Move move) {
-        // move 'count' elements from one stack to the other keeping element order
+        // same as CrateMover9000 but keeps element order
         var helper = new Stack<char>();
         CrateMover9000(move with {target=helper});
         CrateMover9000(move with {source=helper});
@@ -31,7 +30,8 @@ class Solution : Solver {
         var parts = input.Split("\n\n");
 
         var stackDefs = parts[0].Split("\n");
-        // chunk each line to 4 character wide columns
+        
+        // process each line by 4 character wide columns
         // last line defines the number of stacks:
         var stacks = stackDefs.Last().Chunk(4).Select(i => new Stack<char>()).ToArray();
         // bottom-up: push the next element to the the correspoing stack (' ' means no more elements).
