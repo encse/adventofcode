@@ -13,7 +13,7 @@ class SolutionTemplateGenerator {
              |
              |namespace AdventOfCode.Y{problem.Year}.Day{problem.Day.ToString("00")};
              |
-             |[ProblemName(""{problem.Title}"")]      
+             |[ProblemName(""{problem.Title}"")]
              |class Solution : Solver {{
              |
              |    public object PartOne(string input) {{
