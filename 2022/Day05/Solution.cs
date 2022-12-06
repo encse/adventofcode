@@ -30,13 +30,14 @@ class Solution : Solver {
         var parts = input.Split("\n\n");
 
         var stackDefs = parts[0].Split("\n");
-        
+
         // process each line by 4 character wide columns
         // last line defines the number of stacks:
         var stacks = stackDefs.Last().Chunk(4).Select(i => new Stack<char>()).ToArray();
         // bottom-up: push the next element to the the correspoing stack (' ' means no more elements).
         foreach (var line in stackDefs.Reverse().Skip(1)) {
             foreach (var (stack, item) in stacks.Zip(line.Chunk(4))) {
+                // item is ~ "[A] "
                 if (item[1] != ' ') {
                     stack.Push(item[1]);
                 }
