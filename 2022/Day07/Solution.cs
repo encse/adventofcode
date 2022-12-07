@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2022.Day07;
 
@@ -16,31 +17,21 @@ class Solution : Solver {
         return directorySizes.Where(size => size + freeSpace >= 30000000).Min();
     }
 
-    record struct Dir(int totalSize, List<Dir> subdirs);
-
     private List<int> GetDirectorySizes(string input) {
-        // parses the input starting with `$ cd foo` until `$ cd ..` or end of input is found
-        Dir parseDir(IEnumerator<string> iterator) {
-            iterator.MoveNext(); // $ cd foo
-
-            var totalSize = 0;
-            var subdirs = new List<Dir> { };
-            while (iterator.MoveNext() && !iterator.Current.StartsWith("$ cd ..")) {
-                if (iterator.Current.StartsWith("$ cd")) {
-                    subdirs.Add(parseDir(iterator));
-                    totalSize += subdirs.Last().totalSize;
-                } else if (!iterator.Current.StartsWith("dir ")) {
-                    totalSize += int.Parse(iterator.Current.Split(" ")[0]);
+        var path = new Stack<string>();
+        var sizes = new Dictionary<string, int>();
+        foreach (var line in input.Split("\n")) {
+            if (line == "$ cd ..") {
+                path.Pop();
+            } else if (line.StartsWith("$ cd")) {
+                path.Push(string.Join("", path)+line.Split(" ")[2]);
+            } else if (Regex.Match(line, @"\d+").Success) {
+                var size = int.Parse(line.Split(" ")[0]);
+                foreach (var dir in path) {
+                    sizes[dir] = sizes.GetValueOrDefault(dir) + size;
                 }
             }
-            return new Dir(totalSize, subdirs);
         }
-
-        // post-order traversal of a directory
-        IEnumerable<Dir> flatten(Dir dir) => dir.subdirs.SelectMany(flatten).Append(dir);
-
-        var iterator = input.Split("\n").AsEnumerable<string>().GetEnumerator();
-        iterator.MoveNext();
-        return flatten(parseDir(iterator)).Select(dir => dir.totalSize).ToList();
+        return sizes.Values.ToList();
     }
 }
