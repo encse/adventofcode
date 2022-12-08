@@ -45,11 +45,11 @@ record Forest(string[] items, int crow, int ccol) {
         from icol in Enumerable.Range(0, ccol)
         select new Tree(items[irow][icol], irow, icol);
 
-    public bool IsTallest(Tree tree, Direction dir) =>
-        SmallerTrees(tree, dir).Count() == TreesInDirection(tree, dir).Count();
-
     public int ViewDistance(Tree tree, Direction dir) =>
         IsTallest(tree, dir) ? TreesInDirection(tree, dir).Count() : SmallerTrees(tree, dir).Count() + 1;
+
+    public bool IsTallest(Tree tree, Direction dir) =>
+        TreesInDirection(tree, dir).All(treeT => treeT.height < tree.height);
 
     IEnumerable<Tree> SmallerTrees(Tree tree, Direction dir) =>
         TreesInDirection(tree, dir).TakeWhile(treeT => treeT.height < tree.height);
