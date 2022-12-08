@@ -6,62 +6,63 @@ namespace AdventOfCode.Y2022.Day08;
 [ProblemName("Treetop Tree House")]
 class Solution : Solver {
 
-    public object PartOne(string input) {
-        var grid = Parse(input);
-        return grid.Positions().Count(grid.IsVisible);
-    }
-
-    public object PartTwo(string input) {
-        var grid = Parse(input);
-        return grid.Positions().Select(grid.GetScenicScore).Max();
-    }
-
-    Grid Parse(string input) {
-        var items = input.Split("\n");
-        var (ccol, crow) = (items[0].Length, items.Length);
-        return new Grid(items, crow, ccol);
-    }
-}
-
-record Postion(int irow, int icol);
-record Direction(int drow, int dcol);
-record Grid(string[] items, int crow, int ccol) {
-
     static Direction Left = new Direction(0, -1);
     static Direction Right = new Direction(0, 1);
     static Direction Up = new Direction(-1, 0);
     static Direction Down = new Direction(1, 0);
 
-    public bool IsVisible(Postion pos) =>
-        IsVisible(pos, Left) || IsVisible(pos, Right) || IsVisible(pos, Up) || IsVisible(pos, Down);
+    public object PartOne(string input) {
+        var forest = Parse(input);
 
-    public int GetScenicScore(Postion pos) =>
-        ViewDistance(pos, Left) * ViewDistance(pos, Right) * ViewDistance(pos, Up) * ViewDistance(pos, Down);
+        bool isVisible(Tree tree) => 
+            forest.IsTallest(tree, Left) || forest.IsTallest(tree, Right) || 
+            forest.IsTallest(tree, Up) || forest.IsTallest(tree, Down);
+        
+        return forest.Trees().Count(isVisible);
+    }
 
-    public IEnumerable<Postion> Positions() =>
+    public object PartTwo(string input) {
+        var forest = Parse(input);
+
+        int scenicScore(Tree tree) =>
+            forest.ViewDistance(tree, Left) * forest.ViewDistance(tree, Right) * 
+            forest.ViewDistance(tree, Up) * forest.ViewDistance(tree, Down);
+
+        return forest.Trees().Select(scenicScore).Max();
+    }
+
+    Forest Parse(string input) {
+        var items = input.Split("\n");
+        var (ccol, crow) = (items[0].Length, items.Length);
+        return new Forest(items, crow, ccol);
+    }
+}
+
+record Direction(int drow, int dcol);
+record Tree(int height, int irow, int icol);
+record Forest(string[] items, int crow, int ccol) {
+
+    public IEnumerable<Tree> Trees() =>
         from irow in Enumerable.Range(0, crow)
         from icol in Enumerable.Range(0, ccol)
-        select new Postion(irow, icol);
+        select new Tree(items[irow][icol], irow, icol);
 
-    bool IsVisible(Postion pos, Direction dir) => 
-        SmallerTreeCount(pos, dir) == TreesInDirection(pos, dir).Count();
+    public bool IsTallest(Tree tree, Direction dir) => 
+        SmallerTrees(tree, dir).Count() == TreesInDirection(tree, dir).Count();
         
-    int ViewDistance(Postion pos, Direction dir) => 
-        SmallerTreeCount(pos, dir) + (IsVisible(pos, dir) ? 0 : 1);
+    public int ViewDistance(Tree pos, Direction dir) => 
+        SmallerTrees(pos, dir).Count() + (IsTallest(pos, dir) ? 0 : 1);
 
-    int SmallerTreeCount(Postion pos, Direction dir) =>
-        TreesInDirection(pos, dir).TakeWhile(tree => tree < items[pos.irow][pos.icol]).Count();
+    IEnumerable<Tree> SmallerTrees(Tree tree, Direction dir) =>
+        TreesInDirection(tree, dir).TakeWhile(treeT => treeT.height < tree.height);
 
-    IEnumerable<int> TreesInDirection(Postion pos, Direction dir) {
-        for (var first = true; 
-            pos.irow >= 0 && pos.irow < crow && pos.icol >= 0 && pos.icol < ccol; 
-            pos = new Postion(pos.irow + dir.drow, pos.icol + dir.dcol)
-        ) {
-            if (first) {
-                first = false;
-            } else {
-                yield return items[pos.irow][pos.icol];
+    IEnumerable<Tree> TreesInDirection(Tree tree, Direction dir) {
+        var (first, irow, icol) = (true, tree.irow, tree.icol); 
+        while (irow >= 0 && irow < crow && icol >= 0 && icol < ccol){
+            if (!first) {
+                yield return new Tree(height: items[irow][icol], irow:irow, icol: icol);
             }
+            (first, irow, icol) = (false, irow + dir.drow, icol + dir.dcol);
         }
     }
 }
