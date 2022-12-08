@@ -14,8 +14,8 @@ class Solution : Solver {
     public object PartOne(string input) {
         var forest = Parse(input);
 
-        return forest.Trees().Count(tree => 
-            forest.IsTallest(tree, Left) || forest.IsTallest(tree, Right) || 
+        return forest.Trees().Count(tree =>
+            forest.IsTallest(tree, Left) || forest.IsTallest(tree, Right) ||
             forest.IsTallest(tree, Up) || forest.IsTallest(tree, Down)
         );
     }
@@ -23,8 +23,8 @@ class Solution : Solver {
     public object PartTwo(string input) {
         var forest = Parse(input);
 
-        return forest.Trees().Select(tree => 
-            forest.ViewDistance(tree, Left) * forest.ViewDistance(tree, Right) * 
+        return forest.Trees().Select(tree =>
+            forest.ViewDistance(tree, Left) * forest.ViewDistance(tree, Right) *
             forest.ViewDistance(tree, Up) * forest.ViewDistance(tree, Down)
         ).Max();
     }
@@ -45,20 +45,20 @@ record Forest(string[] items, int crow, int ccol) {
         from icol in Enumerable.Range(0, ccol)
         select new Tree(items[irow][icol], irow, icol);
 
-    public bool IsTallest(Tree tree, Direction dir) => 
+    public bool IsTallest(Tree tree, Direction dir) =>
         SmallerTrees(tree, dir).Count() == TreesInDirection(tree, dir).Count();
-        
-    public int ViewDistance(Tree pos, Direction dir) => 
+
+    public int ViewDistance(Tree pos, Direction dir) =>
         SmallerTrees(pos, dir).Count() + (IsTallest(pos, dir) ? 0 : 1);
 
     IEnumerable<Tree> SmallerTrees(Tree tree, Direction dir) =>
         TreesInDirection(tree, dir).TakeWhile(treeT => treeT.height < tree.height);
 
     IEnumerable<Tree> TreesInDirection(Tree tree, Direction dir) {
-        var (first, irow, icol) = (true, tree.irow, tree.icol); 
-        while (irow >= 0 && irow < crow && icol >= 0 && icol < ccol){
+        var (first, irow, icol) = (true, tree.irow, tree.icol);
+        while (irow >= 0 && irow < crow && icol >= 0 && icol < ccol) {
             if (!first) {
-                yield return new Tree(height: items[irow][icol], irow:irow, icol: icol);
+                yield return new Tree(height: items[irow][icol], irow: irow, icol: icol);
             }
             (first, irow, icol) = (false, irow + dir.drow, icol + dir.dcol);
         }
