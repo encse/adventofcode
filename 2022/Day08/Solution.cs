@@ -14,21 +14,19 @@ class Solution : Solver {
     public object PartOne(string input) {
         var forest = Parse(input);
 
-        bool isVisible(Tree tree) => 
+        return forest.Trees().Count(tree => 
             forest.IsTallest(tree, Left) || forest.IsTallest(tree, Right) || 
-            forest.IsTallest(tree, Up) || forest.IsTallest(tree, Down);
-        
-        return forest.Trees().Count(isVisible);
+            forest.IsTallest(tree, Up) || forest.IsTallest(tree, Down)
+        );
     }
 
     public object PartTwo(string input) {
         var forest = Parse(input);
 
-        int scenicScore(Tree tree) =>
+        return forest.Trees().Select(tree => 
             forest.ViewDistance(tree, Left) * forest.ViewDistance(tree, Right) * 
-            forest.ViewDistance(tree, Up) * forest.ViewDistance(tree, Down);
-
-        return forest.Trees().Select(scenicScore).Max();
+            forest.ViewDistance(tree, Up) * forest.ViewDistance(tree, Down)
+        ).Max();
     }
 
     Forest Parse(string input) {
