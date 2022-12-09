@@ -28,7 +28,7 @@ class Solution : Solver {
 
     record Knot(int irow, int icol);
 
-    // moving the head in the given direction, inplace update of the knots following to the rules
+    // moves the head in the given direction, inplace update of all knots
     void MoveHead(Knot[] rope, string dir) {
         rope[0] = dir switch {
             "U" => rope[0] with { irow = rope[0].irow - 1 },
