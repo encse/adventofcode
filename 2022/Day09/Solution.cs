@@ -38,14 +38,15 @@ class Solution : Solver {
             _ => throw new ArgumentException(dir)
         };
 
+        // move the knots which are not adjacent to the previous knot in the rope:
         for (var i = 1; i < rope.Length; i++) {
-            var prevKnot = rope[i - 1];
-            var thisKnot = rope[i];
-            var adjacent = Math.Abs(prevKnot.irow - thisKnot.irow) < 2 && Math.Abs(prevKnot.icol - thisKnot.icol) < 2;
-            if (!adjacent) {
+            var drow = rope[i - 1].irow - rope[i].irow; 
+            var dcol = rope[i - 1].icol - rope[i].icol;
+
+            if (Math.Abs(drow) > 1 || Math.Abs(dcol) > 1) {
                 rope[i] = new Knot(
-                    thisKnot.irow + Math.Sign(prevKnot.irow - thisKnot.irow),
-                    thisKnot.icol + Math.Sign(prevKnot.icol - thisKnot.icol)
+                    rope[i].irow + Math.Sign(drow), 
+                    rope[i].icol + Math.Sign(dcol)
                 );
             }
         }
