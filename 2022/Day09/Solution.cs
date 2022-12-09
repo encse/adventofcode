@@ -26,7 +26,7 @@ class Solution : Solver {
         }
     }
 
-    record Knot(int irow, int icol);
+    record struct Knot(int irow, int icol);
 
     // moves the head in the given direction, inplace update of all knots
     void MoveHead(Knot[] rope, string dir) {
