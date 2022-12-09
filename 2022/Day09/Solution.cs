@@ -28,7 +28,7 @@ class Solution : Solver {
 
     record struct Knot(int irow, int icol);
 
-    // moves the head in the given direction, inplace update of all knots
+    // moves the head in the given direction, inplace update of the rope
     void MoveHead(Knot[] rope, string dir) {
         rope[0] = dir switch {
             "U" => rope[0] with { irow = rope[0].irow - 1 },
@@ -38,7 +38,7 @@ class Solution : Solver {
             _ => throw new ArgumentException(dir)
         };
 
-        // move the knots which are not adjacent to the previous knot in the rope:
+        // move knots which are not adjacent to their previous sibling in the rope:
         for (var i = 1; i < rope.Length; i++) {
             var drow = rope[i - 1].irow - rope[i].irow; 
             var dcol = rope[i - 1].icol - rope[i].icol;
