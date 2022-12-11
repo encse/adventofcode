@@ -9,17 +9,17 @@ namespace AdventOfCode.Y2022.Day11;
 class Solution : Solver {
 
     public object PartOne(string input) {
-        var monkeys = Parse(input).ToList();
+        var monkeys = ParseMonkeys(input).ToList();
         return Run(20, monkeys, w => w / 3);
     }
 
     public object PartTwo(string input) {
-        var monkeys = Parse(input).ToList();
+        var monkeys = ParseMonkeys(input).ToList();
         var mod = monkeys.Aggregate(1, (mod, monkey) => mod * monkey.mod);
         return Run(10_000, monkeys, w => w % mod);
     }
 
-    IEnumerable<Monkey> Parse(string input) => 
+    IEnumerable<Monkey> ParseMonkeys(string input) => 
         from block in input.Split("\n\n") select ParseMonkey(block);
 
     Monkey ParseMonkey(string input) {
