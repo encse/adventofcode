@@ -15,17 +15,17 @@ class Solution : Solver {
             .Sum();
     }
 
-    public object PartTwo(string input) =>
-        new OcrString( 
-            Signal(input).Select(signal => {
+    public object PartTwo(string input) => 
+        Signal(input)
+            .Select(signal => {
                 var spriteMiddle = signal.x;
                 var screenColumn = (signal.cycle - 1) % 40;
                 return Math.Abs(spriteMiddle - screenColumn) < 2 ? '#' : ' ';
             })
             .Chunk(40)
             .Select(line => new string(line))
-            .Aggregate("", (screen, line) => screen + "\n" + line)
-        );
+            .Aggregate("", (screen, line) => screen + line + "\n")
+            .Ocr();
 
     IEnumerable<(int cycle, int x)> Signal(string input) {
         var (cycle, x) = (1, 1);
