@@ -21,7 +21,7 @@ class Solution : Solver {
             var spriteMiddle = signal.x;
             var screenColumn = (signal.cycle - 1) % 40;
 
-            screen += Math.Abs(spriteMiddle - screenColumn) < 2 ? "#" : ".";
+            screen += Math.Abs(spriteMiddle - screenColumn) < 2 ? "#" : " ";
 
             if (screenColumn == 39) {
                 screen += "\n";
