@@ -6,7 +6,7 @@ using System.Linq;
 
 //
 // Standard breadth-first algorithm, starting from the goal node and walking backwards. 
-// I used a dictionary to represent valid coordinates, it's very handy when in of
+// I used a dictionary to represent valid coordinates, it's very handy when in need of
 // enumerating all coordinates or checking if we are stepping to valid location.
 //
 [ProblemName("Hill Climbing Algorithm")]
