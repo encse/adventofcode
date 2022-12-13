@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
@@ -15,7 +16,9 @@ namespace AdventOfCode.Y2022.Day13;
 // So much about using just one expression for Part2.
 // 
 // I didn't have a great idea to deal with the 1 based indexing, but I'm satisfied with 
-// how this looks in general.
+// how this looks in general. Well mostly. I managed to overgolf the compare function 
+// at the end...
+// 
 [ProblemName("Distress Signal")]
 class Solution : Solver {
 
@@ -37,20 +40,17 @@ class Solution : Solver {
         where !string.IsNullOrEmpty(line) 
         select JsonNode.Parse(line);
 
-    int Compare(JsonNode left, JsonNode right) {
-        if (left is JsonValue && right is JsonValue) {
-            return left.GetValue<int>() - right.GetValue<int>();
+    int Compare(JsonNode nodeA, JsonNode nodeB) {
+        if (nodeA is JsonValue && nodeB is JsonValue) {
+            return (int)nodeA - (int)nodeB;
+        } else {
+            // It's AoC time, let's exploit FirstOrDefault! 
+            // 😈 if all items are equal, compare the length of the arrays 
+            var arrayA = nodeA as JsonArray ?? new JsonArray((int)nodeA);
+            var arrayB = nodeB as JsonArray ?? new JsonArray((int)nodeB);
+            return Enumerable.Zip(arrayA, arrayB)
+                .Select(p => Compare(p.First, p.Second))
+                .FirstOrDefault(c => c != 0, arrayA.Count - arrayB.Count);
         }
-
-        var leftArray = left is JsonArray a ? a : new JsonArray(left.GetValue<int>());
-        var rightArray = right is JsonArray b ? b : new JsonArray(right.GetValue<int>());
-
-        foreach (var (leftItem, rightItem) in Enumerable.Zip(leftArray, rightArray)) {
-            var c = Compare(leftItem, rightItem);
-            if (c != 0) {
-                return c;
-            }
-        }
-        return leftArray.Count - rightArray.Count;
     }
 }
