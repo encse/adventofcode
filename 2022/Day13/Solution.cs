@@ -1,7 +1,6 @@
-using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace AdventOfCode.Y2022.Day13;
 
@@ -15,43 +14,32 @@ class Solution : Solver {
             .Sum();
 
     public object PartTwo(string input) {
-        var sorted = GetPackets("[[2]]\n[[6]]\n" + input)
-            .OrderBy(Compare)
-            .Select(packet => packet.ToString())
-            .ToList();
-        return (sorted.IndexOf("[[2]]") + 1) * (sorted.IndexOf("[[6]]") + 1);
+        var p1 = JsonNode.Parse("[[2]]");
+        var p2 = JsonNode.Parse("[[6]]");
+        var packets = GetPackets(input).Append(p1).Append(p2).ToList();
+        packets.Sort(Compare);
+        return (packets.IndexOf(p1) + 1) * (packets.IndexOf(p2) + 1);
     }
 
-    IEnumerable<JsonElement> GetPackets(string input) =>
+    IEnumerable<JsonNode> GetPackets(string input) =>
          input
             .Split("\n")
             .Where(x => !string.IsNullOrEmpty(x))
-            .Select(line => JsonDocument.Parse(line).RootElement);
+            .Select(line => JsonNode.Parse(line));
 
-    int Compare(JsonElement left, JsonElement right) =>
-        (left.ValueKind, right.ValueKind) switch {
-            (JsonValueKind.Number, JsonValueKind.Number) => left.GetInt32() - right.GetInt32(),
-            (JsonValueKind.Array, JsonValueKind.Array) => Compare(left.EnumerateArray().ToArray(), right.EnumerateArray().ToArray()),
-            (JsonValueKind.Number, JsonValueKind.Array) => Compare(new[] { left }, right.EnumerateArray().ToArray()),
-            (JsonValueKind.Array, JsonValueKind.Number) => Compare(left.EnumerateArray().ToArray(), new[] { right }),
-            _ => throw new ArgumentException()
-        };
+    int Compare(JsonNode left, JsonNode right) {
+        if (left is JsonValue leftVal && right is JsonValue rightVal){
+            return left.GetValue<int>() - right.GetValue<int>();
+        }
 
-    int Compare(JsonElement[] leftArray, JsonElement[] rightArray) {
-        foreach (var (left, right) in Enumerable.Zip(leftArray, rightArray)) {
-            var c = Compare(left, right);
+        var leftArray = left switch { JsonArray a => a, _ => new JsonArray(left.GetValue<int>())};
+        var rightArray = right switch { JsonArray a => a, _ => new JsonArray(right.GetValue<int>())};
+        foreach (var (leftItem, rightItem) in Enumerable.Zip(leftArray, rightArray)) {
+            var c = Compare(leftItem, rightItem);
             if (c != 0) {
                 return c;
             }
         }
-        return leftArray.Length - rightArray.Length;
-    }
-}
-
-file static class Extensions {
-    public static List<T> OrderBy<T>(this IEnumerable<T> items, Comparison<T> comparison){
-        var list = items.ToList();
-        list.Sort(comparison);
-        return list;
+        return leftArray.Count - rightArray.Count;
     }
 }
