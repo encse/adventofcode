@@ -14,10 +14,10 @@ class Solution : Solver {
             .Sum();
 
     public object PartTwo(string input) {
-        var dividerPackets = GetPackets("[[2]]\n[[6]]").ToList();
-        var packets = dividerPackets.Concat(GetPackets(input)).ToList();
+        var divider = GetPackets("[[2]]\n[[6]]").ToList();
+        var packets = GetPackets(input).Concat(divider).ToList();
         packets.Sort(Compare);
-        return (packets.IndexOf(dividerPackets[0]) + 1) * (packets.IndexOf(dividerPackets[1]) + 1);
+        return (packets.IndexOf(divider[0]) + 1) * (packets.IndexOf(divider[1]) + 1);
     }
 
     IEnumerable<JsonNode> GetPackets(string input) =>
