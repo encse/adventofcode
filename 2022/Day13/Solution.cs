@@ -4,6 +4,18 @@ using System.Text.Json.Nodes;
 
 namespace AdventOfCode.Y2022.Day13;
 
+// NOTES: I don't use C# during the year, so I didn't know which Json parser to use 
+// and first went with System.Text.Json, then found a solution on reddit which uses 
+// System.Text.Json.Nodes and could improve my coding a bit.
+// 
+// For part2: I couldn't find a version of OrderBy() that would take a simple comparator 
+// function, and I didn't want to implement a full blown IComparer<T> interface. Then 
+// realised that List<T> has a Sort function which works with just a simple delegate. 
+// Unfortunately it's a void function so there is no way to chain the result further. 
+// So much about using just one expression for Part2.
+// 
+// I didn't have a great idea to deal with the 1 based indexing, but I'm satisfied with 
+// how this looks in general.
 [ProblemName("Distress Signal")]
 class Solution : Solver {
 
