@@ -14,7 +14,7 @@ class Solution : Solver {
             .Sum();
 
     public object PartTwo(string input) {
-        var dividerPackets = new []{JsonNode.Parse("[[2]]"), JsonNode.Parse("[[6]]")}; 
+        var dividerPackets = GetPackets("[[2]]\n[[6]]").ToList();
         var packets = dividerPackets.Concat(GetPackets(input)).ToList();
         packets.Sort(Compare);
         return (packets.IndexOf(dividerPackets[0]) + 1) * (packets.IndexOf(dividerPackets[1]) + 1);
