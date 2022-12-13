@@ -38,12 +38,12 @@ class Solution : Solver {
         select JsonNode.Parse(line);
 
     int Compare(JsonNode left, JsonNode right) {
-        if (left is JsonValue leftVal && right is JsonValue rightVal){
+        if (left is JsonValue && right is JsonValue) {
             return left.GetValue<int>() - right.GetValue<int>();
         }
 
-        var leftArray  = left  switch { JsonArray a => a, _ => new JsonArray(left.GetValue<int>())};
-        var rightArray = right switch { JsonArray a => a, _ => new JsonArray(right.GetValue<int>())};
+        var leftArray = left is JsonArray a ? a : new JsonArray(left.GetValue<int>());
+        var rightArray = right is JsonArray b ? b : new JsonArray(right.GetValue<int>());
 
         foreach (var (leftItem, rightItem) in Enumerable.Zip(leftArray, rightArray)) {
             var c = Compare(leftItem, rightItem);
