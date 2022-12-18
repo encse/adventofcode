@@ -8,40 +8,44 @@ namespace AdventOfCode.Y2022.Day17;
 class Solution : Solver {
 
     public object PartOne(string input) {
-        return new Tunnel(input).AddRocks(2022).height;
+        return new Tunnel(input, 100).AddRocks(2022).Height;
     }
 
     public object PartTwo(string input) {
-        return new Tunnel(input).AddRocks(1000000000000).height;
+        return new Tunnel(input, 100).AddRocks(1000000000000).Height;
     }
 
     class Tunnel {
-        // preserve just the top of the whole cave this is a practical 
-        // constant, there is NO THEORY BEHIND it.
-        const int linesToStore = 100;
-        List<string> lines;
+        int linesToStore;
+
+        List<string> lines = new List<string>();
         long linesNotStored;
 
-        public long height => lines.Count + linesNotStored - 1;
+        public long Height => lines.Count + linesNotStored;
 
-        IEnumerator<string[]> rocks;
-        IEnumerator<char> jets;
+        string[][] rocks;
+        string jets;
+        ModCounter irock;
+        ModCounter ijet;
 
-        public Tunnel(string jets) {
-            var rocks = new string[][]{
+        // Simulation runs so that only the top N lines are kept in the tunnel. 
+        // This is a practical constant, there is NO THEORY BEHIND it.
+        public Tunnel(string jets, int linesToStore) {
+            this.linesToStore = linesToStore;
+            rocks = new string[][]{
                 new []{"####"},
                 new []{" # ", "###", " # "},
                 new []{"  #", "  #", "###"},
                 new []{"#", "#", "#", "#"},
                 new []{"##", "##"}
             };
+            this.irock = new ModCounter(0, rocks.Length);
 
-            this.rocks = Loop(rocks).GetEnumerator();
-            this.jets = Loop(jets.Trim()).GetEnumerator();
-            this.lines = new List<string>() { "+-------+" };
+            this.jets = jets;
+            this.ijet = new ModCounter(0, jets.Length);
         }
 
-        public Tunnel AddRocks(long rocks) {
+        public Tunnel AddRocks(long rocksToAdd) {
             // We are adding rocks one by one until we find a recurring pattern.
 
             // Then we can jump forward full periods with just increasing the height 
@@ -50,40 +54,39 @@ class Solution : Solver {
 
             // Then we just add the remaining rocks. 
 
-            var seen = new Dictionary<string, (long rocks, long height)>();
-            while (rocks > 0) {
+            var seen = new Dictionary<string, (long rocksToAdd, long height)>();
+            while (rocksToAdd > 0) {
                 var hash = string.Join("\n", lines);
                 if (seen.TryGetValue(hash, out var cache)) {
                     // we have seen this pattern.
                     // compute length of the period, and how much does it
                     // add to the height of the cave:
-                    var heightOfPeriod = this.height - cache.height;
-                    var periodLength = cache.rocks - rocks;
+                    var heightOfPeriod = this.Height - cache.height;
+                    var periodLength = cache.rocksToAdd - rocksToAdd;
 
                     // advance forwad as much as possible
-                    linesNotStored += (rocks / periodLength) * heightOfPeriod;
-                    rocks = rocks % periodLength;
+                    linesNotStored += (rocksToAdd / periodLength) * heightOfPeriod;
+                    rocksToAdd = rocksToAdd % periodLength;
                     break;
                 } else {
-                    seen[hash] = (rocks, this.height);
+                    seen[hash] = (rocksToAdd, this.Height);
                     this.AddRock();
-                    rocks--;
+                    rocksToAdd--;
                 }
             }
 
-            while (rocks > 0) {
+            while (rocksToAdd > 0) {
                 this.AddRock();
-                rocks--;
+                rocksToAdd--;
             }
             return this;
         }
 
         public Tunnel AddRock() {
             // Adds one rock to the cave
-            rocks.MoveNext();
-            var rock = rocks.Current;
+            var rock = rocks[(int)irock++];
 
-            // make room: 3 lines + the height of the rock
+            // make room of 3 lines + the height of the rock
             for (var i = 0; i < rock.Length + 3; i++) {
                 lines.Insert(0, "|       |");
             }
@@ -91,10 +94,10 @@ class Solution : Solver {
             // simulate falling
             var (rockX, rockY) = (3, 0);
             while (true) {
-                jets.MoveNext();
-                if (jets.Current == '>' && !Hit(rock, rockX + 1, rockY)) {
+                var jet = jets[(int)ijet++];
+                if (jet == '>' && !Hit(rock, rockX + 1, rockY)) {
                     rockX++;
-                } else if (jets.Current == '<' && !Hit(rock, rockX - 1, rockY)) {
+                } else if (jet == '<' && !Hit(rock, rockX - 1, rockY)) {
                     rockX--;
                 }
                 if (Hit(rock, rockX, rockY + 1)) {
@@ -107,13 +110,16 @@ class Solution : Solver {
             return this;
         }
 
-        bool Hit(string[] rock, int x, int y) {
-            // tells if a rock hits the walls of the cave or some other rock
+        bool Hit(string[] rock, int rockX, int rockY) {
+            // tells if a rock can be placed in the given location or hits something
+            if (rock.Length + rockY > lines.Count) {
+                return true;
+            }
 
             var (crow, ccol) = (rock.Length, rock[0].Length);
             for (var irow = 0; irow < crow; irow++) {
                 for (var icol = 0; icol < ccol; icol++) {
-                    if (rock[irow][icol] == '#' && lines[irow + y][icol + x] != ' ') {
+                    if (rock[irow][icol] == '#' && lines[irow + rockY][icol + rockX] != ' ') {
                         return true;
                     }
                 }
@@ -146,19 +152,20 @@ class Solution : Solver {
 
             // keep the tail
             if (lines.Count > linesToStore) {
-                var r = lines.Count - linesToStore - 1;
+                var r = lines.Count - linesToStore;
                 lines.RemoveRange(linesToStore, r);
                 linesNotStored += r;
             }
         }
 
-        IEnumerable<T> Loop<T>(IEnumerable<T> items) {
-            while (true) {
-                foreach (var item in items) {
-                    yield return item;
-                }
-            }
+        char Get(IList<IList<char>> c, int x, int y){
+            return ' ';
         }
+    }
 
+    record struct ModCounter(int index, int mod) {
+        public static explicit operator int(ModCounter c) => c.index;
+        public static ModCounter operator ++(ModCounter c) => 
+            c with {index = c.index == c.mod - 1 ? 0 : c.index + 1};
     }
 }
