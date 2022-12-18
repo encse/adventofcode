@@ -20,9 +20,9 @@ class Solution : Solver {
         var waterLocations = FillWithWater(bounds.min, bounds, lavaLocations);
         return lavaLocations.SelectMany(Neighbours).Count(p => waterLocations.Contains(p));
     }
-
+    
     // fills a region with water starting from the given point and avoiding lavalLocations
-    // standard flood fill algorith,
+    // standard flood fill algorithm
     HashSet<Point> FillWithWater(Point from, Bounds bounds, HashSet<Point> lavaLocations) {
         var result = new HashSet<Point>();
         var q = new Queue<Point>();
