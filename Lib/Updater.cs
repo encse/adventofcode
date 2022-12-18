@@ -43,6 +43,10 @@ class Updater {
         var years = Assembly.GetEntryAssembly().GetTypes()
             .Where(t => t.GetTypeInfo().IsClass && typeof(Solver).IsAssignableFrom(t))
             .Select(tsolver => SolverExtensions.Year(tsolver));
+        
+        if (years.Count() == 0) {
+            years = new int[] { year };
+        }
 
         UpdateProjectReadme(years.Min(), years.Max());
         UpdateReadmeForYear(calendar);
