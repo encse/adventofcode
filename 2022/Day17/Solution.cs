@@ -18,7 +18,7 @@ class Solution : Solver {
     class Tunnel {
         int linesToStore;
 
-        List<string> lines = new List<string>();
+        List<char[]> lines = new List<char[]>();
         long linesNotStored;
 
         public long Height => lines.Count + linesNotStored;
@@ -56,15 +56,11 @@ class Solution : Solver {
 
             var seen = new Dictionary<string, (long rocksToAdd, long height)>();
             while (rocksToAdd > 0) {
-                var hash = string.Join("\n", lines);
+                var hash = string.Join("", lines.SelectMany(ch => ch));
                 if (seen.TryGetValue(hash, out var cache)) {
-                    // we have seen this pattern.
-                    // compute length of the period, and how much does it
-                    // add to the height of the cave:
+                    // we have seen this pattern, advance forwad as much as possible
                     var heightOfPeriod = this.Height - cache.height;
                     var periodLength = cache.rocksToAdd - rocksToAdd;
-
-                    // advance forwad as much as possible
                     linesNotStored += (rocksToAdd / periodLength) * heightOfPeriod;
                     rocksToAdd = rocksToAdd % periodLength;
                     break;
@@ -82,90 +78,86 @@ class Solution : Solver {
             return this;
         }
 
+        // Adds one rock to the cave
         public Tunnel AddRock() {
-            // Adds one rock to the cave
             var rock = rocks[(int)irock++];
 
             // make room of 3 lines + the height of the rock
             for (var i = 0; i < rock.Length + 3; i++) {
-                lines.Insert(0, "|       |");
+                lines.Insert(0, "|       |".ToArray());
             }
 
             // simulate falling
-            var (rockX, rockY) = (3, 0);
+            var pos = new Pos(0, 3);
             while (true) {
                 var jet = jets[(int)ijet++];
-                if (jet == '>' && !Hit(rock, rockX + 1, rockY)) {
-                    rockX++;
-                } else if (jet == '<' && !Hit(rock, rockX - 1, rockY)) {
-                    rockX--;
+                if (jet == '>' && !Hit(rock, pos.Right)) {
+                    pos = pos.Right;
+                } else if (jet == '<' && !Hit(rock, pos.Left)) {
+                    pos = pos.Left;
                 }
-                if (Hit(rock, rockX, rockY + 1)) {
+                if (Hit(rock, pos.Below)) {
                     break;
                 }
-                rockY++;
+                pos = pos.Below;
             }
 
-            Draw(rock, rockX, rockY);
+            Draw(rock, pos);
             return this;
         }
 
-        bool Hit(string[] rock, int rockX, int rockY) {
-            // tells if a rock can be placed in the given location or hits something
-            if (rock.Length + rockY > lines.Count) {
-                return true;
-            }
+        // tells if a rock can be placed in the given location or hits something
+        bool Hit(string[] rock, Pos pos) =>
+            Area(rock).Any(pt =>
+                Get(rock, pt) == '#' &&
+                Get(lines, pt + pos) != ' '
+            );
 
-            var (crow, ccol) = (rock.Length, rock[0].Length);
-            for (var irow = 0; irow < crow; irow++) {
-                for (var icol = 0; icol < ccol; icol++) {
-                    if (rock[irow][icol] == '#' && lines[irow + rockY][icol + rockX] != ' ') {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-
-        void Draw(string[] rock, int rockX, int rockY) {
+        void Draw(string[] rock, Pos pos) {
             // draws a rock pattern into the cave at the given x,y coordinates,
-
-            var (crow, ccol) = (rock.Length, rock[0].Length);
-            for (var irow = 0; irow < crow; irow++) {
-                var chars = lines[irow + rockY].ToArray();
-                for (var icol = 0; icol < ccol; icol++) {
-
-                    if (rock[irow][icol] == '#') {
-                        if (chars[icol + rockX] != ' ') {
-                            throw new Exception();
-                        }
-                        chars[icol + rockX] = '#';
-                    }
+            foreach (var pt in Area(rock)) {
+                if (Get(rock, pt) == '#') {
+                    Set(lines, pt + pos, '#');
                 }
-                lines[rockY + irow] = string.Join("", chars);
             }
-
+           
             // remove empty lines from the top
             while (!lines[0].Contains('#')) {
                 lines.RemoveAt(0);
             }
 
             // keep the tail
-            if (lines.Count > linesToStore) {
-                var r = lines.Count - linesToStore;
-                lines.RemoveRange(linesToStore, r);
-                linesNotStored += r;
+            while (lines.Count > linesToStore) {
+                lines.RemoveAt(lines.Count - 1);
+                linesNotStored ++;
             }
         }
+    }
 
-        char Get(IList<IList<char>> c, int x, int y){
-            return ' ';
-        }
+    static IEnumerable<Pos> Area(string[] mat) =>
+        from irow in Enumerable.Range(0, mat.Length)
+        from icol in Enumerable.Range(0, mat[0].Length)
+        select new Pos(irow, icol);
+
+    static char Get(IEnumerable<IEnumerable<char>> mat, Pos pos) {
+        return (mat.ElementAtOrDefault(pos.irow) ?? "#########").ElementAt(pos.icol);
+    }
+
+    static char Set(IList<char[]> mat, Pos pos, char ch) {
+        return mat[pos.irow][pos.icol] = ch;
+    }
+
+    record struct Pos(int irow, int icol) {
+        public Pos Left => new Pos(irow, icol - 1);
+        public Pos Right => new Pos(irow, icol + 1);
+        public Pos Below => new Pos(irow + 1, icol);
+        public static Pos operator +(Pos posA, Pos posB) =>
+            new Pos(posA.irow + posB.irow, posA.icol + posB.icol);
     }
 
     record struct ModCounter(int index, int mod) {
         public static explicit operator int(ModCounter c) => c.index;
-        public static ModCounter operator ++(ModCounter c) => 
-            c with {index = c.index == c.mod - 1 ? 0 : c.index + 1};
+        public static ModCounter operator ++(ModCounter c) =>
+            c with { index = c.index == c.mod - 1 ? 0 : c.index + 1 };
     }
 }
