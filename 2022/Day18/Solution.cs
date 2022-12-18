@@ -1,9 +1,5 @@
-using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Text;
 
 namespace AdventOfCode.Y2022.Day18;
 
@@ -11,91 +7,75 @@ namespace AdventOfCode.Y2022.Day18;
 class Solution : Solver {
 
     record class Point(int x, int y, int z);
+    record class Bounds(Point min, Point max);
+
     public object PartOne(string input) {
-        var points = input.Split("\n").Select(line =>
-            line.Split(",").Select(int.Parse).ToArray() switch {
-                [var x, var y, var z] => new Point(x, y, z),
-                _ => throw new ArgumentException()
-            }
-        ).ToArray();
-
-        var res = 6 * points.Length;
-        foreach (var ptA in points) {
-            foreach (var ptB in points) {
-                var d = Math.Abs(ptA.x - ptB.x) + Math.Abs(ptA.y - ptB.y) + Math.Abs(ptA.z - ptB.z);
-                if (d == 1) {
-                    res--;
-                }
-            }
-        }
-
-        return res;
+        var lavaLocations = GetLavaLocations(input).ToHashSet();
+        return lavaLocations.SelectMany(Neighbours).Count(p => !lavaLocations.Contains(p));
     }
 
     public object PartTwo(string input) {
+        var lavaLocations = GetLavaLocations(input).ToHashSet();
+        var bounds = GetBounds(lavaLocations);
+        var waterLocations = FillWithWater(bounds.min, bounds, lavaLocations);
+        return lavaLocations.SelectMany(Neighbours).Count(p => waterLocations.Contains(p));
+    }
 
-        var points = input.Split("\n").Select(line =>
-            line.Split(",").Select(int.Parse).ToArray() switch {
-                [var x, var y, var z] => new Point(x, y, z),
-                _ => throw new ArgumentException()
-            }
-        ).ToHashSet();
-
-        var minX = points.Select(p => p.x).Min() - 2;
-        var maxX = points.Select(p => p.x).Max() + 2;
-
-        var minY = points.Select(p => p.y).Min() - 2;
-        var maxY = points.Select(p => p.y).Max() + 2;
-
-        var minZ = points.Select(p => p.z).Min() - 2;
-        var maxZ = points.Select(p => p.z).Max() + 2;
-
-        var boundsA = new Point(minX, minY, minZ);
-        var boundsB = new Point(maxX, maxY, maxZ);
-
+    // fills a region with water starting from the given point and avoiding lavalLocations
+    // standard flood fill algorith,
+    HashSet<Point> FillWithWater(Point from, Bounds bounds, HashSet<Point> lavaLocations) {
+        var result = new HashSet<Point>();
         var q = new Queue<Point>();
-        var seen = new HashSet<Point>();
-        q.Enqueue(boundsA);
-        seen.Add(boundsA);
 
+        result.Add(from);
+        q.Enqueue(from);
         while (q.Any()) {
             var water = q.Dequeue();
-            foreach (var direction in Directions(water)) {
-                if (!seen.Contains(direction) && Within(boundsA, boundsB, direction) && !points.Contains(direction) ) {
-                    seen.Add(direction);
-                    if (seen.Count % 100 == 0) {
-                        Console.WriteLine(seen.Count);
-                    }
-
-                    q.Enqueue(direction);
-                }
-            }
-
-        }
-
-        var res = 0;
-        foreach (var pt in points) {
-            foreach (var direction in Directions(pt)) {
-                if (seen.Contains(direction)) {
-                    res++;
+            foreach (var neighbour in Neighbours(water)) {
+                if (!result.Contains(neighbour) && 
+                    Within(bounds, neighbour) && 
+                    !lavaLocations.Contains(neighbour)
+                ) {
+                    result.Add(neighbour);
+                    q.Enqueue(neighbour);
                 }
             }
         }
-        return res;
+
+        return result;
     }
 
-    bool Within(Point boundsA, Point boundsB, Point point) {
-        return
-            boundsA.x <= point.x && point.x <= boundsB.x &&
-            boundsA.y <= point.y && point.y <= boundsB.y &&
-            boundsA.z <= point.z && point.z <= boundsB.z;
+    IEnumerable<Point> GetLavaLocations(string input) =>
+        from line in input.Split("\n")
+        let coords = line.Split(",").Select(int.Parse).ToArray()
+        select new Point(coords[0], coords[1], coords[2]);
+
+    // returns the enclosing box of a point set, the min and max values are padded by one
+    Bounds GetBounds(IEnumerable<Point> points) {
+        var minX = points.Select(p => p.x).Min() - 1;
+        var maxX = points.Select(p => p.x).Max() + 1;
+
+        var minY = points.Select(p => p.y).Min() - 1;
+        var maxY = points.Select(p => p.y).Max() + 1;
+
+        var minZ = points.Select(p => p.z).Min() - 1;
+        var maxZ = points.Select(p => p.z).Max() + 1;
+
+        return new Bounds(new Point(minX, minY, minZ), new Point(maxX, maxY, maxZ));
     }
-    IEnumerable<Point> Directions(Point point) {
-        yield return point with { x = point.x - 1 };
-        yield return point with { x = point.x + 1 };
-        yield return point with { y = point.y - 1 };
-        yield return point with { y = point.y + 1 };
-        yield return point with { z = point.z - 1 };
-        yield return point with { z = point.z + 1 };
-    }
+
+    bool Within(Bounds bounds, Point point) =>
+        bounds.min.x <= point.x && point.x <= bounds.max.x &&
+        bounds.min.y <= point.y && point.y <= bounds.max.y &&
+        bounds.min.z <= point.z && point.z <= bounds.max.z;
+
+    IEnumerable<Point> Neighbours(Point point) =>
+        new[]{
+           point with { x = point.x - 1 },
+           point with { x = point.x + 1 },
+           point with { y = point.y - 1 },
+           point with { y = point.y + 1 },
+           point with { z = point.z - 1 },
+           point with { z = point.z + 1 }
+        };
 }
