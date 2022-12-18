@@ -28,12 +28,12 @@ class Solution : Solver {
         IEnumerator<char> jets;
 
         public Tunnel(string jets) {
-            var rocks = new[]{
-                "####".Split("\n"),
-                " # \n###\n # ".Split("\n"),
-                "  #\n  #\n###".Split("\n"),
-                "#\n#\n#\n#".Split("\n"),
-                "##\n##".Split("\n")
+            var rocks = new string[][]{
+                new []{"####"},
+                new []{" # ", "###", " # "},
+                new []{"  #", "  #", "###"},
+                new []{"#", "#", "#", "#"},
+                new []{"##", "##"}
             };
 
             this.rocks = Loop(rocks).GetEnumerator();
