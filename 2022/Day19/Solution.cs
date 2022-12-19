@@ -35,62 +35,69 @@ class Solution : Solver {
         );
     }
 
-    int MaxGeodes(
-        Blueprint bluePrint,
-        State state,
-        Dictionary<State, int> cache
-    ) {
+    // Returns the maximum mineable geodes under the given state constraints,
+    // Recursion with a cache.
+    int MaxGeodes(Blueprint bluePrint, State state, Dictionary<State, int> cache) {
         if (state.remainingTime == 0) {
             return state.available.geode;
         }
 
         if (!cache.ContainsKey(state)) {
             cache[state] = (
-                from afterBuilding in BuildAll(bluePrint, state)
-                let nextState = afterBuilding with {
+                from afterFactory in NextSteps(bluePrint, state)
+                let afterMining = afterFactory with {
                     remainingTime = state.remainingTime - 1,
-                    available = afterBuilding.available + state.produced
+                    available = afterFactory.available + state.produced
                 }
-                select MaxGeodes(bluePrint, nextState, cache)
+                select MaxGeodes(bluePrint, afterMining, cache)
             ).Max();
         }
 
         return cache[state];
     }
 
-    IEnumerable<State> BuildAll(Blueprint bluePrint, State state) {
-        var current = state.available;
-        var prev = current - state.produced;
+    // Returns all possible factory steps
+    IEnumerable<State> NextSteps(Blueprint bluePrint, State state) {
+        var now = state.available;
+        var prev = now - state.produced;
 
-        if (!CanBuild(bluePrint.geode, prev) && CanBuild(bluePrint.geode, current)) {
-            yield return Build(bluePrint.geode, state);
+        // The !canBuild(X, prev) && canBuild(X, now) conditions are tricky.
+        // We consider building a miner only if we couldn't build it in the previous step
+        // otherwise we would introduce combinatorical explosion with a factor of 2 with
+        // doing nothing in this phase (yield return state) and reconsidering the building
+        // of the same miner in the next recursion step.
+
+        if (!CanBuild(bluePrint.geode, prev) && CanBuild(bluePrint.geode, now)) {
+            yield return Build(state, bluePrint.geode);
+            // Building a geode miner asap seems to be an optimal choice, no 
+            // need to try anything else.
             yield break;
         }
 
-        if (!CanBuild(bluePrint.obsidian, prev) && CanBuild(bluePrint.obsidian, current)) {
-            yield return Build(bluePrint.obsidian, state);
+        if (!CanBuild(bluePrint.obsidian, prev) && CanBuild(bluePrint.obsidian, now)) {
+            yield return Build(state, bluePrint.obsidian);
         }
-        if (!CanBuild(bluePrint.clay, prev) && CanBuild(bluePrint.clay, current)) {
-            yield return Build(bluePrint.clay, state);
+        if (!CanBuild(bluePrint.clay, prev) && CanBuild(bluePrint.clay, now)) {
+            yield return Build(state, bluePrint.clay);
         }
-        if (!CanBuild(bluePrint.ore, prev) && CanBuild(bluePrint.ore, current)) {
-            yield return Build(bluePrint.ore, state);
+        if (!CanBuild(bluePrint.ore, prev) && CanBuild(bluePrint.ore, now)) {
+            yield return Build(state, bluePrint.ore);
         }
 
         yield return state;
     }
 
-    bool CanBuild(Robot robot, Material material) => material >= robot.cost;
+    bool CanBuild(Robot robot, Material availableMaterial) => availableMaterial >= robot.cost;
 
-    State Build(Robot robot, State resources) =>
-        resources with {
-            available = resources.available - robot.cost,
-            produced = resources.produced + robot.produces
+    State Build(State state, Robot robot) =>
+        state with {
+            available = state.available - robot.cost,
+            produced = state.produced + robot.produces
         };
 
-    State Mine(State resources, Material miners) => 
-        resources with {
-            available = resources.available + miners
+    State Mine(State state, Material miners) => 
+        state with {
+            available = state.available + miners
         };
 
     IEnumerable<Blueprint> Parse(string input) {
