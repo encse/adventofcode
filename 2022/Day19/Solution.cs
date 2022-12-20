@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -9,122 +10,125 @@ class Solution : Solver {
 
     public object PartOne(string input) {
         var res = 0;
-        foreach(var blueprint in Parse(input)) {
-            res += blueprint.id *  MaxGeodes(blueprint, 24);
+        foreach (var blueprint in Parse(input).Where(bp => bp.id < 100)) {
+            var m = MaxGeodes(blueprint, 24);
+            res += blueprint.id * m;
         }
         return res;
     }
 
     public object PartTwo(string input) {
         var res = 1;
-        foreach(var blueprint in Parse(input).Where(bp => bp.id <= 3)) {
-            res *= MaxGeodes(blueprint, 32);
+        foreach (var blueprint in Parse(input).Where(bp => bp.id <= 3)) {
+            var m = MaxGeodes(blueprint, 32);
+            res *= m;
         }
         return res;
     }
 
+    // Priority queue based maximum search with LOTS OF PRUNING
     private int MaxGeodes(Blueprint blueprint, int timeLimit) {
-        return MaxGeodes(
-            blueprint, 
-            new State(
-                remainingTime: timeLimit,
-                available: new Material(ore: 0, 0, 0, 0),
-                produced: new Material(ore: 1, 0, 0, 0)
-            ),
-            new Dictionary<State, int>()
-        );
-    }
+        var q = new PriorityQueue<(State state, Robot[] ignore), int>();
+        var seen = new HashSet<State>();
 
-    // Returns the maximum mineable geodes under the given state constraints,
-    // Recursion with a cache.
-    int MaxGeodes(Blueprint bluePrint, State state, Dictionary<State, int> cache) {
-        if (state.remainingTime == 0) {
-            return state.available.geode;
-        }
+        enqueue(new State(remainingTime: timeLimit, available: Nothing, producing: Ore));
 
-        if (!cache.ContainsKey(state)) {
-            cache[state] = (
-                from afterFactory in NextSteps(bluePrint, state)
-                let afterMining = afterFactory with {
-                    remainingTime = state.remainingTime - 1,
-                    available = afterFactory.available + state.produced
+        var max = 0;
+        while (q.Count > 0) {
+            var (state, ignore) = q.Dequeue();
+
+            // Queue is ordered by potentialGeodeCount, there is
+            // no point in investigating the remaining items.
+            if (potentialGeodeCount(state) < max) {
+                break;
+            }
+
+            if (!seen.Contains(state)) {
+                seen.Add(state);
+
+                if (state.remainingTime == 0) {
+                    // time is off, just update max
+                    max = Math.Max(max, state.available.geode);
+                } else {
+
+                    // what robots can be created from our available materials?
+                    var buildableRobots = blueprint.robots
+                        .Where(robot => state.available >= robot.cost)
+                        .ToArray();
+
+                    // 1) wait until next round for potentialy more robot types
+                    enqueue(
+                        state with {
+                            remainingTime = state.remainingTime - 1,
+                            available = state.available + state.producing,
+                        },
+                        // if we have materials for some robot, there is no point
+                        // in building it only in the next round let's ignore these
+                        ignore: buildableRobots
+                    );
+
+                    // 2) or build some robots right away
+                    foreach (var robot in buildableRobots) {
+
+                        if (!ignore.Contains(robot) && worthBuilding(state, robot)) {
+                            enqueue(state with {
+                                remainingTime = state.remainingTime - 1,
+                                available = state.available + state.producing - robot.cost,
+                                producing = state.producing + robot.producing,
+                            });
+                        }
+                    }
                 }
-                select MaxGeodes(bluePrint, afterMining, cache)
-            ).Max();
+            }
         }
 
-        return cache[state];
+        return max;
+
+        // ------- 
+
+        // Upper limit for the maximum geodes we can mine starting from this state.
+        // Let's be optimistic and suppose that in each and every step we will be able to build a new geode robot...
+        int potentialGeodeCount(State state) {
+            var future = (state.producing.geode + state.producing.geode + state.remainingTime) * state.remainingTime / 2;
+            return state.available.geode + future;
+        }
+
+        // We can build just a single robot in a round. This gives as a prunning condition.
+        // Producing more material in a round that we can spend on building a new robot is worthless.
+        bool worthBuilding(State state, Robot robot) {
+            return state.producing + robot.producing <= blueprint.maxCost;
+        }
+
+        // Just add an item to the search queue, use -potentialGeodeCount as priority 
+        void enqueue(State state, Robot[] ignore = null) {
+            q.Enqueue((state, ignore ?? new Robot[0]), -potentialGeodeCount(state));
+        }
+
     }
-
-    // Returns all possible factory steps
-    IEnumerable<State> NextSteps(Blueprint bluePrint, State state) {
-        var now = state.available;
-        var prev = now - state.produced;
-
-        // The !canBuild(X, prev) && canBuild(X, now) conditions are tricky.
-        // We consider building a miner only if we couldn't build it in the previous step
-        // otherwise we would introduce combinatorical explosion with a factor of 2 with
-        // doing nothing in this phase (yield return state) and reconsidering the building
-        // of the same miner in the next recursion step.
-
-        if (!CanBuild(bluePrint.geode, prev) && CanBuild(bluePrint.geode, now)) {
-            yield return Build(state, bluePrint.geode);
-            // Building a geode miner asap seems to be an optimal choice, no 
-            // need to try anything else.
-            yield break;
-        }
-
-        if (!CanBuild(bluePrint.obsidian, prev) && CanBuild(bluePrint.obsidian, now)) {
-            yield return Build(state, bluePrint.obsidian);
-        }
-        if (!CanBuild(bluePrint.clay, prev) && CanBuild(bluePrint.clay, now)) {
-            yield return Build(state, bluePrint.clay);
-        }
-        if (!CanBuild(bluePrint.ore, prev) && CanBuild(bluePrint.ore, now)) {
-            yield return Build(state, bluePrint.ore);
-        }
-
-        yield return state;
-    }
-
-    bool CanBuild(Robot robot, Material availableMaterial) => availableMaterial >= robot.cost;
-
-    State Build(State state, Robot robot) =>
-        state with {
-            available = state.available - robot.cost,
-            produced = state.produced + robot.produces
-        };
-
-    State Mine(State state, Material miners) => 
-        state with {
-            available = state.available + miners
-        };
 
     IEnumerable<Blueprint> Parse(string input) {
         foreach (var line in input.Split("\n")) {
             var numbers = Regex.Matches(line, @"(\d+)").Select(x => int.Parse(x.Value)).ToArray();
             yield return new Blueprint(
                 id: numbers[0],
-                ore: new Robot(
-                    cost: new Material(ore: numbers[1], clay: 0, obsidian: 0, geode: 0),
-                    produces: new Material(ore: 1, clay: 0, obsidian: 0, geode: 0)
-                ),
-                clay: new Robot(
-                    cost: new Material(ore: numbers[2], clay: 0, obsidian: 0, geode: 0),
-                    produces: new Material(ore: 0, clay: 1, obsidian: 0, geode: 0)
-                ),
-                obsidian: new Robot(
-                    cost: new Material(ore: numbers[3], clay: numbers[4], obsidian: 0, geode: 0),
-                    produces: new Material(ore: 0, clay: 0, obsidian: 1, geode: 0)
-                ),
-                geode: new Robot(
-                    cost: new Material(ore: numbers[5], clay: 0, obsidian: numbers[6], geode: 0),
-                    produces: new Material(ore: 0, clay: 0, obsidian: 0, geode: 1)
-                )
+                new Robot(producing: Ore, cost: numbers[1] * Ore),
+                new Robot(producing: Clay, cost: numbers[2] * Ore),
+                new Robot(producing: Obsidian, cost: numbers[3] * Ore + numbers[4] * Clay),
+                new Robot(producing: Geode, cost: numbers[5] * Ore + numbers[6] * Obsidian)
             );
         }
     }
+
+    static Material Nothing = new Material(0, 0, 0, 0);
+    static Material Ore = new Material(1, 0, 0, 0);
+    static Material Clay = new Material(0, 1, 0, 0);
+    static Material Obsidian = new Material(0, 0, 1, 0);
+    static Material Geode = new Material(0, 0, 0, 1);
+
     record Material(int ore, int clay, int obsidian, int geode) {
+        public static Material operator *(int m, Material a) {
+            return new Material(m * a.ore, m * a.clay, m * a.obsidian, m * a.geode);
+        }
         public static Material operator +(Material a, Material b) {
             return new Material(
                 a.ore + b.ore,
@@ -160,7 +164,14 @@ class Solution : Solver {
         }
     }
 
-    record Robot(Material cost, Material produces);
-    record State(int remainingTime, Material available, Material produced);
-    record Blueprint(int id, Robot ore, Robot clay, Robot obsidian, Robot geode);
+    record Robot(Material cost, Material producing);
+    record State(int remainingTime, Material available, Material producing);
+    record Blueprint(int id, params Robot[] robots) {
+        public Material maxCost = new Material(
+            ore: robots.Select(robot => robot.cost.ore).Max(),
+            clay: robots.Select(robot => robot.cost.clay).Max(),
+            obsidian: robots.Select(robot => robot.cost.obsidian).Max(),
+            geode: int.MaxValue
+        );
+    }
 }
