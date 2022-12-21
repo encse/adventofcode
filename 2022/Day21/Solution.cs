@@ -19,8 +19,9 @@ class Solution : Solver {
         return expr.right;
     }
 
-    // one step towards making the equation to look like <variable> = <constant>
-    // it is supposed that there is only one variable occurrence in the whole expression tree.
+    // One step in rearranging the equation to <variable> = <constant> form.
+    // It is supposed that there is only one variable occurrence in the whole 
+    // expression tree.
     Eq Solve(Eq eq) =>
         eq.left switch {
             Op(Const l, "+", Expr r) => new Eq(r, new Op(eq.right, "-", l).Simplify()),
