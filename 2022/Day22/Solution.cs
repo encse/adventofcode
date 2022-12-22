@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -57,19 +56,9 @@ class Solution : Solver {
     const int left = 2;
     const int up = 3;
 
-    Dictionary<string, Coord> blockTopLeft =
-        new Dictionary<string, Coord>(){
-            {"A", new Coord(0, blockSize)},
-            {"B", new Coord(0, 2 * blockSize)},
-            {"C", new Coord(blockSize, blockSize)},
-            {"D", new Coord(2 * blockSize, 0)},
-            {"E", new Coord(2 * blockSize, blockSize)},
-            {"F", new Coord(3 * blockSize, 0)},
-        };
-
     int Solve(string input, string topology) {
         var (map, cmds) = Parse(input);
-        var state = new State(new Coord(1, 51), right);
+        var state = new State("A", new Coord(0, 0), right);
 
         foreach (var cmd in cmds) {
             switch (cmd) {
@@ -82,7 +71,8 @@ class Solution : Solver {
                 case Forward(var n):
                     for (var i = 0; i < n; i++) {
                         var stateNext = Step(topology, state);
-                        if (map[stateNext.coord.irow][stateNext.coord.icol] == '.') {
+                        var global = ToGlobal(stateNext);
+                        if (map[global.irow][global.icol] == '.') {
                             state = stateNext;
                         } else {
                             break;
@@ -92,21 +82,27 @@ class Solution : Solver {
             }
         }
 
-        return 1000 * (state.coord.irow + 1) + 4 * (state.coord.icol + 1) + state.dir;
+        return 1000 * (ToGlobal(state).irow + 1) + 4 * (ToGlobal(state).icol + 1) + state.dir;
     }
+
+    Coord ToGlobal(State state) => 
+        state.block switch {
+            "A" => state.coord + new Coord(0, blockSize),
+            "B" => state.coord + new Coord(0, 2 * blockSize),
+            "C" => state.coord + new Coord(blockSize, blockSize),
+            "D" => state.coord + new Coord(2 * blockSize, 0),
+            "E" => state.coord + new Coord(2 * blockSize, blockSize),
+            "F" => state.coord + new Coord(3 * blockSize, 0),
+            _ => throw new Exception()
+        };
 
     State Step(string topology, State state) {
 
         bool wrapsAround(Coord coord) =>
             coord.icol < 0 || coord.icol >= blockSize || coord.irow < 0 || coord.irow >= blockSize;
 
-        var srcBlock = blockTopLeft.Single(kvp => !wrapsAround(state.coord - kvp.Value)).Key;
+        var (srcBlock, coord, dir) = state;
         var dstBlock = srcBlock;
-
-        var (coord, dir) = state;
-
-        // we will work with local coordinates below
-        coord -= blockTopLeft[srcBlock];
 
         // take one step, if there is no wrap around we are all right
         coord = dir switch {
@@ -149,9 +145,7 @@ class Solution : Solver {
             }
         }
 
-        coord += blockTopLeft[dstBlock];
-
-        return new State(coord, dir);
+        return new State(dstBlock, coord, dir);
     }
 
     (string[] map, Cmd[] path) Parse(string input) {
@@ -171,7 +165,7 @@ class Solution : Solver {
         return (map, commands);
     }
 
-    record State(Coord coord, int dir);
+    record State(string block, Coord coord, int dir);
 
     record Coord(int irow, int icol) {
         public static Coord operator +(Coord a, Coord b) =>
