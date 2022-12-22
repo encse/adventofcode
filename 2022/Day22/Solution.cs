@@ -7,8 +7,7 @@ namespace AdventOfCode.Y2022.Day22;
 [ProblemName("Monkey Map")]
 class Solution : Solver {
     /*
-        The cube is unfolded like this. Each letter identifies an 50x50 side square in 
-        the input:
+        The cube is unfolded like this. Each letter identifies an 50x50 square in the input:
                  AB
                  C 
                 DE
@@ -124,13 +123,13 @@ class Solution : Solver {
             var mapping = line.Split(" -> ")[1].Split(" ");
             // mapping: B3 E0 D3 A0
 
-            var neighbor = mapping[dir];
-            // neighbor: D3
+            var neighbour = mapping[dir];
+            // neighbour: D3
 
-            dstBlock = neighbor.Substring(0, 1);
+            dstBlock = neighbour.Substring(0, 1);
             // dstBlock: D
 
-            var rotate = int.Parse(neighbor.Substring(1));
+            var rotate = int.Parse(neighbour.Substring(1));
             // rotate: 3
 
             // go back to the 0..49 range first, then rotate as much as needed
