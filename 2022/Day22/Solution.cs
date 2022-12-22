@@ -7,37 +7,6 @@ namespace AdventOfCode.Y2022.Day22;
 
 [ProblemName("Monkey Map")]
 class Solution : Solver {
-    const int blockSize = 50;
-    const int right = 0;
-    const int down = 1;
-    const int left = 2;
-    const int up = 3;
-
-    record State(Coord coord, int dir);
-
-    record Coord(int irow, int icol) {
-        public static Coord operator +(Coord a, Coord b) =>
-            new Coord(a.irow + b.irow, a.icol + b.icol);
-
-        public static Coord operator -(Coord a, Coord b) =>
-            new Coord(a.irow - b.irow, a.icol - b.icol);
-
-        public Coord Step(int dir) =>
-            dir switch {
-                left => this with { icol = icol - 1 },
-                down => this with { irow = irow + 1 },
-                right => this with { icol = icol + 1 },
-                up => this with { irow = irow - 1 },
-                _ => throw new Exception()
-            };
-
-    }
-
-    interface Cmd { }
-    record Forward(int n) : Cmd;
-    record Right() : Cmd;
-    record Left() : Cmd;
-
     /*
         The cube is unfolded like this. Each letter identifies an 50x50 side square in 
         the input:
@@ -82,7 +51,13 @@ class Solution : Solver {
         """
     );
 
-    Dictionary<string, Coord> blockTopLeft = 
+    const int blockSize = 50;
+    const int right = 0;
+    const int down = 1;
+    const int left = 2;
+    const int up = 3;
+
+    Dictionary<string, Coord> blockTopLeft =
         new Dictionary<string, Coord>(){
             {"A", new Coord(0, blockSize)},
             {"B", new Coord(0, 2 * blockSize)},
@@ -127,14 +102,21 @@ class Solution : Solver {
 
         var srcBlock = blockTopLeft.Single(kvp => !wrapsAround(state.coord - kvp.Value)).Key;
         var dstBlock = srcBlock;
-        
+
         var (coord, dir) = state;
+
         // we will work with local coordinates below
         coord -= blockTopLeft[srcBlock];
 
         // take one step, if there is no wrap around we are all right
-        coord = coord.Step(state.dir);
-        
+        coord = dir switch {
+            left => coord with { icol = coord.icol - 1 },
+            down => coord with { irow = coord.irow + 1 },
+            right => coord with { icol = coord.icol + 1 },
+            up => coord with { irow = coord.irow - 1 },
+            _ => throw new Exception()
+        };
+
         if (wrapsAround(coord)) {
             // check the topology, select the dstBlock and rotate coord and dir as much as needed
             // this is easier to follow through an example
@@ -142,13 +124,13 @@ class Solution : Solver {
 
             var line = topology.Split('\n').Single(x => x.StartsWith(srcBlock));
             // line: C -> B3 E0 D3 A0
-            
-            var mapping = line.Split(" -> ")[1].Split(" "); 
+
+            var mapping = line.Split(" -> ")[1].Split(" ");
             // mapping: B3 E0 D3 A0
 
             var neighbor = mapping[dir];
             // neighbor: D3
-            
+
             dstBlock = neighbor.Substring(0, 1);
             // dstBlock: D
 
@@ -178,14 +160,29 @@ class Solution : Solver {
         var map = blocks[0].Split("\n");
         var commands = Regex
             .Matches(blocks[1], @"(\d+)|L|R")
-            .Select<Match, Cmd>(m => 
+            .Select<Match, Cmd>(m =>
                 m.Value switch {
-                "L" => new Left(),
-                "R" => new Right(),
-                string n => new Forward(int.Parse(n)),
-            })
+                    "L" => new Left(),
+                    "R" => new Right(),
+                    string n => new Forward(int.Parse(n)),
+                })
             .ToArray();
 
         return (map, commands);
     }
+
+    record State(Coord coord, int dir);
+
+    record Coord(int irow, int icol) {
+        public static Coord operator +(Coord a, Coord b) =>
+            new Coord(a.irow + b.irow, a.icol + b.icol);
+
+        public static Coord operator -(Coord a, Coord b) =>
+            new Coord(a.irow - b.irow, a.icol - b.icol);
+    }
+
+    interface Cmd { }
+    record Forward(int n) : Cmd;
+    record Right() : Cmd;
+    record Left() : Cmd;
 }
