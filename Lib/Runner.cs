@@ -82,6 +82,10 @@ class Runner {
 
     private static string GetNormalizedInput(string file) {
         var input = File.ReadAllText(file);
+
+        // on Windows we have "\r\n", not sure if this causes more harm or not
+        input = input.Replace("\r", "");
+
         if (input.EndsWith("\n")) {
             input = input.Substring(0, input.Length - 1);
         }
