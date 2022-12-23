@@ -7,21 +7,24 @@ namespace AdventOfCode.Y2022.Day22;
 [ProblemName("Monkey Map")]
 class Solution : Solver {
     /*
-        The cube is unfolded like this. Each letter identifies an 50x50 square in the input:
+        The cube is unfolded like this. Each letter identifies an 50x50 square 
+        in the input:
                  AB
                  C 
                 DE
                 F 
-        A topology map tells us how cube sides are connected. For example in case of part 1
-        the line "A -> B0 C0 B0 E0" means that if we go to the right from A we get to B,
-        C is down, moving to the left we find B again, and moving up from A we get to E.
-        The order of directions is always right, down, left and up.
+        A topology map tells us how cube sides are connected. For example in 
+        case of part 1 the line "A -> B0 C0 B0 E0" means that if we go to the 
+        right from A we get to B, C is down, moving to the left we find B again, 
+        and moving up from A we get to E. The order of directions is always 
+        right, down, left and up.
 
-        The number next to the letter tells us how many 90 degrees we need to rotate the
-        destination square to point upwards. In case of part 1 we don't need to rotate
-        so the number is always zero. In part 2 there is "A -> B0 C0 D2 F1" which means that
-        if we are about to move up from A we get to F, but F is rotated to the right 1 
-        times, likewise D2 means that D is on the left of A and it is up side down.
+        The number next to the letter tells us how many 90 degrees we need to 
+        rotate the destination square to point upwards. In case of part 1 we 
+        don't need to rotate so the number is always zero. In part 2 there is 
+        "A -> B0 C0 D2 F1" which means that if we are about to move up from A we 
+        get to F, but F is rotated to the right once, likewise D2 means that D 
+        is on the left of A and it is up side down.
 
         This mapping was generated from a paper model.
     */
@@ -81,7 +84,9 @@ class Solution : Solver {
             }
         }
 
-        return 1000 * (ToGlobal(state).irow + 1) + 4 * (ToGlobal(state).icol + 1) + state.dir;
+        return 1000 * (ToGlobal(state).irow + 1) + 
+                  4 * (ToGlobal(state).icol + 1) + 
+                      state.dir;
     }
 
     Coord ToGlobal(State state) => 
@@ -98,7 +103,8 @@ class Solution : Solver {
     State Step(string topology, State state) {
 
         bool wrapsAround(Coord coord) =>
-            coord.icol < 0 || coord.icol >= blockSize || coord.irow < 0 || coord.irow >= blockSize;
+            coord.icol < 0 || coord.icol >= blockSize || 
+            coord.irow < 0 || coord.irow >= blockSize;
 
         var (srcBlock, coord, dir) = state;
         var dstBlock = srcBlock;
@@ -113,8 +119,8 @@ class Solution : Solver {
         };
 
         if (wrapsAround(coord)) {
-            // check the topology, select the dstBlock and rotate coord and dir as much as needed
-            // this is easier to follow through an example
+            // check the topology, select the dstBlock and rotate coord and dir 
+            // as much as needed this is easier to follow through an example
             // if srcBlock: "C", dir: 2
 
             var line = topology.Split('\n').Single(x => x.StartsWith(srcBlock));
@@ -139,7 +145,10 @@ class Solution : Solver {
             };
 
             for (var i = 0; i < rotate; i++) {
-                coord = coord with { irow = coord.icol, icol = blockSize - coord.irow - 1 };
+                coord = coord with { 
+                    irow = coord.icol, 
+                    icol = blockSize - coord.irow - 1 
+                };
                 dir = (dir + 1) % 4;
             }
         }
