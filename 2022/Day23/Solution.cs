@@ -8,6 +8,8 @@ namespace AdventOfCode.Y2022.Day23;
 [ProblemName("Unstable Diffusion")]
 class Solution : Solver {
 
+    // I used complex numbers for a change. The map is represented with a hashset of positions.
+
     public object PartOne(string input) {
         var state = Parse(input);
         for (var i = 0; i < 10; i++) {
