@@ -96,7 +96,8 @@ class Solution : Solver {
         // a new geode robot...
         int potentialGeodeCount(State state) {
             // sum of [state.producing.geode .. state.producing.geode + state.remainingTime - 1]
-            var future = (2 * state.producing.geode + state.remainingTime - 1) * state.remainingTime / 2;
+            var future = 
+                (2 * state.producing.geode + state.remainingTime - 1) * state.remainingTime / 2;
             return state.available.geode + future;
         }
 
