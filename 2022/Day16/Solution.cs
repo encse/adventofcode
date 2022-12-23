@@ -80,7 +80,8 @@ class Solution : Solver {
                     valves.Remove(valve);
                     remainingTime -= distance + 1;
 
-                    flowFromRest = Math.Max(flowFromRest, MaxFlow(cache, map, valve, valves, remainingTime));
+                    flowFromRest = Math.Max(
+                        flowFromRest, MaxFlow(cache, map, valve, valves, remainingTime));
 
                     remainingTime += distance + 1;
                     valves.Add(valve);
@@ -99,7 +100,7 @@ class Solution : Solver {
         foreach (var line in input.Split("\n")) {
             var name = Regex.Match(line, "Valve (.*) has").Groups[1].Value;
             var flow = int.Parse(Regex.Match(line, @"\d+").Groups[0].Value);
-            var tunnels = Regex.Match(line, "to valves? (.*)").Groups[1].Value.Split(", ").ToArray();
+            var tunnels = Regex.Match(line, "to valves? (.*)").Groups[1].Value.Split(", ");
             valveList.Add(new Valve(0, name, flow, tunnels));
         }
         var valves = valveList
@@ -134,7 +135,9 @@ class Solution : Solver {
                 for (var target = 0; target < n; target++) {
                     if (source != target) {
                         for (var through = 0; through < n; through++) {
-                            if (distances[source, through] == int.MaxValue || distances[through, target] == int.MaxValue) {
+                            if (distances[source, through] == int.MaxValue || 
+                                distances[through, target] == int.MaxValue
+                            ) {
                                 continue;
                             }
                             var cost = distances[source, through] + distances[through, target];

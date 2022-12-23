@@ -36,7 +36,7 @@ class Solution : Solver {
     // Parse the 4 numbers with regex from each line and return the list of pairings
     IEnumerable<Pair> Parse(string input) {
         foreach (var line in input.Split("\n")) {
-            var numbers = Regex.Matches(line, "-?[0-9]+").Select(m => int.Parse(m.Value)).ToArray();
+            var numbers = Regex.Matches(line, @"-?\d+").Select(m => int.Parse(m.Value)).ToArray();
             yield return new Pair(
                 sensor: new Pos(numbers[0], numbers[1]),
                 beacon: new Pos(numbers[2], numbers[3])
