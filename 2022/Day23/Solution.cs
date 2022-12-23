@@ -10,99 +10,79 @@ class Solution : Solver {
 
     // I used complex numbers for a change. The map is represented with a hashset of positions.
 
-    public object PartOne(string input) {
-        var state = Parse(input);
-        for (var i = 0; i < 10; i++) {
-            state = Step(state);
-        }
+    public object PartOne(string input) 
+        => Simulate(Parse(input)).Select(Area).ElementAt(9);
 
-        // smallest enclosing rectangle
-        var width = state.elves.Select(p => p.Real).Max() - 
-                    state.elves.Select(p => p.Real).Min() + 1;
+    public object PartTwo(string input) 
+        => Simulate(Parse(input)).Count();
 
-        var height = state.elves.Select(p => p.Imaginary).Max() - 
-                     state.elves.Select(p => p.Imaginary).Min() + 1;
+    IEnumerable<HashSet<Complex>> Simulate(HashSet<Complex> elves) {
+        var lookAround = new Queue<Complex>(new []{ N, S, W, E });
 
-        return width * height - state.elves.Count;
-    }
+        for (var fixpoint = false; !fixpoint; lookAround.Enqueue(lookAround.Dequeue())) {
+           
+            // 1) collect proposals; for each position (key) compute the list of the elves 
+            //    who want to step there
+            var proposals = new Dictionary<Complex, List<Complex>>();
 
-    public object PartTwo(string input) {
-        // interate until fixpoint is reached
-        var steps = 0;
+            foreach (var elf in elves) {
+                var lonely = Directions.All(dir => !elves.Contains(elf + dir));
+                if (lonely) {
+                    continue;
+                }
 
-        var state = Parse(input);
-        while (!state.fixpoint) {
-            state = Step(state);
-            steps++;
-        }
-
-        return steps;
-    }
-
-    State Step(State state) {
-
-        bool occupied(Complex pos) => state.elves.Contains(pos);
-        bool lonely(Complex pos) => directions.All(dir => !occupied(pos + dir));
-
-        // elf proposes a postion if nobody is nearby in that direction
-        bool proposes(Complex elf, Complex dir) => ExtendDir(dir).All(d => !occupied(elf + d));
-
-        // for each position (key) it has a list of the elves who wants to step there
-        var proposals = new Dictionary<Complex, List<Complex>>();
-
-        foreach (var elf in state.elves) {
-            if (lonely(elf)) {
-                continue;
-            }
-
-            foreach (var dir in state.directions) {
-                if (proposes(elf, dir)) {
-                    var pos = elf + dir;
-                    if (!proposals.ContainsKey(pos)) {
-                        proposals[pos] = new List<Complex>();
+                foreach (var dir in lookAround) {
+                    
+                    // elf proposes a postion if nobody stands in that direction
+                    var proposes = ExtendDir(dir).All(d => !elves.Contains(elf + d));
+                    if (proposes) {
+                        var pos = elf + dir;
+                        if (!proposals.ContainsKey(pos)) {
+                            proposals[pos] = new List<Complex>();
+                        }
+                        proposals[pos].Add(elf);
+                        break;
                     }
-                    proposals[pos].Add(elf);
-                    break;
                 }
             }
-        }
 
-        // move elves, compute fixpoint flag
-        var fixpoint = true;
-        foreach (var p in proposals) {
-            var (to, from) = p;
-            if (from.Count == 1) {
-                state.elves.Remove(from.Single());
-                state.elves.Add(to);
-                fixpoint = false;
+            // 2) move elves, compute fixpoint flag
+            fixpoint = true;
+            foreach (var p in proposals) {
+                var (to, from) = p;
+                if (from.Count == 1) {
+                    elves.Remove(from.Single());
+                    elves.Add(to);
+                    fixpoint = false;
+                }
             }
-        }
 
-        return new State(
-            state.elves,
-            state.directions.Skip(1).Concat(state.directions.Take(1)).ToList(),
-            fixpoint
-        );
+            yield return elves;
+        }
     }
 
-    State Parse(string input) {
-        var lines = input.Split("\n");
+    double Area(HashSet<Complex> elves) {
+        // smallest enclosing rectangle
+        var width = elves.Select(p => p.Real).Max() - 
+                    elves.Select(p => p.Real).Min() + 1;
 
-        var elves = (
+        var height = elves.Select(p => p.Imaginary).Max() - 
+                     elves.Select(p => p.Imaginary).Min() + 1;
+
+        return width * height - elves.Count;
+    }
+     
+    HashSet<Complex> Parse(string input) {
+        var lines = input.Split("\n");
+        return (
             from irow in Enumerable.Range(0, lines.Length)
             from icol in Enumerable.Range(0, lines[0].Length)
             where lines[irow][icol] == '#'
             select new Complex(icol, irow)
         ).ToHashSet();
-
-        var directions = new List<Complex>() { N, S, W, E };
-
-        return new State(elves, directions, fixpoint: false);
     }
 
     ///  -------
-
-    record State(HashSet<Complex> elves, List<Complex> directions, bool fixpoint);
 
     static Complex N = new Complex(0, -1);
     static Complex E = new Complex(1, 0);
@@ -113,7 +93,7 @@ class Solution : Solver {
     static Complex SE = S + E;
     static Complex SW = S + W;
 
-    static Complex[] directions = new[] { NW, N, NE, E, SE, S, SW, W };
+    static Complex[] Directions = new[] { NW, N, NE, E, SE, S, SW, W };
 
     // Extends an ordinal position with its intercardinal neighbours
     Complex[] ExtendDir(Complex dir) =>
