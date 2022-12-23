@@ -17,11 +17,13 @@ class Solution : Solver {
         }
 
         // smallest enclosing rectangle
-        var w = state.elves.MaxBy(p => p.Real).Real - state.elves.MinBy(p => p.Real).Real + 1;
-        var h = state.elves.MaxBy(p => p.Imaginary).Imaginary - state.elves.MinBy(p => p.Imaginary).Imaginary + 1;
+        var width = state.elves.Select(p => p.Real).Max() - 
+                    state.elves.Select(p => p.Real).Min() + 1;
 
-        // return area - elf count
-        return w * h - state.elves.Count;
+        var height = state.elves.Select(p => p.Imaginary).Max() - 
+                     state.elves.Select(p => p.Imaginary).Min() + 1;
+
+        return width * height - state.elves.Count;
     }
 
     public object PartTwo(string input) {
