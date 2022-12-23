@@ -28,14 +28,19 @@ class Solution : Solver {
 
     // Priority queue based maximum search with LOTS OF PRUNING
     private int MaxGeodes(Blueprint blueprint, int timeLimit) {
-        var q = new PriorityQueue<(State state, Robot[] ignore), int>();
+        var q = new PriorityQueue<State, int>();
         var seen = new HashSet<State>();
 
-        enqueue(new State(remainingTime: timeLimit, available: Nothing, producing: Ore));
+        enqueue(new State(
+            remainingTime: timeLimit, 
+            available: Nothing, 
+            producing: Ore, 
+            dontBuild: 0
+        ));
 
         var max = 0;
         while (q.Count > 0) {
-            var (state, ignore) = q.Dequeue();
+            var state = q.Dequeue();
 
             // Queue is ordered by potentialGeodeCount, there is
             // no point in investigating the remaining items.
@@ -50,34 +55,34 @@ class Solution : Solver {
                     // time is off, just update max
                     max = Math.Max(max, state.available.geode);
                 } else {
-
-                    // what robots can be created from our available materials?
+                    // What robots can be created from the available materials?
                     var buildableRobots = blueprint.robots
                         .Where(robot => state.available >= robot.cost)
                         .ToArray();
 
-                    // 1) wait until next round for potentialy more robot types
-                    enqueue(
-                        state with {
-                            remainingTime = state.remainingTime - 1,
-                            available = state.available + state.producing,
-                        },
-                        // if we have materials for some robot, there is no point
-                        // in building it only in the next round let's ignore these
-                        ignore: buildableRobots
-                    );
-
-                    // 2) or build some robots right away
+                    // 1) build one of them right away
                     foreach (var robot in buildableRobots) {
-
-                        if (!ignore.Contains(robot) && worthBuilding(state, robot)) {
+                        if (worthBuilding(state, robot)) {
                             enqueue(state with {
                                 remainingTime = state.remainingTime - 1,
                                 available = state.available + state.producing - robot.cost,
                                 producing = state.producing + robot.producing,
+                                dontBuild = 0
                             });
                         }
                     }
+
+                    // 2) or wait until next round for more robot types. Don't postpone
+                    //    building of robots which are already available. This is a very
+                    //    very important prunning step. It's about 25 times faster if we 
+                    //    do it this way.
+                    enqueue(
+                        state with {
+                            remainingTime = state.remainingTime - 1,
+                            available = state.available + state.producing,
+                            dontBuild = buildableRobots.Select(robot => robot.id).Sum(),
+                        }
+                    );
                 }
             }
         }
@@ -86,24 +91,32 @@ class Solution : Solver {
 
         // ------- 
 
-        // Upper limit for the maximum geodes we can mine starting from this state.
-        // Let's be optimistic and suppose that in each and every step we will be able to build a new geode robot...
+        // Upper limit for the maximum geodes we reach when starting from this state. 
+        // Let's be optimistic and suppose that in each step we will be able to build 
+        // a new geode robot...
         int potentialGeodeCount(State state) {
-            var future = (state.producing.geode + state.producing.geode + state.remainingTime) * state.remainingTime / 2;
+            // sum of [state.producing.geode .. state.producing.geode + state.remainingTime - 1]
+            var future = (2 * state.producing.geode + state.remainingTime - 1) * state.remainingTime / 2;
             return state.available.geode + future;
         }
 
-        // We can build just a single robot in a round. This gives as a prunning condition.
-        // Producing more material in a round that we can spend on building a new robot is worthless.
         bool worthBuilding(State state, Robot robot) {
+            // We can explicitly ignore building some robots. 
+            // Robot ids are powers of 2 used as flags in the dontBuild integer.
+            if ((state.dontBuild & robot.id) != 0) {
+                return false;
+            }
+
+            // Our factory can build just a single robot in a round. This gives as 
+            // a prunning condition. Producing more material in a round that we can 
+            // spend on building a new robot is worthless.
             return state.producing + robot.producing <= blueprint.maxCost;
         }
 
         // Just add an item to the search queue, use -potentialGeodeCount as priority 
-        void enqueue(State state, Robot[] ignore = null) {
-            q.Enqueue((state, ignore ?? new Robot[0]), -potentialGeodeCount(state));
+        void enqueue(State state) {
+            q.Enqueue(state, -potentialGeodeCount(state));
         }
-
     }
 
     IEnumerable<Blueprint> Parse(string input) {
@@ -111,10 +124,10 @@ class Solution : Solver {
             var numbers = Regex.Matches(line, @"(\d+)").Select(x => int.Parse(x.Value)).ToArray();
             yield return new Blueprint(
                 id: numbers[0],
-                new Robot(producing: Ore, cost: numbers[1] * Ore),
-                new Robot(producing: Clay, cost: numbers[2] * Ore),
-                new Robot(producing: Obsidian, cost: numbers[3] * Ore + numbers[4] * Clay),
-                new Robot(producing: Geode, cost: numbers[5] * Ore + numbers[6] * Obsidian)
+                new Robot(id: 1, producing: Ore, cost: numbers[1] * Ore),
+                new Robot(id: 2, producing: Clay, cost: numbers[2] * Ore),
+                new Robot(id: 4, producing: Obsidian, cost: numbers[3] * Ore + numbers[4] * Clay),
+                new Robot(id: 8, producing: Geode, cost: numbers[5] * Ore + numbers[6] * Obsidian)
             );
         }
     }
@@ -164,8 +177,8 @@ class Solution : Solver {
         }
     }
 
-    record Robot(Material cost, Material producing);
-    record State(int remainingTime, Material available, Material producing);
+    record Robot(int id, Material cost, Material producing);
+    record State(int remainingTime, Material available, Material producing, int dontBuild);
     record Blueprint(int id, params Robot[] robots) {
         public Material maxCost = new Material(
             ore: robots.Select(robot => robot.cost.ore).Max(),
