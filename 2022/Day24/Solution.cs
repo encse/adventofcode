@@ -125,7 +125,8 @@ class Solution : Solver {
         return result;
     }
 
-
+    // Updates the input map with different blizzard postions. The positions
+    // are just are marked with a 'B', their moving direction is not kept.
     string[] MarkBlizzards(string input, IEnumerable<Blizzard> blizzards) {
         var map = input
             .Replace(">", ".")
@@ -147,6 +148,8 @@ class Solution : Solver {
 
     record Pos(int irow, int icol);
 
+    // Represents one blizzard that can move in a certain direction 
+    // looping around the map as per task description.
     record Blizzard(Pos pos, Pos dir, int crow, int ccol) {
         public Blizzard Step() {
             var irow = pos.irow + dir.irow;
@@ -167,7 +170,7 @@ class Solution : Solver {
         }
     }
 
-    // time indexable list of maps
+    // Time indexable list of maps
     record Maps(string[][] maps) {
         public int crow => maps[0].Length;
         public int ccol => maps[0][0].Length;
