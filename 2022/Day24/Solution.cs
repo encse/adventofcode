@@ -117,7 +117,8 @@ class Solution : Solver {
                     ch == 'v' ? new Pos(1, 0) :
                                 new Pos(0, 0);
                 if (dir != new Pos(0, 0)) {
-                    result.Add(new Blizzard(new Pos(irow, icol), dir, crow, ccol));
+                    result.Add(
+                        new Blizzard(new Pos(irow, icol), dir, crow, ccol));
                 }
             }
         }
