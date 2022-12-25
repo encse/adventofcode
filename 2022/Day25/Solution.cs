@@ -1,4 +1,5 @@
 using System.Linq;
+using System;
 
 namespace AdventOfCode.Y2022.Day25;
 
@@ -13,9 +14,9 @@ class Solution : Solver {
                 .Sum()
         );
     
+    // This is just string to number conversion in base 5
+    // with the two special digits that worth -2 and -1.
     long SnafuToLong(string snafu) {
-        // This is just string to number conversion in base 5
-        // with the two special digits that worth -2 and -1.
         long res = 0L;
         foreach (var digit in snafu) {
             res = res * 5;
@@ -30,11 +31,11 @@ class Solution : Solver {
         return res;
     }
 
+    // Snafu numbers have digits -2, -1, 0, 1 and 2, so this is almost 
+    // standard base 5 conversion, but when dealing with digits 3 and 4 we 
+    // need to increment the higher decimal place so that we have
+    // something to subtract 2 and 1 from.
     string LongToSnafu(long d) {
-        // Almost standard base conversion, but when dealing with digits 3
-        // and 4 we need to increment the higher decimal place so that we have
-        // something to subtract 2 and 1 from.
-
         var res = "";
         while (d > 0) {
             switch (d % 5) {
