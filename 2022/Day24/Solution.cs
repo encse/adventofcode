@@ -48,10 +48,10 @@ class Solution : Solver {
                 return pos;
             }
 
-            foreach (var stateNeighbour in NextPositions(pos, maps)) {
-                if (!seen.Contains(stateNeighbour)) {
-                    seen.Add(stateNeighbour);
-                    q.Enqueue(stateNeighbour, f(stateNeighbour));
+            foreach (var nextPos in NextPositions(pos, maps)) {
+                if (!seen.Contains(nextPos)) {
+                    seen.Add(nextPos);
+                    q.Enqueue(nextPos, f(nextPos));
                 }
             }
         }
