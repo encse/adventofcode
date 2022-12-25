@@ -7,47 +7,48 @@ namespace AdventOfCode.Y2022.Day24;
 class Solution : Solver {
 
     // We do a standard A* algorithm, the only trick is that
-    // the 'map' always changes as blizzards move, I used a Maps
-    // class that can be queried with time + irow + icol.
+    // the 'map' always changes as blizzards move, so our position
+    // is now a space time coordinate. 
+    // I used an efficent Maps class that can be queried with these.
+
+    record Pos(int time, int irow, int icol);
 
     public object PartOne(string input) {
         var (entry, exit, maps) = Parse(input);
-        var state = new SearchState(0, entry);
-        return WalkTo(state, exit, maps).time;
+        return WalkTo(entry, exit, maps).time;
     }
 
     public object PartTwo(string input) {
         var (entry, exit, maps) = Parse(input);
-        var state = new SearchState(0, entry);
-        state = WalkTo(state, exit, maps);
-        state = WalkTo(state, entry, maps);
-        state = WalkTo(state, exit, maps);
-        return state.time;
+        var pos = WalkTo(entry, exit, maps);
+        pos = WalkTo(pos, entry, maps);
+        pos = WalkTo(pos, exit, maps);
+        return pos.time;
     }
 
     // Standard A* algorithm
-    SearchState WalkTo(SearchState intialState, Pos goal, Maps maps) {
+    Pos WalkTo(Pos start, Pos goal, Maps maps) {
 
-        var q = new PriorityQueue<SearchState, int>();
+        var q = new PriorityQueue<Pos, int>();
 
-        int f(SearchState state) {
+        int f(Pos pos) {
             // estimate the remaining step count with Manhattan distance
             var dist =
-                Math.Abs(goal.irow - state.pos.irow) +
-                Math.Abs(goal.icol - state.pos.icol);
-            return state.time + dist;
+                Math.Abs(goal.irow - pos.irow) +
+                Math.Abs(goal.icol - pos.icol);
+            return pos.time + dist;
         }
 
-        q.Enqueue(intialState, f(intialState));
-        HashSet<SearchState> seen = new HashSet<SearchState>();
+        q.Enqueue(start, f(start));
+        HashSet<Pos> seen = new HashSet<Pos>();
 
         while (q.Count > 0) {
-            var state = q.Dequeue();
-            if (state.pos == goal) {
-                return state;
+            var pos = q.Dequeue();
+            if (pos.irow == goal.irow && pos.icol == goal.icol) {
+                return pos;
             }
 
-            foreach (var stateNeighbour in NextStates(state, maps)) {
+            foreach (var stateNeighbour in NextPositions(pos, maps)) {
                 if (!seen.Contains(stateNeighbour)) {
                     seen.Add(stateNeighbour);
                     q.Enqueue(stateNeighbour, f(stateNeighbour));
@@ -58,47 +59,42 @@ class Solution : Solver {
         throw new Exception();
     }
 
-    // Increase time with one, look for free neighbour positions
-    IEnumerable<SearchState> NextStates(SearchState state, Maps maps) {
-        foreach (var pos in new Pos[]{
-            state.pos,
-            state.pos with {irow=state.pos.irow -1},
-            state.pos with {irow=state.pos.irow +1},
-            state.pos with {icol=state.pos.icol -1},
-            state.pos with {icol=state.pos.icol +1},
+    // Increase time, look for free neighbours
+    IEnumerable<Pos> NextPositions(Pos pos, Maps maps) {
+        pos = pos with {time = pos.time + 1};
+        foreach (var nextPos in new Pos[]{
+            pos,
+            pos with {irow=pos.irow -1},
+            pos with {irow=pos.irow +1},
+            pos with {icol=pos.icol -1},
+            pos with {icol=pos.icol +1},
         }) {
-            if (maps.Get(state.time + 1, pos) == '.') {
-                yield return state with {
-                    time = state.time + 1,
-                    pos = pos
-                };
+            if (maps.Get(nextPos) == '.') {
+                yield return nextPos;
             }
         }
     }
 
     (Pos entry, Pos exit, Maps maps) Parse(string input) {
         var maps = new Maps(input);
-        var entry = new Pos(0, 1);
-        var exit = new Pos(maps.crow - 1, maps.ccol - 2);
+        var entry = new Pos(0, 0, 1);
+        var exit = new Pos(int.MaxValue, maps.crow - 1, maps.ccol - 2);
         return (entry, exit, maps);
     }
 
-    record SearchState(int time, Pos pos);
-    record Pos(int irow, int icol);
-
-    // Time indexable list of maps
+    // Space-time indexable map
     class Maps {
-        private string[] lines;
+        private string[] map;
         public readonly int crow;
         public readonly int ccol;
 
         public Maps(string input) {
-            lines = input.Split("\n");
-            this.crow = lines.Length;
-            this.ccol = lines[0].Length;
+            map = input.Split("\n");
+            this.crow = map.Length;
+            this.ccol = map[0].Length;
         }
 
-        public char Get(int time, Pos pos) {
+        public char Get(Pos pos) {
             if (pos.irow == 0 && pos.icol == 1) {
                 return '.';
             }
@@ -106,25 +102,29 @@ class Solution : Solver {
                 return '.';
             }
 
-            if (pos.irow <= 0 || pos.irow >= crow - 1 || pos.icol <= 0 || pos.icol >= ccol - 1) {
-                return '#';
-            }
-
-            var icolLeft =  (pos.icol - 1 - time + 1000 * (ccol - 2)) % (ccol - 2) + 1;
-            var icolRight = (pos.icol - 1 + time + 1000 * (ccol - 2)) % (ccol - 2) + 1;
-            var irowUp =    (pos.irow - 1 - time + 1000 * (crow - 2)) % (crow - 2) + 1;
-            var irowDown =  (pos.irow - 1 + time + 1000 * (crow - 2)) % (crow - 2) + 1;
-
-            if (
-                lines[pos.irow][icolLeft] == '>' ||
-                lines[pos.irow][icolRight] == '<' ||
-                lines[irowUp][pos.icol] == 'v' ||
-                lines[irowDown][pos.icol] == '^'
+            if (pos.irow <= 0 || pos.irow >= crow - 1 || 
+                pos.icol <= 0 || pos.icol >= ccol - 1
             ) {
                 return '#';
-            } else {
-                return '.';
             }
+
+            // blizzards have a horizontal and a vertical loop
+            // it's easy to check the original postions with going back in time
+            // using modular arithmetic
+            var hmod = ccol - 2;
+            var vmod = crow - 2;
+
+            var icolW = (pos.icol - 1 + hmod - (pos.time % hmod)) % hmod + 1;
+            var icolE = (pos.icol - 1 + hmod + (pos.time % hmod)) % hmod + 1;
+            var icolN = (pos.irow - 1 + vmod - (pos.time % vmod)) % vmod + 1;
+            var icolS = (pos.irow - 1 + vmod + (pos.time % vmod)) % vmod + 1;
+
+            return 
+                map[pos.irow][icolW] == '>' ? '>':
+                map[pos.irow][icolE] == '<' ? '<':
+                map[icolN][pos.icol] == 'v' ? 'v':
+                map[icolS][pos.icol] == '^' ? '^':
+                                              '.';
         }
     }
 }
