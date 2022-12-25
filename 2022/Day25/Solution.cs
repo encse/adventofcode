@@ -31,19 +31,22 @@ class Solution : Solver {
     }
 
     string LongToSnafu(long d) {
-        // Almost standard base conversion, but when dealing with digits 3 and 4
-        // we need to increment the higher decimal place and subtract 2 or 1.
+        // Almost standard base conversion, but when dealing with digits 3
+        // and 4 we need to increment the higher decimal place so that we have
+        // something to subtract 2 and 1 from.
+
         var res = "";
         while (d > 0) {
-            var digit = d % 5;
-            d /= 5;
-            switch (digit) {
+            switch (d % 5) {
                 case 0: res = '0' + res; break;
                 case 1: res = '1' + res; break;
                 case 2: res = '2' + res; break;
-                case 3: res = '=' + res; d++; break; 
-                case 4: res = '-' + res; d++; break;
+                // add 5 and emit -2 because 3 = 5 -2
+                case 3: d+=5; res = '=' + res; break; 
+                // add 5 and emit -1 because 4 = 5 -1
+                case 4: d+=5; res = '-' + res; break;
             }
+            d /= 5;
         }
         return res;
     }
