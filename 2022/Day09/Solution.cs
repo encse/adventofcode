@@ -10,6 +10,8 @@ class Solution : Solver {
     public object PartOne(string input) => Tails(input, 2).ToHashSet().Count;
     public object PartTwo(string input) => Tails(input, 10).ToHashSet().Count;
 
+    // Moves a rope with the given length according to the input and
+    // returns the position of its tail in each step.
     private IEnumerable<Knot> Tails(string input, int ropeLength) {
         var rope = Enumerable.Repeat(new Knot(0, 0), ropeLength).ToArray();
         yield return rope.Last();
