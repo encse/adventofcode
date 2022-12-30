@@ -112,45 +112,31 @@ class Solution : Solver {
     }
 
     int[,] ComputeDistances(Valve[] valves) {
-        // Bellman-Ford style distance calculation for every pair of valves
-        var distances = new int[valves.Length, valves.Length];
-        for (var i = 0; i < valves.Length; i++) {
-            for (var j = 0; j < valves.Length; j++) {
-                distances[i, j] = int.MaxValue;
-            }
-        }
-        foreach (var valve in valves) {
-            foreach (var target in valve.tunnels) {
-                var targetNode = valves.Single(x => x.name == target);
-                distances[valve.id, targetNode.id] = 1;
-                distances[targetNode.id, valve.id] = 1;
+        // Floyd-Warshall style distance calculation for every pair of valves.
+        // See https://en.wikipedia.org/wiki/Floyd%E2%80%93Warshall_algorithm
+        // The only change is that moving from i to i is not enabled.
+        
+        // This is an O(n^3) algorithm, but we are dealing with a low n.
+        var n = valves.Length;
+
+        // Just "big enough" so that infinity + infinity still fits in an int.
+        var infinity = int.MaxValue / 2; 
+
+        var dist = new int[valves.Length, valves.Length];
+        for (var i = 0; i < n; i++) {
+            for (var j = 0; j < n; j++) {
+                var neighbours = valves[i].tunnels.Contains(valves[j].name);
+                dist[i, j] = neighbours ? 1 : infinity;
             }
         }
 
-        var n = distances.GetLength(0);
-        var done = false;
-        while (!done) {
-            done = true;
-            for (var source = 0; source < n; source++) {
-                for (var target = 0; target < n; target++) {
-                    if (source != target) {
-                        for (var through = 0; through < n; through++) {
-                            if (distances[source, through] == int.MaxValue || 
-                                distances[through, target] == int.MaxValue
-                            ) {
-                                continue;
-                            }
-                            var cost = distances[source, through] + distances[through, target];
-                            if (cost < distances[source, target]) {
-                                done = false;
-                                distances[source, target] = cost;
-                                distances[target, source] = cost;
-                            }
-                        }
-                    }
+        for (var k = 0; k < n; k++) {
+            for (var i = 0; i < n; i++) {
+                for (var j = 0; j < n; j++) {
+                    dist[i, j] = Math.Min(dist[i,j], dist[i, k] + dist[k, j]);
                 }
             }
         }
-        return distances;
+        return dist;
     }
 }
