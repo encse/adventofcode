@@ -26,14 +26,16 @@ class Solution : Solver {
         CrateMover9000(move with {source=helper});
     }
 
-    string MoveCrates(string input, Action<Move> crateMover)  {
+    string MoveCrates(string input, Action<Move> crateMover) {
         var parts = input.Split("\n\n");
 
         var stackDefs = parts[0].Split("\n");
 
         // process each line by 4 character wide columns
         // last line defines the number of stacks:
-        var stacks = stackDefs.Last().Chunk(4).Select(i => new Stack<char>()).ToArray();
+        var stacks = 
+            stackDefs.Last().Chunk(4).Select(i => new Stack<char>()).ToArray();
+        
         // bottom-up: push the next element to the the correspoing stack;
         //            ' ' means no more elements.
         foreach (var line in stackDefs.Reverse().Skip(1)) {
@@ -51,10 +53,15 @@ class Solution : Solver {
             var count = int.Parse(m.Groups[1].Value);
             var from = int.Parse(m.Groups[2].Value) - 1;
             var to = int.Parse(m.Groups[3].Value) - 1;
-            crateMover(new Move(count:count, source: stacks[from], target: stacks[to]));
+            crateMover(
+                new Move(
+                    count:count, 
+                    source: stacks[from], target: stacks[to]
+                ));
         }
 
-        // assuming that the stacks are not empty at the end, concatenate the top of each:
+        // assuming that the stacks are not empty at the end, concatenate the 
+        // top of each:
         return string.Join("", stacks.Select(stack => stack.Pop()));
     }
 }
