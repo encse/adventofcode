@@ -8,13 +8,13 @@ namespace AdventOfCode.Y2022.Day07;
 class Solution : Solver {
 
     public object PartOne(string input) {
-        return GetDirectorySizes(input).Where(size => size < 100_000).Sum();
+        return GetDirectorySizes(input).Where(size => size < 100000).Sum();
     }
 
     public object PartTwo(string input) {
         var directorySizes = GetDirectorySizes(input);
-        var freeSpace = 70_000_000 - directorySizes.Max();
-        return directorySizes.Where(size => size + freeSpace >= 30_000_000).Min();
+        var freeSpace = 70000000 - directorySizes.Max();
+        return directorySizes.Where(size => size + freeSpace >= 30000000).Min();
     }
 
     private List<int> GetDirectorySizes(string input) {
