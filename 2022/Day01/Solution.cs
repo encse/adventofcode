@@ -12,6 +12,8 @@ class Solution : Solver {
     public object PartTwo(string input) =>
         GetCaloriesPerElf(input).Take(3).Sum();
 
+    // Returns the calories carried by the elves in descending
+    // order.
     private IEnumerable<int> GetCaloriesPerElf(string input) =>
         from elf in input.Split("\n\n")
         let calories = elf.Split('\n').Select(int.Parse).Sum()
