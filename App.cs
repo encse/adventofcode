@@ -50,9 +50,9 @@ var action =
             throw new AocCommuncationError("Event is not active. This option works in Dec 1-25 only)");
         }
     }) ??
-    Command(args, Args("([0-9]+)/([0-9]+)"), m => {
+    Command(args, Args("([0-9]+)/(Day)?([0-9]+)"), m => {
         var year = int.Parse(m[0]);
-        var day = int.Parse(m[1]);
+        var day = int.Parse(m[2]);
         var tsolversSelected = tsolvers.First(tsolver =>
             SolverExtensions.Year(tsolver) == year &&
             SolverExtensions.Day(tsolver) == day);
