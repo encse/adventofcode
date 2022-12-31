@@ -8,10 +8,15 @@ namespace AdventOfCode.Y2022.Day05;
 [ProblemName("Supply Stacks")]
 class Solution : Solver {
 
+    // The input is parsed into some stacks of 'crates', and move operations 
+    // that is to be applied on them. There is a crane which takes some number 
+    // of crates from one stack and puts them on the top of an other stack. 
+    // Part one and two differs in how this crane works, which is implemented 
+    // by the two 'crateMover' functions.
+    record struct Move(int count, Stack<char> source, Stack<char> target);
+
     public object PartOne(string input) => MoveCrates(input, CrateMover9000);
     public object PartTwo(string input) => MoveCrates(input, CrateMover9001);
-
-    record struct Move(int count, Stack<char> source, Stack<char> target);
 
     void CrateMover9000(Move move) {
         for (var i = 0; i < move.count; i++) {
@@ -28,27 +33,35 @@ class Solution : Solver {
 
     string MoveCrates(string input, Action<Move> crateMover) {
         var parts = input.Split("\n\n");
-
-        var stackDefs = parts[0].Split("\n");
-
-        // process each line by 4 character wide columns
-        // last line defines the number of stacks:
-        var stacks = 
-            stackDefs.Last().Chunk(4).Select(i => new Stack<char>()).ToArray();
         
-        // bottom-up: push the next element to the the correspoing stack;
-        //            ' ' means no more elements.
+        var stackDefs = parts[0].Split("\n");
+        // [D]
+        // [N] [C]
+        // [Z] [M] [P]
+        //  1   2   3 
+      
+        // last line defines the number of stacks:
+        var stacks = stackDefs
+            .Last()
+            .Chunk(4)
+            .Select(_ => new Stack<char>())
+            .ToArray();
+        
+        // Each input line is processed in 4 character long chunks in bottom up
+        // order. Push the next element into the next stack (note how the chunk 
+        // and the stack is paired up using the zip function). ' ' means no more 
+        // elements to add, just go to the next chunk.
         foreach (var line in stackDefs.Reverse().Skip(1)) {
             foreach (var (stack, item) in stacks.Zip(line.Chunk(4))) {
-                // item is ~ "[A] "
                 if (item[1] != ' ') {
                     stack.Push(item[1]);
                 }
             }
         }
 
-        // parse the 'moves' with regex, and use 'crateMover' on them:
+        // now parse the move operations and crateMover on them:
         foreach (var line in parts[1].Split("\n")) {
+            // e.g. "move 6 from 4 to 3"
             var m = Regex.Match(line, @"move (.*) from (.*) to (.*)");
             var count = int.Parse(m.Groups[1].Value);
             var from = int.Parse(m.Groups[2].Value) - 1;
@@ -60,8 +73,7 @@ class Solution : Solver {
                 ));
         }
 
-        // assuming that the stacks are not empty at the end, concatenate the 
-        // top of each:
+        // collect the top of each stack:
         return string.Join("", stacks.Select(stack => stack.Pop()));
     }
 }
