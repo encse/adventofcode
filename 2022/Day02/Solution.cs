@@ -22,28 +22,26 @@ class Solution : Solver {
         Scissors = 3,
     }
 
-    public object PartOne(string input) => 
-        Total(input, ElfParser, HumanParser1);
+    public object PartOne(string input) => Total(input, Elf, Human1);
     
-    public object PartTwo(string input) => 
-        Total(input, ElfParser, HumanParser2);
+    public object PartTwo(string input) => Total(input, Elf, Human2);
 
-    Sign ElfParser(string line) =>
+    Sign Elf(string line) =>
         line[0] == 'A' ? Sign.Rock :
         line[0] == 'B' ? Sign.Paper :
         line[0] == 'C' ? Sign.Scissors :
                          throw new ArgumentException(line);
 
-    Sign HumanParser1(string line) =>   
+    Sign Human1(string line) =>   
         line[2] == 'X' ? Sign.Rock :
         line[2] == 'Y' ? Sign.Paper :
         line[2] == 'Z' ? Sign.Scissors :
                          throw new ArgumentException(line);
 
-    Sign HumanParser2(string line) =>   
-        line[2] == 'X' ? Next(Next(ElfParser(line))): // elf wins
-        line[2] == 'Y' ? ElfParser(line) :            // draw
-        line[2] == 'Z' ? Next(ElfParser(line)) :      // you win
+    Sign Human2(string line) =>   
+        line[2] == 'X' ? Next(Next(Elf(line))): // elf wins
+        line[2] == 'Y' ? Elf(line) :            // draw
+        line[2] == 'Z' ? Next(Elf(line)) :      // you win
                          throw new ArgumentException(line);
           
     int Total(string input, Func<string, Sign> elf, Func<string, Sign> human) =>
