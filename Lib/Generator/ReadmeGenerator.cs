@@ -38,7 +38,7 @@ class ProjectReadmeGenerator {
            > 
            > ## Dependencies
 
-           > - This project is based on `.NET 7`  and `C# 11`. It should work on Windows, Linux and OS-X.
+           > - This project is based on `.NET 8`  and `C# 12`. It should work on Windows, Linux and OS-X.
            > - `AngleSharp` is used for problem download.
 
            > ## Running
