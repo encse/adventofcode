@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System.Linq;
+using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ class Solution : Solver {
         var q = new ConcurrentQueue<int>();
 
         Parallel.ForEach(
-            Enumerable.Range(0, int.MaxValue), 
+            Numbers(), 
             () => MD5.Create(), 
             (i, state, md5) => {
                 var hashBytes = md5.ComputeHash(Encoding.ASCII.GetBytes(input + i));
@@ -33,4 +34,9 @@ class Solution : Solver {
         return q.Min();
     }
 
+    IEnumerable<int> Numbers() {
+        for (int i=0; ;i++) {
+            yield return i;
+        }
+    }
 }

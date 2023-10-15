@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -8,51 +10,52 @@ using System.Threading.Tasks;
 namespace AdventOfCode.Y2016.Day05;
 
 [ProblemName("How About a Nice Game of Chess?")]
-class Solution : Solver {
+class Solution : Solver
+{
 
-    public object PartOne(string input) {
-        var st = "";
-        foreach (var hash in Hashes(input)) {
-            st += hash[2].ToString("x");
-            if (st.Length == 8) {
-                break;
-            }
-        }
-        return st;
+    public object PartOne(string input)
+    {
+       return string.Join("", Hashes(input).Select(hash => hash[5]).Take(8));
     }
 
-    public object PartTwo(string input) {
-        var chars = Enumerable.Range(0, 8).Select(_ => (char)255).ToArray();
+    public object PartTwo(string input)
+    {
+        var res = new char[8];
         var found = 0;
-        foreach (var hash in Hashes(input)) {
-            if (hash[2] < 8) {
-                var i = hash[2];
-                if (chars[i] == 255) {
-                    chars[i] = hash[3].ToString("x2")[0];
-                    found++;
-                    if (found == 8) {
-                        break;
-                    }
+        foreach (var hash in Hashes(input))
+        {
+            var idx = hash[5] - '0';
+            if (0 <= idx && idx < 8 && res[idx] == 0)
+            {
+                res[idx] = hash[6];
+                found++;
+                if (found == 8) { 
+                    break; 
                 }
-
             }
+           
         }
-        return string.Join("", chars);
+        return string.Join("", res);
     }
 
-    public IEnumerable<byte[]> Hashes(string input) {
+    public IEnumerable<string> Hashes(string input)
+    {
 
-        for (var i = 0; i < int.MaxValue; i++) {
-            var q = new ConcurrentQueue<(int i, byte[] hash)>();
+        for (var i = 0; i < int.MaxValue; i++)
+        {
+            var q = new ConcurrentQueue<(int i, string hash)>();
 
             Parallel.ForEach(
-                Enumerable.Range(i, int.MaxValue - i),
+                NumbersFrom(i),
                 () => MD5.Create(),
-                (i, state, md5) => {
+                (i, state, md5) =>
+                {
                     var hash = md5.ComputeHash(Encoding.ASCII.GetBytes(input + i));
+                    var hashString = string.Join("", hash.Select(x => x.ToString("x2")));
 
-                    if (hash[0] == 0 && hash[1] == 0 && hash[2] < 16) {
-                        q.Enqueue((i, hash));
+                    if (hashString.StartsWith("00000"))
+                    {
+                        q.Enqueue((i, hashString));
                         state.Stop();
                     }
                     return md5;
@@ -63,5 +66,10 @@ class Solution : Solver {
             i = item.i;
             yield return item.hash;
         }
+    }
+
+    IEnumerable<int> NumbersFrom(int i)
+    {
+        for (;;) yield return i++;
     }
 }
