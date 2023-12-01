@@ -18,20 +18,20 @@ class Solution : Solver {
     int GetNumber(string line, string rx) {
         var first = Regex.Match(line, rx);
         var last = Regex.Match(line, rx, RegexOptions.RightToLeft);
-
-        return ParseMatch(first) * 10 + ParseMatch(last);
+        return ParseMatch(first.Value) * 10 + ParseMatch(last.Value);
     }
 
-    int ParseMatch(Match m) => 
-        !m.Success ? 0 :
-        m.Groups[0].Value == "one" ? 1 :
-        m.Groups[0].Value == "two" ? 2 :
-        m.Groups[0].Value == "three" ? 3 :
-        m.Groups[0].Value == "four" ? 4 :
-        m.Groups[0].Value == "five" ? 5 :
-        m.Groups[0].Value == "six" ? 6 :
-        m.Groups[0].Value == "seven" ? 7 :
-        m.Groups[0].Value == "eight" ? 8 :
-        m.Groups[0].Value == "nine" ? 9 :
-        int.Parse(m.Groups[0].Value);
+    int ParseMatch(string st) => st switch {
+        "" => 0, // no match
+        "one" => 1,
+        "two" => 2,
+        "three" => 3,
+        "four" => 4,
+        "five" => 5,
+        "six" => 6,
+        "seven" => 7,
+        "eight" => 8,
+        "nine" => 9,
+        var d => int.Parse(d)
+    };
 }
