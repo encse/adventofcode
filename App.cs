@@ -5,11 +5,11 @@ using System.Text.RegularExpressions;
 
 using AdventOfCode;
 
+
 var tsolvers = Assembly.GetEntryAssembly()!.GetTypes()
     .Where(t => t.GetTypeInfo().IsClass && typeof(Solver).IsAssignableFrom(t))
     .OrderBy(t => t.FullName)
     .ToArray();
-
 var action =
     Command(args, Args("update", "([0-9]+)/([0-9]+)"), m => {
         var year = int.Parse(m[1]);
