@@ -12,14 +12,12 @@ class Solution : Solver {
     public object PartTwo(string input) => 
         Solve(input, @"\d|one|two|three|four|five|six|seven|eight|nine");
 
-    int Solve(string input, string rx) =>
-        input.Split("\n").Select(line => GetNumber(line, rx)).Sum();
-  
-    int GetNumber(string line, string rx) {
-        var first = Regex.Match(line, rx);
-        var last = Regex.Match(line, rx, RegexOptions.RightToLeft);
-        return ParseMatch(first.Value) * 10 + ParseMatch(last.Value);
-    }
+    int Solve(string input, string rx) => (
+        from line in input.Split("\n")
+        let first = Regex.Match(line, rx)
+        let last = Regex.Match(line, rx, RegexOptions.RightToLeft)
+        select ParseMatch(first.Value) * 10 + ParseMatch(last.Value)
+    ).Sum();
 
     int ParseMatch(string st) => st switch {
         "" => 0, // no match
