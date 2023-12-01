@@ -20,6 +20,7 @@ class Solution : Solver {
 
     // recursively evaluate the packet and its contents based on the type tag for part 2:
     long Evaluate(Packet packet) {
+
         var parts = packet.packets.Select(Evaluate).ToArray();
         return packet.type switch {
             0 => parts.Sum(),

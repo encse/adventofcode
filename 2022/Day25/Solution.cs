@@ -15,7 +15,7 @@ class Solution : Solver {
         );
     
     // This is just string to number conversion in base 5
-    // with the two special digits that worth -2 and -1.
+    // with the two special digits that's worth -2 and -1.
     long SnafuToLong(string snafu) {
         long res = 0L;
         foreach (var digit in snafu) {
