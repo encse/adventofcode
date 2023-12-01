@@ -24,12 +24,14 @@ class SplashScreenImpl : SplashScreen {
             Write(0xcc00, false, "                                                           \n                                        ");
             Write(0xcc00, false, "                    \n                                                            \n                  ");
             Write(0xcc00, false, "                                          \n                                                         ");
-            Write(0xcc00, false, "   \n           ");
-            Write(0x333333, false, "    ----@             *                            ");
-            Write(0x666666, false, " 2\n             * ! /^\\                                          ");
+            Write(0xcc00, false, "   \n               ");
+            Write(0x9b715b, false, "----@");
+            Write(0x333333, false, "             *                            ");
+            Write(0x666666, false, " 2\n             ");
+            Write(0xffff66, true, "* ");
+            Write(0x9b715b, false, "! /^\\                                          ");
             Write(0xcccccc, false, " 1 ");
-            Write(0xffff66, false, "*");
-            Write(0x666666, false, "*\n           \n");
+            Write(0xffff66, false, "**\n           \n");
             
         Console.ForegroundColor = color;
         Console.WriteLine();
