@@ -20,7 +20,6 @@ class Solution : Solver {
     ).Sum();
 
     int ParseMatch(string st) => st switch {
-        "" => 0, // no match
         "one" => 1,
         "two" => 2,
         "three" => 3,
