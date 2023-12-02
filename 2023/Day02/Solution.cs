@@ -30,7 +30,7 @@ class Solution : Solver {
             ParseInts(line, @"(\d+) blue").Max()
         );
 
-    // extracts integers from a string identified by the a single regex group.
+    // extracts integers from a string identified by a single regex group.
     IEnumerable<int> ParseInts(string st, string rx) =>
         from m in Regex.Matches(st, rx) 
         select int.Parse(m.Groups[1].Value);
