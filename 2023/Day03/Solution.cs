@@ -5,8 +5,8 @@ using System.Text.RegularExpressions;
 namespace AdventOfCode.Y2023.Day03;
 
 [ProblemName("Gear Ratios")]
-class Solution : Solver
-{
+class Solution : Solver {
+
     // Introduce a Parse function that returns the interesting 'blocks' of texts 
     // and positions using a regex. Then just filter and match these according
     // to the problem spec.
@@ -18,7 +18,7 @@ class Solution : Solver
 
         return (
             from n in nums
-            where symbols.Any(s => NextTo(s, n))
+            where symbols.Any(s => Adjacent(s, n))
             select n.Int
         ).Sum();
     }
@@ -30,7 +30,7 @@ class Solution : Solver
 
         return (
             from g in gears
-            let neighbours = from n in numbers where NextTo(n, g) select n.Int
+            let neighbours = from n in numbers where Adjacent(n, g) select n.Int
             where neighbours.Count() == 2
             select neighbours.First() * neighbours.Last()
         ).Sum();
@@ -38,7 +38,7 @@ class Solution : Solver
 
     // checks that the parts are touching each other, i.e. rows are within 1 
     // step and also the columns (using https://stackoverflow.com/a/3269471).
-    bool NextTo(Part p1, Part p2) => 
+    bool Adjacent(Part p1, Part p2) => 
         Math.Abs(p2.Irow - p1.Irow) <= 1 &&
         p1.Icol <= p2.Icol + p2.Text.Length &&
         p2.Icol <= p1.Icol + p1.Text.Length;
