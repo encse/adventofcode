@@ -7,6 +7,10 @@ namespace AdventOfCode.Y2023.Day03;
 [ProblemName("Gear Ratios")]
 class Solution : Solver
 {
+    // Introduce a Parse function that returns the interesting 'blocks' of texts 
+    // and positions using a regex. Then just filter and match these according
+    // to the problem spec.
+
     public object PartOne(string input) {
         var rows = input.Split("\n");
         var symbols = Parse(rows, new Regex(@"[^.0-9]"));
