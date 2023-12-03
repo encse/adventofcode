@@ -37,7 +37,7 @@ class Solution : Solver
     }
 
     // checks that the parts are touching each other, i.e. rows are within 1 
-    // step also the columns (using https://stackoverflow.com/a/3269471).
+    // step and also the columns (using https://stackoverflow.com/a/3269471).
     bool NextTo(Part p1, Part p2) => 
         Math.Abs(p2.Irow - p1.Irow) <= 1 &&
         p1.Icol <= p2.Icol + p2.Text.Length &&
