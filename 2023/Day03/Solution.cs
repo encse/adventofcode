@@ -38,7 +38,7 @@ class Solution : Solver {
 
     // checks that the parts are touching each other, i.e. rows are within 1 
     // step and also the columns (using https://stackoverflow.com/a/3269471).
-    bool Adjacent(Part p1, Part p2) => 
+    bool Adjacent(Part p1, Part p2) =>
         Math.Abs(p2.Irow - p1.Irow) <= 1 &&
         p1.Icol <= p2.Icol + p2.Text.Length &&
         p2.Icol <= p1.Icol + p1.Text.Length;

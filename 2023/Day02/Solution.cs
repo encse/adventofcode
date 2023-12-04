@@ -10,7 +10,7 @@ class Solution : Solver {
     public object PartOne(string input) => (
         from line in input.Split("\n")
         let game = ParseGame(line)
-        where game.red <= 12 &&  game.green <= 13 && game.blue <= 14
+        where game.red <= 12 && game.green <= 13 && game.blue <= 14
         select game.id
     ).Sum();
 
@@ -22,9 +22,9 @@ class Solution : Solver {
 
     // no need to keep track of the individual rounds in a game, just return 
     // the maximum of the red, green, blue boxes
-    Game ParseGame(string line) => 
+    Game ParseGame(string line) =>
         new Game(
-            ParseInts(line, @"Game (\d+)").First(), 
+            ParseInts(line, @"Game (\d+)").First(),
             ParseInts(line, @"(\d+) red").Max(),
             ParseInts(line, @"(\d+) green").Max(),
             ParseInts(line, @"(\d+) blue").Max()
@@ -32,7 +32,7 @@ class Solution : Solver {
 
     // extracts integers from a string identified by a single regex group.
     IEnumerable<int> ParseInts(string st, string rx) =>
-        from m in Regex.Matches(st, rx) 
+        from m in Regex.Matches(st, rx)
         select int.Parse(m.Groups[1].Value);
 }
 

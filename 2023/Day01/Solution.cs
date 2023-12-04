@@ -6,10 +6,10 @@ namespace AdventOfCode.Y2023.Day01;
 [ProblemName("Trebuchet?!")]
 class Solution : Solver {
 
-    public object PartOne(string input) => 
+    public object PartOne(string input) =>
         Solve(input, @"\d");
 
-    public object PartTwo(string input) => 
+    public object PartTwo(string input) =>
         Solve(input, @"\d|one|two|three|four|five|six|seven|eight|nine");
 
     int Solve(string input, string rx) => (
