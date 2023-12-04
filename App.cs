@@ -109,8 +109,8 @@ var action =
 
 try {
     action();
-} catch (AggregateException a){
-    if (a.InnerExceptions.Count == 1 && a.InnerException is AocCommuncationError){
+} catch (AggregateException a) {
+    if (a.InnerExceptions.Count == 1 && a.InnerException is AocCommuncationError) {
         Console.WriteLine(a.InnerException.Message);
     } else {
         throw;
@@ -131,8 +131,8 @@ Action Command(string[] args, string[] regexes, Func<string[], Action> parse) {
     }
     try {
 
-        return parse(matches.SelectMany(m => 
-                m.Groups.Count > 1 ? m.Groups.Cast<Group>().Skip(1).Select(g => g.Value) 
+        return parse(matches.SelectMany(m =>
+                m.Groups.Count > 1 ? m.Groups.Cast<Group>().Skip(1).Select(g => g.Value)
                                    : new[] { m.Value }
             ).ToArray());
     } catch {
