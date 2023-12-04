@@ -14,8 +14,8 @@ enum State {
 class Solution : Solver {
 
     public object PartOne(string input) =>
-        Iterate(input, 10000, 
-            (state, drow, dcol) => 
+        Iterate(input, 10000,
+            (state, drow, dcol) =>
                 state switch {
                     State.Clean => (State.Infected, -dcol, drow),
                     State.Infected => (State.Clean, dcol, -drow),
@@ -24,8 +24,8 @@ class Solution : Solver {
         );
 
     public object PartTwo(string input) =>
-        Iterate(input, 10000000, 
-            (state, drow, dcol) => 
+        Iterate(input, 10000000,
+            (state, drow, dcol) =>
                 state switch {
                     State.Clean => (State.Weakened, -dcol, drow),
                     State.Weakened => (State.Infected, drow, dcol),
@@ -48,14 +48,14 @@ class Solution : Solver {
                 }
             }
         }
-        var (irow, icol) = (crow / 2, ccol/ 2);
+        var (irow, icol) = (crow / 2, ccol / 2);
         var (drow, dcol) = (-1, 0);
         var infections = 0;
         for (int i = 0; i < iterations; i++) {
             var state = cells.TryGetValue((irow, icol), out var s) ? s : State.Clean;
-            
+
             (state, drow, dcol) = update(state, drow, dcol);
-            
+
             if (state == State.Infected) {
                 infections++;
             }
