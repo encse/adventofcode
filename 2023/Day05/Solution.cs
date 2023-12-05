@@ -7,7 +7,7 @@ namespace AdventOfCode.Y2023.Day05;
 
 [ProblemName("If You Give A Seed A Fertilizer")]
 class Solution : Solver {
-
+    // this is still wip.
     public object PartOne(string input) {
         return Solve(input, ints => ints.Select(v => new Range(v, v)));
     }
