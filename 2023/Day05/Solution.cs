@@ -17,14 +17,11 @@ class Solution : Solver {
     }
 
     public long Solve(string input, Func<long[], IEnumerable<Range>> parseRanges) {
-
         var blocks = input.Split("\n\n");
         var ranges = parseRanges(ParseInts(blocks[0])).ToArray();
         var maps = blocks.Skip(1).Select(ParseMap).ToArray();
 
-        for (var i = 0; i < maps.Length; i++) {
-            ranges = ranges.SelectMany(range => Lookup(range, maps[i])).ToArray();
-        }
+        ranges = Lookup(ranges, maps);
 
         return ranges.Select(r => r.from).Min();
     }
@@ -44,6 +41,30 @@ class Solution : Solver {
             select new MapEntry(src, dst)
             ).ToArray()
         );
+
+    Range[] Lookup(Range[] ranges, Map[] maps) {
+        for (var i = 0; i < maps.Length; i++) {
+            ranges = ranges.SelectMany(range => Lookup(range, maps[i])).ToArray();
+            ranges = Pack(ranges);
+        }
+        return ranges;
+    } 
+
+    Range[] Pack(Range[] ranges) {
+        ranges = ranges.OrderBy(x => x.from).Distinct().ToArray();
+        var res = new List<Range>();
+        var range = ranges[0];
+        for(var i = 1;i<ranges.Length;i++) {
+            if (range.to == ranges[i].from - 1) {
+                range = new Range(range.from, ranges[i].to);
+            } else {
+                res.Add(range);
+                range = ranges[i];
+            }
+        }
+        res.Add(range);
+        return res.ToArray();
+    }
 
     IEnumerable<Range> Lookup(Range range, Map map) {
         var q = new Queue<Range>();
@@ -74,6 +95,7 @@ class Solution : Solver {
             }
         }
     }
+
 }
 
 record MapEntry(Range src, Range dst);
