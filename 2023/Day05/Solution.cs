@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Text;
 
 namespace AdventOfCode.Y2023.Day05;
 
@@ -11,30 +9,27 @@ namespace AdventOfCode.Y2023.Day05;
 class Solution : Solver {
 
     public object PartOne(string input) {
-        return 0;
-        // var blocks = input.Split("\n\n");
-        // var seeds = ParseSeeds(blocks[0]);
-        // var maps = blocks.Skip(1).Select(ParseMap).ToArray();
-
-        // return (from seed in seeds select Process(seed, maps)).Min();
+        return Solve(input, ints => ints.Select(v => new Range(v, v)));
     }
 
     public object PartTwo(string input) {
+        return Solve(input, ints => ints.Chunk(2).Select(v => new Range(v[0], v[0] + v[1] - 1)));
+    }
+
+    public long Solve(string input, Func<long[], IEnumerable<Range>> parseRanges) {
 
         var blocks = input.Split("\n\n");
-        var ranges = ParseSeeds(blocks[0]).Chunk(2).Select(v => new Range(v[0], v[0] + v[1] - 1)).ToArray();
+        var ranges = parseRanges(ParseInts(blocks[0])).ToArray();
         var maps = blocks.Skip(1).Select(ParseMap).ToArray();
 
-        for(var i=0;i<maps.Length;i++) {
+        for (var i = 0; i < maps.Length; i++) {
             ranges = ranges.SelectMany(range => Lookup(range, maps[i])).ToArray();
         }
 
         return ranges.Select(r => r.from).Min();
     }
 
-    long Process(long item, Map[] maps) => maps.Aggregate(item, Lookup);
-
-    long[] ParseSeeds(string input) => (
+    long[] ParseInts(string input) => (
         from m in Regex.Matches(input, @"\d+")
         select long.Parse(m.Value)
     ).ToArray();
@@ -53,7 +48,7 @@ class Solution : Solver {
     IEnumerable<Range> Lookup(Range range, Map map) {
         var q = new Queue<Range>();
         q.Enqueue(range);
-        while(q.Any()) {
+        while (q.Any()) {
             range = q.Dequeue();
             var found = false;
             foreach (var entry in map.entries) {
@@ -64,10 +59,10 @@ class Solution : Solver {
                     found = true;
                 } else if (range.from < entry.src.from && entry.src.from <= range.to) {
                     // range contains the begining of the entry
-                    q.Enqueue(new Range(range.from, entry.src.from));
-                    q.Enqueue(new Range(entry.src.from + 1, range.to));
+                    q.Enqueue(new Range(range.from, entry.src.from - 1));
+                    q.Enqueue(new Range(entry.src.from, range.to));
                     found = true;
-                } else if (range.from < entry.src.to && entry.src.to <= range.to ) {
+                } else if (range.from < entry.src.to && entry.src.to <= range.to) {
                     // range contains the end of the entry
                     q.Enqueue(new Range(range.from, entry.src.to));
                     q.Enqueue(new Range(entry.src.to + 1, range.to));
@@ -78,11 +73,6 @@ class Solution : Solver {
                 yield return new Range(range.from, range.to);
             }
         }
-        Console.WriteLine("x");
-    }
-
-    long Lookup(long item, Map map) {
-        return Lookup(new Range(item,item), map).Single().from;
     }
 }
 
