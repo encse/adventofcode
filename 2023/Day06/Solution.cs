@@ -25,7 +25,7 @@ class Solution : Solver {
     long WinningMoves(long time, long record) {
         // If we wait x ms, our boat moves `(time - x) * x` millimeters.
         // This breaks the record when `(time - x) * x > record`
-        // or `-x^2  + time * x - distance > 0`.
+        // or `-x^2  + time * x - record > 0`.
 
         // get the roots first
         var (x1, x2) = SolveEq(-1, time, -record);
