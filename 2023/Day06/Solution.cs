@@ -12,8 +12,8 @@ class Solution : Solver {
 
     long Solve(string input) {
         var rows = input.Split("\n");
-        var times = ParseInts(rows[0]);
-        var records = ParseInts(rows[1]);
+        var times = Parse(rows[0]);
+        var records = Parse(rows[1]);
 
         var res = 1L;
         for (var i = 0; i < times.Length; i++) {
@@ -30,13 +30,13 @@ class Solution : Solver {
         // get the roots first
         var (x1, x2) = SolveEq(-1, time, -record);
         
-        // integers in between the roots:
+        // integers in between the roots
         var maxX = (long)Math.Ceiling(x2) - 1;
         var minX = (long)Math.Floor(x1) + 1;
         return maxX - minX + 1; 
     }
 
-    // solves ax^2 +bx + c = 0 (supposing two distinct roots)
+    // solves ax^2 +bx + c = 0 (supposing two different roots)
     (double, double) SolveEq(long a, long b, long c) {
         var d = Math.Sqrt(b * b - 4 * a * c);
         var x1 = (-b - d) / (2 * a);
@@ -44,7 +44,7 @@ class Solution : Solver {
         return (Math.Min(x1, x2), Math.Max(x1, x2));
     }
 
-    long[] ParseInts(string input) => (
+    long[] Parse(string input) => (
         from m in Regex.Matches(input, @"\d+")
         select long.Parse(m.Value)
     ).ToArray();
