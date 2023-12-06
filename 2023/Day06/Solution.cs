@@ -36,7 +36,7 @@ class Solution : Solver {
         return maxX - minX + 1; 
     }
 
-    // solves ax^2 +bx + c = 0 (supposing two different roots)
+    // solves ax^2 + bx + c = 0 (supposing two different roots)
     (double, double) SolveEq(long a, long b, long c) {
         var d = Math.Sqrt(b * b - 4 * a * c);
         var x1 = (-b - d) / (2 * a);
