@@ -22,13 +22,12 @@ class Solution : Solver {
         return maps.Aggregate(seedRanges, Project).Select(r => r.from).Min();
     }
 
-    // The complexity arises from the fact that when a single 'range' is mapped 
-    // it can enerate multiple 'ranges' in the output. Since we are dealing with 
-    // this anyways, we can immediately solve the more general problem which 
-    // gets an _array_ of ranges instead of just one and returns a ranges array.
+    // When a single 'range' is mapped  it can generate multiple 'ranges' in the 
+    // output. Since we are dealing with this anyways, we can just as well solve 
+    // the more general problem which gets an array of ranges instead.
     //
-    // This function has a proper signature to be used with Aggregate, so that
-    // we can push the input through multiple maps in one call.
+    // This has the proper signature for Aggregate(), so we can push the input 
+    // through multiple maps in one call.
     Range[] Project(Range[] inputRanges, Dictionary<Range,Range> map) {
         var todo = new Queue<Range>();
         foreach (var range in inputRanges) {
