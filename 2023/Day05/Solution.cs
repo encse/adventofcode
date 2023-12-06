@@ -37,11 +37,11 @@ class Solution : Solver {
         var outputRanges = new List<Range>();
         while (todo.Any()) {
             var range = todo.Dequeue();
-            // If the no entry intersects our range -> just add it to the output. 
-            // If an entry completely contains the range, map and add to the output.
-            // Otherwise, some  entry partly covers the range. In this case 'chop' 
-            // the range into two halfs getting rid of the intersection. Then new pieces 
-            // are added back to the queue for further processing and will be 
+            // If no entry intersects our range -> just add it to the output. 
+            // If an entry completely contains the range -> add after mapping.
+            // Otherwise, some entry partly covers the range. In this case 'chop' 
+            // the range into two halfs getting rid of the intersection. The new 
+            // pieces are added back to the queue for further processing and will be 
             // ultimately consumed by the first two cases.
             var src = map.Keys.FirstOrDefault(src => Intersects(src, range));
             if (src == null) {
