@@ -7,95 +7,94 @@ namespace AdventOfCode.Y2023.Day05;
 
 [ProblemName("If You Give A Seed A Fertilizer")]
 class Solution : Solver {
-    // this is still wip.
-    public object PartOne(string input) {
-        return Solve(input, ints => ints.Select(v => new Range(v, v)));
-    }
 
-    public object PartTwo(string input) {
-        return Solve(input, ints => ints.Chunk(2).Select(v => new Range(v[0], v[0] + v[1] - 1)));
-    }
+    public object PartOne(string input) => Solve(input, PartOneRanges);
 
-    public long Solve(string input, Func<long[], IEnumerable<Range>> parseRanges) {
+    public object PartTwo(string input) => Solve(input, PartTwoRanges);
+
+    long Solve(string input, Func<long[], IEnumerable<Range>> parseRanges) {
         var blocks = input.Split("\n\n");
-        var ranges = parseRanges(ParseInts(blocks[0])).ToArray();
+
+        // Parse the 'seeds' in the input into range of numbers; in part 1 these 
+        // are just individual numbers, but in part 2 we have real ranges
+        var ranges = parseRanges(ParseNumbers(blocks[0])).ToArray();
+   
         var maps = blocks.Skip(1).Select(ParseMap).ToArray();
-
-        ranges = Lookup(ranges, maps);
-
-        return ranges.Select(r => r.from).Min();
+        // Project each range through the series of maps, this will result some
+        // new ranges. Return the leftmost value (minimum) of these.
+        return maps.Aggregate(ranges, Project).Select(r => r.from).Min();
     }
 
-    long[] ParseInts(string input) => (
-        from m in Regex.Matches(input, @"\d+")
-        select long.Parse(m.Value)
-    ).ToArray();
-
-    Map ParseMap(string input) =>
-        new Map(
-            (
-            from line in input.Split("\n").Skip(1)
-            let parts = line.Split(" ").Select(long.Parse).ToArray()
-            let src = new Range(parts[1], parts[2] + parts[1] - 1)
-            let dst = new Range(parts[0], parts[2] + parts[0] - 1)
-            select new MapEntry(src, dst)
-            ).ToArray()
-        );
-
-    Range[] Lookup(Range[] ranges, Map[] maps) {
-        for (var i = 0; i < maps.Length; i++) {
-            ranges = ranges.SelectMany(range => Lookup(range, maps[i])).ToArray();
-            ranges = Pack(ranges);
+    // The complexity arises from the fact that when a single 'range' is mapped 
+    // it can enerate multiple 'ranges' in the output. Since we are dealing with 
+    // this anyways, we can immediately solve the more general problem which 
+    // gets an _array_ of ranges instead of just one and returns a ranges array.
+    //
+    // This function has a proper signature to be used with Aggregate, so that
+    // we can push the input through multiple maps in one call.
+    Range[] Project(Range[] inputRanges, Map map) {
+        var todo = new Queue<Range>();
+        foreach (var srcRange in inputRanges) {
+            todo.Enqueue(srcRange);
         }
-        return ranges;
-    } 
 
-    Range[] Pack(Range[] ranges) {
-        ranges = ranges.OrderBy(x => x.from).Distinct().ToArray();
-        var res = new List<Range>();
-        var range = ranges[0];
-        for(var i = 1;i<ranges.Length;i++) {
-            if (range.to == ranges[i].from - 1) {
-                range = new Range(range.from, ranges[i].to);
-            } else {
-                res.Add(range);
-                range = ranges[i];
-            }
-        }
-        res.Add(range);
-        return res.ToArray();
-    }
-
-    IEnumerable<Range> Lookup(Range range, Map map) {
-        var q = new Queue<Range>();
-        q.Enqueue(range);
-        while (q.Any()) {
-            range = q.Dequeue();
-            var found = false;
+        var outputRanges = new List<Range>();
+        while (todo.Any()) {
+            var range = todo.Dequeue();
+            // If a map entry completely contains a range, we can just map it into
+            // a single range in the output. If there is no entry that intersects
+            // with the range, we just keep it as it is. Otherwise some entry partly
+            // intersects the range. In this case we 'chop' the range into two halfs
+            // getting rid of the intersection. These pieces are added back to 
+            // the queue for further processing and will be ultimately consumed
+            // by the first two cases.
+            var processed = false;
             foreach (var entry in map.entries) {
                 if (entry.src.from <= range.from && range.to <= entry.src.to) {
-                    // entry src contains our range
+                    // entry contains the range -> output
                     var shift = entry.dst.from - entry.src.from;
-                    yield return new Range(range.from + shift, range.to + shift);
-                    found = true;
+                    outputRanges.Add(new Range(range.from + shift, range.to + shift));
+                    processed = true;
+                    break;
                 } else if (range.from < entry.src.from && entry.src.from <= range.to) {
-                    // range contains the begining of the entry
-                    q.Enqueue(new Range(range.from, entry.src.from - 1));
-                    q.Enqueue(new Range(entry.src.from, range.to));
-                    found = true;
+                    // range contains the begining of the entry -> split
+                    todo.Enqueue(new Range(range.from, entry.src.from - 1));
+                    todo.Enqueue(new Range(entry.src.from, range.to));
+                    processed = true;
+                    break;
                 } else if (range.from < entry.src.to && entry.src.to <= range.to) {
-                    // range contains the end of the entry
-                    q.Enqueue(new Range(range.from, entry.src.to));
-                    q.Enqueue(new Range(entry.src.to + 1, range.to));
-                    found = true;
+                    // range contains the end of the entry -> split
+                    todo.Enqueue(new Range(range.from, entry.src.to));
+                    todo.Enqueue(new Range(entry.src.to + 1, range.to));
+                    processed = true;
+                    break;
                 }
             }
-            if (!found) {
-                yield return new Range(range.from, range.to);
+            if (!processed) {
+                outputRanges.Add(new Range(range.from, range.to));
             }
         }
+        return [..outputRanges];
     }
 
+    // each number results in a 1 length range:
+    IEnumerable<Range> PartOneRanges(long[] numbers) =>
+        from n in numbers select new Range(n, n);
+
+    // chunk is a great way to iterate over the pairs of numbers in the input:
+    IEnumerable<Range> PartTwoRanges(long[] numbers) =>
+        from c in numbers.Chunk(2) select new Range(c[0], c[0] + c[1] - 1);
+
+    long[] ParseNumbers(string input) =>
+        [.. from m in Regex.Matches(input, @"\d+") select long.Parse(m.Value)];
+
+    Map ParseMap(string input) => new Map([..
+        from line in input.Split("\n").Skip(1)
+        let parts = line.Split(" ").Select(long.Parse).ToArray()
+        let src = new Range(parts[1], parts[2] + parts[1] - 1)
+        let dst = new Range(parts[0], parts[2] + parts[0] - 1)
+        select new MapEntry(src, dst)
+    ]);
 }
 
 record MapEntry(Range src, Range dst);
