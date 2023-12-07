@@ -31,7 +31,7 @@ class Solution : Solver {
         return (pv << 64) + cv;
     }
 
-    // replace cards with with their indices in cardOrder. E.g. for 123456789TJQKA
+    // replace cards with their indices in cardOrder. E.g. for 123456789TJQKA
     // A8A8A becomes (13)(7)(13)(7)(13), 9A34Q becomes (8)(13)(2)(3)(11)
     BigInteger CardValue(string hand, string cardOrder) =>
          new BigInteger(hand.Select(ch => (byte)cardOrder.IndexOf(ch)).Reverse().ToArray());
