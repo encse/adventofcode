@@ -31,12 +31,12 @@ class Solution : Solver {
         return (pv << 64) + cv;
     }
 
-    // replace cards with their indices in cardOrder. E.g. for 123456789TJQKA
+    // map cards to their indices in cardOrder. E.g. for 123456789TJQKA
     // A8A8A becomes (13)(7)(13)(7)(13), 9A34Q becomes (8)(13)(2)(3)(11)
     BigInteger CardValue(string hand, string cardOrder) =>
          new BigInteger(hand.Select(ch => (byte)cardOrder.IndexOf(ch)).Reverse().ToArray());
 
-    // replace cards with the number of their occurrences in the hand then order them such as
+    // map cards to the number of their occurrences in the hand then order them such that
     // A8A8A becomes 33322, 9A34Q becomes 11111 and K99AA becomes 22221
     BigInteger PatternValue(string hand) =>
         new BigInteger(hand.Select(ch => (byte)hand.Count(x => x == ch)).Order().ToArray());
