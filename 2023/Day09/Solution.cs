@@ -22,8 +22,8 @@ class Solution : Solver {
     // I went a bit further and recurse until there are no numbers left. It's
     // more compact this way and doesn't affect the runtime much.
     long ExtrapolateRight(long[] numbers) =>
-        numbers.Length == 0 ? 0 : ExtrapolateRight(Diff(numbers)) + numbers.Last();
+        !numbers.Any() ? 0 : ExtrapolateRight(Diff(numbers)) + numbers.Last();
 
     long ExtrapolateLeft(long[] numbers) =>
-       numbers.Length == 0 ? 0 : numbers.First() - ExtrapolateLeft(Diff(numbers));
+       !numbers.Any() ? 0 : numbers.First() - ExtrapolateLeft(Diff(numbers));
 }
