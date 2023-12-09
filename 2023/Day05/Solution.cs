@@ -21,7 +21,7 @@ class Solution : Solver {
         return maps.Aggregate(seedRanges, Project).Select(r => r.begin).Min();
     }
 
-    List<Range> Project(List<Range> inputRanges, Dictionary<Range,Range> map) {
+    List<Range> Project(List<Range> inputRanges, Dictionary<Range, Range> map) {
         var input = new Queue<Range>(inputRanges);
         var output = new List<Range>();
 
@@ -60,17 +60,17 @@ class Solution : Solver {
 
     // chunk is a great way to iterate over the pairs of numbers
     IEnumerable<Range> PartTwoRanges(IEnumerable<long> numbers) =>
-        from c in numbers.Chunk(2) select new Range(c[0], c[0] + c[1] - 1);
+        from n in numbers.Chunk(2) select new Range(n[0], n[0] + n[1] - 1);
 
     IEnumerable<long> ParseNumbers(string input) =>
         from m in Regex.Matches(input, @"\d+") select long.Parse(m.Value);
 
     Dictionary<Range, Range> ParseMap(string input) => (
         from line in input.Split("\n").Skip(1)
-        let parts =  line.Split(" ").Select(long.Parse).ToArray()
-        let src = new Range(parts[1], parts[2] + parts[1] - 1)
-        let dst = new Range(parts[0], parts[2] + parts[0] - 1)
-        select new KeyValuePair<Range, Range>(src, dst)
+        let parts = ParseNumbers(line).ToArray()
+        select new KeyValuePair<Range, Range>(
+            new Range(parts[1], parts[2] + parts[1] - 1),
+            new Range(parts[0], parts[2] + parts[0] - 1))
     ).ToDictionary();
 }
 
