@@ -9,12 +9,13 @@ class SplashScreenImpl : SplashScreen {
 
         var color = Console.ForegroundColor;
         Write(0xcc00, false, "           ▄█▄ ▄▄█ ▄ ▄ ▄▄▄ ▄▄ ▄█▄  ▄▄▄ ▄█  ▄▄ ▄▄▄ ▄▄█ ▄▄▄\n           █▄█ █ █ █ █ █▄█ █ █ █   █ █ █▄ ");
-            Write(0xcc00, false, " █  █ █ █ █ █▄█\n           █ █ █▄█ ▀▄▀ █▄▄ █ █ █▄  █▄█ █   █▄ █▄█ █▄█ █▄▄  /* 2023 */\n            \n ");
-            Write(0xcc00, false, "                                                           \n                                        ");
-            Write(0xcc00, false, "                    \n                                                            \n                  ");
-            Write(0xcc00, false, "                                          \n                                                         ");
-            Write(0xcc00, false, "   \n                                                            \n                                   ");
-            Write(0xcc00, false, "                         \n                                                            \n           ");
+            Write(0xcc00, false, " █  █ █ █ █ █▄█\n           █ █ █▄█ ▀▄▀ █▄▄ █ █ █▄  █▄█ █   █▄ █▄█ █▄█ █▄▄  int y = 2023;\n           ");
+            Write(0xcc00, false, " \n                                                            \n                                     ");
+            Write(0xcc00, false, "                       \n                                                            \n               ");
+            Write(0xcc00, false, "                                             \n                                                      ");
+            Write(0xcc00, false, "      \n                                                            \n                                ");
+            Write(0xcc00, false, "                            \n                                                            \n          ");
+            Write(0xcc00, false, " ");
             Write(0x333333, false, "            *        ");
             Write(0xe3b585, false, "' ''...                       ");
             Write(0x666666, false, "10\n                     ");
