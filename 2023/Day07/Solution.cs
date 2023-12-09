@@ -17,17 +17,10 @@ class Solution : Solver {
         (PatternValue(hand) << 64) + CardValue(hand, "123456789TJQKA");
 
     BigInteger Part2Points(string hand) {
-        // The most frequent card ignoring J with a special case for "JJJJJ":
-        var replacement = (
-            from ch in hand
-            where ch != 'J'
-            group ch by ch into g
-            orderby g.Count() descending
-            select g.Key
-        ).FirstOrDefault('J');
-
-        var cv = CardValue(hand, "J123456789TQKA");
-        var pv = PatternValue(hand.Replace('J', replacement));
+        var cards = "J123456789TQKA";
+        var cv = CardValue(hand, cards);
+        // try all combinations, no fancy stuff
+        var pv = cards.Select(ch => PatternValue(hand.Replace('J', ch))).Max();
         return (pv << 64) + cv;
     }
 
