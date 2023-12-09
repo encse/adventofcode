@@ -9,28 +9,24 @@ namespace AdventOfCode.Y2023.Day05;
 class Solution : Solver {
 
     public object PartOne(string input) => Solve(input, PartOneRanges);
-
     public object PartTwo(string input) => Solve(input, PartTwoRanges);
 
-    long Solve(string input, Func<long[], IEnumerable<Range>> parseSeeds) {
+    long Solve(string input, Func<IEnumerable<long>, IEnumerable<Range>> parseSeeds) {
         var blocks = input.Split("\n\n");
-        var seedRanges = parseSeeds(ParseNumbers(blocks[0])).ToArray();
+        var seedRanges = parseSeeds(ParseNumbers(blocks[0])).ToList();
         var maps = blocks.Skip(1).Select(ParseMap).ToArray();
 
         // Project each range through the series of maps, this will result some
         // new ranges. Return the leftmost value (minimum) of these.
-        return maps.Aggregate(seedRanges, Project).Select(r => r.from).Min();
+        return maps.Aggregate(seedRanges, Project).Select(r => r.begin).Min();
     }
 
-    Range[] Project(Range[] inputRanges, Dictionary<Range,Range> map) {
-        var todo = new Queue<Range>();
-        foreach (var range in inputRanges) {
-            todo.Enqueue(range);
-        }
+    List<Range> Project(List<Range> inputRanges, Dictionary<Range,Range> map) {
+        var input = new Queue<Range>(inputRanges);
+        var output = new List<Range>();
 
-        var outputRanges = new List<Range>();
-        while (todo.Any()) {
-            var range = todo.Dequeue();
+        while (input.Any()) {
+            var range = input.Dequeue();
             // If no entry intersects our range -> just add it to the output. 
             // If an entry completely contains the range -> add after mapping.
             // Otherwise, some entry partly covers the range. In this case 'chop' 
@@ -39,35 +35,35 @@ class Solution : Solver {
             // ultimately consumed by the first two cases.
             var src = map.Keys.FirstOrDefault(src => Intersects(src, range));
             if (src == null) {
-                outputRanges.Add(range);
-            } else if (src.from <= range.from && range.to <= src.to) {
+                output.Add(range);
+            } else if (src.begin <= range.begin && range.end <= src.end) {
                 var dst = map[src];
-                var shift = dst.from - src.from;
-                outputRanges.Add(new Range(range.from + shift, range.to + shift));
-            } else if (range.from < src.from) {
-                todo.Enqueue(new Range(range.from, src.from - 1));
-                todo.Enqueue(new Range(src.from, range.to));
+                var shift = dst.begin - src.begin;
+                output.Add(new Range(range.begin + shift, range.end + shift));
+            } else if (range.begin < src.begin) {
+                input.Enqueue(new Range(range.begin, src.begin - 1));
+                input.Enqueue(new Range(src.begin, range.end));
             } else {
-                todo.Enqueue(new Range(range.from, src.to));
-                todo.Enqueue(new Range(src.to + 1, range.to));
+                input.Enqueue(new Range(range.begin, src.end));
+                input.Enqueue(new Range(src.end + 1, range.end));
             }
         }
-        return [..outputRanges];
+        return output;
     }
 
     // see https://stackoverflow.com/a/3269471
-    bool Intersects(Range r1, Range r2) => r1.from <= r2.to && r2.from <= r1.to;
+    bool Intersects(Range r1, Range r2) => r1.begin <= r2.end && r2.begin <= r1.end;
 
     // consider each number as a range of 1 length
-    IEnumerable<Range> PartOneRanges(long[] numbers) =>
+    IEnumerable<Range> PartOneRanges(IEnumerable<long> numbers) =>
         from n in numbers select new Range(n, n);
 
     // chunk is a great way to iterate over the pairs of numbers
-    IEnumerable<Range> PartTwoRanges(long[] numbers) =>
+    IEnumerable<Range> PartTwoRanges(IEnumerable<long> numbers) =>
         from c in numbers.Chunk(2) select new Range(c[0], c[0] + c[1] - 1);
 
-    long[] ParseNumbers(string input) =>
-        [.. from m in Regex.Matches(input, @"\d+") select long.Parse(m.Value)];
+    IEnumerable<long> ParseNumbers(string input) =>
+        from m in Regex.Matches(input, @"\d+") select long.Parse(m.Value);
 
     Dictionary<Range, Range> ParseMap(string input) => (
         from line in input.Split("\n").Skip(1)
@@ -78,4 +74,4 @@ class Solution : Solver {
     ).ToDictionary();
 }
 
-record Range(long from, long to);
+record Range(long begin, long end);
