@@ -25,5 +25,5 @@ class Solution : Solver {
         !numbers.Any() ? 0 : ExtrapolateRight(Diff(numbers)) + numbers.Last();
 
     long ExtrapolateLeft(long[] numbers) =>
-       !numbers.Any() ? 0 : numbers.First() - ExtrapolateLeft(Diff(numbers));
+       ExtrapolateRight(numbers.Reverse().ToArray());
 }
