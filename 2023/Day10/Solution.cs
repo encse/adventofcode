@@ -23,8 +23,8 @@ class Solution : Solver {
     }
 
     // We pretty much want to flood fill from a corner that is outside the loop.
-    // Unfortunately we need to deal with loops not part of the releant loop and 
-    // the narrow tunnels where 'paint' should flood in but not represented as 
+    // Unfortunately we need to deal with loops not part of the relevant loop and 
+    // the narrow tunnels where 'paint' should flow in but not represented as 
     // an individual cell in the input, such as two vertical pipes next to 
     // each other like ||.
     // 
