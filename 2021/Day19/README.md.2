@@ -1,6 +1,0 @@
-## --- Day 19: Beacon Scanner ---
-As your [probe](17) drifted down through this area, it released an assortment of <em>beacons</em> and <em>scanners</em> into the water. It's difficult to navigate in the pitch black open waters of the ocean trench, but if you can build a map of the trench using data from the scanners, you should be able to safely reach the bottom.
-
-The beacons and scanners float motionless in the water; they're designed to maintain the same position for long periods of time. Each scanner is capable of detecting all beacons in a large cube centered on the scanner; beacons that are at most 1000 units away from the scanner in each of the three axes (<code>x</code>, <code>y</code>, and <code>z</code>) have their precise position determined relative to the scanner. However, scanners cannot detect other scanners. The submarine has automatically summarized the relative positions of beacons detected by each scanner (your puzzle input).
-
-Read the [full puzzle](https://adventofcode.com/2021/day/19).
