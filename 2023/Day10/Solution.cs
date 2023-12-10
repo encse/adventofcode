@@ -22,14 +22,17 @@ class Solution : Solver {
         return loop.Count / 2;
     }
 
-    // We pretty much want to flood fill from a corner that is outside the map.
-    // But we need to deal with loops not part of the map and the narrow
-    // tunnels where 'paint' should flood in but not represented as an individual 
-    // cell in the input, such as two vertical pipes next to each other ||
+    // We pretty much want to flood fill from a corner that is outside the loop.
+    // Unfortunately we need to deal with loops not part of the releant loop and 
+    // the narrow tunnels where 'paint' should flood in but not represented as 
+    // an individual cell in the input, such as two vertical pipes next to 
+    // each other like ||.
     // 
-    // The trick is to find the loop, remove everything that is not part
-    // of the loop, then scale up the map so that these narrow tunnels become
-    // real cells. Run the the flood fill algoithm in the scaled up map and finally 
+    // The trick is to find the loop first, then remove everything that is not part
+    // of it. Now scale up the map so that these narrow tunnels become real cells. 
+    // I map each cell to a 3x3 pattern. 
+    // 
+    // Then run the the flood fill algoithm in the scaled up map and finally 
     // calculate the cells that were not 'painted', i.e. inside the original loop.
     public object PartTwo(string input) {
         var map = ParseMap(input);
