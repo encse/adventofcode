@@ -52,6 +52,31 @@ class ProjectReadmeGenerator {
            > {Usage.Get()}
            > ```
 
+           > ## Input files
+           > 
+           > I encrypt my input files using git-crypt which is transparent to all git clients and services 
+           > (eg. GitHub, BitBucket, etc) and has Linux, OSX and Windows support.
+           > 
+           > I created a secret key in my personal home directory called `aoc-crypt.key` such as:
+           > 
+           > ```
+           > cd my-repo
+           > git-crypt init
+           > git-crypt export-key ~/aoc-crypt.key
+           > ```
+           
+           > the `.gitattributes` file is set up so that it transparently encrypts and decrypts my input files.
+           > 
+           > After cloing the repo I need to 'unlock' the secrets with 
+
+           > ```
+           > git-crypt unlock ~/aoc-crypt.key
+           > ```
+           > 
+           > If you have cloned my repo you won't be able to do this, since you don't have my key, but
+           > you can setup your own repo following this guide, which is adapted from this 
+           > link https://stackoverflow.com/a/45047100.
+
            > ## Working in Visual Studio Code
            > If you prefer, you can work directly in VSCode as well. 
  
@@ -62,10 +87,7 @@ class ProjectReadmeGenerator {
            >  **Note:** this feature relies on the ""Memento Inputs"" extension to store your session cookie, you need 
            >  to set it up in advance from the Command Palette with `Install Extensions`.
            > 
-           > ## Encrypting the input files
-           > cd repo-root-directory
-           > git-crypt unlock ~/crypt.key
-           > git-crypt status -f
+  
            ".StripMargin("> ");
     }
 }
