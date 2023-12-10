@@ -81,6 +81,7 @@ record SolverResult(string[] answers, string[] errors);
 class Runner {
 
     private static string GetNormalizedInput(string file) {
+        GitCrypt.CheckFile(file);
         var input = File.ReadAllText(file);
 
         // on Windows we have "\r\n", not sure if this causes more harm or not
@@ -140,6 +141,7 @@ class Runner {
     }
 
     public static void RunAll(params Solver[] solvers) {
+
         var errors = new List<string>();
 
         var lastYear = -1;
