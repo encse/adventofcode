@@ -19,6 +19,15 @@ class Updater {
 
     public async Task Update(int year, int day) {
 
+        if (!File.Exists(".git/git-crypt/keys/default")) {
+            Console.WriteLine(
+                """
+                Repository is not unlocked. You need to install and configure git-crypt.
+                Check out the README file.
+                """);
+            Environment.Exit(1);
+        }
+
         var session = GetSession();
         var baseAddress = new Uri("https://adventofcode.com/");
 
