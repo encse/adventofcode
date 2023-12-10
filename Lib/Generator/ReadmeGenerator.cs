@@ -61,7 +61,12 @@ class ProjectReadmeGenerator {
            > 
            >  **Note:** this feature relies on the ""Memento Inputs"" extension to store your session cookie, you need 
            >  to set it up in advance from the Command Palette with `Install Extensions`.
-           > ".StripMargin("> ");
+           > 
+           > ## Encrypting the input files
+           > cd repo-root-directory
+           > git-crypt unlock ~/crypt.key
+           > git-crypt status -f
+           ".StripMargin("> ");
     }
 }
 
