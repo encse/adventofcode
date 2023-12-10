@@ -40,7 +40,8 @@ class Solution : Solver {
         map = Filter(map, loop);
         map = Replace(map, '.', 'I');
         map = ScaleUp(map);
-        map = Fill(map, Complex.Zero, ".I", 'O');
+        // start from the top left corner, works for the input
+        map = Fill(map, Complex.Zero, ".I", 'O'); 
         return map.Values.Count(v => v == 'I');
     }
 
@@ -116,24 +117,6 @@ class Solution : Solver {
 
     Map Replace(Map map, char chSrc, char chDst) => 
         map.Keys.ToDictionary(k => k, k => map[k] == chSrc ? chDst : map[k]);
-
-
-    // Adds a 1 width border of '.' around the map
-    Map Pad(Map map) {
-        var ccol = map.Keys.Select(k => k.Real).Max();
-        var crow = map.Keys.Select(k => k.Imaginary).Max();
-
-        for (var irow = -1; irow <= crow; irow++) {
-            map[new Complex(0, irow)] = '.';
-            map[new Complex(ccol + 1, irow)] = '.';
-        }
-        for (var icol = -1; icol <= ccol; icol++) {
-            map[new Complex(icol, 0)] = '.';
-            map[new Complex(icol, crow + 1)] = '.';
-        }
-
-        return map.Keys.ToDictionary(k => k + new Complex(1, 1), k => map[k]);
-    }
 
     // Creates a 3x scaled up map applying the patterns of MagnifyCh
     Map ScaleUp(Map map) {
