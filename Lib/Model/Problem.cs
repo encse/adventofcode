@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using AngleSharp.Dom;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace AdventOfCode.Model;
 class Problem {
@@ -16,25 +17,15 @@ class Problem {
 
     public static Problem Parse(int year, int day, string url, IDocument document, string input) {
 
-        var md = $"original source: [{url}]({url})\n";
         var answers = new List<string>();
-        foreach (var article in document.QuerySelectorAll("article")) {
-            md += UnparseList("", article) + "\n";
+        var article = document.QuerySelectorAll("article").First();
+        var md = UnparseList("", article) + "\n";
+        var blocks = md.Split("\n\n").Take(2);
 
-            var answerNode = article.NextSibling; 
-            while (answerNode != null && !( 
-                answerNode.NodeName == "P" 
-                && (answerNode as IElement).QuerySelector("code") != null 
-                && answerNode.TextContent.Contains("answer"))
-            ) {
-                answerNode = answerNode.NextSibling as IElement;
-            }
+        md = string.Join("\n\n", blocks);
 
-            var code = (answerNode as IElement)?.QuerySelector("code");
-            if (code != null) {
-                answers.Add(code.TextContent);
-            }
-        }
+        md += $"\n\nRead the [full puzzle]({url}).\n";
+
         var title = document.QuerySelector("h2").TextContent;
 
         var match = Regex.Match(title, ".*: (.*) ---");
