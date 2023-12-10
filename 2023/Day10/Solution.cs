@@ -16,7 +16,7 @@ class Solution : Solver {
     static readonly Complex Right = Complex.One;
     static readonly Complex[] Dirs = [Up, Right, Down, Left];
 
-    static readonly Dictionary<char, Complex[]>  OutputDirs = new Dictionary<char, Complex[]>{
+    static readonly Dictionary<char, Complex[]>  Exits = new Dictionary<char, Complex[]>{
         {'7', [Left, Down] },
         {'F', [Right, Down]},
         {'L', [Up, Right]},
@@ -53,7 +53,7 @@ class Solution : Solver {
         var positions = new HashSet<Complex>();
 
         // pick one direction that leads out from S and connected to the neighbour
-        var dir = Dirs.First(dir => OutputDirs[map[position + dir]].Contains(-dir));
+        var dir = Dirs.First(dir => Exits[map[position + dir]].Contains(-dir));
 
         for (; ; ) {
             positions.Add(position);
@@ -61,7 +61,7 @@ class Solution : Solver {
             if (map[position] == 'S') {
                 break;
             }
-            dir = OutputDirs[map[position]].Single(dirOut => dirOut != -dir);
+            dir = Exits[map[position]].Single(dirOut => dirOut != -dir);
         }
         return positions;
     }
@@ -73,9 +73,10 @@ class Solution : Solver {
             return false;
         }
 
-        // Imagine a small elf starting from the top right segment of a cell 
-        // and moving to the left jumping over the pipes it encounters.
-        // Every jump flips the "inside" variable.
+        // Imagine a small elf starting from the top half of a cell and moving 
+        // to the left jumping over the pipes it encounters. It needs to jump 
+        // over only 'vertically' oriented pipes, since it runs in the top of the 
+        // row. Each jump flips the "inside" variable.
         var inside = false;
         position--;
         while (map.ContainsKey(position)) {
