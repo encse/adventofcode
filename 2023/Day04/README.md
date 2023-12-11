@@ -3,4 +3,6 @@ The gondola takes you up. Strangely, though, the ground doesn't seem to be comin
 
 As you exit the gondola, the first thing you notice is that the air here is much <em>warmer</em> than it was on Snow Island. It's also quite <em>humid</em>. Is this where the water source is?
 
+The next thing you notice is an Elf sitting on the floor across the station in what seems to be a pile of colorful square cards.
+
 Read the [full puzzle](https://adventofcode.com/2023/day/4).

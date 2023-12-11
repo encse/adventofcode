@@ -3,4 +3,6 @@ Your all-expenses-paid trip turns out to be a one-way, five-minute ride in an [a
 
 "Did you bring the parts?"
 
+You turn around to see an Elf completely covered in white clothing, wearing goggles, and riding a large [camel](https://en.wikipedia.org/wiki/Dromedary).
+
 Read the [full puzzle](https://adventofcode.com/2023/day/7).
