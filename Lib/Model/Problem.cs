@@ -17,15 +17,9 @@ class Problem {
 
     public static Problem Parse(int year, int day, string url, IDocument document, string input) {
 
-        var answers = new List<string>();
-        var article = document.QuerySelectorAll("article").First();
-        var md = UnparseList("", article) + "\n";
-        var blocks = md.Split("\n\n").Take(2);
+        var md = ParseMdIntro(document, 3, url);
 
-        md = string.Join("\n\n", blocks);
-
-        md += $"\n\nRead the [full puzzle]({url}).\n";
-
+        var answers = ParseAnswers(document);
         var title = document.QuerySelector("h2").TextContent;
 
         var match = Regex.Match(title, ".*: (.*) ---");
@@ -33,6 +27,41 @@ class Problem {
             title = match.Groups[1].Value;
         }
         return new Problem {Year = year, Day = day, Title = title, ContentMd = md, Input = input, Answers = answers.ToArray() };
+    }
+
+    static string ParseMdIntro(IDocument document, int paragraphs, string url) {
+        var article = ParseMd(document).Split("\n\n").ToList(); 
+        article = article.Take(Math.Min(paragraphs, article.Count)).ToList();
+        article.Add($"Read the [full puzzle]({url}).\n");
+        return string.Join("\n\n", article);
+    }
+    
+    static string ParseMd(IDocument document) {
+        var md = "";
+        foreach (var article in document.QuerySelectorAll("article")) {
+            md += UnparseList("", article) + "\n";
+        }
+        return md;
+    }
+
+    static List<string> ParseAnswers(IDocument document) {
+        var answers = new List<string>();
+        foreach (var article in document.QuerySelectorAll("article")) {
+            var answerNode = article.NextSibling; 
+            while (answerNode != null && !( 
+                answerNode.NodeName == "P" 
+                && (answerNode as IElement).QuerySelector("code") != null 
+                && answerNode.TextContent.Contains("answer"))
+            ) {
+                answerNode = answerNode.NextSibling as IElement;
+            }
+
+            var code = (answerNode as IElement)?.QuerySelector("code");
+            if (code != null) {
+                answers.Add(code.TextContent);
+            }
+        }
+        return answers;
     }
 
     static string UnparseList(string sep, INode element) {
