@@ -16,7 +16,7 @@ class Solution : Solver {
     static readonly Complex Right = Complex.One;
     static readonly Complex[] Dirs = [Up, Right, Down, Left];
 
-    static readonly Dictionary<char, Complex[]>  Exits = new Dictionary<char, Complex[]>{
+    static readonly Dictionary<char, Complex[]> Exits = new Dictionary<char, Complex[]>{
         {'7', [Left, Down] },
         {'F', [Right, Down]},
         {'L', [Up, Right]},
@@ -24,6 +24,7 @@ class Solution : Solver {
         {'|', [Up, Down]},
         {'-', [Left, Right]},
         {'S', [Up, Down, Left, Right]},
+        {'.', []},
     };
 
     public object PartOne(string input) {
@@ -35,24 +36,15 @@ class Solution : Solver {
     public object PartTwo(string input) {
         var map = ParseMap(input);
         var loop = LoopPositions(map);
-
-        // remove pipes not in the loop:
-        map = (
-            from kvp in map
-            let position = kvp.Key
-            let cell = loop.Contains(position) ? kvp.Value : '.'
-            select (position, cell)
-        ).ToDictionary();
-
-        return map.Keys.Count(position => Inside(map, position));
+        return map.Keys.Count(position => Inside(position, map, loop));
     }
 
-    // Returns the positions that make up the loop starting at 'S'
+    // Returns the positions that make up the loop containing 'S'
     HashSet<Complex> LoopPositions(Map map) {
         var position = map.Keys.Single(k => map[k] == 'S');
         var positions = new HashSet<Complex>();
 
-        // pick one direction that leads out from S and connected to the neighbour
+        // pick a connected direction out of S
         var dir = Dirs.First(dir => Exits[map[position + dir]].Contains(-dir));
 
         for (; ; ) {
@@ -61,43 +53,41 @@ class Solution : Solver {
             if (map[position] == 'S') {
                 break;
             }
-            dir = Exits[map[position]].Single(dirOut => dirOut != -dir);
+            dir = Exits[map[position]].Single(exit => exit != -dir);
         }
         return positions;
     }
 
     // Check if position is inside the loop using ray casting algorithm
-    bool Inside(Map map, Complex position) {
-        var cell = map[position];
-        if (cell != '.') {
+    bool Inside(Complex position, Map map, HashSet<Complex> loop) {
+        // Imagine a small elf starting from the top half of a cell and moving 
+        // to the left jumping over the pipes it encounters. It needs to jump 
+        // over only 'vertically' oriented pipes leading upwards, since it runs 
+        // in the top of the row. Each jump flips the "inside" variable.
+
+        if (loop.Contains(position)) {
             return false;
         }
 
-        // Imagine a small elf starting from the top half of a cell and moving 
-        // to the left jumping over the pipes it encounters. It needs to jump 
-        // over only 'vertically' oriented pipes, since it runs in the top of the 
-        // row. Each jump flips the "inside" variable.
         var inside = false;
-        position--;
+        position += Left;
         while (map.ContainsKey(position)) {
-            if ("SJL|".Contains(map[position])) {
+            if (loop.Contains(position) && Exits[map[position]].Contains(Up)) {
                 inside = !inside;
             }
-            position--;
+            position += Left;
         }
         return inside;
     }
 
     Map ParseMap(string input) {
         var rows = input.Split("\n");
-        var crow = rows.Length;
-        var ccol = rows[0].Length;
-        var res = new Map();
-        for (var irow = 0; irow < crow; irow++) {
-            for (var icol = 0; icol < ccol; icol++) {
-                res[new Complex(icol, irow)] = rows[irow][icol];
-            }
-        }
-        return res;
+        return (
+            from irow in Enumerable.Range(0, rows.Length)
+            from icol in Enumerable.Range(0, rows[0].Length)
+            let pos = new Complex(icol, irow)
+            let cell = rows[irow][icol]
+            select new KeyValuePair<Complex, char>(pos, cell)
+        ).ToDictionary();
     }
 }
