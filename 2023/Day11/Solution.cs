@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 
 namespace AdventOfCode.Y2023.Day11;
@@ -8,50 +7,46 @@ namespace AdventOfCode.Y2023.Day11;
 [ProblemName("Cosmic Expansion")]
 class Solution : Solver {
 
-    public object PartOne(string input) => Solve(input, 2);
-    public object PartTwo(string input) => Solve(input, 1_000_000);
+    public object PartOne(string input) => Solve(input, 1);
+    public object PartTwo(string input) => Solve(input, 999999);
 
-    long Solve(string input, int e) {
+    long Solve(string input, int expansion) {
         var map = input.Split("\n");
-        var crow = map.Length;
-        var ccol = map[0].Length;
-        var emptyRows = Enumerable.Range(0, crow).Where(irow => EmptyRow(map, irow)).ToHashSet();
-        var emptyCols = Enumerable.Range(0, ccol).Where(icol => EmptyCol(map, icol)).ToHashSet();
-        var stars = (
-            from irow in Enumerable.Range(0, crow)
-            from icol in Enumerable.Range(0, ccol)
-            where map[irow][icol] == '#'
-            select (irow, icol)
-        ).ToArray();
 
+        Func<int, bool> emptyRow = EmptyRows(map).ToHashSet().Contains;
+        Func<int, bool> emptyCol = EmptyCols(map).ToHashSet().Contains;
+
+        var stars = FindAll(map, '#');
         return (
             from star1 in stars
             from star2 in stars
-            select Distance(star1, star2, e, emptyRows, emptyCols)
+            select
+                Distance(star1.irow, star2.irow, expansion, emptyRow) +
+                Distance(star1.icol, star2.icol, expansion, emptyCol)
         ).Sum() / 2;
     }
 
-    long Distance((int irow, int icol)p1, (int irow, int icol)p2, long e, HashSet<int> emptyRows, HashSet<int> emptyCols) {
-        var (irowSrc, irowDst) = (Math.Min(p1.irow, p2.irow), Math.Max(p1.irow, p2.irow));
-        var (icolSrc, icolDst) = (Math.Min(p1.icol, p2.icol), Math.Max(p1.icol, p2.icol));
-
-        return (
-            irowDst - irowSrc +
-            icolDst - icolSrc +
-            (e-1) * Enumerable.Range(icolSrc, icolDst - icolSrc).Count(emptyCols.Contains) +
-            (e-1) * Enumerable.Range(irowSrc, irowDst - irowSrc).Count(emptyRows.Contains)
-        );
+    long Distance(int i1, int i2, int expansion, Func<int, bool> empty) {
+        var a = Math.Min(i1, i2);
+        var d = Math.Abs(i1 - i2);
+        return d + expansion * Enumerable.Range(a, d).Count(empty);
     }
 
-    bool EmptyRow(string[] map, int irow) {
-        var crow = map.Length;
-        var ccol = map[0].Length;
-        return Enumerable.Range(0, ccol).All(icol => map[irow][icol] == '.');
-    }
+    IEnumerable<int> EmptyRows(string[] map) =>
+        from irow in Enumerable.Range(0, map.Length)
+        where map[irow].All(ch => ch == '.')
+        select irow;
 
-    bool EmptyCol(string[] map, int icol) {
-        var crow = map.Length;
-        var ccol = map[0].Length;
-        return Enumerable.Range(0, crow).All(irow => map[irow][icol] == '.');
-    }
+    IEnumerable<int> EmptyCols(string[] map) =>
+        from icol in Enumerable.Range(0, map[0].Length)
+        where map.All(row => row[icol] == '.')
+        select icol;
+
+    IEnumerable<Position> FindAll(string[] map, char ch) =>
+        from irow in Enumerable.Range(0, map.Length)
+        from icol in Enumerable.Range(0, map[0].Length)
+        where map[irow][icol] == ch
+        select new Position(irow, icol);
 }
+
+record Position(int irow, int icol);
