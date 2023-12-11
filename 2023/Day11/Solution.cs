@@ -13,23 +13,23 @@ class Solution : Solver {
     long Solve(string input, int expansion) {
         var map = input.Split("\n");
 
-        Func<int, bool> emptyRow = EmptyRows(map).ToHashSet().Contains;
-        Func<int, bool> emptyCol = EmptyCols(map).ToHashSet().Contains;
+        Func<int, bool> isRowEmpty = EmptyRows(map).ToHashSet().Contains;
+        Func<int, bool> isColEmpty = EmptyCols(map).ToHashSet().Contains;
 
-        var stars = FindAll(map, '#');
+        var galaxies = FindAll(map, '#');
         return (
-            from star1 in stars
-            from star2 in stars
+            from g1 in galaxies
+            from g2 in galaxies
             select
-                Distance(star1.irow, star2.irow, expansion, emptyRow) +
-                Distance(star1.icol, star2.icol, expansion, emptyCol)
+                Distance(g1.irow, g2.irow, expansion, isRowEmpty) +
+                Distance(g1.icol, g2.icol, expansion, isColEmpty)
         ).Sum() / 2;
     }
 
-    long Distance(int i1, int i2, int expansion, Func<int, bool> empty) {
+    long Distance(int i1, int i2, int expansion, Func<int, bool> isEmpty) {
         var a = Math.Min(i1, i2);
         var d = Math.Abs(i1 - i2);
-        return d + expansion * Enumerable.Range(a, d).Count(empty);
+        return d + expansion * Enumerable.Range(a, d).Count(isEmpty);
     }
 
     IEnumerable<int> EmptyRows(string[] map) =>
