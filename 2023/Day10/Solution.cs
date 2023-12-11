@@ -44,7 +44,7 @@ class Solution : Solver {
         var position = map.Keys.Single(k => map[k] == 'S');
         var positions = new HashSet<Complex>();
 
-        // pick a connected direction out of S
+        // pick a direction connected to a neighbour
         var dir = Dirs.First(dir => Exits[map[position + dir]].Contains(-dir));
 
         for (; ; ) {
