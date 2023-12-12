@@ -11,6 +11,19 @@ class Solution : Solver {
     public object PartOne(string input) => Solve(input, 1);
     public object PartTwo(string input) => Solve(input, 5);
 
+    // After unfolding the input we process it line by line computing the possible 
+    // combinations for each. We use memoized recursion with a cache to speed up PartTwo. 
+    // 
+    // The computation is recursive by nature, and goes over the pattern and numbers
+    // in tandem branching on '?' symbols and consuming as much of dead springs
+    // as dictated by the next number when a '#' is found. The symbol that follows 
+    // a dead range needs special treatment: it cannot be a '#', and if it was a '?'
+    // we should consider it as a '.' according to the problem statement.
+    // 
+    // I like to use immutable datastructures when dealing with problems that
+    // involves backtracking, it's not immediately obvious from the solution below
+    // but using a mutable stack or list would case a lot of headache.
+
     long Solve(string input, int repeat) => (
         from line in input.Split("\n")
         let parts = line.Split(" ")
@@ -18,26 +31,23 @@ class Solution : Solver {
         let numString = Unfold(parts[1], ',', repeat)
         let nums = numString.Split(',').Select(int.Parse)
         select
-            Solve(pattern, ImmutableStack.CreateRange(nums.Reverse()), new Cache())
+            Compute(pattern, ImmutableStack.CreateRange(nums.Reverse()), new Cache())
     ).Sum();
 
     string Unfold(string st, char join, int unfold) =>
         string.Join(join, Enumerable.Repeat(st, unfold));
 
-    // Classic memoized recursion.
-    // I like to use immutable datastructures here because of easy backtracking.
-    long Solve(string pattern, ImmutableStack<int> nums, Cache cache) {
-
-        // The 'good enough for x-mas' hash key
+    long Compute(string pattern, ImmutableStack<int> nums, Cache cache) {
+        // Pulling out the famous 'good enough for x-mas' hash algorithm
         var key = pattern + "," + string.Join(",", nums.Select(n => n.ToString()));
 
         if (!cache.ContainsKey(key)) {
-            cache[key] = Compute(pattern, nums, cache);
+            cache[key] = Dispatch(pattern, nums, cache);
         }
         return cache[key];
     }
 
-    long Compute(string pattern, ImmutableStack<int> nums, Cache cache) {
+    long Dispatch(string pattern, ImmutableStack<int> nums, Cache cache) {
         return pattern.FirstOrDefault() switch {
             '.' => ProcessDot(pattern, nums, cache),
             '?' => ProcessQuestion(pattern, nums, cache),
@@ -53,12 +63,12 @@ class Solution : Solver {
 
     long ProcessDot(string pattern, ImmutableStack<int> nums, Cache cache) {
         // consume one spring and recurse
-        return Solve(pattern[1..], nums, cache);
+        return Compute(pattern[1..], nums, cache);
     }
 
     long ProcessQuestion(string pattern, ImmutableStack<int> nums, Cache cache) {
         // recurse both ways
-        return Solve("." + pattern[1..], nums, cache) + Solve("#" + pattern[1..], nums, cache);
+        return Compute("." + pattern[1..], nums, cache) + Compute("#" + pattern[1..], nums, cache);
     }
 
     long ProcessHash(string pattern, ImmutableStack<int> nums, Cache cache) {
@@ -76,11 +86,11 @@ class Solution : Solver {
         if (potentiallyDead < n) {
             return 0; // not enough dead springs 
         } else if (pattern.Length == n) {
-            return Solve("", nums, cache);
+            return Compute("", nums, cache);
         } else if (pattern[n] == '#') {
             return 0; // dead spring follows the range -> not good
         } else {
-            return Solve(pattern[(n + 1)..], nums, cache);
+            return Compute(pattern[(n + 1)..], nums, cache);
         }
     }
 }
