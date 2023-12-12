@@ -2,7 +2,7 @@ using System;
 using System.Collections.Immutable;
 using System.Linq;
 
-using Cache = System.Collections.Generic.Dictionary<string, long>;
+using Cache = System.Collections.Generic.Dictionary<(string, System.Collections.Immutable.ImmutableStack<int>), long>;
 namespace AdventOfCode.Y2023.Day12;
 
 [ProblemName("Hot Springs")]
@@ -38,13 +38,10 @@ class Solution : Solver {
         string.Join(join, Enumerable.Repeat(st, unfold));
 
     long Compute(string pattern, ImmutableStack<int> nums, Cache cache) {
-        // Pulling out the famous 'good enough for x-mas' hash algorithm
-        var key = pattern + "," + string.Join(",", nums.Select(n => n.ToString()));
-
-        if (!cache.ContainsKey(key)) {
-            cache[key] = Dispatch(pattern, nums, cache);
+        if (!cache.ContainsKey((pattern, nums))) {
+            cache[(pattern, nums)] = Dispatch(pattern, nums, cache);
         }
-        return cache[key];
+        return cache[(pattern, nums)];
     }
 
     long Dispatch(string pattern, ImmutableStack<int> nums, Cache cache) {
