@@ -22,7 +22,7 @@ class Solution : Solver {
     // 
     // I like to use immutable datastructures when dealing with problems that
     // involves backtracking, it's not immediately obvious from the solution below
-    // but using a mutable stack or list would case a lot of headache.
+    // but using a mutable stack or list would cause a lot of headache.
 
     long Solve(string input, int repeat) => (
         from line in input.Split("\n")
