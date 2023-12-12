@@ -1,124 +1,86 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Text;
-using Microsoft.VisualBasic;
 
+using Cache = System.Collections.Generic.Dictionary<string, long>;
 namespace AdventOfCode.Y2023.Day12;
 
 [ProblemName("Hot Springs")]
 class Solution : Solver {
 
-    public object PartOne(string input) {
-        var s = 0L;
-        foreach(var line in input.Split("\n")) {
-            var parts = line.Split(" ");
-            var pattern = parts[0];
-            
-            var nums = parts[1].Split(",").Select(int.Parse);
-            var d = SolveLine(pattern, ImmutableStack.CreateRange(nums.Reverse()), new Dictionary<string, long>());
-            s += d;
-        }
-        return s;
-    }
+    public object PartOne(string input) => Solve(input, 1);
+    public object PartTwo(string input) => Solve(input, 5);
 
-    public object PartTwo(string input) {
-        var s = 0L;
-        foreach(var line in input.Split("\n")) {
-            var parts = line.Split(" ");
-            var pattern = Unfold(parts[0], '?');
-            var nums =  Unfold(parts[1],',').Split(",").Select(int.Parse);
-            var d = SolveLine(pattern, ImmutableStack.CreateRange(nums.Reverse()), new Dictionary<string, long>());
-            Console.WriteLine(d);
-            s += d;
-        }
-        return s;
-    }
+    long Solve(string input, int repeat) => (
+        from line in input.Split("\n")
+        let parts = line.Split(" ")
+        let pattern = Unfold(parts[0], '?', repeat)
+        let numString = Unfold(parts[1], ',', repeat)
+        let nums = numString.Split(',').Select(int.Parse)
+        select
+            Solve(pattern, ImmutableStack.CreateRange(nums.Reverse()), new Cache())
+    ).Sum();
 
-    string Unfold(string st, char join) {
-        return string.Join(join, [st, st, st, st, st]);
-    }
+    string Unfold(string st, char join, int unfold) =>
+        string.Join(join, Enumerable.Repeat(st, unfold));
 
-    long SolveLine(string pattern, ImmutableStack<int> nums, Dictionary<string, long> cache) {
-        var key = pattern +"," + string.Join(",", nums.Select(n => n.ToString()));
+    // Classic memoized recursion.
+    // I like to use immutable datastructures here because of easy backtracking.
+    long Solve(string pattern, ImmutableStack<int> nums, Cache cache) {
+
+        // The 'good enough for x-mas' hash key
+        var key = pattern + "," + string.Join(",", nums.Select(n => n.ToString()));
 
         if (!cache.ContainsKey(key)) {
-            long foo() {
-                    if (pattern == "") {
-                    var ok = nums.All(x=>x==0);
-                    return ok ? 1 : 0;
-                } else if (!nums.Any(x=>x!=0)) {
-                    var ok = pattern.All(ch => ch != '#');
-                    return ok ? 1 : 0;
-                } else if (pattern[0] == '.') {
-                    return SolveLine(pattern[1..], nums, cache);
-                } else if (pattern[0] == '#') {
-                    var n = nums.Peek();
-                    nums = nums.Pop();
-                    if (pattern.Length < n) {
-                        return 0;
-                    } else {
-                        if (pattern.Take(n).Any(ch => ch == '.')){
-                            return 0;
-                        }
-                        pattern = pattern[n..];
-                        if (pattern.Length > 0) {
-                            if (pattern[0] == '#') {
-                                return 0;
-                            } else {
-                                pattern = pattern[1..];
-                            }
-                        }
-                    }
-                    return SolveLine(pattern, nums, cache);
-                    
-                } else {
-                    var l = SolveLine("." + pattern[1..], nums, cache);
-                    var r = SolveLine("#" + pattern[1..], nums, cache);
-                    return l + r; 
-                }
-            }
-            cache[key] = foo();
+            cache[key] = Compute(pattern, nums, cache);
         }
         return cache[key];
     }
+
+    long Compute(string pattern, ImmutableStack<int> nums, Cache cache) {
+        return pattern.FirstOrDefault() switch {
+            '.' => ProcessDot(pattern, nums, cache),
+            '?' => ProcessQuestion(pattern, nums, cache),
+            '#' => ProcessHash(pattern, nums, cache),
+            _ => ProcessEnd(pattern, nums, cache),
+        };
+    }
+
+    long ProcessEnd(string _, ImmutableStack<int> nums, Cache __) {
+        // the good case is when there are no numbers left at the end of the pattern
+        return nums.Any() ? 0 : 1;
+    }
+
+    long ProcessDot(string pattern, ImmutableStack<int> nums, Cache cache) {
+        // consume one spring and recurse
+        return Solve(pattern[1..], nums, cache);
+    }
+
+    long ProcessQuestion(string pattern, ImmutableStack<int> nums, Cache cache) {
+        // recurse both ways
+        return Solve("." + pattern[1..], nums, cache) + Solve("#" + pattern[1..], nums, cache);
+    }
+
+    long ProcessHash(string pattern, ImmutableStack<int> nums, Cache cache) {
+        // take the first number and consume that many dead springs, recurse
+
+        if (!nums.Any()) {
+            return 0; // no more numbers left, this is no good
+        }
+
+        var n = nums.Peek();
+        nums = nums.Pop();
+
+        var potentiallyDead = pattern.TakeWhile(s => s == '#' || s == '?').Count();
+
+        if (potentiallyDead < n) {
+            return 0; // not enough dead springs 
+        } else if (pattern.Length == n) {
+            return Solve("", nums, cache);
+        } else if (pattern[n] == '#') {
+            return 0; // dead spring follows the range -> not good
+        } else {
+            return Solve(pattern[(n + 1)..], nums, cache);
+        }
+    }
 }
-
-
-// int Solve(string pattern, ImmutableStack<int> nums, string solution) {
-//         if (pattern == "") {
-//             var ok = nums.All(x=>x==0);
-//             if (ok) {
-//                 Console.WriteLine(solution);
-//             }
-//             return ok ? 1 : 0;
-//         } else if (!nums.Any(x=>x!=0)) {
-//             var ok = pattern.All(ch => ch != '#');
-//              if (ok) {
-//                 Console.WriteLine(solution+pattern.Replace('?', '.'));
-//             }
-//             return ok ? 1 : 0;
-//         } else if (pattern[0] == '.') {
-//             var n = nums.Peek();
-//             if (n == 0) {
-//                 nums = nums.Pop();
-//             }
-//             return Solve(pattern[1..], nums, solution+".");
-//         } else if (pattern[0] == '#') {
-//             var n = nums.Peek();
-//             if (n == 0) {
-//                 return 0;
-//             } else {
-//                 nums = nums.Pop();
-//                 nums = nums.Push(n-1);
-//             }
-//             return Solve(pattern[1..], nums, solution+"#");
-            
-//         } else {
-//             var l = Solve("." + pattern[1..], nums, solution);
-//             var r = Solve("#" + pattern[1..], nums, solution);
-//             return l + r; 
-//         }
-//     }
