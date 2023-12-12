@@ -12,7 +12,7 @@ class Solution : Solver {
     public object PartTwo(string input) => Solve(input, 5);
 
     // After unfolding the input we process it line by line computing the possible 
-    // combinations for each. We use memoized recursion with a cache to speed up PartTwo. 
+    // combinations for each. We use memoized recursion to speed up PartTwo.
     // 
     // The computation is recursive by nature, and goes over the pattern and numbers
     // in tandem branching on '?' symbols and consuming as much of dead springs
