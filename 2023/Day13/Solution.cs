@@ -30,7 +30,7 @@ class Solution : Solver {
         select mirror.Real + 100 * mirror.Imaginary
     ).First();
 
-    // cast a ray from each postion along the mirror and count the 'smuggles'
+    // cast a ray from each postion along the mirror and count the smudges
     int FindSmudges(Map map, Complex mirror, Complex rayDir) => (
         from ray0 in Positions(map, mirror, Ortho(rayDir))
         let rayA = Positions(map, ray0, rayDir)
