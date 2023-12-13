@@ -11,117 +11,86 @@ namespace AdventOfCode.Y2023.Day13;
 [ProblemName("Point of Incidence")]
 class Solution : Solver {
 
-    public object PartOne(string input) {
-        var blocks = input.Split("\n\n");
-        var s = 0;
-        foreach (var block in blocks) {
-            var rows = block.Split("\n");
-            var crow = rows.Length;
-            var ccol = rows[0].Length;
-            var map = ParseMap(rows);
-            s += Solve(map, crow, ccol).Single();
-        }
-        return s;
-    }
-
-    public object PartTwo(string input) {
-
-        var blocks = input.Split("\n\n");
-        var s = 0;
-        var iblock = 0;
-        foreach (var block in blocks) {
-            iblock++;
-            var rows = block.Split("\n");
-            var crow = rows.Length;
-            var ccol = rows[0].Length;
-            var map = ParseMap(rows);
-
-            var orig = Solve(map, crow, ccol).Single();
-            int[] patched = null;
-            foreach (var key in map.Keys) {
-                if (map[key] == '.') {
-                    map[key] = '#';
-                    patched = Solve(map, crow, ccol);
-                    map[key] = '.';
-                } else {
-                    map[key] = '.';
-                    patched = Solve(map, crow, ccol);
-                    map[key] = '#';
-                }
-
-                patched = patched.Where(x => x != orig).ToArray();
-                if (patched.Length>0) {
-                    break;
-                }
-            }
-            if (patched.Length!=1) {
-                Console.WriteLine(iblock);
-                Console.WriteLine(block);
-                Console.WriteLine(patched.Length);
-                Console.WriteLine();
-            } else {
-                s += patched.Single();
-            }
-        }
-        return s;
-    }
-
-    int[] Solve(Map map, int crow, int ccol) {
-        return SolveHoriz(map, crow).Concat(SolveVert(map, ccol)).ToArray();
-    }
-
-    int[] SolveHoriz(Map map, int crow) {
-        HashSet<int> res = null;
-         for (var irow = 0; irow < crow; irow++) {
-            var mirrors = Mirrors(map, new Complex(0, irow), Right).ToArray();
-            if (res == null) {
-                res = new HashSet<int>(mirrors);
-            } else {
-                res.IntersectWith(mirrors);
-            }
-        }
-        return res.Select(r => r + 1).ToArray();
-    }
-     int[] SolveVert(Map map, int ccol) {
-        HashSet<int> res = null;
-        res = null;
-        for (var icol = 0; icol < ccol; icol++) {
-            var mirrors = Mirrors(map, new Complex(icol, 0), Down).ToArray();
-            if (res == null) {
-                res = new HashSet<int>(mirrors);
-            } else {
-                res.IntersectWith(mirrors);
-            }
-        }
-        return res.Select(r => (r + 1) * 100).ToArray();
-    }
-
     Complex Right = 1;
     Complex Down = Complex.ImaginaryOne;
-    Complex Flip(Complex dir) => dir == Down ? Right : Down;
 
-    IEnumerable<int> Mirrors(Map map, Complex pos, Complex dir) {
-        var i = 0;
-        while (map.ContainsKey(pos + dir)) {
-            var s = 0.5 * dir;
-            var ok = true;
-            while (map.ContainsKey(pos + 0.5 * dir - s) && map.ContainsKey(pos + 0.5 * dir + s) && ok) {
-                var pleft = pos + 0.5 * dir - s;
-                var pright = pos + 0.5 * dir + s;
-                var left = map[pleft];
-                var right = map[pright];
-                ok = left == right;
-                s += dir;
-            }
-            if (ok) {
+    public object PartOne(string input) => Solve(input, UnpatchedScore);
+    public object PartTwo(string input) => Solve(input, PatchedScore);
+
+    int Solve(string input, Func<Map, int> score) =>  (
+        from block in input.Split("\n\n")
+        let map = ParseMap(block)
+        select score(map)
+    ).Sum();
+
+    int UnpatchedScore(Map map) => GetScores(map).Single();
+
+    int PatchedScore(Map map) {
+        var unpatchedScore = GetScores(map).Single();
+        return (
+            from patchedMap in Patches(map)
+            from patchedScore in GetScores(patchedMap)
+            where patchedScore != unpatchedScore
+            select patchedScore
+        ).First();
+    }
+
+    // returns all possible patched versions of a given map 
+    IEnumerable<Map> Patches(Map map) {
+        foreach (var key in map.Keys) {
+            var res = new Map(map);
+            res[key] = map[key] == '.' ? '#' : '.';
+            yield return res;
+        }
+    }
+    
+    // Find all possible mirrors horiontally and vertically and returns the score 
+    // associated with them
+    int[] GetScores(Map map) {
+        return [
+            ..GetMirrorPositionsByDir(map, Down), 
+            ..GetMirrorPositionsByDir(map, Right).Select(r => r * 100),
+        ];
+    }
+
+    // Starting from (0,0) go over the map in the given direction and check 
+    // each row/column for possible mirror locations. The result is the common 
+    // intersection of these candidates.
+    int[] GetMirrorPositionsByDir(Map map, Complex dir) {
+        var ortho = dir == Right ? Down : Right;
+        var res = MirrorCandidates(map, Complex.Zero, ortho).ToHashSet();
+        for (var pos = dir; map.ContainsKey(pos); pos += dir) {
+            res.IntersectWith(MirrorCandidates(map, pos, ortho));
+        }
+        return res.ToArray();
+    }
+
+    // Collects the possible mirror locations in a single row/column
+    IEnumerable<int> MirrorCandidates(Map map, Complex pos, Complex dir) {
+        for(var i=1; map.ContainsKey(pos); i++, pos += dir) {
+            if (IsMirrorCandidate(map, pos, dir)) {
                 yield return i;
             }
-            pos += dir;
-            i++;
         }
     }
 
-    Map ParseMap(string[] rows) {
+    // go in both directions from pos and validate the mirror property
+    bool IsMirrorCandidate(Map map, Complex pos, Complex dir) {
+        if (!map.ContainsKey(pos + dir)) {
+            return false; // cannot a place a mirror at the edge of the map
+        }
+        
+        for (var i = Complex.Zero; ; i += dir) {
+            if (!map.ContainsKey(pos - i) || !map.ContainsKey(pos + i + dir)) {
+                return true; // we reached the end of the map, it's a mirror
+            } else if (map[pos - i] != map[pos + i + dir]) {
+                return false; // not a mirror image
+            }
+        }
+    }
+
+    Map ParseMap(string input) {
+        var rows = input.Split("\n");
         return (
             from irow in Enumerable.Range(0, rows.Length)
             from icol in Enumerable.Range(0, rows[0].Length)
@@ -130,5 +99,4 @@ class Solution : Solver {
             select new KeyValuePair<Complex, char>(pos, cell)
         ).ToDictionary();
     }
-
 }
