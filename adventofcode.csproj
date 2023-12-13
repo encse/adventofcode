@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <LangVersion>12</LangVersion>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <UseAppHost>false</UseAppHost>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="AngleSharp" Version="0.14.0" />
