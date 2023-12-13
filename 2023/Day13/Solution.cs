@@ -22,6 +22,7 @@ class Solution : Solver {
         select GetScore(map, allowedSmudges)
     ).Sum();
 
+    // place a mirror along the edges of the map, find the one has the allowed smudges 
     double GetScore(Map map, int allowedSmudges) => (
         from dir in new Complex[] { Right, Down }
         from mirror in Positions(map, dir, dir)
@@ -37,6 +38,13 @@ class Solution : Solver {
         select Enumerable.Zip(rayA, rayB).Count(p => map[p.First] != map[p.Second])
     ).Sum();
 
+    // allowed positions of the map from 'start' going in 'dir'
+    IEnumerable<Complex> Positions(Map map, Complex start, Complex dir) {
+        for (var pos = start; map.ContainsKey(pos); pos += dir) {
+            yield return pos; 
+        }
+    }
+
     Map ParseMap(string input) {
         var rows = input.Split("\n");
         return (
@@ -46,12 +54,5 @@ class Solution : Solver {
             let cell = rows[irow][icol]
             select new KeyValuePair<Complex, char>(pos, cell)
         ).ToDictionary();
-    }
-
-    // allowed poistions of the map from 'start' going in 'dir'
-    IEnumerable<Complex> Positions(Map map, Complex start, Complex dir) {
-        for (var pos = start; map.ContainsKey(pos); pos += dir) {
-            yield return pos;
-        }
     }
 }
