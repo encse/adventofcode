@@ -22,7 +22,7 @@ class Solution : Solver {
         select GetScore(map, allowedSmudges)
     ).Sum();
 
-    // place a mirror along the edges of the map, find the one has the allowed smudges 
+    // place a mirror along the edges of the map, find the one with the allowed smudges 
     double GetScore(Map map, int allowedSmudges) => (
         from dir in new Complex[] { Right, Down }
         from mirror in Positions(map, dir, dir)
