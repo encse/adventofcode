@@ -78,10 +78,6 @@ class Solution : Solver {
     }
 
     // returns the cummulated distances of 'O' tiles from the bottom of the map
-    int Measure(Map map) => (
-        from irow in Enumerable.Range(0, Crow(map))
-        from icol in Enumerable.Range(0, Ccol(map))
-        where map[irow][icol] == 'O'
-        select Crow(map) - irow
-    ).Sum();
+    int Measure(Map map) => 
+        map.Select((row, irow) => (Crow(map) - irow) * row.Count(ch => ch == 'O')).Sum();
 }
