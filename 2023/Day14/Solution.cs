@@ -50,7 +50,7 @@ class Solution : Solver {
     // Tilt the map to the North, so that the 'O' tiles roll to the top.
     Map Tilt(Map map) {
         for (var icol = 0; icol < Ccol(map); icol++) {
-            bool colFinished = false;
+            var colFinished = false;
             while (!colFinished) {
                 colFinished = true;
                 for (var irow = 0; irow < Crow(map) - 1; irow++) {
