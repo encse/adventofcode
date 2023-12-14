@@ -13,14 +13,14 @@ class ProjectReadmeGenerator {
            <a href="https://adventofcode.com"><img src="{lastYear}/calendar.svg" width="80%" /></a>
 
            This project is best used as a template for your own AoC repository and a guide in solving
-           the puzzles. I put a lot of effort into my solutions, I aim for clarity so they are neither 
-           super effective super short, but hopefully more readable.
+           the puzzles. I put a lot of effort into my solutions. I aim for clarity which means that 
+           they are neither super effective or super short, but hopefully more readable.
 
            Due to copyright requirements I'm not allowed to include my input files within this repository
            so you cannot just clone it and run. However I wanted to have a self contained documentary
            for myself that I can later refactor, so I decided to commit the encrypted version of the
            input files. It doesn't violate the copyright since it's just random garbage for everyone else
-           but when I check it out, a plugin called 'git-crypt' decrypts all my inputs transparently,
+           but when I check it out, a plugin called `git-crypt` decrypts all my inputs transparently,
            so I can work with them freely. On commit the whole process is reversed and the files get
            encrypted again.
 
@@ -53,6 +53,8 @@ class ProjectReadmeGenerator {
            If you need to clone your repo later you will need to unlock it using this key such as:
            
            ```
+           > git clone ...
+           > cd repo-dir
            > git-crypt unlock ~/aoc-crypt.key
            ```
 
