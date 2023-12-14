@@ -161,6 +161,9 @@ class Runner {
         if (errors.Any()) {
             WriteLine(ConsoleColor.Red, "Errors:\n" + string.Join("\n", errors));
         }
+
+        WriteLine(ConsoleColor.Yellow, "Please consider supporting the maintainer: https://github.com/sponsors/encse");
+        WriteLine();
     }
 
     private static void WriteLine(ConsoleColor color = ConsoleColor.Gray, string text = "") {
