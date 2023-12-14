@@ -13,8 +13,8 @@ class ProjectReadmeGenerator {
            <a href="https://adventofcode.com"><img src="{lastYear}/calendar.svg" width="80%" /></a>
 
            This project is best used as a template for your own AoC repository and a guide in solving
-           the puzzles.  I put a lot of effor into my solutions. They are neither super effective 
-           nor super short, but hopefully more readable.
+           the puzzles. I put a lot of effort into my solutions, I aim for clarity so they are neither 
+           super effective super short, but hopefully more readable.
 
            Due to copyright requirements I'm not allowed to include my input files within this repository
            so you cannot just clone it and run. However I wanted to have a self contained documentary

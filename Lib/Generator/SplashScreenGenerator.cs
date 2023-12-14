@@ -8,26 +8,26 @@ namespace AdventOfCode.Generator;
 class SplashScreenGenerator {
     public string Generate(Calendar calendar) {
         string calendarPrinter = CalendarPrinter(calendar);
-        return $@"
-            |using System;
-            |
-            |namespace AdventOfCode.Y{calendar.Year};
-            |
-            |class SplashScreenImpl : SplashScreen {{
-            |
-            |    public void Show() {{
-            |
-            |        var color = Console.ForegroundColor;
-            |        {calendarPrinter.Indent(12)}
-            |        Console.ForegroundColor = color;
-            |        Console.WriteLine();
-            |    }}
-            |
-            |   private static void Write(int rgb, bool bold, string text){{
-            |       Console.Write($""\u001b[38;2;{{(rgb>>16)&255}};{{(rgb>>8)&255}};{{rgb&255}}{{(bold ? "";1"" : """")}}m{{text}}"");
-            |   }}
-            |}}
-            |".StripMargin();
+        return $$"""
+            using System;
+            
+            namespace AdventOfCode.Y{{calendar.Year}};
+            
+            class SplashScreenImpl : SplashScreen {
+            
+                public void Show() {
+            
+                    var color = Console.ForegroundColor;
+                    {{calendarPrinter.Indent(12)}}
+                    Console.ForegroundColor = color;
+                    Console.WriteLine();
+                }
+            
+                private static void Write(int rgb, bool bold, string text){
+                   Console.Write($"\u001b[38;2;{(rgb>>16)&255};{(rgb>>8)&255};{rgb&255}{(bold ? ";1" : "")}m{text}");
+                }
+            }
+            """;
     }
 
     private string CalendarPrinter(Calendar calendar) {

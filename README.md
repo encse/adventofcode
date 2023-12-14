@@ -4,8 +4,8 @@ C# solutions to the [Advent of Code](https://adventofcode.com) problems.
 <a href="https://adventofcode.com"><img src="2023/calendar.svg" width="80%" /></a>
 
 This project is best used as a template for your own AoC repository and a guide in solving
-the puzzles.  I put a lot of effor into my solutions. They are neither super effective 
-nor super short, but hopefully more readable.
+the puzzles. I put a lot of effort into my solutions, I aim for clarity so they are neither 
+super effective super short, but hopefully more readable.
 
 Due to copyright requirements I'm not allowed to include my input files within this repository
 so you cannot just clone it and run. However I wanted to have a self contained documentary
@@ -49,7 +49,6 @@ If you need to clone your repo later you will need to unlock it using this key s
 
 6. Get help with `dotnet run` and start coding.
 ```
-
 Usage: dotnet run [arguments]
 1) To run the solutions and admire your advent calendar:
 
@@ -77,7 +76,6 @@ set up your SESSION variable as above.
 
  upload [year]/[day]   Upload the answer for the selected year and day.
  upload today          Shortcut to the above.
-
 
 ```
 
