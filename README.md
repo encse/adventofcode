@@ -15,7 +15,7 @@ but when I check it out, a plugin called `git-crypt` decrypts all my inputs tran
 so I can work with them freely. On commit the whole process is reversed and the files get
 encrypted again.
 
-If you find this useful, please consider [supporting](https://github.com/sponsors/encse) me.
+If you find this useful, please [support](https://github.com/sponsors/encse) me.
 
 ## Dependencies
 
@@ -81,7 +81,7 @@ set up your SESSION variable as above.
  upload [year]/[day]   Upload the answer for the selected year and day.
  upload today          Shortcut to the above.
 
-4) Don't forget to bid the maintainer https://github.com/sponsors/encse.
+4) Don't forget to tip the maintainer https://github.com/sponsors/encse.
 ```
 
 ## Working in Visual Studio Code

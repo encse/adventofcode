@@ -175,7 +175,7 @@ class Usage {
              upload [year]/[day]   Upload the answer for the selected year and day.
              upload today          Shortcut to the above.
 
-            4) Don't forget to bid the maintainer https://github.com/sponsors/encse.
+            4) Don't forget to tip the maintainer https://github.com/sponsors/encse.
             """;
     }
 }

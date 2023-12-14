@@ -24,7 +24,7 @@ class ProjectReadmeGenerator {
            so I can work with them freely. On commit the whole process is reversed and the files get
            encrypted again.
 
-           If you find this useful, please consider [supporting](https://github.com/sponsors/encse) me.
+           If you find this useful, please [support](https://github.com/sponsors/encse) me.
 
            ## Dependencies
 

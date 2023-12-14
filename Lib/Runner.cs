@@ -162,7 +162,7 @@ class Runner {
             WriteLine(ConsoleColor.Red, "Errors:\n" + string.Join("\n", errors));
         }
 
-        WriteLine(ConsoleColor.Yellow, "Please consider supporting the maintainer: https://github.com/sponsors/encse");
+        WriteLine(ConsoleColor.Yellow, "Please support the maintainer: https://github.com/sponsors/encse");
         WriteLine();
     }
 
