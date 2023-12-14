@@ -11,8 +11,7 @@ class Solution : Solver {
     public object PartOne(string input) => Measure(Tilt(Parse(input)));
     public object PartTwo(string input) => Measure(Iterate(Parse(input), Cycle, 1_000_000_000));
 
-    Map Parse(string input) =>
-        (from line in input.Split('\n') select line.ToCharArray()).ToArray();
+    Map Parse(string input) => input.Split('\n').Select(line => line.ToCharArray()).ToArray();
 
     int Crow(char[][] map) => map.Length;
     int Ccol(char[][] map) => map[0].Length;
@@ -24,13 +23,14 @@ class Solution : Solver {
         while (count > 0) {
             map = cycle(map);
             count--;
-            var hash = string.Join("\n", from line in map select string.Join("", line));
-            var idx = history.IndexOf(hash);
+
+            var mapString = string.Join("\n", map.Select(line => new string(line)));
+            var idx = history.IndexOf(mapString);
             if (idx < 0) {
-                history.Add(hash);
+                history.Add(mapString);
             } else {
-                count %= history.Count - idx;
-                return Parse(history[idx + count]);
+                var remainder = count % (history.Count - idx); 
+                return Parse(history[idx + remainder]);
             }
         }
         return map;
