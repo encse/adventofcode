@@ -29,7 +29,8 @@ class Solution : Solver {
             if (idx < 0) {
                 history.Add(mapString);
             } else {
-                var remainder = count % (history.Count - idx); 
+                var loopLength = history.Count - idx;
+                var remainder = count % loopLength; 
                 return Parse(history[idx + remainder]);
             }
         }
