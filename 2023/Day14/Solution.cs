@@ -18,8 +18,8 @@ class Solution : Solver {
     int Ccol(char[][] map) => map[0].Length;
 
     Map Iterate(Map map, Func<Map, Map> cycle, long count) {
-        // The usual trick: keep itereating until we find a loop, then make a shortcut
-        // and finish with the remaining elements.
+        // The usual trick: keep iterating until we find a loop, make a shortcut
+        // and finish with the remaining elements. 
 
         // the 'good enough for xmas' hash algorithm
         var hash = (Map map) => string.Join("", from line in map from ch in line select ch);
