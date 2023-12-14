@@ -50,15 +50,14 @@ class Solution : Solver {
     // Tilt the map to the North, so that the 'O' tiles roll to the top.
     Map Tilt(Map map) {
         for (var icol = 0; icol < Ccol(map); icol++) {
-            var colFinished = false;
-            while (!colFinished) {
-                colFinished = true;
-                for (var irow = 0; irow < Crow(map) - 1; irow++) {
-                    if (map[irow][icol] == '.' && map[irow + 1][icol] == 'O') {
-                        map[irow][icol] = 'O';
-                        map[irow + 1][icol] = '.';
-                        colFinished = false;
-                    }
+            var irowT = 0; // tells where to roll up the next 'O' tile
+            for (var irowS = 0; irowS < Crow(map); irowS++) {
+                if (map[irowS][icol] == '#') {
+                    irowT = irowS + 1;
+                } else if (map[irowS][icol] == 'O') {
+                    // works when even if irowS == irowT
+                    (map[irowS][icol], map[irowT][icol]) = ('.', 'O'); 
+                    irowT++;
                 }
             }
         }
@@ -78,6 +77,6 @@ class Solution : Solver {
     }
 
     // returns the cummulated distances of 'O' tiles from the bottom of the map
-    int Measure(Map map) => 
+    int Measure(Map map) =>
         map.Select((row, irow) => (Crow(map) - irow) * row.Count(ch => ch == 'O')).Sum();
 }
