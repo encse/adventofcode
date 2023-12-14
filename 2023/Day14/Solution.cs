@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using Map = char[][];
 
 namespace AdventOfCode.Y2023.Day14;
 
@@ -7,49 +9,56 @@ namespace AdventOfCode.Y2023.Day14;
 class Solution : Solver {
 
     public object PartOne(string input) => Measure(Tilt(Parse(input)));
-    public object PartTwo(string input) => Measure(Loop(Parse(input), 1_000_000_000));
+    public object PartTwo(string input) => Measure(Iterate(Parse(input), Cycle, 1_000_000_000));
 
-    char[][] Parse(string input) {
-        return input.Split('\n').Select(line => line.ToCharArray()).ToArray();
-    }
+    Map Parse(string input) => 
+        (from line in input.Split('\n') select line.ToCharArray()).ToArray();
 
-    char[][] Loop(char[][] map, long count) {
+    int Crow(char[][] map) => map.Length;
+    int Ccol(char[][] map) => map[0].Length;
+
+    Map Iterate(Map map, Func<Map, Map> cycle, long count) {
+        // The usual trick: keep itereating until we find a loop, then make a shortcut
+        // and finish with the remaining elements.
+
+        // the 'good enough for xmas' hash algorithm
+        var hash = (Map map) => string.Join("", from line in map from ch in line select ch);
+
         var seen = new List<string>();
-        while (!seen.Contains(ToString(map)) && count > 0) {
-            seen.Add(ToString(map));
-            map = Cycle(map);
+        while (!seen.Contains(hash(map)) && count > 0) {
+            seen.Add(hash(map));
+            map = cycle(map);
             count--;
         }
 
-        var loop = seen.Count - seen.IndexOf(ToString(map));
-        count %= loop;
+        var loopLength = seen.Count - seen.IndexOf(hash(map));
+        count %= loopLength;
 
         while (count > 0) {
-            map = Cycle(map);
+            map = cycle(map);
             count--;
         }
         return map;
     }
 
-    char[][] Cycle(char[][] map) {
+    Map Cycle(Map map) {
         for (var i = 0; i < 4; i++) {
             map = Rotate(Tilt(map));
         }
         return map;
     }
 
-    char[][] Tilt(char[][] map) {
-        var crow = map.Length;
-        var ccol = map[0].Length;
-        var f = true;
-        while (f) {
-            f = false;
-            for (var irow = 0; irow < crow - 1; irow++) {
-                for (var icol = 0; icol < ccol; icol++) {
+    // Tilt the map to the North, so that the 'O' tiles roll to the top.
+    Map Tilt(Map map) {
+        var moved = true;
+        while (moved) {
+            moved = false;
+            for (var irow = 0; irow < Crow(map) - 1; irow++) {
+                for (var icol = 0; icol < Ccol(map); icol++) {
                     if (map[irow][icol] == '.' && map[irow + 1][icol] == 'O') {
                         map[irow][icol] = 'O';
                         map[irow + 1][icol] = '.';
-                        f = true;
+                        moved = true;
                     }
                 }
             }
@@ -57,36 +66,23 @@ class Solution : Solver {
         return map;
     }
 
-    char[][] Rotate(char[][] map) {
-        var crowSrc = map.Length;
-        var ccolSrc = map[0].Length;
-        var crowDst = ccolSrc;
-        var ccolDst = crowSrc;
-        var res = new char[ccolSrc][];
-        for (var irowDst = 0; irowDst < crowDst; irowDst++) {
-            res[irowDst] = new char[crowDst];
-            for (var icolDst = 0; icolDst < ccolDst; icolDst++) {
-                res[irowDst][icolDst] = map[ccolDst - icolDst - 1][irowDst];
+    // Ugly coordinate magic, turns the map 90º clockwise
+    Map Rotate(Map src) {
+        var dst = new char[Crow(src)][];
+        for (var irow = 0; irow < Ccol(src); irow++) {
+            dst[irow] = new char[Ccol(src)];
+            for (var icol = 0; icol < Crow(src); icol++) {
+                dst[irow][icol] = src[Crow(src) - icol - 1][irow];
             }
         }
-        return res;
+        return dst;
     }
 
-    int Measure(char[][] map) {
-        var crow = map.Length;
-        var ccol = map[0].Length;
-        var w = 0;
-        for (var irow = 0; irow < crow; irow++) {
-            for (var icol = 0; icol < ccol; icol++) {
-                if (map[irow][icol] == 'O') {
-                    w += crow - irow;
-                }
-            }
-        }
-        return w;
-    }
-
-    string ToString(char[][] map) {
-        return string.Join("\n", map.Select(line => string.Join("", line)));
-    }
+    // returns the cummulated distances of 'O' tiles from the bottom of the map
+    int Measure(Map map) => (
+        from irow in Enumerable.Range(0, Crow(map))
+        from icol in Enumerable.Range(0, Ccol(map))
+        where map[irow][icol] == 'O'
+        select Crow(map) - irow
+    ).Sum();
 }
