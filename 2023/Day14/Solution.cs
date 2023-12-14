@@ -17,25 +17,21 @@ class Solution : Solver {
     int Crow(char[][] map) => map.Length;
     int Ccol(char[][] map) => map[0].Length;
 
-    Map Iterate(Map map, Func<Map, Map> cycle, long count) {
+    Map Iterate(Map map, Func<Map, Map> cycle, int count) {
         // The usual trick: keep iterating until we find a loop, make a shortcut
-        // and finish with the remaining elements. 
-        var seen = new List<string>();
+        // and read the result from the accumulated history.
+        var history = new List<string>();
         while (count > 0) {
             map = cycle(map);
             count--;
-
-            var hash = string.Join("", from line in map from ch in line select ch);
-            if (!seen.Contains(hash)) {
-                seen.Add(hash);
+            var hash = string.Join("\n", from line in map select string.Join("", line));
+            var idx = history.IndexOf(hash);
+            if (idx < 0) {
+                history.Add(hash);
             } else {
-                count %= seen.Count - seen.IndexOf(hash);
-                break;
+                count %= history.Count - idx;
+                return Parse(history[idx + count]);
             }
-        }
-
-        for (; count > 0; count--) {
-            map = cycle(map);
         }
         return map;
     }
@@ -55,8 +51,8 @@ class Solution : Solver {
                 if (map[irowS][icol] == '#') {
                     irowT = irowS + 1;
                 } else if (map[irowS][icol] == 'O') {
-                    // works when even if irowS == irowT
-                    (map[irowS][icol], map[irowT][icol]) = ('.', 'O'); 
+                    map[irowS][icol] = '.'; 
+                    map[irowT][icol] = 'O'; 
                     irowT++;
                 }
             }
