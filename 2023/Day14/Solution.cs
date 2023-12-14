@@ -11,7 +11,7 @@ class Solution : Solver {
     public object PartOne(string input) => Measure(Tilt(Parse(input)));
     public object PartTwo(string input) => Measure(Iterate(Parse(input), Cycle, 1_000_000_000));
 
-    Map Parse(string input) => 
+    Map Parse(string input) =>
         (from line in input.Split('\n') select line.ToCharArray()).ToArray();
 
     int Crow(char[][] map) => map.Length;
@@ -20,23 +20,22 @@ class Solution : Solver {
     Map Iterate(Map map, Func<Map, Map> cycle, long count) {
         // The usual trick: keep iterating until we find a loop, make a shortcut
         // and finish with the remaining elements. 
-
-        // the 'good enough for xmas' hash algorithm
-        var hash = (Map map) => string.Join("", from line in map from ch in line select ch);
-
         var seen = new List<string>();
-        while (!seen.Contains(hash(map)) && count > 0) {
-            seen.Add(hash(map));
-            map = cycle(map);
-            count--;
-        }
-
-        var loopLength = seen.Count - seen.IndexOf(hash(map));
-        count %= loopLength;
-
         while (count > 0) {
             map = cycle(map);
             count--;
+
+            var hash = string.Join("", from line in map from ch in line select ch);
+            if (!seen.Contains(hash)) {
+                seen.Add(hash);
+            } else {
+                count %= seen.Count - seen.IndexOf(hash);
+                break;
+            }
+        }
+
+        for (; count > 0; count--) {
+            map = cycle(map);
         }
         return map;
     }
@@ -50,15 +49,15 @@ class Solution : Solver {
 
     // Tilt the map to the North, so that the 'O' tiles roll to the top.
     Map Tilt(Map map) {
-        var moved = true;
-        while (moved) {
-            moved = false;
-            for (var irow = 0; irow < Crow(map) - 1; irow++) {
-                for (var icol = 0; icol < Ccol(map); icol++) {
+        for (var icol = 0; icol < Ccol(map); icol++) {
+            bool colFinished = false;
+            while (!colFinished) {
+                colFinished = true;
+                for (var irow = 0; irow < Crow(map) - 1; irow++) {
                     if (map[irow][icol] == '.' && map[irow + 1][icol] == 'O') {
                         map[irow][icol] = 'O';
                         map[irow + 1][icol] = '.';
-                        moved = true;
+                        colFinished = false;
                     }
                 }
             }
