@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+
 namespace AdventOfCode.Y2023.Day15;
 using Boxes = List<Lens>[];
 
@@ -8,7 +9,7 @@ class Solution : Solver {
 
     public object PartOne(string input) => input.Split(',').Select(Hash).Sum();
 
-    // I call this the "forced functional" way
+    // "funcionally imperative of imperatively functional", only for 🎄
     public object PartTwo(string input) =>
         ParseSteps(input).Aggregate(MakeBoxes(256), UpdateBoxes, GetFocusingPower);
 
