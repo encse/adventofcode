@@ -17,11 +17,11 @@ class Solution : Solver {
         var box = boxes[Hash(step.label)];
         var ilens = box.FindIndex(lens => lens.label == step.label);
 
-        if (ilens >= 0 && !step.focalLength.HasValue) {
+        if (!step.focalLength.HasValue && ilens >= 0) {
             box.RemoveAt(ilens);
-        } else if (ilens >= 0 && step.focalLength.HasValue) {
+        } else if (step.focalLength.HasValue && ilens >= 0) {
             box[ilens] = new Lens(step.label, step.focalLength.Value);
-        } else if (ilens < 0 && step.focalLength.HasValue) {
+        } else if (step.focalLength.HasValue && ilens < 0) {
             box.Add(new Lens(step.label, step.focalLength.Value));
         }
         return boxes;
