@@ -1,59 +1,47 @@
-using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Text;
-using System.Drawing;
-using System.Security.Cryptography.X509Certificates;
-
 namespace AdventOfCode.Y2023.Day15;
+using Boxes = List<Lens>[];
 
 [ProblemName("Lens Library")]
 class Solution : Solver {
 
-    public object PartOne(string input) {
-        return input.Split(',').Select(Hash).Sum();
+    public object PartOne(string input) => input.Split(',').Select(Hash).Sum();
+
+    // I call this the "forced functional" way
+    public object PartTwo(string input) =>
+        ParseSteps(input).Aggregate(MakeBoxes(256), UpdateBoxes, GetFocusingPower);
+
+    Boxes UpdateBoxes(Boxes boxes, Step step) {
+        var box = boxes[Hash(step.label)];
+        var ilens = box.FindIndex(lens => lens.label == step.label);
+
+        if (ilens >= 0 && !step.focalLength.HasValue) {
+            box.RemoveAt(ilens);
+        } else if (ilens >= 0 && step.focalLength.HasValue) {
+            box[ilens] = new Lens(step.label, step.focalLength.Value);
+        } else if (ilens < 0 && step.focalLength.HasValue) {
+            box.Add(new Lens(step.label, step.focalLength.Value));
+        }
+        return boxes;
     }
+
+    IEnumerable<Step> ParseSteps(string input) =>
+        from item in input.Split(',')
+        let parts = item.Split('-', '=')
+        select new Step(parts[0], parts[1] == "" ? null : int.Parse(parts[1]));
+
+    Boxes MakeBoxes(int count) =>
+        Enumerable.Range(0, count).Select(_ => new List<Lens>()).ToArray();
+
+    int GetFocusingPower(Boxes boxes) => (
+        from ibox in Enumerable.Range(0, boxes.Length)
+        from ilens in Enumerable.Range(0, boxes[ibox].Count)
+        select (ibox + 1) * (ilens + 1) * boxes[ibox][ilens].focalLength
+    ).Sum();
+
     int Hash(string st) => st.Aggregate(0, (ch, a) => (ch + a) * 17 % 256);
-
-    T Tsto<T>(T t) {
-        Console.WriteLine(t);
-        return t;
-    }
-    public object PartTwo(string input) {
-        var boxes = new List<Lens>[256];
-        for(var i = 0;i<256;i++) {
-            boxes[i] = new List<Lens>();
-        }
-
-        foreach(var cmd in input.Split(',')) {
-            var parts = cmd.Split('-', '=');
-            var label = parts[0];
-            var box = Hash(label);
-            
-            if (parts[1] == "") {
-                boxes[box] = boxes[box].Where(x => x.label != label).ToList();
-            } else  {
-                var focalLength = int.Parse(parts[1]);
-                var newLens = new Lens(label, focalLength);
-                var idx = boxes[box].FindIndex(lens => lens.label == newLens.label);
-                if (idx < 0) {
-                    boxes[box].Add(newLens);
-                } else {
-                    boxes[box][idx] = newLens;
-                }
-            }
-        }
-
-        var m = 0L;
-        for(var i = 0;i<256;i++) {
-            for(var idx =0; idx <  boxes[i].Count;idx++) {
-                var power = (i + 1) * boxes[i][idx].focalLength * (idx + 1);
-                m += power;
-            }
-        }
-        return m;
-    }
 }
+
 record Lens(string label, int focalLength);
+record Step(string label, int? focalLength);
