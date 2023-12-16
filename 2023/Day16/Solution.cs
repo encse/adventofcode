@@ -29,8 +29,7 @@ class Solution : Solver {
         var q = new Queue<Beam>([beam]);
         var seen = new HashSet<Beam>();
 
-        while (q.Any()) {
-            beam = q.Dequeue();
+        while (q.TryDequeue(out beam)) {
             seen.Add(beam);
             foreach (var dir in Exits(map[beam.pos], beam.dir)) {
                 var pos = beam.pos + dir;
