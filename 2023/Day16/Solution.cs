@@ -25,7 +25,8 @@ class Solution : Solver {
 
     // follow the beam in the map and return the energized cell count. 
     int EnergizedCells(Map map, Beam beam) {
-        // this is essentially just a flood fill algorithm..
+
+        // this is essentially just a flood fill algorithm.
         var q = new Queue<Beam>([beam]);
         var seen = new HashSet<Beam>();
 
@@ -53,7 +54,7 @@ class Solution : Solver {
         ];
     }
 
-    // use a dictionary because of the easy bounds check (i.e. containskey)
+    // using a dictionary helps with bounds check (simply containskey)
     Map ParseMap(string input) {
         var lines = input.Split('\n');
         return (
@@ -65,11 +66,11 @@ class Solution : Solver {
         ).ToDictionary();
     }
 
-    // map boundary
+    // map dimensions
     Complex TopLeft(Map map) => Complex.Zero;
     Complex BottomRight(Map map) => map.Keys.MaxBy(pos => pos.Imaginary + pos.Real);
 
-    // allowed positions of the map from 'start' going in 'dir'
+    // positions of the map from 'start' going in 'dir'
     IEnumerable<Complex> Positions(Map map, Complex start, Complex dir) {
         for (var pos = start; map.ContainsKey(pos); pos += dir) {
             yield return pos;
