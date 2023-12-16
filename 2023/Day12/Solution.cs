@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Immutable;
+using System.Collections.Generic;
 using System.Linq;
 
-using Cache = System.Collections.Generic.Dictionary<(string, System.Collections.Immutable.ImmutableStack<int>), long>;
 namespace AdventOfCode.Y2023.Day12;
+using Cache = Dictionary<(string, ImmutableStack<int>), long>;
 
 [ProblemName("Hot Springs")]
 class Solution : Solver {
