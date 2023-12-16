@@ -77,21 +77,11 @@ class Solution : Solver {
     }
 
     // The 'exit' direction(s) of the given cell when entered by a beam moving in 'dir'
-    Complex[] Exits(char cell, Complex dir) {
-        var p = (cell, dir);
-        return
-            p == ('-', Up)     ? [Left, Right] :
-            p == ('-', Down)   ? [Left, Right] :
-            p == ('|', Left)   ? [Up, Down] :
-            p == ('|', Right)  ? [Up, Down] :
-            p == ('/', Left)   ? [Down] :
-            p == ('/', Right)  ? [Up] :
-            p == ('/', Up)     ? [Right] :
-            p == ('/', Down)   ? [Left] :
-            p == ('\\', Left)  ? [Up] :
-            p == ('\\', Right) ? [Down] :
-            p == ('\\', Up)    ? [Left] :
-            p == ('\\', Down)  ? [Right] :
-                 /* otherwise */ [p.dir];
-    }
+    Complex[] Exits(char cell, Complex dir) => (cell, dir.Real, dir.Imaginary) switch {
+        ('-', 0, _) => [Left, Right],
+        ('|', _, 0) => [Up, Down],
+        ('/', _, _) => [-new Complex(dir.Imaginary, dir.Real)],
+        ('\\', _, _) => [new Complex(dir.Imaginary, dir.Real)],
+        _ => [dir]
+    };
 }
