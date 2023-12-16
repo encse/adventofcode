@@ -1,9 +1,9 @@
 using System.Linq;
 using System.Text.RegularExpressions;
-
-using Map = System.Collections.Generic.Dictionary<string, (string Left, string Right)>;
+using System.Collections.Generic;
 
 namespace AdventOfCode.Y2023.Day08;
+using Map = Dictionary<string, (string Left, string Right)>;
 
 [ProblemName("Haunted Wasteland")]
 class Solution : Solver {
