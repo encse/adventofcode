@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace AdventOfCode.Y2023.Day11;
+record Position(int irow, int icol);
 
 [ProblemName("Cosmic Expansion")]
 class Solution : Solver {
@@ -48,5 +49,3 @@ class Solution : Solver {
         where map[irow][icol] == ch
         select new Position(irow, icol);
 }
-
-record Position(int irow, int icol);
