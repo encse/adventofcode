@@ -43,46 +43,37 @@ class Solution : Solver {
         return seen.Select(beam => beam.pos).Distinct().Count();
     }
 
-    // go around the edges of the map and return the inward pointing directions
+    // go around the edges (top, right, bottom, left order) of the map
+    // and return the inward pointing directions
     IEnumerable<Beam> StartBeams(Map map) {
-        var (tl, br) = (TopLeft(map), BottomRight(map));
+        var br = map.Keys.MaxBy(pos => pos.Imaginary + pos.Real);
         return [
-            ..from pos in Positions(map, tl, Right) select (pos, Down),
-            ..from pos in Positions(map, tl, Down) select (pos, Right),
-            ..from pos in Positions(map, br, Left) select (pos, Up),
-            ..from pos in Positions(map, br, Up) select (pos, Left),
+            ..from pos in map.Keys where pos.Real == 0 select (pos, Down),
+            ..from pos in map.Keys where pos.Real == br.Real select (pos, Left),
+            ..from pos in map.Keys where pos.Imaginary == br.Imaginary select (pos, Up),
+            ..from pos in map.Keys where pos.Imaginary == 0 select (pos, Right),
         ];
     }
 
-    // using a dictionary helps with bounds check (simply containskey)
+    // using a dictionary helps with bounds check (simply containskey):
     Map ParseMap(string input) {
         var lines = input.Split('\n');
         return (
             from irow in Enumerable.Range(0, lines.Length)
             from icol in Enumerable.Range(0, lines[0].Length)
-            let pos = new Complex(icol, irow)
             let cell = lines[irow][icol]
+            let pos = new Complex(icol, irow)
             select new KeyValuePair<Complex, char>(pos, cell)
         ).ToDictionary();
     }
 
-    // map dimensions
-    Complex TopLeft(Map map) => Complex.Zero;
-    Complex BottomRight(Map map) => map.Keys.MaxBy(pos => pos.Imaginary + pos.Real);
-
-    // positions of the map from 'start' going in 'dir'
-    IEnumerable<Complex> Positions(Map map, Complex start, Complex dir) {
-        for (var pos = start; map.ContainsKey(pos); pos += dir) {
-            yield return pos;
-        }
-    }
-
-    // The 'exit' direction(s) of the given cell when entered by a beam moving in 'dir'
-    Complex[] Exits(char cell, Complex dir) => (cell, dir.Real, dir.Imaginary) switch {
-        ('-', 0, _) => [Left, Right],
-        ('|', _, 0) => [Up, Down],
-        ('/', _, _) => [-new Complex(dir.Imaginary, dir.Real)],
-        ('\\', _, _) => [new Complex(dir.Imaginary, dir.Real)],
+    // the 'exit' direction(s) of the given cell when entered by a beam moving in 'dir'
+    // we have some special cases for mirrors and spliters, the rest keeps the direction
+    Complex[] Exits(char cell, Complex dir) => cell switch {
+        '-' when dir == Up || dir == Down => [Left, Right],
+        '|' when dir == Left || dir == Right => [Up, Down],
+        '/' => [-new Complex(dir.Imaginary, dir.Real)],
+        '\\' => [new Complex(dir.Imaginary, dir.Real)],
         _ => [dir]
     };
 }
