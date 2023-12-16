@@ -3,6 +3,8 @@ using System.Linq;
 
 namespace AdventOfCode.Y2023.Day15;
 using Boxes = List<Lens>[];
+record Lens(string label, int focalLength);
+record Step(string label, int? focalLength);
 
 [ProblemName("Lens Library")]
 class Solution : Solver {
@@ -43,6 +45,3 @@ class Solution : Solver {
 
     int Hash(string st) => st.Aggregate(0, (ch, a) => (ch + a) * 17 % 256);
 }
-
-record Lens(string label, int focalLength);
-record Step(string label, int? focalLength);
