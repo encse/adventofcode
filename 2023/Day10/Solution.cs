@@ -5,7 +5,6 @@ using System.Linq;
 using System.Numerics;
 
 namespace AdventOfCode.Y2023.Day10;
-
 using Map = Dictionary<Complex, char>;
 
 [ProblemName("Pipe Maze")]
