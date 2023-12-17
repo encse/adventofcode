@@ -5,13 +5,12 @@ using System.Numerics;
 
 namespace AdventOfCode.Y2023.Day17;
 using Map = Dictionary<Complex, int>;
-record Crucible(Complex pos, Complex dir, int straight);
+record Crucible(Complex pos, Complex dir, int straightMoves);
 
 // Encode the difference between part 1 and 2 in a handy 'rules' object
 record Rules(
-    Func<Crucible, bool> canStop,
-    Func<Crucible, bool> canGoStraight,
-    Func<Crucible, bool> canTurn
+    Func<Crucible, bool> canChangeDir,
+    Func<Crucible, bool> canGoStraight
 );
 
 [ProblemName("Clumsy Crucible")]
@@ -20,17 +19,15 @@ class Solution : Solver {
     public object PartOne(string input) =>
         Heatloss(input,
             new Rules(
-                canStop: crucible => true,
-                canTurn: crucible => true,
-                canGoStraight: crucible => crucible.straight < 3
+                canChangeDir: crucible => true,
+                canGoStraight: crucible => crucible.straightMoves < 3
             ));
 
     public object PartTwo(string input) =>
         Heatloss(input,
             new Rules(
-                canStop: crucible => crucible.straight >= 4,
-                canTurn: crucible => crucible.straight == 0 || crucible.straight >= 4,
-                canGoStraight: crucible => crucible.straight < 10
+                canChangeDir: crucible => crucible.straightMoves >= 4,
+                canGoStraight: crucible => crucible.straightMoves < 10
             ));
 
     // Graph search using a priority queue. We can simply store the heatloss in 
@@ -40,11 +37,14 @@ class Solution : Solver {
         var goal = map.Keys.MaxBy(pos => pos.Imaginary + pos.Real);
 
         var q = new PriorityQueue<Crucible, int>();
-        q.Enqueue(new Crucible(pos: 0, dir: 1, straight: 0), 0);
-        var seen = new HashSet<Crucible>();
 
+        // initial direction: right or down
+        q.Enqueue(new Crucible(pos: 0, dir: 1, straightMoves: 0), 0);
+        q.Enqueue(new Crucible(pos: 0, dir: Complex.ImaginaryOne, straightMoves: 0), 0);
+
+        var seen = new HashSet<Crucible>();
         while (q.TryDequeue(out var crucible, out var heatloss)) {
-            if (crucible.pos == goal && rules.canStop(crucible)) {
+            if (crucible.pos == goal && rules.canChangeDir(crucible)) {
                 return heatloss;
             }
             foreach (var next in Moves(crucible, rules)) {
@@ -62,11 +62,11 @@ class Solution : Solver {
         if (rules.canGoStraight(crucible)) {
             yield return crucible with { 
                 pos = crucible.pos + crucible.dir, 
-                straight = crucible.straight + 1 
+                straightMoves = crucible.straightMoves + 1 
             };
         }
 
-        if (rules.canTurn(crucible)) {
+        if (rules.canChangeDir(crucible)) {
             var dir = crucible.dir * Complex.ImaginaryOne;
             yield return new Crucible(crucible.pos + dir, dir, 1);
             yield return new Crucible(crucible.pos - dir, -dir, 1);
