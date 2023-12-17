@@ -10,7 +10,7 @@ record Crucible(Complex pos, Complex dir, int straight);
 // Encode the difference between part 1 and 2 in a handy 'rules' object
 record Rules(
     Func<Crucible, bool> canStop,
-    Func<Crucible, bool> canGoForward,
+    Func<Crucible, bool> canGoStraight,
     Func<Crucible, bool> canTurn
 );
 
@@ -22,7 +22,7 @@ class Solution : Solver {
             new Rules(
                 canStop: crucible => true,
                 canTurn: crucible => true,
-                canGoForward: crucible => crucible.straight < 3
+                canGoStraight: crucible => crucible.straight < 3
             ));
 
     public object PartTwo(string input) =>
@@ -30,7 +30,7 @@ class Solution : Solver {
             new Rules(
                 canStop: crucible => crucible.straight >= 4,
                 canTurn: crucible => crucible.straight == 0 || crucible.straight >= 4,
-                canGoForward: crucible => crucible.straight < 10
+                canGoStraight: crucible => crucible.straight < 10
             ));
 
     // Graph search using a priority queue. We can simply store the heatloss in 
@@ -59,7 +59,7 @@ class Solution : Solver {
 
     // returns possible next states based on the rules
     public IEnumerable<Crucible> Moves(Crucible crucible, Rules rules) {
-        if (rules.canGoForward(crucible)) {
+        if (rules.canGoStraight(crucible)) {
             yield return crucible with { 
                 pos = crucible.pos + crucible.dir, 
                 straight = crucible.straight + 1 
