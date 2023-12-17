@@ -5,99 +5,73 @@ using System.Numerics;
 
 namespace AdventOfCode.Y2023.Day17;
 using Map = Dictionary<Complex, int>;
-using State1 = (Complex pos, Complex dir, int straight);
-using State2 = (Complex pos, Complex dir, int straight);
+record Crucible(Complex pos, Complex dir, int straight);
+
+// Encode the difference between part 1 and 2 in a handy 'rules' object
+record Rules(
+    Func<Crucible, bool> canStop,
+    Func<Crucible, bool> canGoForward,
+    Func<Crucible, bool> canTurn
+);
 
 [ProblemName("Clumsy Crucible")]
 class Solution : Solver {
 
-    static readonly Complex Up = -Complex.ImaginaryOne;
-    static readonly Complex Down = Complex.ImaginaryOne;
-    static readonly Complex Left = -Complex.One;
-    static readonly Complex Right = Complex.One;
-
     public object PartOne(string input) =>
-        Heatloss1(ParseMap(input), (Complex.Zero, Right, 0));
+        Heatloss(input,
+            new Rules(
+                canStop: crucible => true,
+                canTurn: crucible => true,
+                canGoForward: crucible => crucible.straight < 3
+            ));
 
-    public object PartTwo(string input) => 
-        Heatloss2(ParseMap(input), (Complex.Zero, Right, 0));
+    public object PartTwo(string input) =>
+        Heatloss(input,
+            new Rules(
+                canStop: crucible => crucible.straight >= 4,
+                canTurn: crucible => crucible.straight == 0 || crucible.straight >= 4,
+                canGoForward: crucible => crucible.straight < 10
+            ));
 
-    int Heatloss1(Map map, State1 state) {
-        var heatloss = 0;
+    // Graph search using a priority queue. We can simply store the heatloss in 
+    // the priority.
+    int Heatloss(string input, Rules rules) {
+        var map = ParseMap(input);
+        var goal = map.Keys.MaxBy(pos => pos.Imaginary + pos.Real);
 
-        var br = map.Keys.MaxBy(pos => pos.Imaginary + pos.Real);
-        var q = new PriorityQueue<State1, int>();
+        var q = new PriorityQueue<Crucible, int>();
+        q.Enqueue(new Crucible(pos: 0, dir: 1, straight: 0), 0);
+        var seen = new HashSet<Crucible>();
 
-        q.Enqueue(state, heatloss);
-        var seen = new HashSet<State1>();
-        while (q.TryDequeue(out state, out heatloss)) {
-            if (state.pos == br) {
-                break;
+        while (q.TryDequeue(out var crucible, out var heatloss)) {
+            if (crucible.pos == goal && rules.canStop(crucible)) {
+                return heatloss;
             }
-            foreach (var stateT in Exits(state)) {
-                if (map.ContainsKey(stateT.pos) && !seen.Contains(stateT)) {
-                    seen.Add(stateT);
-                    var h = heatloss + map[stateT.pos];
-                    q.Enqueue(stateT, h);
+            foreach (var next in Moves(crucible, rules)) {
+                if (map.ContainsKey(next.pos) && !seen.Contains(next)) {
+                    seen.Add(next);
+                    q.Enqueue(next, heatloss + map[next.pos]);
                 }
             }
         }
-
-        return heatloss;
+        throw new Exception();
     }
 
-    IEnumerable<State1> Exits(State1 state) {
-        if (state.straight < 3) {
-            yield return state with { pos = state.pos + state.dir, straight = state.straight + 1 };
+    // returns possible next states based on the rules
+    public IEnumerable<Crucible> Moves(Crucible crucible, Rules rules) {
+        if (rules.canGoForward(crucible)) {
+            yield return crucible with { 
+                pos = crucible.pos + crucible.dir, 
+                straight = crucible.straight + 1 
+            };
         }
 
-        var dir = state.dir * Complex.ImaginaryOne;
-        yield return state with { pos = state.pos + dir, dir = dir, straight = 1 };
-        dir = -dir;
-        yield return state with { pos = state.pos + dir, dir = dir, straight = 1 };
-    }
-
-    int Heatloss2(Map map, State2 state) {
-        var heatloss = 0;
-
-        var br = map.Keys.MaxBy(pos => pos.Imaginary + pos.Real);
-        var q = new PriorityQueue<State1, int>();
-
-        q.Enqueue(state, heatloss);
-        var seen = new HashSet<State1>();
-        while (q.TryDequeue(out state, out heatloss)) {
-            if (state.pos == br && state.straight % 4 == 0) {
-                break;
-            }
-            foreach (var stateT in Exits2(state)) {
-                if (map.ContainsKey(stateT.pos) && !seen.Contains(stateT)) {
-                    seen.Add(stateT);
-                    var h = heatloss + map[stateT.pos];
-                    // Console.WriteLine(state.pos + " -> " + stateT.pos + " " + stateT.straight + "    " + h);
-                    q.Enqueue(stateT, h);
-                }
-            }
+        if (rules.canTurn(crucible)) {
+            var dir = crucible.dir * Complex.ImaginaryOne;
+            yield return new Crucible(crucible.pos + dir, dir, 1);
+            yield return new Crucible(crucible.pos - dir, -dir, 1);
         }
-
-        return heatloss;
     }
-
-    IEnumerable<State1> Exits2(State1 state) {
-        if (state.straight > 0 && state.straight < 4) {
-            yield return state with { pos = state.pos + state.dir, straight = state.straight + 1 };
-            yield break;
-        } 
-        
-        if (state.straight < 10) {
-            yield return state with { pos = state.pos + state.dir, straight = state.straight + 1 };
-        }
-
-        var dir = state.dir * Complex.ImaginaryOne;
-        yield return state with { pos = state.pos + dir, dir = dir, straight = 1 };
-        dir = -dir;
-        yield return state with { pos = state.pos + dir, dir = dir, straight = 1 };
-    }
-
 
     // using a dictionary helps with bounds check (simply containskey):
     Map ParseMap(string input) {
@@ -110,6 +84,4 @@ class Solution : Solver {
             select new KeyValuePair<Complex, int>(pos, cell)
         ).ToDictionary();
     }
-
-
 }
