@@ -7,35 +7,17 @@ namespace AdventOfCode.Y2023.Day17;
 using Map = Dictionary<Complex, int>;
 record Crucible(Complex pos, Complex dir, int straightMoves);
 
-// Encode the difference between part 1 and 2 in a handy 'rules' object
-record Rules(
-    Func<Crucible, bool> canChangeDir,
-    Func<Crucible, bool> canGoStraight
-);
-
 [ProblemName("Clumsy Crucible")]
 class Solution : Solver {
 
-    public object PartOne(string input) =>
-        Heatloss(input,
-            new Rules(
-                canChangeDir: crucible => true,
-                canGoStraight: crucible => crucible.straightMoves < 3
-            ));
-
-    public object PartTwo(string input) =>
-        Heatloss(input,
-            new Rules(
-                canChangeDir: crucible => crucible.straightMoves >= 4,
-                canGoStraight: crucible => crucible.straightMoves < 10
-            ));
+    public object PartOne(string input) => Heatloss(input, 0, 3);
+    public object PartTwo(string input) => Heatloss(input, 4, 10);
 
     // Graph search using a priority queue. We can simply store the heatloss in 
     // the priority.
-    int Heatloss(string input, Rules rules) {
+    int Heatloss(string input, int minStraight, int maxStraight) {
         var map = ParseMap(input);
         var goal = map.Keys.MaxBy(pos => pos.Imaginary + pos.Real);
-
         var q = new PriorityQueue<Crucible, int>();
 
         // initial direction: right or down
@@ -44,10 +26,10 @@ class Solution : Solver {
 
         var seen = new HashSet<Crucible>();
         while (q.TryDequeue(out var crucible, out var heatloss)) {
-            if (crucible.pos == goal && rules.canChangeDir(crucible)) {
+            if (crucible.pos == goal && crucible.straightMoves >= minStraight) {
                 return heatloss;
             }
-            foreach (var next in Moves(crucible, rules)) {
+            foreach (var next in Moves(crucible, minStraight, maxStraight)) {
                 if (map.ContainsKey(next.pos) && !seen.Contains(next)) {
                     seen.Add(next);
                     q.Enqueue(next, heatloss + map[next.pos]);
@@ -58,15 +40,15 @@ class Solution : Solver {
     }
 
     // returns possible next states based on the rules
-    public IEnumerable<Crucible> Moves(Crucible crucible, Rules rules) {
-        if (rules.canGoStraight(crucible)) {
+    public IEnumerable<Crucible> Moves(Crucible crucible, int minStraight, int maxStraight) {
+        if (crucible.straightMoves < maxStraight) {
             yield return crucible with { 
                 pos = crucible.pos + crucible.dir, 
                 straightMoves = crucible.straightMoves + 1 
             };
         }
 
-        if (rules.canChangeDir(crucible)) {
+        if (crucible.straightMoves >= minStraight) {
             var dir = crucible.dir * Complex.ImaginaryOne;
             yield return new Crucible(crucible.pos + dir, dir, 1);
             yield return new Crucible(crucible.pos - dir, -dir, 1);
