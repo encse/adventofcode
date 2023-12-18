@@ -1,8 +1,8 @@
+namespace AdventOfCode.Y2023.Day03;
+
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
-
-namespace AdventOfCode.Y2023.Day03;
 
 [ProblemName("Gear Ratios")]
 class Solution : Solver {
