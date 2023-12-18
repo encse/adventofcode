@@ -1,9 +1,9 @@
+namespace AdventOfCode.Y2023.Day14;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Map = char[][];
-
-namespace AdventOfCode.Y2023.Day14;
 
 [ProblemName("Parabolic Reflector Dish")]
 class Solution : Solver {
