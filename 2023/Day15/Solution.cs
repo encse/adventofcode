@@ -1,8 +1,9 @@
+namespace AdventOfCode.Y2023.Day15;
+
 using System.Collections.Generic;
 using System.Linq;
+using Boxes = System.Collections.Generic.List<Lens>[];
 
-namespace AdventOfCode.Y2023.Day15;
-using Boxes = List<Lens>[];
 record Lens(string label, int focalLength);
 record Step(string label, int? focalLength);
 
