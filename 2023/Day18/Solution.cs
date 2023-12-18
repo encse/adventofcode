@@ -8,7 +8,7 @@ using System.Numerics;
 [ProblemName("Lavaduct Lagoon")]
 class Solution : Solver {
 
-    public object PartOne(string input)=> Area(Steps1(input));
+    public object PartOne(string input) => Area(Steps1(input));
     public object PartTwo(string input) => Area(Steps2(input));
 
     IEnumerable<Complex> Steps1(string input) =>
@@ -44,19 +44,21 @@ class Solution : Solver {
         // Shoelace formula https://en.wikipedia.org/wiki/Shoelace_formula
         var shiftedVertices = vertices.Skip(1).Append(vertices[0]);
         var shoelaces =
-            from pair in vertices.Zip(shiftedVertices)
-            select pair.First.Real * pair.Second.Imaginary - pair.First.Imaginary * pair.Second.Real;
+            from points in vertices.Zip(shiftedVertices)
+            let p1 = points.First
+            let p2 = points.Second
+            select p1.Real * p2.Imaginary - p1.Imaginary * p2.Real;
         var area = Math.Abs(shoelaces.Sum()) / 2;
 
         // Pick's theorem  https://en.wikipedia.org/wiki/Pick%27s_theorem
         var boundary = steps.Select(x => x.Magnitude).Sum();
-        var interior = area - boundary / 2 + 1; 
+        var interior = area - boundary / 2 + 1;
 
         // Integer area
         return boundary + interior;
     }
 
-     IEnumerable<Complex> Vertices(IEnumerable<Complex> steps) {
+    IEnumerable<Complex> Vertices(IEnumerable<Complex> steps) {
         var pos = Complex.Zero;
         foreach (var step in steps) {
             pos += step;
