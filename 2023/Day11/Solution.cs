@@ -1,8 +1,9 @@
+namespace AdventOfCode.Y2023.Day11;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AdventOfCode.Y2023.Day11;
 record Position(int irow, int icol);
 
 [ProblemName("Cosmic Expansion")]
