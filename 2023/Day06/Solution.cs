@@ -1,8 +1,8 @@
+namespace AdventOfCode.Y2023.Day06;
+
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
-
-namespace AdventOfCode.Y2023.Day06;
 
 [ProblemName("Wait For It")]
 class Solution : Solver {
