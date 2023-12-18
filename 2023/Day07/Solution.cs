@@ -1,8 +1,8 @@
+namespace AdventOfCode.Y2023.Day07;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
-namespace AdventOfCode.Y2023.Day07;
 
 [ProblemName("Camel Cards")]
 class Solution : Solver {
