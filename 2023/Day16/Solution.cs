@@ -1,11 +1,10 @@
+namespace AdventOfCode.Y2023.Day16;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-
-namespace AdventOfCode.Y2023.Day16;
-using Map = Dictionary<Complex, char>;
-using Beam = (Complex pos, Complex dir);
+using Map = System.Collections.Generic.Dictionary<System.Numerics.Complex, char>;
+using Beam = (System.Numerics.Complex pos, System.Numerics.Complex dir);
 
 [ProblemName("The Floor Will Be Lava")]
 class Solution : Solver {
