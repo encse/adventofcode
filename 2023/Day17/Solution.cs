@@ -1,10 +1,11 @@
+namespace AdventOfCode.Y2023.Day17;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using Map = System.Collections.Generic.Dictionary<System.Numerics.Complex, int>;
 
-namespace AdventOfCode.Y2023.Day17;
-using Map = Dictionary<Complex, int>;
 record Crucible(Complex pos, Complex dir, int straightMoves);
 
 [ProblemName("Clumsy Crucible")]
