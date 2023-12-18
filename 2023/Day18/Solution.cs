@@ -37,14 +37,23 @@ class Solution : Solver {
         let dist = Convert.ToInt32(hex[2..7], 16)
         select dir * dist;
 
+    // We are using a combination of the shoelace formula with Pick's theorem
     double Area(IEnumerable<Complex> steps) {
         var vertices = Vertices(steps).ToList();
-        var circumference = steps.Select(x => x.Magnitude).Sum();
+
+        // Shoelace formula https://en.wikipedia.org/wiki/Shoelace_formula
         var shiftedVertices = vertices.Skip(1).Append(vertices[0]);
         var shoelaces =
             from pair in vertices.Zip(shiftedVertices)
             select pair.First.Real * pair.Second.Imaginary - pair.First.Imaginary * pair.Second.Real;
-        return Math.Abs(shoelaces.Sum()) / 2 + circumference / 2 + 1;
+        var area = Math.Abs(shoelaces.Sum()) / 2;
+
+        // Pick's theorem  https://en.wikipedia.org/wiki/Pick%27s_theorem
+        var boundary = steps.Select(x => x.Magnitude).Sum();
+        var interior = area - boundary / 2 + 1; 
+
+        // Integer area
+        return boundary + interior;
     }
 
      IEnumerable<Complex> Vertices(IEnumerable<Complex> steps) {
