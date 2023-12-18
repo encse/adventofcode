@@ -1,7 +1,7 @@
+namespace AdventOfCode.Y2023.Day01;
+
 using System.Linq;
 using System.Text.RegularExpressions;
-
-namespace AdventOfCode.Y2023.Day01;
 
 [ProblemName("Trebuchet?!")]
 class Solution : Solver {
