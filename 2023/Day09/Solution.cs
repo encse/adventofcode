@@ -1,7 +1,7 @@
+namespace AdventOfCode.Y2023.Day09;
+
 using System;
 using System.Linq;
-
-namespace AdventOfCode.Y2023.Day09;
 
 [ProblemName("Mirage Maintenance")]
 class Solution : Solver {
