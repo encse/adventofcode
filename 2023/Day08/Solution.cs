@@ -1,9 +1,8 @@
+namespace AdventOfCode.Y2023.Day08;
+
 using System.Linq;
 using System.Text.RegularExpressions;
-
 using Map = System.Collections.Generic.Dictionary<string, (string Left, string Right)>;
-
-namespace AdventOfCode.Y2023.Day08;
 
 [ProblemName("Haunted Wasteland")]
 class Solution : Solver {

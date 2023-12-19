@@ -1,9 +1,10 @@
+namespace AdventOfCode.Y2023.Day12;
+
 using System;
 using System.Collections.Immutable;
 using System.Linq;
-
-using Cache = System.Collections.Generic.Dictionary<(string, System.Collections.Immutable.ImmutableStack<int>), long>;
-namespace AdventOfCode.Y2023.Day12;
+using Cache = System.Collections.Generic.Dictionary<
+    (string, System.Collections.Immutable.ImmutableStack<int>), long>;
 
 [ProblemName("Hot Springs")]
 class Solution : Solver {
@@ -54,7 +55,7 @@ class Solution : Solver {
     }
 
     long ProcessEnd(string _, ImmutableStack<int> nums, Cache __) {
-        // the good case is when there are no numbers left at the end of the pattern
+        // no numbers left at the end of pattern -> good
         return nums.Any() ? 0 : 1;
     }
 
@@ -65,7 +66,8 @@ class Solution : Solver {
 
     long ProcessQuestion(string pattern, ImmutableStack<int> nums, Cache cache) {
         // recurse both ways
-        return Compute("." + pattern[1..], nums, cache) + Compute("#" + pattern[1..], nums, cache);
+        return Compute("." + pattern[1..], nums, cache) +
+            Compute("#" + pattern[1..], nums, cache);
     }
 
     long ProcessHash(string pattern, ImmutableStack<int> nums, Cache cache) {

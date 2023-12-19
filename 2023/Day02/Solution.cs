@@ -1,8 +1,10 @@
+namespace AdventOfCode.Y2023.Day02;
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace AdventOfCode.Y2023.Day02;
+record Game(int id, int red, int green, int blue);
 
 [ProblemName("Cube Conundrum")]
 class Solution : Solver {
@@ -35,5 +37,3 @@ class Solution : Solver {
         from m in Regex.Matches(st, rx)
         select int.Parse(m.Groups[1].Value);
 }
-
-record Game(int id, int red, int green, int blue);

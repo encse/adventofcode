@@ -1,9 +1,11 @@
+namespace AdventOfCode.Y2023.Day05;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace AdventOfCode.Y2023.Day05;
+record Range(long begin, long end);
 
 [ProblemName("If You Give A Seed A Fertilizer")]
 class Solution : Solver {
@@ -74,4 +76,3 @@ class Solution : Solver {
     ).ToDictionary();
 }
 
-record Range(long begin, long end);

@@ -1,10 +1,10 @@
+namespace AdventOfCode.Y2023.Day13;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using Map = System.Collections.Generic.Dictionary<System.Numerics.Complex, char>;
-
-namespace AdventOfCode.Y2023.Day13;
 
 [ProblemName("Point of Incidence")]
 class Solution : Solver {

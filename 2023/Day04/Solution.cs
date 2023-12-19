@@ -1,8 +1,10 @@
+namespace AdventOfCode.Y2023.Day04;
+
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace AdventOfCode.Y2023.Day04;
+record Card(int matches);
 
 [ProblemName("Scratchcards")]
 class Solution : Solver {
@@ -36,5 +38,3 @@ class Solution : Solver {
         return new Card(l.Intersect(r).Count());
     }
 }
-
-record Card(int matches);

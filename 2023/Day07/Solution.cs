@@ -1,8 +1,8 @@
+namespace AdventOfCode.Y2023.Day07;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
-namespace AdventOfCode.Y2023.Day07;
 
 [ProblemName("Camel Cards")]
 class Solution : Solver {
@@ -18,7 +18,8 @@ class Solution : Solver {
 
     (long, long) Part2Points(string hand) {
         var cards = "J123456789TQKA";
-        var patternValue = cards.Select(ch => PatternValue(hand.Replace('J', ch))).Max();
+        var patternValue = 
+            cards.Select(ch => PatternValue(hand.Replace('J', ch))).Max();
         return (patternValue, CardValue(hand, cards));
     }
 
@@ -27,8 +28,8 @@ class Solution : Solver {
     long CardValue(string hand, string cardOrder) =>
         Pack(hand.Select(card => cardOrder.IndexOf(card)));
 
-    // map cards to the number of their occurrences in the hand then order them such that
-    // A8A8A becomes 33322, 9A34Q becomes 11111 and K99AA becomes 22221
+    // map cards to the number of their occurrences in the hand then order them 
+    // such thatA8A8A becomes 33322, 9A34Q becomes 11111 and K99AA becomes 22221
     long PatternValue(string hand) =>
         Pack(hand.Select(card => hand.Count(x => x == card)).OrderDescending());
 
