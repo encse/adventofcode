@@ -89,10 +89,10 @@ class Solution : Solver {
 
     Cond TryParseCond(string st) =>
         st.Split('<', '>', ':') switch {
-            ["x", var num, var stm] => new Cond(0, st[1..2], int.Parse(num), stm),
-            ["m", var num, var stm] => new Cond(1, st[1..2], int.Parse(num), stm),
-            ["a", var num, var stm] => new Cond(2, st[1..2], int.Parse(num), stm),
-            ["s", var num, var stm] => new Cond(3, st[1..2], int.Parse(num), stm),
+            ["x", var num, var state] => new Cond(0, st[1..2], int.Parse(num), state),
+            ["m", var num, var state] => new Cond(1, st[1..2], int.Parse(num), state),
+            ["a", var num, var state] => new Cond(2, st[1..2], int.Parse(num), state),
+            ["s", var num, var state] => new Cond(3, st[1..2], int.Parse(num), state),
             _ => null
         };
 
