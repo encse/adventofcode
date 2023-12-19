@@ -30,7 +30,7 @@ class Solution : Solver {
         var rules = ParseRules(parts[0]);
         return (
             from cube in ParseUnitCube(parts[1])
-            where AccepteVolume(rules, cube) == 1
+            where AcceptedVolume(rules, cube) == 1
             select cube.Select(r => r.begin).Sum()
         ).Sum();
     }
@@ -39,10 +39,10 @@ class Solution : Solver {
         var parts = input.Split("\n\n");
         var rules = ParseRules(parts[0]);
         var cube = Enumerable.Repeat(new Range(1, 4000), 4).ToImmutableArray();
-        return AccepteVolume(rules, cube);
+        return AcceptedVolume(rules, cube);
     }
 
-    BigInteger AccepteVolume(Rules rules, Cube cube) {
+    BigInteger AcceptedVolume(Rules rules, Cube cube) {
         var q = new Queue<(Cube cube, string state)>();
         q.Enqueue((cube, "in"));
 
