@@ -8,10 +8,15 @@ using Map = char[][];
 [ProblemName("Parabolic Reflector Dish")]
 class Solution : Solver {
 
-    public object PartOne(string input) => Measure(Tilt(Parse(input)));
-    public object PartTwo(string input) => Measure(Iterate(Parse(input), Cycle, 1_000_000_000));
+    public object PartOne(string input) => 
+        Measure(Tilt(Parse(input)));
 
-    Map Parse(string input) => input.Split('\n').Select(line => line.ToCharArray()).ToArray();
+    public object PartTwo(string input) => 
+        Measure(Iterate(Parse(input), Cycle, 1_000_000_000));
+
+    Map Parse(string input) => (
+        from l in input.Split('\n') select l.ToCharArray()
+    ).ToArray();
 
     int Crow(char[][] map) => map.Length;
     int Ccol(char[][] map) => map[0].Length;
@@ -24,7 +29,7 @@ class Solution : Solver {
             map = cycle(map);
             count--;
 
-            var mapString = string.Join("\n", map.Select(line => new string(line)));
+            var mapString = string.Join("\n", map.Select(l=> new string(l)));
             var idx = history.IndexOf(mapString);
             if (idx < 0) {
                 history.Add(mapString);
@@ -74,6 +79,8 @@ class Solution : Solver {
     }
 
     // returns the cummulated distances of 'O' tiles from the bottom of the map
-    int Measure(Map map) =>
-        map.Select((row, irow) => (Crow(map) - irow) * row.Count(ch => ch == 'O')).Sum();
+    int Measure(Map map) =>  
+        map.Select((row, irow) => 
+            (Crow(map) - irow) * row.Count(ch => ch == 'O')
+        ).Sum();
 }
