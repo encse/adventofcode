@@ -95,8 +95,8 @@ class Solution : Solver {
     // returns two ranges containing [r.begin .. num - 1], [num .. r.end], 
     // returns empty ranges where end < begin if num is outside of r
     (Range lo, Range hi) SplitRange(Range r, int num) => (
-        r with { end = Math.Min(num - 1, r.end) },
-        r with { begin = Math.Max(r.begin, num) }
+        r with { begin = r.begin, end = Math.Min(num - 1, r.end) },
+        r with { begin = Math.Max(r.begin, num), end = r.end }
     );
 
     Rules ParseRules(string input) => (
