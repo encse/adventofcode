@@ -30,7 +30,7 @@ class Solution : Solver {
         var rules = ParseRules(parts[0]);
         return (
             from cube in ParseUnitCube(parts[1])
-            where Accepted(rules, cube) == 1
+            where AccepteVolume(rules, cube) == 1
             select cube.Select(r => r.begin).Sum()
         ).Sum();
     }
@@ -39,13 +39,10 @@ class Solution : Solver {
         var parts = input.Split("\n\n");
         var rules = ParseRules(parts[0]);
         var cube = Enumerable.Repeat(new Range(1, 4000), 4).ToImmutableArray();
-        return Accepted(rules, cube);
+        return AccepteVolume(rules, cube);
     }
 
-    BigInteger Volume(Cube cube) =>
-        cube.Aggregate(BigInteger.One, (m, r) => m * (r.end - r.begin + 1));
-
-    BigInteger Accepted(Rules rules, Cube cube) {
+    BigInteger AccepteVolume(Rules rules, Cube cube) {
         var q = new Queue<(Cube cube, string state)>();
         q.Enqueue((cube, "in"));
 
@@ -78,6 +75,9 @@ class Solution : Solver {
         return res;
     }
 
+    BigInteger Volume(Cube cube) =>
+        cube.Aggregate(BigInteger.One, (m, r) => m * (r.end - r.begin + 1));
+  
     // Cuts a cube along the specified dimension, other dimensions are unaffected.
     (Cube lo, Cube hi) CutCube(Cube cube, int dim, int num) {
         var r = cube[dim];
