@@ -10,7 +10,7 @@ using Rules = System.Collections.Generic.Dictionary<string, string>;
 using Cube = System.Collections.Immutable.ImmutableArray<Range>;
 
 record Range(int begin, int end);
-record Cond(int dim, int num, string state);
+record Cond(int dim, string op, int num, string state);
 
 [ProblemName("Aplenty")]
 class Solution : Solver {
@@ -48,26 +48,27 @@ class Solution : Solver {
     BigInteger Accepted(Rules rules, Cube cube) {
         var q = new Queue<(Cube cube, string state)>();
         q.Enqueue((cube, "in"));
-        
+
         BigInteger res = 0;
         while (q.Any()) {
             (cube, var state) = q.Dequeue();
             if (cube.Any(coord => coord.end < coord.begin)) {
                 continue; // cube is empty
-            } else if (state == "A") {
-                res += Volume(cube); // cube is accepted
             } else if (state == "R") {
                 continue; // cube is rejected
+            } else if (state == "A") {
+                res += Volume(cube); // cube is accepted
             } else {
                 foreach (var stm in rules[state].Split(",")) {
-                    if (TryParseCond(stm, '<', out var cond)) {
-                        var (cube1, cube2) = SplitCube(cube, cond.dim, cond.num);
+                    Cond cond = TryParseCond(stm);
+                    if (cond?.op == "<") {
+                        var (cube1, cube2) = CutCube(cube, cond.dim, cond.num - 1);
                         q.Enqueue((cube1, cond.state));
                         cube = cube2;
-                    } else if (TryParseCond(stm, '>', out cond)) {
-                        var (cube1, cube2) = SplitCube(cube, cond.dim, cond.num + 1);
-                        q.Enqueue((cube2, cond.state));
+                    } else if (cond?.op == ">") {
+                        var (cube1, cube2) = CutCube(cube, cond.dim, cond.num);
                         cube = cube1;
+                        q.Enqueue((cube2, cond.state));
                     } else {
                         q.Enqueue((cube, stm));
                     }
@@ -77,23 +78,23 @@ class Solution : Solver {
         return res;
     }
 
-    // Cuts a cube at 'num' along the specified dimension, other dimensions are unaffected.
-    (Cube lo, Cube hi) SplitCube(Cube cube, int dim, int num) {
+    // Cuts a cube along the specified dimension, other dimensions are unaffected.
+    (Cube lo, Cube hi) CutCube(Cube cube, int dim, int num) {
         var r = cube[dim];
         return (
-            cube.SetItem(dim, r with { end = Math.Min(num - 1, r.end) }),
-            cube.SetItem(dim, r with { begin = Math.Max(r.begin, num) })
+            cube.SetItem(dim, r with { end = Math.Min(num, r.end) }),
+            cube.SetItem(dim, r with { begin = Math.Max(r.begin, num + 1) })
         );
     }
 
-    int ParseDim(string st) => st switch { "x" => 0, "m" => 1, "a" => 2, _ => 3 };
-
-    bool TryParseCond(string st, char ch, out Cond cond) {
-        var parts = st.Split(ch, ':');
-        var success = parts.Length == 3;
-        cond = success ? new Cond(ParseDim(parts[0]), int.Parse(parts[1]), parts[2]) : null;
-        return success;
-    }
+    Cond TryParseCond(string st) =>
+        st.Split('<', '>', ':') switch {
+            ["x", var num, var stm] => new Cond(0, st[1..2], int.Parse(num), stm),
+            ["m", var num, var stm] => new Cond(1, st[1..2], int.Parse(num), stm),
+            ["a", var num, var stm] => new Cond(2, st[1..2], int.Parse(num), stm),
+            ["s", var num, var stm] => new Cond(3, st[1..2], int.Parse(num), stm),
+            _ => null
+        };
 
     Rules ParseRules(string input) => (
         from line in input.Split('\n')
