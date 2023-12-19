@@ -6,7 +6,7 @@ using System.Linq;
 using System.Numerics;
 using Map = System.Collections.Generic.Dictionary<System.Numerics.Complex, int>;
 
-record Crucible(Complex pos, Complex dir, int straightMoves);
+record Crucible(Complex pos, Complex dir, int straight);
 
 [ProblemName("Clumsy Crucible")]
 class Solution : Solver {
@@ -22,12 +22,12 @@ class Solution : Solver {
         var q = new PriorityQueue<Crucible, int>();
 
         // initial direction: right or down
-        q.Enqueue(new Crucible(pos: 0, dir: 1, straightMoves: 0), 0);
-        q.Enqueue(new Crucible(pos: 0, dir: Complex.ImaginaryOne, straightMoves: 0), 0);
+        q.Enqueue(new Crucible(pos: 0, dir: 1, straight: 0), 0);
+        q.Enqueue(new Crucible(pos: 0, dir: Complex.ImaginaryOne, straight: 0), 0);
 
         var seen = new HashSet<Crucible>();
         while (q.TryDequeue(out var crucible, out var heatloss)) {
-            if (crucible.pos == goal && crucible.straightMoves >= minStraight) {
+            if (crucible.pos == goal && crucible.straight >= minStraight) {
                 return heatloss;
             }
             foreach (var next in Moves(crucible, minStraight, maxStraight)) {
@@ -41,18 +41,18 @@ class Solution : Solver {
     }
 
     // returns possible next states based on the rules
-    public IEnumerable<Crucible> Moves(Crucible crucible, int minStraight, int maxStraight) {
-        if (crucible.straightMoves < maxStraight) {
-            yield return crucible with { 
-                pos = crucible.pos + crucible.dir, 
-                straightMoves = crucible.straightMoves + 1 
+    IEnumerable<Crucible> Moves(Crucible c, int minStraight, int maxStraight) {
+        if (c.straight < maxStraight) {
+            yield return c with { 
+                pos = c.pos + c.dir, 
+                straight = c.straight + 1 
             };
         }
 
-        if (crucible.straightMoves >= minStraight) {
-            var dir = crucible.dir * Complex.ImaginaryOne;
-            yield return new Crucible(crucible.pos + dir, dir, 1);
-            yield return new Crucible(crucible.pos - dir, -dir, 1);
+        if (c.straight >= minStraight) {
+            var dir = c.dir * Complex.ImaginaryOne;
+            yield return new Crucible(c.pos + dir, dir, 1);
+            yield return new Crucible(c.pos - dir, -dir, 1);
         }
     }
 
