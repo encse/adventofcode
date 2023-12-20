@@ -22,14 +22,10 @@ class Solution : Solver {
     }
 
     public object PartTwo(string input) {
-        // The input has a special structure.
-        //
-        // Broadcaster feeds 4 disconnected substructures which are 
-        // channeled into a single nand gate at the end. The nand gate is
-        // connected into rx.
-        //
-        // I checked that the substructures work in a loop, and the length
-        // of those are primes. We just need to multiply them all.
+        // The input has a special structure. Broadcaster feeds 4 disconnected 
+        // substructures which are channeled into a single nand gate at the end. 
+        // The nand gate is connected into rx. I checked that the substructures 
+        // work in a loop, that has prime length. Just need to multiply them all.
         var gates = ParseGates(input);
         var nand = gates["rx"].inputs.Single();
         var branches = gates[nand].inputs;
@@ -63,17 +59,17 @@ class Solution : Solver {
     }
 
     Dictionary<string, Gate> ParseGates(string input) {
-        var descriptions = (
+        input += "\nrx ->"; // an extra rule for rx with no output
+
+        var descriptions =
             from line in input.Split('\n')
-            let words = Regex.Matches(line, "\\w+").Select(m=>m.Value).ToArray()
-            select (kind: line[0], name: words.First(), outputs: words[1..])
-        ).ToList();
-        descriptions.Add((kind:'r', name: "rx", outputs: []));
+            let words = Regex.Matches(line, "\\w+").Select(m => m.Value).ToArray()
+            select (kind: line[0], name: words.First(), outputs: words[1..]);
 
         var inputs = (string name) => (
             from d in descriptions where d.outputs.Contains(name) select d.name
         ).ToArray();
-
+        
         return descriptions.ToDictionary(
             d => d.name,
             d => d.kind switch {
@@ -109,7 +105,7 @@ class Solution : Solver {
     }
 
     Gate Repeater(string name, string[] inputs, string[] outputs) {
-        return new Gate(inputs, (Signal s) => 
+        return new Gate(inputs, (Signal s) =>
             from o in outputs select new Signal(name, o, s.value)
         );
     }
