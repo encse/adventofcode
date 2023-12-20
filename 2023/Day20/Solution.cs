@@ -7,7 +7,6 @@ using System.Text.RegularExpressions;
 using Gates = System.Collections.Generic.Dictionary<string, Gate>;
 using Signal = (string sender, string receiver, bool value);
 
-// Different gate types come with different handlers. No OOP this year.
 record Gate(string[] inputs, Func<Signal, IEnumerable<Signal>> handle);
 
 [ProblemName("Pulse Propagation")]
@@ -55,8 +54,8 @@ class Solution : Solver {
         q.Enqueue(new Signal("button", "broadcaster", false));
         while (q.TryDequeue(out var signal)) {
             yield return signal;
-            var receiver = gates[signal.receiver];
-            foreach (var signalT in receiver.handle(signal)) {
+            var handler = gates[signal.receiver];
+            foreach (var signalT in handler.handle(signal)) {
                 q.Enqueue(signalT);
             }
         }
@@ -69,16 +68,14 @@ class Solution : Solver {
             let parts = from m in Regex.Matches(line, "[a-z]+") select m.Value
             select (kind, name: parts.First(), outputs: parts.Skip(1).ToArray())
         ).ToList();
-
-        descriptions.Add(("", "button", ["broadcaster"]));
         descriptions.Add(("", "rx", []));
 
         var gates = new Gates();
         foreach (var descr in descriptions) {
             var inputs = (
-                from decrT in descriptions
-                where decrT.outputs.Contains(descr.name)
-                select decrT.name
+                from descrT in descriptions
+                where descrT.outputs.Contains(descr.name)
+                select descrT.name
             ).ToArray();
 
             gates[descr.name] = descr.kind switch {
