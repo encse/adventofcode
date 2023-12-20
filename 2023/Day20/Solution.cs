@@ -52,8 +52,10 @@ class Solution : Solver {
     IEnumerable<Signal> Trigger(Gates gates) {
         var q = new Queue<Signal>();
         q.Enqueue(new Signal("button", "broadcaster", false));
+
         while (q.TryDequeue(out var signal)) {
             yield return signal;
+
             var handler = gates[signal.receiver];
             foreach (var signalT in handler.handle(signal)) {
                 q.Enqueue(signalT);
@@ -64,8 +66,8 @@ class Solution : Solver {
     Gates ParseGates(string input) {
         var descriptions = (
             from line in input.Split('\n')
-            let parts = from m in Regex.Matches(line, "[a-z]+") select m.Value
-            select (kind: line[0], name: parts.First(), outputs: parts.Skip(1).ToArray())
+            let words = Regex.Matches(line, "\\w+").Select(m=>m.Value).ToArray()
+            select (kind: line[0], name: words.First(), outputs: words[1..])
         ).ToList();
         descriptions.Add((kind:'r', name: "rx", outputs: []));
 
