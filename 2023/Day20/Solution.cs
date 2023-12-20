@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Gates = System.Collections.Generic.Dictionary<string, Gate>;
 using Signal = (string sender, string receiver, bool value);
 
 record Gate(string[] inputs, Func<Signal, IEnumerable<Signal>> handle);
@@ -49,7 +48,7 @@ class Solution : Solver {
 
     // emits a button press, executes until things settle down and returns 
     // all signals for investigation.
-    IEnumerable<Signal> Trigger(Gates gates) {
+    IEnumerable<Signal> Trigger(Dictionary<string, Gate> gates) {
         var q = new Queue<Signal>();
         q.Enqueue(new Signal("button", "broadcaster", false));
 
@@ -63,7 +62,7 @@ class Solution : Solver {
         }
     }
 
-    Gates ParseGates(string input) {
+    Dictionary<string, Gate> ParseGates(string input) {
         var descriptions = (
             from line in input.Split('\n')
             let words = Regex.Matches(line, "\\w+").Select(m=>m.Value).ToArray()
@@ -71,21 +70,18 @@ class Solution : Solver {
         ).ToList();
         descriptions.Add((kind:'r', name: "rx", outputs: []));
 
-        var gates = new Gates();
-        foreach (var descr in descriptions) {
-            var inputs = (
-                from descrT in descriptions
-                where descrT.outputs.Contains(descr.name)
-                select descrT.name
-            ).ToArray();
+        var inputs = (string name) => (
+            from d in descriptions where d.outputs.Contains(name) select d.name
+        ).ToArray();
 
-            gates[descr.name] = descr.kind switch {
-                '&' => NandGate(descr.name, inputs, descr.outputs),
-                '%' => FlipFlop(descr.name, inputs, descr.outputs),
-                _ => Repeater(descr.name, inputs, descr.outputs)
-            };
-        }
-        return gates;
+        return descriptions.ToDictionary(
+            d => d.name,
+            d => d.kind switch {
+                '&' => NandGate(d.name, inputs(d.name), d.outputs),
+                '%' => FlipFlop(d.name, inputs(d.name), d.outputs),
+                _ => Repeater(d.name, inputs(d.name), d.outputs)
+            }
+        );
     }
 
     Gate NandGate(string name, string[] inputs, string[] outputs) {
