@@ -64,11 +64,10 @@ class Solution : Solver {
     Gates ParseGates(string input) {
         var descriptions = (
             from line in input.Split('\n')
-            let kind = char.IsLetter(line[0]) ? "" : line[0..1]
             let parts = from m in Regex.Matches(line, "[a-z]+") select m.Value
-            select (kind, name: parts.First(), outputs: parts.Skip(1).ToArray())
+            select (kind: line[0], name: parts.First(), outputs: parts.Skip(1).ToArray())
         ).ToList();
-        descriptions.Add(("", "rx", []));
+        descriptions.Add((kind:'r', name: "rx", outputs: []));
 
         var gates = new Gates();
         foreach (var descr in descriptions) {
@@ -79,8 +78,8 @@ class Solution : Solver {
             ).ToArray();
 
             gates[descr.name] = descr.kind switch {
-                "&" => NandGate(descr.name, inputs, descr.outputs),
-                "%" => FlipFlop(descr.name, inputs, descr.outputs),
+                '&' => NandGate(descr.name, inputs, descr.outputs),
+                '%' => FlipFlop(descr.name, inputs, descr.outputs),
                 _ => Repeater(descr.name, inputs, descr.outputs)
             };
         }
