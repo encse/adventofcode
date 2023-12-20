@@ -91,6 +91,7 @@ class Solution : Solver {
     }
 
     Gate NandGate(string name, string[] inputs, string[] outputs) {
+        // initially assign low value for each input:
         var state = inputs.ToDictionary(input => input, _ => false);
 
         return new Gate(inputs, (Signal signal) => {
@@ -102,6 +103,7 @@ class Solution : Solver {
 
     Gate FlipFlop(string name, string[] inputs, string[] outputs) {
         var state = false;
+
         return new Gate(inputs, (Signal signal) => {
             if (!signal.value) {
                 state = !state;
