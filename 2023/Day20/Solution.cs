@@ -40,10 +40,10 @@ class Solution : Solver {
 
     int LoopLength(string input, string output) {
         var gates = ParseGates(input);
-        for (var press = 1; ; press++) {
+        for (var i = 1; ; i++) {
             var signals = Trigger(gates);
             if (signals.Any(s => s.sender == output && s.value)) {
-                return press;
+                return i;
             }
         }
     }
