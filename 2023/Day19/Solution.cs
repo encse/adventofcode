@@ -10,7 +10,7 @@ using Rules = System.Collections.Generic.Dictionary<string, string>;
 using Cube = System.Collections.Immutable.ImmutableArray<Range>;
 
 record Range(int begin, int end);
-record Cond(int dim, string op, int num, string state);
+record Cond(int dim, char op, int num, string state);
 
 [ProblemName("Aplenty")]
 class Solution : Solver {
@@ -58,17 +58,17 @@ class Solution : Solver {
             } else {
                 foreach (var stm in rules[state].Split(",")) {
                     Cond cond = TryParseCond(stm);
-                    if (cond?.op == "<") {
+                    if (cond == null) {
+                        q.Enqueue((cube, stm));
+                    } else if (cond.op == '<') {
                         var (cube1, cube2) = CutCube(cube, cond.dim, cond.num - 1);
                         q.Enqueue((cube1, cond.state));
                         cube = cube2;
-                    } else if (cond?.op == ">") {
+                    } else if (cond?.op == '>') {
                         var (cube1, cube2) = CutCube(cube, cond.dim, cond.num);
                         cube = cube1;
                         q.Enqueue((cube2, cond.state));
-                    } else {
-                        q.Enqueue((cube, stm));
-                    }
+                    } 
                 }
             }
         }
@@ -89,10 +89,10 @@ class Solution : Solver {
 
     Cond TryParseCond(string st) =>
         st.Split('<', '>', ':') switch {
-            ["x", var num, var state] => new Cond(0, st[1..2], int.Parse(num), state),
-            ["m", var num, var state] => new Cond(1, st[1..2], int.Parse(num), state),
-            ["a", var num, var state] => new Cond(2, st[1..2], int.Parse(num), state),
-            ["s", var num, var state] => new Cond(3, st[1..2], int.Parse(num), state),
+            ["x", var num, var state] => new Cond(0, st[1], int.Parse(num), state),
+            ["m", var num, var state] => new Cond(1, st[1], int.Parse(num), state),
+            ["a", var num, var state] => new Cond(2, st[1], int.Parse(num), state),
+            ["s", var num, var state] => new Cond(3, st[1], int.Parse(num), state),
             _ => null
         };
 
