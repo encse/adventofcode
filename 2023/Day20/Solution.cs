@@ -1,99 +1,127 @@
 namespace AdventOfCode.Y2023.Day20;
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 using System.Text.RegularExpressions;
 using Gates = System.Collections.Generic.Dictionary<string, Gate>;
 using Signal = (string sender, string receiver, bool value);
-record Gate(string kind, string[] outputs, Dictionary<string, bool> inputs);
+
+// Different gate types come with different handlers. No OOP this year.
+record Gate(string[] inputs, Func<Signal, IEnumerable<Signal>> handle);
 
 [ProblemName("Pulse Propagation")]
 class Solution : Solver {
 
     public object PartOne(string input) {
-        var (low, high) = (0, 0);
+        // Press the button 1000 times and count the high and low signals:
+        var emitted = new Dictionary<bool, int>{[false] = 0, [true]=0};
         var gates = ParseGates(input);
         for (var i = 0; i < 1000; i++) {
-            foreach (var signal in Button(gates)) {
-                if (signal.value) {
-                    high++;
-                } else {
-                    low++;
-                }
+            foreach (var signal in PressButton(gates)) {
+                emitted[signal.value]++;
             }
         }
-        return low * high;
+        return emitted[false] * emitted[true];
     }
 
     public object PartTwo(string input) {
+        // The input has a special structure.
+        //
+        // The broadcaster feeds 4 disconnected substructures which are 
+        // channeld into a single nand gate at the end. The nand gate is
+        // connected into rx.
+        // I checked that the substructures work in a loop, and the length
+        // of those are relative primes. So we can just multiply them all
+        // to get the final result.
+
         var gates = ParseGates(input);
-        var nand = gates["rx"].inputs.Keys.First();
-        var m = BigInteger.One;
-        foreach (var gate in gates[nand].inputs.Keys) {
-            var s = 1;
-            gates = ParseGates(input);
-            while (!Button(gates).Any(signal => signal.receiver == gate && !signal.value)) {
-                s++;
+        var nand = gates["rx"].inputs.Single();
+
+        var m = 1L;
+        foreach (var substructure in gates[nand].inputs) {
+            gates = ParseGates(input); // always start from a fresh input
+
+            var press = 0;
+            while (true) {
+                var signals = PressButton(gates);
+                press++;
+                if (signals.Any(s => s.receiver == substructure && !s.value)) {
+                    break;
+                }
             }
-            m *= s;
+            m *= press;
         }
         return m;
     }
 
-    IEnumerable<Signal> Button(Gates gates) {
-        var q = new Queue<(string src, string dst, bool signal)>();
-
-        var emit = (string name, bool signal) => {
-            foreach (var output in gates[name].outputs) {
-                q.Enqueue((name, output, signal));
-            }
-        };
-
-        emit("button", false);
-        while (q.Any()) {
-            var signal = q.Dequeue();
+    // emits a button press, executes until things settle down and returns 
+    // all signals for investigation.
+    IEnumerable<Signal> PressButton(Gates gates) {
+        var q = new Queue<Signal>();
+        q.Enqueue(new Signal("button", "broadcaster", false));
+        while (q.TryDequeue(out var signal)) {
             yield return signal;
-
-            var (sender, receiver, value) = signal;
-
-            var gate = gates[receiver];
-            switch (gate.kind) {
-                case "&":
-                    gate.inputs[sender] = value;
-                    emit(receiver, !gate.inputs.Values.All(x => x));
-                    break;
-                case "%":
-                    if (!value) {
-                        gate.inputs["state"] = !gate.inputs.GetValueOrDefault("state");
-                        emit(receiver, gate.inputs["state"]);
-                    }
-                    break;
-                case "":
-                    emit(receiver, value);
-                    break;
+            var receiver = gates[signal.receiver];
+            foreach (var signalT in receiver.handle(signal)) {
+                q.Enqueue(signalT);
             }
         }
     }
 
     Gates ParseGates(string input) {
-        var gates = new Gates();
-        foreach (var line in input.Split('\n')) {
-            var parts = from m in Regex.Matches(line, "[a-z]+") select m.Value;
-            var kind = char.IsLetter(line[0]) ? "" : line[0..1];
-            var name = parts.First();
-            var outputs = parts.Skip(1).ToArray();
-            var gate = new Gate(kind, outputs, new Dictionary<string, bool>());
-            gates[name] = gate;
-        }
+        var entries = (
+            from line in input.Split('\n')
+            let kind = char.IsLetter(line[0]) ? "" : line[0..1]
+            let parts = from m in Regex.Matches(line, "[a-z]+") select m.Value
+            select (kind, name: parts.First(), outputs: parts.Skip(1).ToArray())
+        ).ToList();
 
-        gates["button"] = new Gate("", ["broadcaster"], new Dictionary<string, bool>());
-        gates["rx"] = new Gate("", [], new Dictionary<string, bool>());
-        foreach(var gate in gates.Keys){
-            foreach(var output in gates[gate].outputs){
-                gates[output].inputs[gate] = false;
-            }
+        // these extra guys are needed
+        entries.Add(("", "button", ["broadcaster"]));
+        entries.Add(("", "rx", []));
+
+        var gates = new Gates();
+        foreach (var entry in entries) {
+            var inputs = (
+                from e in entries
+                where e.outputs.Contains(entry.name)
+                select e.name
+            ).ToArray();
+
+            gates[entry.name] = entry.kind switch {
+                "&" => NandGate(entry.name, inputs, entry.outputs),
+                "%" => FlipFlop(entry.name, inputs, entry.outputs),
+                _ => Repeater(entry.name, inputs, entry.outputs)
+            };
         }
         return gates;
+    }
+
+    Gate NandGate(string gate, string[] inputs, string[] outputs) {
+        var state = inputs.ToDictionary(input => input, _ => false);
+        return new Gate(inputs, (Signal signal) => {
+            state[signal.sender] = signal.value;
+            var value = !state.Values.All(b => b);
+            return outputs.Select(receiver => new Signal(gate, receiver, value));
+        });
+    }
+
+    Gate FlipFlop(string gate, string[] inputs, string[] outputs) {
+        var state = false;
+        return new Gate(inputs, (Signal signal) => {
+            if (!signal.value) {
+                state = !state;
+                return outputs.Select(receiver => new Signal(gate, receiver, state));
+            } else {
+                return [];
+            }
+        });
+    }
+
+    Gate Repeater(string gate, string[] inputs, string[] outputs) {
+        return new Gate(inputs, (Signal s) => 
+            from receiver in outputs select new Signal(gate, receiver, s.value)
+        );
     }
 }
