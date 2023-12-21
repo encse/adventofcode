@@ -19,97 +19,59 @@ class Solution : Solver {
         return pos.Count;
     }
 
-    int LoopLength(Dictionary<Complex, char> map, Complex pos) {
-        var prev2 = new HashSet<Complex>();
-        var prev1 = new HashSet<Complex>();
-        var cur = new HashSet<Complex> { pos };
-        for (var i = 0; ; i++) {
-            prev2 = prev1;
-            prev1 = cur;
-            cur = Step(map, cur);
-            if (prev2.Count == cur.Count && prev2.Intersect(cur).Count() == prev2.Count) {
-                return i;
-            }
-        }
+    void Shift(CircularBuffer<long> cb, long item) {
+        var last = cb.Enqueue(item);
+        cb[^2] += last;
     }
 
     public object PartTwo(string input) {
 
         var steps = 26501365;
-        var map = ParseMap(input);
-        var s = map.Keys.Where(k => map[k] == 'S').Single();
-        var br = map.Keys.MaxBy(pos => pos.Real + pos.Imaginary);
 
         Complex center = new Complex(65, 65);
-
         Complex[] corners = [
             new Complex(0, 0),
             new Complex(0, 130),
             new Complex(130, 130),
             new Complex(130, 0),
         ];
-
         Complex[] middles = [
             new Complex(65, 0),
             new Complex(65, 130),
             new Complex(0, 65),
             new Complex(130, 65),
         ];
+        Complex[] entryPoints = [center, .. corners, .. middles];
 
-        var cohorts = new Dictionary<Complex, CircularBuffer<long>>();
-
-        var loop = 263;
-        cohorts[center] = new CircularBuffer<long>(loop);
-        foreach (var corner in corners) {
-            cohorts[corner] = new CircularBuffer<long>(loop);
-        }
-        foreach (var middle in middles) {
-            cohorts[middle] = new CircularBuffer<long>(loop);
+        var bufferSize = 261;
+        var buffers = new Dictionary<Complex, CircularBuffer<long>>();
+        foreach (var entryPoint in entryPoints) {
+            buffers[entryPoint] = new CircularBuffer<long>(bufferSize);
         }
 
+        Shift(buffers[center], 1);
+        Shift(buffers[center], 0);
 
-        foreach (var k in cohorts.Keys) {
-            Console.WriteLine((k, LoopLength(map, k)));
-        }
-
-        cohorts[center][1] = 1;
-        for (var i = 2; i <= steps; i++) {
-            foreach (var item in cohorts.Keys) {
-                var phase = cohorts[item];
-                var last = phase.Enqueue(0);
-                phase[^2] += last;
+        for (var i = 1; i < steps; i++) {
+            Shift(buffers[center], 0);
+            foreach (var corner in corners) {
+                Shift(buffers[corner], i % 131 == 0 ? i / 131 : 0);
             }
-            var rem = i % 131;
-            if (rem == 1) {
-                var newItems = i / 131;
-                foreach (var corner in corners) {
-                    cohorts[corner][0] += newItems;
-                }
-            } else if (rem == 66) {
-                foreach (var middle in middles) {
-                    cohorts[middle][0]++;
-                }
+            foreach (var corner in middles) {
+                Shift(buffers[corner], i % 131 == 65 ? 1 : 0);
             }
         }
 
-        Console.WriteLine("y");
+        var map = ParseMap(input);
         var res = 0L;
-
-        // var counts = 0;
-        foreach (var item in cohorts.Keys) {
-            var phase = cohorts[item];
-            var pos = new HashSet<Complex> { item };
-            for (var i = 0; i < loop; i++) {
-                var count = phase[i];
-                if (count > 0) {
-                    Console.WriteLine((item, i, count, pos.Count, pos.Count * count));
-                }
-                res += pos.Count * count;
+        foreach (var entryPoint in entryPoints) {
+            var buffer = buffers[entryPoint];
+            var pos = new HashSet<Complex> { entryPoint };
+            for (var i = 0; i < bufferSize; i++) {
+                res += pos.Count * buffer[i];
                 pos = Step(map, pos);
             }
-            Console.WriteLine("---");
         }
-        Console.WriteLine("z");
         return res;
     }
 
