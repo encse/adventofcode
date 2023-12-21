@@ -1,6 +1,5 @@
 namespace AdventOfCode.Y2023.Day21;
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -21,7 +20,8 @@ class Solution : Solver {
         new Complex(0, 65),
         new Complex(130, 65),
     ];
-    static readonly Complex[] tileEntries = [center, .. corners, .. middles];
+    static readonly Complex[] entrypoints = [center, .. corners, .. middles];
+    static readonly Complex[] dirs = [ 1, -1, Complex.ImaginaryOne, -Complex.ImaginaryOne ];
 
     // wip
     public object PartOne(string input) {
@@ -38,7 +38,7 @@ class Solution : Solver {
         var steps = 26501365;
         var bufferSize = 270; // anything that is > 260
         var buffers = new Dictionary<Complex, CircularBuffer<long>>();
-        foreach (var entryPoint in tileEntries) {
+        foreach (var entryPoint in entrypoints) {
             buffers[entryPoint] = new CircularBuffer<long>(bufferSize);
         }
 
@@ -58,22 +58,22 @@ class Solution : Solver {
 
         var map = ParseMap(input);
         var res = 0L;
-        foreach (var tileEntry in tileEntries) {
-            var positions = new HashSet<Complex> { tileEntry };
+        foreach (var entryPoint in entrypoints) {
+            var positions = new HashSet<Complex> { entryPoint };
             for (var i = 0; i < bufferSize; i++) {
-                res += positions.Count * buffers[tileEntry][i];
+                res += positions.Count * buffers[entryPoint][i];
                 positions = Step(map, positions);
             }
         }
         return res;
     }
 
-    HashSet<Complex> Step(Dictionary<Complex, char> map, HashSet<Complex> pos) {
+    HashSet<Complex> Step(HashSet<Complex> map, HashSet<Complex> pos) {
         var res = new HashSet<Complex>();
         foreach (var p in pos) {
-            foreach (var dir in new Complex[] { 1, -1, Complex.ImaginaryOne, -Complex.ImaginaryOne }) {
+            foreach (var dir in dirs) {
                 var pT = p + dir;
-                if (map.ContainsKey(pT) && map[pT] != '#') {
+                if (map.Contains(pT)) {
                     res.Add(pT);
                 }
             }
@@ -81,15 +81,14 @@ class Solution : Solver {
         return res;
     }
 
-    Dictionary<Complex, char> ParseMap(string input) {
+    HashSet<Complex> ParseMap(string input) {
         var lines = input.Split("\n");
         return (
             from irow in Enumerable.Range(0, lines.Length)
             from icol in Enumerable.Range(0, lines[0].Length)
-            select new KeyValuePair<Complex, char>(
-                new Complex(icol, irow), lines[irow][icol]
-            )
-        ).ToDictionary();
+            where lines[irow][icol]  != '#'
+            select new Complex(icol, irow)
+        ).ToHashSet();
     }
 }
 
