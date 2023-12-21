@@ -1,5 +1,6 @@
 namespace AdventOfCode.Y2023.Day21;
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -18,12 +19,26 @@ class Solution : Solver {
         return pos.Count;
     }
 
+    int LoopLength(Dictionary<Complex, char> map, Complex pos) {
+        var prev2 = new HashSet<Complex>();
+        var prev1 = new HashSet<Complex>();
+        var cur = new HashSet<Complex> { pos };
+        for (var i = 0; ; i++) {
+            prev2 = prev1;
+            prev1 = cur;
+            cur = Step(map, cur);
+            if (prev2.Count == cur.Count && prev2.Intersect(cur).Count() == prev2.Count) {
+                return i;
+            }
+        }
+    }
+
     public object PartTwo(string input) {
+
         var steps = 26501365;
         var map = ParseMap(input);
         var s = map.Keys.Where(k => map[k] == 'S').Single();
         var br = map.Keys.MaxBy(pos => pos.Real + pos.Imaginary);
-        var loop = 260;
 
         Complex center = new Complex(65, 65);
 
@@ -40,58 +55,61 @@ class Solution : Solver {
             new Complex(0, 65),
             new Complex(130, 65),
         ];
-        var cohorts = new Dictionary<Complex, long[]>();
 
-        cohorts[center] = new long[loop + 1];
+        var cohorts = new Dictionary<Complex, CircularBuffer<long>>();
+
+        var loop = 263;
+        cohorts[center] = new CircularBuffer<long>(loop);
         foreach (var corner in corners) {
-            cohorts[corner] = new long[loop + 1];
+            cohorts[corner] = new CircularBuffer<long>(loop);
         }
         foreach (var middle in middles) {
-            cohorts[middle] = new long[loop + 1];
+            cohorts[middle] = new CircularBuffer<long>(loop);
         }
 
-        var m = 0;
-        cohorts[center][m] = 1;
-        var phaseLength = loop + 1;
-        for (var i = 1; i <= steps; i++) {
 
-            var nextM = (m + phaseLength - 1) % phaseLength;
+        foreach (var k in cohorts.Keys) {
+            Console.WriteLine((k, LoopLength(map, k)));
+        }
+
+        cohorts[center][1] = 1;
+        for (var i = 2; i <= steps; i++) {
             foreach (var item in cohorts.Keys) {
                 var phase = cohorts[item];
-                var a = phase[(m + phase.Length - 1) % phase.Length];
-                var b = phase[(m + phase.Length - 2) % phase.Length];
-                var c = phase[(m + phase.Length - 3) % phase.Length];
-
-                phase[nextM] = 0;
-                phase[(nextM + phase.Length - 1) % phase.Length] = b;
-                phase[(nextM + phase.Length - 2) % phase.Length] = a + c;
+                var last = phase.Enqueue(0);
+                phase[^2] += last;
             }
-            m = nextM;
-
-            if (i >= 132 && (i - 132) % 131 == 0) {
+            var rem = i % 131;
+            if (rem == 1) {
                 var newItems = i / 131;
                 foreach (var corner in corners) {
-                    cohorts[corner][m] += newItems;
+                    cohorts[corner][0] += newItems;
                 }
-            } else if (i >= 66 && (i - 66) % 131 == 0) {
+            } else if (rem == 66) {
                 foreach (var middle in middles) {
-                    cohorts[middle][m]++;
+                    cohorts[middle][0]++;
                 }
             }
         }
 
+        Console.WriteLine("y");
         var res = 0L;
 
         // var counts = 0;
         foreach (var item in cohorts.Keys) {
             var phase = cohorts[item];
             var pos = new HashSet<Complex> { item };
-            for (var i = 0; i < phase.Length; i++) {
-                var count = phase[(m + i) % phase.Length];
+            for (var i = 0; i < loop; i++) {
+                var count = phase[i];
+                if (count > 0) {
+                    Console.WriteLine((item, i, count, pos.Count, pos.Count * count));
+                }
                 res += pos.Count * count;
                 pos = Step(map, pos);
             }
+            Console.WriteLine("---");
         }
+        Console.WriteLine("z");
         return res;
     }
 
@@ -117,5 +135,23 @@ class Solution : Solver {
                 new Complex(icol, irow), lines[irow][icol]
             )
         ).ToDictionary();
+    }
+}
+
+class CircularBuffer<T>(int size) {
+    public int Count => size;
+    T[] items = new T[size];
+    int i = 0;
+
+    public T this[int index] {
+        get { return items[(i + index) % size]; }
+        set { items[(i + index) % size] = value; }
+    }
+
+    public T Enqueue(T t) {
+        i = (i + size - 1) % size;
+        var res = items[i];
+        items[i] = t;
+        return res;
     }
 }
