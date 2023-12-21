@@ -8,68 +8,61 @@ using System.Numerics;
 [ProblemName("Step Counter")]
 class Solution : Solver {
 
+    static readonly Complex center = new Complex(65, 65);
+    static readonly Complex[] corners = [
+        new Complex(0, 0),
+        new Complex(0, 130),
+        new Complex(130, 130),
+        new Complex(130, 0),
+    ];
+    static readonly Complex[] middles = [
+        new Complex(65, 0),
+        new Complex(65, 130),
+        new Complex(0, 65),
+        new Complex(130, 65),
+    ];
+    static readonly Complex[] tileEntries = [center, .. corners, .. middles];
+
     // wip
     public object PartOne(string input) {
         var map = ParseMap(input);
-        var s = map.Keys.Where(k => map[k] == 'S').Single();
-        var pos = new HashSet<Complex> { s };
+        var positions = new HashSet<Complex> { center };
         for (var i = 0; i < 64; i++) {
-            pos = Step(map, pos);
+            positions = Step(map, positions);
         }
-        return pos.Count;
-    }
-
-    void Shift(CircularBuffer<long> cb, long item) {
-        var last = cb.Enqueue(item);
-        cb[^2] += last;
+        return positions.Count;
     }
 
     public object PartTwo(string input) {
 
         var steps = 26501365;
-
-        Complex center = new Complex(65, 65);
-        Complex[] corners = [
-            new Complex(0, 0),
-            new Complex(0, 130),
-            new Complex(130, 130),
-            new Complex(130, 0),
-        ];
-        Complex[] middles = [
-            new Complex(65, 0),
-            new Complex(65, 130),
-            new Complex(0, 65),
-            new Complex(130, 65),
-        ];
-        Complex[] entryPoints = [center, .. corners, .. middles];
-
-        var bufferSize = 261;
+        var bufferSize = 270; // anything that is > 260
         var buffers = new Dictionary<Complex, CircularBuffer<long>>();
-        foreach (var entryPoint in entryPoints) {
+        foreach (var entryPoint in tileEntries) {
             buffers[entryPoint] = new CircularBuffer<long>(bufferSize);
         }
 
-        Shift(buffers[center], 1);
-        Shift(buffers[center], 0);
-
+        buffers[center][1] = 1;
         for (var i = 1; i < steps; i++) {
-            Shift(buffers[center], 0);
-            foreach (var corner in corners) {
-                Shift(buffers[corner], i % 131 == 0 ? i / 131 : 0);
+            foreach (var cb in buffers.Values) {
+                cb[^3] += cb[^1];
             }
-            foreach (var corner in middles) {
-                Shift(buffers[corner], i % 131 == 65 ? 1 : 0);
+            buffers[center].Shift(0);
+            foreach (var item in middles) {
+                buffers[item].Shift(i % 131 == 65 ? 1 : 0);
+            }
+            foreach (var item in corners) {
+                buffers[item].Shift(i % 131 == 0 ? i/131 : 0);
             }
         }
 
         var map = ParseMap(input);
         var res = 0L;
-        foreach (var entryPoint in entryPoints) {
-            var buffer = buffers[entryPoint];
-            var pos = new HashSet<Complex> { entryPoint };
+        foreach (var tileEntry in tileEntries) {
+            var positions = new HashSet<Complex> { tileEntry };
             for (var i = 0; i < bufferSize; i++) {
-                res += pos.Count * buffer[i];
-                pos = Step(map, pos);
+                res += positions.Count * buffers[tileEntry][i];
+                positions = Step(map, positions);
             }
         }
         return res;
@@ -110,7 +103,7 @@ class CircularBuffer<T>(int size) {
         set { items[(i + index) % size] = value; }
     }
 
-    public T Enqueue(T t) {
+    public T Shift(T t) {
         i = (i + size - 1) % size;
         var res = items[i];
         items[i] = t;
