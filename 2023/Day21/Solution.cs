@@ -74,10 +74,10 @@ class Solution : Solver {
 
     public object PartTwo(string input) {
         var steps = 26501365;
-        steps = 330;
+        // steps = 500;
 
-        Console.WriteLine("expected "+PartTwoCheck(input, steps));
-        Console.WriteLine("actual "+PartTwoB(input, steps));
+        // Console.WriteLine("expected " + PartTwoCheck(input, steps));
+        Console.WriteLine("actual " + PartTwoB(input, steps));
         return 0;
 
     }
@@ -113,14 +113,14 @@ class Solution : Solver {
             new Complex(0, 65),
             new Complex(130, 65),
         ];
-        var cohorts = new Dictionary<Complex, int[]>();
+        var cohorts = new Dictionary<Complex, long[]>();
 
-        cohorts[center] = new int[loop + 1];
+        cohorts[center] = new long[loop + 1];
         foreach (var corner in corners) {
-            cohorts[corner] = new int[loop + 1];
+            cohorts[corner] = new long[loop + 1];
         }
         foreach (var middle in middles) {
-            cohorts[middle] = new int[loop + 1];
+            cohorts[middle] = new long[loop + 1];
         }
 
         var m = 0;
@@ -148,35 +148,38 @@ class Solution : Solver {
             if (i % 1000 == 0) {
                 Console.WriteLine((double)i / steps);
             }
-            if (i == 132) {
+
+            if (i >= 132 && (i - 132) % 131 == 0) {
+                var newItems = i / 131;
                 foreach (var corner in corners) {
-                    cohorts[corner][m]++;
+                    cohorts[corner][m] += newItems;
                     generated++;
                 }
-            } else if (i == 263) {
-                foreach (var corner in corners) {
-                    cohorts[corner][m]+=2;
-                    generated++;
-                }
-            } else if (i == 66 || i == 197 || i == 328) {
+            } else if (i >= 66 && (i - 66) % 131 == 0) {
                 foreach (var middle in middles) {
                     cohorts[middle][m]++;
                     generated++;
                 }
             }
+            // if (i == 66 || i == 197 || i == 328) {
+            //     foreach (var middle in middles) {
+            //         cohorts[middle][m]++;
+            //         generated++;
+            //     }
+            // }
 
         }
 
         var res = 0L;
 
-        var counts = 0;
+        // var counts = 0;
         foreach (var item in cohorts.Keys) {
             var phase = cohorts[item];
             var pos = new HashSet<Complex> { item };
             for (var i = 0; i < phase.Length; i++) {
                 var count = phase[(m + i) % phase.Length];
-                counts += count;
-                res += (long)pos.Count * count;
+                // counts += count;
+                res += pos.Count * count;
                 pos = Step(map, pos);
             }
         }
