@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
+// WIP
+
 record Range(int begin, int end) {
     public bool Containts(int x) {
         return begin <= x && x <= end;
@@ -27,44 +29,39 @@ record Cube(int id, Range x, Range y, Range z) {
 class Solution : Solver {
 
     public object PartTwo(string input) {
-        var cubes = ParseCubes(input);
-        (cubes, var _) = Fall(cubes);
-
-        var supportList = new List<(Cube lo, Cube hi)>();
-        for (var i = 0; i < cubes.Length; i++) {
-            var cubeLo = cubes[i];
-            for (var j = 0; j < cubes.Length; j++) {
-                var cubeHi = cubes[j];
-                if (cubeLo.Top == cubeHi.Bottom - 1 && Above(cubeHi, cubeLo)) {
-                    supportList.Add((cubeLo, cubeHi));
-                }
-            }
-        }
-
-        Tsto(cubes);
-        var supportedBy = (Cube c) => supportList.Where(s => s.lo == c).Select(s => s.hi);
-        var supportsOf = (Cube c) => supportList.Where(s => s.hi == c).Select(s => s.lo);
-
-        var blowsup = new Dictionary<Cube, int>();
-
-        int Boom(Cube cube) {
-            if (!blowsup.ContainsKey(cube)) {
-                Console.WriteLine(blowsup.Count);
-                var (_, falls) = Fall(cubes.Where(c => c != cube).ToArray());
-                blowsup[cube] = falls;
-                // Console.WriteLine(cube.id + " -> " + blowsup[cube]);
-            }
-            return blowsup[cube];
-        }
-
+        var cubes = Fall(ParseCubes(input));
+        var (supportedBy, supportsOf) = Analyze(cubes);
+        var res = 0;
         foreach (var cube in cubes) {
-            Boom(cube);
+            res += Boom(cube, supportedBy, supportsOf);
         }
-        return blowsup.Values.Sum();
+        return res;
     }
 
-    (Cube[], int) Fall(Cube[] cubes) {
-        var falls = 0;
+    public object PartOne(string input) {
+        var cubes = ParseCubes(input);
+        cubes = cubes.OrderBy(cube => cube.Bottom).ToArray();
+        var (supportedBy, supportsOf) = Analyze(cubes);
+        return cubes.Count(c => supportedBy(c).All(c2 => supportsOf(c2).Count() > 1));
+    }
+
+    int Boom(Cube cube, Func<Cube, IEnumerable<Cube>> supportedBy, Func<Cube, IEnumerable<Cube>> supportsOf) {
+        var q = new Queue<Cube>();
+        q.Enqueue(cube);
+        var affected = new HashSet<Cube>();
+        while (q.Any()) {
+            cube = q.Dequeue();
+            affected.Add(cube);
+            var falls = supportedBy(cube).
+                Where(c => supportsOf(c).All(support => affected.Contains(support)));
+            foreach (var cubeT in falls) {
+                q.Enqueue(cubeT);
+            }
+        }
+        return affected.Count - 1;
+    }
+
+    Cube[] Fall(Cube[] cubes) {
         cubes = cubes.OrderBy(cube => cube.Bottom).ToArray();
 
         for (var i = 0; i < cubes.Length; i++) {
@@ -78,17 +75,12 @@ class Solution : Solver {
 
             }
             var fall = cubeI.Bottom - newBottom;
-            if (fall > 0) {
-                falls++;
-                cubes[i] = cubeI with { z = new Range(cubeI.Bottom - fall, cubeI.Top - fall) };
-            }
+            cubes[i] = cubeI with { z = new Range(cubeI.Bottom - fall, cubeI.Top - fall) };
         }
-        return (cubes, falls);
+        return cubes;
     }
 
-    public object PartOne(string input) {
-        var cubes = ParseCubes(input);
-        cubes = cubes.OrderBy(cube => cube.Bottom).ToArray();
+    (Func<Cube, IEnumerable<Cube>> supportedBy, Func<Cube, IEnumerable<Cube>> supportsOf) Analyze(Cube[] cubes) {
 
         for (var i = 0; i < cubes.Length; i++) {
             var cubeI = cubes[i];
@@ -115,43 +107,20 @@ class Solution : Solver {
             }
         }
 
-        var supportedBy = (Cube c) => supportList.Where(s => s.lo == c).Select(s => s.hi);
-        var supportsOf = (Cube c) => supportList.Where(s => s.hi == c).Select(s => s.lo);
+        var supportedByT = cubes.ToDictionary(
+            cube => cube,
+            cube => supportList.Where(s => s.lo == cube).Select(s => s.hi).ToArray()
+        );
 
-        return cubes.Count(c => supportedBy(c).All(c2 => supportsOf(c2).Count() > 1));
-    }
+        var supportsOfT = cubes.ToDictionary(
+            cube => cube,
+            cube => supportList.Where(s => s.hi == cube).Select(s => s.lo).ToArray()
+        );
 
-    int Tsto(Cube[] cubes) {
-        var minX = cubes.Select(c => c.Left).Min();
-        var maxX = cubes.Select(c => c.Right).Max();
-        var maxZ = cubes.Select(c => c.Top).Max();
 
-        var volume = 0;
-        var lines = new List<string>();
-        for (var z = 1; z <= maxZ; z++) {
-            var line = "";
-            for (var x = minX; x <= maxX; x++) {
-                var m = cubes.Count(c => c.Containts(x, c.Front, z));
-                if (m == 0) {
-                    line += ".";
-                } else if (m == 1) {
-                    var cube = cubes.Single(c => c.Containts(x, c.Front, z));
-                    if (cube.id < 10) {
-                        line += cube.id;
-                    } else {
-                        line += "#";
-                    }
-                } else {
-                    line += "?";
-                }
-                volume += m;
-            }
-            lines.Insert(0, line);
-        }
-
-        Console.WriteLine(string.Join("\n", lines));
-        Console.WriteLine();
-        return volume;
+        var supportedBy = (Cube c) => supportedByT[c];
+        var supportsOf = (Cube c) => supportsOfT[c];
+        return (supportedBy, supportsOf);
     }
 
     bool Above(Cube cubeA, Cube cubeB) {
