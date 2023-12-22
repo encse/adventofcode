@@ -6,14 +6,12 @@ using System.Linq;
 using System.Text.RegularExpressions;
 
 record Range(int begin, int end);
-
 record Block(Range x, Range y, Range z) {
-    public int Bottom => z.begin;
     public int Top => z.end;
+    public int Bottom => z.begin;
 }
-
 record Supports(
-    Dictionary<Block,HashSet<Block>> blocksAbove, 
+    Dictionary<Block, HashSet<Block>> blocksAbove,
     Dictionary<Block, HashSet<Block>> blocksBelow
 );
 
@@ -23,8 +21,8 @@ class Solution : Solver {
     public object PartOne(string input) => Kaboom(input).Count(x => x == 0);
     public object PartTwo(string input) => Kaboom(input).Sum();
 
-    // goes over the blocks in the input and desintegrates them one by one.
-    // returns the number of blocks that this would case falling.
+    // desintegrates the blocks one by one and returns how many blocks would
+    // start falling because of that.
     IEnumerable<int> Kaboom(string input) {
         var blocks = Fall(ParseBlocks(input));
         var supports = GetSupports(blocks);
@@ -36,6 +34,7 @@ class Solution : Solver {
             var falling = new HashSet<Block>();
             while (q.TryDequeue(out var block)) {
                 falling.Add(block);
+
                 var blocksStartFalling =
                     from blockT in supports.blocksAbove[block]
                     where supports.blocksBelow[blockT].IsSubsetOf(falling)
@@ -45,22 +44,24 @@ class Solution : Solver {
                     q.Enqueue(blockT);
                 }
             }
-            yield return falling.Count - 1;
+            yield return falling.Count - 1; // -1: desintegratedBlock doesn't count 
         }
     }
 
-    // applies 'gravity' to the blocks
+    // applies 'gravity' to the blocks.
     Block[] Fall(Block[] blocks) {
+
+        // sort them in Z first so that we can work in bottom to top order
         blocks = blocks.OrderBy(block => block.Bottom).ToArray();
+
         for (var i = 0; i < blocks.Length; i++) {
-            var bottom = 1;
+            var newBottom = 1;
             for (var j = 0; j < i; j++) {
                 if (IntersectsXY(blocks[i], blocks[j])) {
-                    bottom = Math.Max(bottom, blocks[j].Top + 1);
+                    newBottom = Math.Max(newBottom, blocks[j].Top + 1);
                 }
             }
-
-            var fall = blocks[i].Bottom - bottom;
+            var fall = blocks[i].Bottom - newBottom;
             blocks[i] = blocks[i] with {
                 z = new Range(blocks[i].Bottom - fall, blocks[i].Top - fall)
             };
@@ -68,17 +69,16 @@ class Solution : Solver {
         return blocks;
     }
 
-    // returns a pair of dictionaries that tells the upper and lower neighbours for each block
+    // calculate upper and lower neighbours for each block
     Supports GetSupports(Block[] blocks) {
         var blocksAbove = blocks.ToDictionary(b => b, _ => new HashSet<Block>());
         var blocksBelow = blocks.ToDictionary(b => b, _ => new HashSet<Block>());
         for (var i = 0; i < blocks.Length; i++) {
-            var blockLo = blocks[i];
             for (var j = i + 1; j < blocks.Length; j++) {
-                var blockHi = blocks[j];
-                if (blockLo.Top == blockHi.Bottom - 1 && IntersectsXY(blockHi, blockLo)) {
-                    blocksBelow[blockHi].Add(blockLo);
-                    blocksAbove[blockLo].Add(blockHi);
+                var zNeighbours = blocks[j].Bottom == 1 + blocks[i].Top;
+                if (zNeighbours && IntersectsXY(blocks[i], blocks[j])) {
+                    blocksBelow[blocks[j]].Add(blocks[i]);
+                    blocksAbove[blocks[i]].Add(blocks[j]);
                 }
             }
         }
