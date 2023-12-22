@@ -35,7 +35,7 @@ class Solution : Solver {
 
     public object PartTwo(string input) {
 
-        var steps = 26501365;
+        var steps = 26501365; // 202300 * 131 + 65
         var bufferSize = 270; // anything that is > 260
         var buffers = new Dictionary<Complex, CircularBuffer<long>>();
         foreach (var entryPoint in entrypoints) {
