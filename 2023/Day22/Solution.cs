@@ -3,7 +3,6 @@ namespace AdventOfCode.Y2023.Day22;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 record Range(int begin, int end);
 record Block(Range x, Range y, Range z) {
@@ -92,10 +91,12 @@ class Solution : Solver {
     bool Intersects(Range r1, Range r2) => r1.begin <= r2.end && r2.begin <= r1.end;
 
     Block[] ParseBlocks(string input) => (
-        from p in Enumerable.Zip(input.Split('\n'), Enumerable.Range(1, 100000))
-        let line = p.First
-        let id = p.Second
-        let v = (from m in Regex.Matches(line, @"\d+") select int.Parse(m.Value)).ToArray()
-        select new Block(new Range(v[0], v[3]), new Range(v[1], v[4]), new Range(v[2], v[5]))
+        from line in input.Split('\n')
+        let numbers = line.Split(',','~').Select(int.Parse).ToArray()
+        select new Block(
+            x: new Range(numbers[0], numbers[3]), 
+            y: new Range(numbers[1], numbers[4]), 
+            z: new Range(numbers[2], numbers[5])
+        )
     ).ToArray();
 }
