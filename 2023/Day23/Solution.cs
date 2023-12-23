@@ -68,7 +68,7 @@ class Solution : Solver {
         var map = ParseMap(input);
 
         // order crossroads in row major order, so the
-        // entry node becomes the first and exit is the last.
+        // entry node comes first and exit is last.
         var crossroads = (
             from pos in map.Keys
             orderby pos.Imaginary, pos.Real
