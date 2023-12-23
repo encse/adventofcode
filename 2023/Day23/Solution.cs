@@ -68,8 +68,8 @@ class Solution : Solver {
     (Node[], Edge[]) MakeGraph(string input) {
         var map = ParseMap(input);
 
-        // positions are ordered in top -> down, left -> right, so 
-        // entry node is the first and exit is the last.
+        // positions are ordered in row major order, so the
+        // entry node becomes the first and exit is the last.
         var crossroads = (
             from pos in map.Keys
             orderby pos.Imaginary, pos.Real
