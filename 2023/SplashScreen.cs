@@ -8,8 +8,8 @@ class SplashScreenImpl : SplashScreen {
 
         var color = Console.ForegroundColor;
         Write(0xcc00, false, "           ▄█▄ ▄▄█ ▄ ▄ ▄▄▄ ▄▄ ▄█▄  ▄▄▄ ▄█  ▄▄ ▄▄▄ ▄▄█ ▄▄▄\n           █▄█ █ █ █ █ █▄█ █ █ █   █ █ █▄ ");
-            Write(0xcc00, false, " █  █ █ █ █ █▄█\n           █ █ █▄█ ▀▄▀ █▄▄ █ █ █▄  █▄█ █   █▄ █▄█ █▄█ █▄▄  {:year 2023}\n            ");
-            Write(0xcc00, false, "\n                                ");
+            Write(0xcc00, false, " █  █ █ █ █ █▄█\n           █ █ █▄█ ▀▄▀ █▄▄ █ █ █▄  █▄█ █   █▄ █▄█ █▄█ █▄▄  0x0000 | 2023\n           ");
+            Write(0xcc00, false, " \n                                ");
             Write(0xa25151, false, "...'''''''''...                    \n                             .'' ");
             Write(0xdf2308, true, "~");
             Write(0xa5a8af, false, "/\\");
@@ -176,8 +176,8 @@ class SplashScreenImpl : SplashScreen {
             Write(0xcc00, false, "'..' .'  ");
             Write(0xcccccc, false, "22 ");
             Write(0xffff66, false, "**\n                         ");
-            Write(0xffffff, false, ".''");
-            Write(0x666666, false, "   -   - ");
+            Write(0xffffff, false, ".''   ");
+            Write(0xccccff, false, "-   - ");
             Write(0xcc00, false, "'..  ");
             Write(0x5555bb, false, "~");
             Write(0xcc00, false, "..'");
@@ -187,16 +187,17 @@ class SplashScreenImpl : SplashScreen {
             Write(0xcc00, false, "..'    ");
             Write(0xcccccc, false, " 4 ");
             Write(0xffff66, false, "**\n                       ");
-            Write(0xffffff, false, ".'");
-            Write(0x666666, false, " * -    /\\     ");
+            Write(0xffffff, false, ".' ");
+            Write(0xffff66, true, "* ");
+            Write(0xccccff, false, "-    ");
+            Write(0xffffff, false, "/\\     ");
             Write(0xcc00, false, "'''..");
             Write(0xd4dde4, false, "/");
             Write(0xcc00, false, "......'''       ");
             Write(0xcccccc, false, "23 ");
-            Write(0xffff66, false, "*");
-            Write(0x666666, false, "*\n                       ");
-            Write(0xffffff, false, ":");
-            Write(0x333333, false, "  -          ");
+            Write(0xffff66, false, "**\n                       ");
+            Write(0xffffff, false, ":  ");
+            Write(0xccccff, false, "-          ");
             Write(0xffffff, false, "/\\    ");
             Write(0xccccff, false, "-");
             Write(0xd4dde4, false, "/  ");
