@@ -68,29 +68,27 @@ class Solution : Solver {
     (Node[], Edge[]) MakeGraph(string input) {
         var map = ParseMap(input);
 
-        // positions are ordered in top -> down, left -> right, so the entry 
-        // node becomes the first (with id==1) and exit is the last.
-        var nodePositions = (
+        // positions are ordered in top -> down, left -> right, so 
+        // entry node is the first and exit is the last.
+        var crossroads = (
             from pos in map.Keys
             orderby pos.Imaginary, pos.Real
             where IsFree(map, pos) && !IsRoad(map, pos)
             select pos
         ).ToArray();
 
-        var node = (int idx) => 1L << idx;
-
         var nodes = (
-            from i in Enumerable.Range(0, nodePositions.Length)
-            select node(i)
+            from i in Enumerable.Range(0, crossroads.Length)
+            select 1L << i
         ).ToArray();
 
         var edges = (
-            from i in Enumerable.Range(0, nodePositions.Length)
-            from j in Enumerable.Range(0, nodePositions.Length)
+            from i in Enumerable.Range(0, crossroads.Length)
+            from j in Enumerable.Range(0, crossroads.Length)
             where i != j
-            let distance = Distance(map, nodePositions[i], nodePositions[j])
+            let distance = Distance(map, crossroads[i], crossroads[j])
             where distance > 0
-            select new Edge(node(i), node(j), distance)
+            select new Edge(nodes[i], nodes[j], distance)
         ).ToArray();
 
         return (nodes, edges);
