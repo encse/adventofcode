@@ -42,7 +42,6 @@ class Solution : Solver {
 
     int Solve(string input) {
         var (nodes, edges) = MakeGraph(input);
-        // nodes are ordered so that:
         var (start, goal) = (nodes.First(), nodes.Last()); 
 
         // Dynamic programming using a cache, 'visited' is a bitset of 'nodes'.
