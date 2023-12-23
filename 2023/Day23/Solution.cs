@@ -18,6 +18,7 @@ class Solution : Solver {
 
     public object PartTwo(string input) {
         input = input.Replace(">", ".").Replace("v", ".");
+        // Console.WriteLine(input);
         return Solve(ParseMap(input));
     }
 
@@ -25,6 +26,8 @@ class Solution : Solver {
         var startPos = 1;
         var goalPos = map.Keys.MaxBy(pos => pos.Imaginary + pos.Real) - 1;
 
+        Console.WriteLine(map[startPos]);
+        Console.WriteLine(map[goalPos]);
         var nodes = Nodes(map).ToArray();
         var edges = Edges(map, nodes).ToArray();
 
@@ -33,16 +36,26 @@ class Solution : Solver {
 
         var start = nodes.Single(n => n.pos == startPos);
         var goal = nodes.Single(n => n.pos == goalPos);
-        return Dp(start, goal, ImmutableHashSet<Node>.Empty.Add(start), edges, new Dictionary<string, int>());
+
+        // 6563
+        return Dp(start, goal, ImmutableHashSet<Node>.Empty, edges, new Dictionary<string, int>());
     }
 
     int Dp(Node start, Node end, ImmutableHashSet<Node> visited, Edge[] edges, Dictionary<string, int> cache) {
-        var key = start.id + "-" + string.Join(",", visited.OrderBy(x => x.id).Select(x => x.id));
+        if (visited.Contains(start)) {
+            return -1;
+        }
+        if ( end == start ){
+            return 0;
+        }
+        visited = visited.Add(start);
+        var key = start.id + ";" + string.Join("-", visited.OrderBy(x => x.id).Select(x => x.id));
         if (!cache.ContainsKey(key)) {
-            var m = 0;
+            var m = -1;
             foreach (var e in edges.Where(e => e.from == start)) {
-                if (!visited.Contains(e.to)) {
-                    m = Math.Max(m, e.length + Dp(e.to, end, visited.Add(e.to), edges, cache));
+                var g = Dp(e.to, end, visited, edges, cache);
+                if (g >= 0) {
+                    m = Math.Max(m, e.length + g);
                 }
             }
             cache[key] = m;
@@ -80,8 +93,7 @@ class Solution : Solver {
     int GetPath(Map map, Complex from, Complex to) {
         var q = new Queue<(Complex, int)>();
         q.Enqueue((from, 0));
-        var seen = new HashSet<Complex>();
-
+        var seen = new HashSet<Complex> { from };
         while (q.Any()) {
             var (pos, dist) = q.Dequeue();
             if (pos == to) {
