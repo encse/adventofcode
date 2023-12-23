@@ -77,8 +77,7 @@ class Solution : Solver {
             select pos
         ).ToArray();
 
-        // the proper power of 2 from a node index in the array
-        var node = (int idx) => 1L << (idx - 1);
+        var node = (int idx) => 1L << idx;
 
         var nodes = (
             from i in Enumerable.Range(0, nodePositions.Length)
