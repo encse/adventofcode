@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Linq;
 using Map = System.Collections.Generic.Dictionary<System.Numerics.Complex, char>;
-using Node = long; // will use powers of two to identify nodes.
+using Node = long;
 record Edge(Node start, Node end, int distance);
 
 [ProblemName("A Long Walk")]
@@ -22,15 +22,14 @@ class Solution : Solver {
     static readonly Complex Down = Complex.ImaginaryOne;
     static readonly Complex Left = -1;
     static readonly Complex Right = 1;
-
-    Complex[] Dirs = [Up, Down, Left, Right];
+    static readonly Complex[] Dirs = [Up, Down, Left, Right];
 
     Dictionary<char, Complex[]> exits = new() {
         ['<'] = [Left],
         ['>'] = [Right],
         ['^'] = [Up],
         ['v'] = [Down],
-        ['.'] = [Up, Down, Left, Right],
+        ['.'] = Dirs,
         ['#'] = []
     };
 
@@ -67,9 +66,8 @@ class Solution : Solver {
     (Node[], Edge[]) MakeGraph(string input) {
         var map = ParseMap(input);
 
-        // order crossroads in row major order, so the
-        // entry node comes first and exit is last.
-        var crossroads = (
+        // row-major order: 'entry' node comes first and 'exit' is last
+        var nodePos = (
             from pos in map.Keys
             orderby pos.Imaginary, pos.Real
             where IsFree(map, pos) && !IsRoad(map, pos)
@@ -77,15 +75,14 @@ class Solution : Solver {
         ).ToArray();
 
         var nodes = (
-            from i in Enumerable.Range(0, crossroads.Length)
-            select 1L << i
+            from i in Enumerable.Range(0, nodePos.Length) select 1L << i
         ).ToArray();
 
         var edges = (
-            from i in Enumerable.Range(0, crossroads.Length)
-            from j in Enumerable.Range(0, crossroads.Length)
+            from i in Enumerable.Range(0, nodePos.Length)
+            from j in Enumerable.Range(0, nodePos.Length)
             where i != j
-            let distance = Distance(map, crossroads[i], crossroads[j])
+            let distance = Distance(map, nodePos[i], nodePos[j])
             where distance > 0
             select new Edge(nodes[i], nodes[j], distance)
         ).ToArray();
@@ -114,8 +111,11 @@ class Solution : Solver {
         return -1;
     }
 
-    bool IsFree(Map map, Complex p) => map.ContainsKey(p) && map[p] != '#';
-    bool IsRoad(Map map, Complex p) => Dirs.Count(d => IsFree(map, p + d)) == 2;
+    bool IsFree(Map map, Complex p) =>
+        map.ContainsKey(p) && map[p] != '#';
+
+    bool IsRoad(Map map, Complex p) => 
+        IsFree(map, p) && Dirs.Count(d => IsFree(map, p + d)) == 2;
 
     Map ParseMap(string input) {
         var lines = input.Split('\n');
