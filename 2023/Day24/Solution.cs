@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 using System.Numerics;
 using System.Data;
 
-record Range(BigInteger begin, BigInteger end);
+record Range(decimal begin, decimal end);
 record Particle(Vec2 pos, Vec2 vel);
 record Particle3(Vec3 pos, Vec3 vel);
 
@@ -18,7 +18,8 @@ class Solution : Solver {
 
     public object PartOne(string input) {
         var particles = ParseParticles(input);
-        var testArea = new Range(200000000000000, 400000000000000);
+        var areaBegin = 200000000000000;
+        var areaEnd = 400000000000000;
         var res = 0;
         for (var i = 0; i < particles.Length; i++) {
             for (var j = i + 1; j < particles.Length; j++) {
@@ -26,11 +27,11 @@ class Solution : Solver {
                 if (mp == null) {
                     continue;
                 }
-                if (!(testArea.begin <= mp.x && mp.x <= testArea.end)) {
+                if (areaBegin > mp.x || mp.x > areaEnd) {
                     continue;
                 }
 
-                if (!(testArea.begin <= mp.y && mp.y <= testArea.end)) {
+                if (areaBegin > mp.y || mp.y > areaEnd) {
                     continue;
                 }
                 if (Past(particles[i], mp)) {
@@ -45,17 +46,17 @@ class Solution : Solver {
         return res;
     }
 
+    public object PartTwo(string input) {
+        var particles = ParseParticles3(input);
+        return Solve(v => v.x, particles) + Solve(v => v.y, particles) + Solve(v => v.z, particles);
+    }
+
     bool Past(Particle p, Vec2 v) {
         // p.pos.x + t * p.vel.x = v.x
-        if (p.pos.x == v.x) {
-            return false;
-        }
-
         if (p.vel.x == 0) {
             return true;
         }
-
-        return (decimal)(v.x - p.pos.x) / (decimal)p.vel.x < 0;
+        return (v.x - p.pos.x) / p.vel.x < 0;
     }
 
     Vec2 MeetPoint(Particle p1, Particle p2) {
@@ -111,11 +112,6 @@ class Solution : Solver {
 
     }
 
-    public object PartTwo(string input) {
-        var particles = ParseParticles3(input);
-        return Solve(v => v.x, particles) + Solve(v => v.y, particles) + Solve(v => v.z, particles);
-    }
-
     public static bool IsPrime(BigInteger number) {
         if (number <= 2) return false;
         if (number % 2 == 0) return false;
@@ -129,7 +125,7 @@ class Solution : Solver {
 
     Particle[] ParseParticles(string input) => (
         from line in input.Split('\n')
-        let v = Regex.Matches(line, @"-?\d+").Select(m => BigInteger.Parse(m.Value)).ToArray()
+        let v = Regex.Matches(line, @"-?\d+").Select(m => decimal.Parse(m.Value)).ToArray()
         select new Particle(new Vec2(v[0], v[1]), new Vec2(v[3], v[4]))
     ).ToArray();
 
@@ -160,11 +156,7 @@ class Solution : Solver {
 
 }
 
-record Vec2(BigInteger x, BigInteger y) {
-    public static BigInteger operator *(Vec2 v1, Vec2 v2) {
-        return v1.x * v2.x + v1.y * v2.y;
-    }
-}
+record Vec2(decimal x, decimal y) { }
 
 record Vec3(BigInteger x, BigInteger y, BigInteger z) {
     public static Vec3 operator +(Vec3 v1, Vec3 v2) {
@@ -178,12 +170,13 @@ record Vec3(BigInteger x, BigInteger y, BigInteger z) {
     }
 }
 
-record Mat2(BigInteger a, BigInteger b, BigInteger c, BigInteger d) {
-    public BigInteger Det => a * d - b * c;
+record Mat2(decimal a, decimal b, decimal c, decimal d) {
+    public decimal Det => a * d - b * c;
     public Mat2 Inv() {
         var det = Det;
         return new Mat2(d / det, -b / det, -c / det, a / det);
     }
+
     public static Mat2 operator *(Mat2 m1, Mat2 m2) {
         return new Mat2(
             m1.a * m2.a + m1.b * m2.c,
