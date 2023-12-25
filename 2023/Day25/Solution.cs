@@ -9,7 +9,7 @@ class Solution : Solver {
 
     public object PartOne(string input) {
         Random r = new Random();
-        // call Karger algorithm in a loop until it finds a cut with 3 edges:
+        // call Karger's algorithm in a loop until it finds a cut with 3 edges:
         var (cutSize, c1, c2) = FindCut(input, r);
         while (cutSize != 3) {
             (cutSize, c1, c2) = FindCut(input, r);
@@ -24,48 +24,54 @@ class Solution : Solver {
     // of the two components separated by the cut.
     (int size, int c1, int c2) FindCut(string input, Random r) {
 
+        // super inefficient version.
+
         var graph = Parse(input);
         var componentSize = graph.Keys.ToDictionary(k => k, _ => 1);
 
         while (graph.Count > 2) {
-            // Choose a random edge u-v
+            // choose a random edge u-v to contract.
             var u = graph.Keys.ElementAt(r.Next(graph.Count));
             var v = graph[u][r.Next(graph[u].Count)];
 
-            // Contract the edge, merge nodes u and v by removing 'v'
-            // from the graph and rebinding the edges of 'v' so that it
-            // starts from 'u'. 
+            // Merge nodes u and v by removing 'v' from the graph and rebinding 
+            // the edges of 'v' so that they start from 'u' now. 
             // There are no multiple edges between two nodes in the original
-            // graph, but this algorithm will introduce those.
+            // graph, but this algorithm will introduce some.
+
+            // rebind
             foreach (var neighbour in graph[v].ToArray()) {
                 graph[neighbour].Remove(v);
                 graph[neighbour].Add(u);
             }
 
-            // add edges starting from 'v'
-            graph[u] = [.. graph[u].Concat(graph[v]).Where(n => n != u && n != v)];
-            graph.Remove(v);
+            // 'u' inherits 'v'-s edges
+            graph[u] = [.. graph[u], ..graph[v]];
 
-            // update component size
+            // get rid of the self references introduced by the above steps
+            graph[u] = [.. graph[u].Where(n => n != u)];
+
+            // update component size 
             componentSize[u] = componentSize[u] + componentSize[v];
+          
+            // 'v' can be removed now
+            graph.Remove(v);
             componentSize.Remove(v);
         }
 
-        // At the end we have just two node with some edges between them.
-        // The number of those edges equals to the size of the cut.
+        // at the end we have just two nodes with some edges between them,
+        // the number of those edges equals to the size of the cut
         var nodeA = graph.Keys.First();
         var nodeB = graph.Keys.Last();
-        var cutSize = graph[nodeA].Count;
-        return (cutSize, componentSize[nodeA], componentSize[nodeB]);
+        return (graph[nodeA].Count, componentSize[nodeA], componentSize[nodeB]);
     }
 
-    // Return adjacency list representation of input, but with the edges 
-    // recorded both ways, unlike in the input which contains them in one
-    // direction only.
+    // Returns an adjacency list representation of the input. Edges are recorded 
+    // both ways, unlike in the input which contains them in one direction only.
     Dictionary<string, List<string>> Parse(string input) {
         Dictionary<string, List<string>> res = new();
 
-        var connect = (string u, string v) => {
+        var registerEdge = (string u, string v) => {
             if (!res.ContainsKey(u)) {
                 res[u] = new();
             }
@@ -77,8 +83,8 @@ class Solution : Solver {
             var u = parts[0];
             var nodes = parts[1].Split(' ');
             foreach (var v in nodes) {
-                connect(u, v);
-                connect(v, u);
+                registerEdge(u, v);
+                registerEdge(v, u);
             }
         }
         return res;
