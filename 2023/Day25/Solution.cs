@@ -9,21 +9,20 @@ class Solution : Solver {
 
     public object PartOne(string input) {
         Random r = new Random();
-        
-        // call Stoer–Wagner algorithm until it finds a cut with 3 edges:
-        var (size, c1, c2) = FindCut(input, r);
-        while (size != 3) {
-            (size, c1, c2) = FindCut(input, r);
+        // call Karger algorithm in a loop until it finds a cut with 3 edges:
+        var (cutSize, c1, c2) = FindCut(input, r);
+        while (cutSize != 3) {
+            (cutSize, c1, c2) = FindCut(input, r);
         }
         return c1 * c2;
     }
 
-    // https://en.wikipedia.org/wiki/Stoer%E2%80%93Wagner_algorithm
-    // The Stoer–Wagner algorithm returns the size of one 'cut' of the graph. 
+    // https://en.wikipedia.org/wiki/Karger%27s_algorithm
+    // The Karger algorithm returns the size of one 'cut' of the graph. 
     // It's a randomized algorithm that is 'likely' to find the minimal cut 
     // in a reasonable time. The algorithm is extended to also return the sizes 
     // of the two components separated by the cut.
-    (int size, int c1, int c2) FindCut(string input,  Random r) {
+    (int size, int c1, int c2) FindCut(string input, Random r) {
 
         var graph = Parse(input);
         var componentSize = graph.Keys.ToDictionary(k => k, _ => 1);
@@ -44,7 +43,7 @@ class Solution : Solver {
             }
 
             // add edges starting from 'v'
-            graph[u] = [..graph[u].Concat(graph[v]).Where(n => n != u && n != v)];
+            graph[u] = [.. graph[u].Concat(graph[v]).Where(n => n != u && n != v)];
             graph.Remove(v);
 
             // update component size
