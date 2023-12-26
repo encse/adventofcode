@@ -8,11 +8,13 @@ using System.Numerics;
 using System.Data;
 
 // WIP, dont look at this :D
-
-record Vec2(decimal x, decimal y) { }
-record Mat2(decimal a, decimal b, decimal c, decimal d) {}
-record Vec3(BigInteger x, BigInteger y, BigInteger z);
+// part 1
+record Vec2(decimal x, decimal y);
+record Mat2(decimal a, decimal b, decimal c, decimal d);
 record Particle(Vec2 pos, Vec2 vel);
+
+// part 2
+record Vec3(BigInteger x, BigInteger y, BigInteger z);
 record Particle3(Vec3 pos, Vec3 vel);
 
 [ProblemName("Never Tell Me The Odds")]
@@ -58,7 +60,7 @@ class Solution : Solver {
 
         // I don't have a matrix library at my disposal, but we just need
         // to compute the determinant, the inverse of m, and one matrix 
-        // multiplication, so I'll inline it here. It's as ugly as it is.
+        // multiplication, so I'll inline it here. I can't make it better.
         var determinant = m.a * m.d - m.b * m.c;
         if (determinant == 0) {
             return (null, -1, -1); //particles don't meet
@@ -74,7 +76,7 @@ class Solution : Solver {
             inverse.c * b.x + inverse.d * b.y
         );
 
-        // times come from solving a linear equation for one coordinate (x):
+        // times come from solving pi.pos + pi.vel * t = pos for x (or y):
         var t1 = (pos.x - p1.pos.x) / p1.vel.x;
         var t2 = (pos.x - p2.pos.x) / p2.vel.x;
         return (pos, t1, t2);
