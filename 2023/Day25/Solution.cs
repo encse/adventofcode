@@ -18,64 +18,66 @@ class Solution : Solver {
     }
 
     // https://en.wikipedia.org/wiki/Karger%27s_algorithm
-    // The Karger algorithm returns the size of one 'cut' of the graph. 
+    // The Karger's algorithm returns the size of one 'cut' of the graph. 
     // It's a randomized algorithm that is 'likely' to find the minimal cut 
-    // in a reasonable time. The algorithm is extended to also return the sizes 
-    // of the two components separated by the cut.
+    // in a reasonable time. The algorithm is extended to return the sizes 
+    // of the two components separated by the cut as well.
+    // This is for education purposes only, very inefficient.
     (int size, int c1, int c2) FindCut(string input, Random r) {
-
-        // super inefficient version.
 
         var graph = Parse(input);
         var componentSize = graph.Keys.ToDictionary(k => k, _ => 1);
 
-        while (graph.Count > 2) {
-            // choose a random edge u-v to contract.
+        var rebind = (string oldNode, string newNode, string ignoreNode) => {
+            foreach (var neighbour in graph[oldNode].ToArray()) {
+                if (neighbour != ignoreNode) {
+                    graph[neighbour].Remove(oldNode);
+                    graph[neighbour].Add(newNode);
+                }
+            }
+        };
+
+        for (var id = 0; graph.Count > 2; id++) {
+            // We decrease the the number of nodes and edges by one. First 
+            // choose a random edge u-v. Introduce a new node that inherits 
+            // every edges of the nodes u and v (apart from u-v itself) then 
+            // remove u and v from the graph. It's component size is the sum
+            // of the component sizes of u and v.
             var u = graph.Keys.ElementAt(r.Next(graph.Count));
             var v = graph[u][r.Next(graph[u].Count)];
 
-            // Merge nodes u and v by removing 'v' from the graph and rebinding 
-            // the edges of 'v' so that they start from 'u' now. 
-            // There are no multiple edges between two nodes in the original
-            // graph, but this algorithm will introduce some.
+            var merged = $"merge-${id}";
+            graph[merged] = [
+                .. from n in graph[u] where n != v select n,
+                .. from n in graph[v] where n != u select n
+            ];
+            rebind(u, merged, v);
+            rebind(v, merged, u);
 
-            // rebind
-            foreach (var neighbour in graph[v].ToArray()) {
-                graph[neighbour].Remove(v);
-                graph[neighbour].Add(u);
-            }
-
-            // 'u' inherits 'v'-s edges
-            graph[u] = [.. graph[u], ..graph[v]];
-
-            // get rid of the self references introduced by the above steps
-            graph[u] = [.. graph[u].Where(n => n != u)];
-
-            // update component size 
-            componentSize[u] = componentSize[u] + componentSize[v];
-          
-            // 'v' can be removed now
+            graph.Remove(u);
             graph.Remove(v);
-            componentSize.Remove(v);
+
+            componentSize[merged] = componentSize[u] + componentSize[v];
         }
 
         // at the end we have just two nodes with some edges between them,
-        // the number of those edges equals to the size of the cut
+        // the number of those edges equals to the size of the cut. Component size
+        // tells the number of nodes in the two sides created by the cut.
         var nodeA = graph.Keys.First();
         var nodeB = graph.Keys.Last();
-        return (graph[nodeA].Count, componentSize[nodeA], componentSize[nodeB]);
+        return (graph[nodeA].Count(), componentSize[nodeA], componentSize[nodeB]);
     }
 
     // Returns an adjacency list representation of the input. Edges are recorded 
     // both ways, unlike in the input which contains them in one direction only.
     Dictionary<string, List<string>> Parse(string input) {
-        Dictionary<string, List<string>> res = new();
+        var graph = new Dictionary<string, List<string>>();
 
         var registerEdge = (string u, string v) => {
-            if (!res.ContainsKey(u)) {
-                res[u] = new();
+            if (!graph.ContainsKey(u)) {
+                graph[u] = new();
             }
-            res[u].Add(v);
+            graph[u].Add(v);
         };
 
         foreach (var line in input.Split('\n')) {
@@ -87,6 +89,6 @@ class Solution : Solver {
                 registerEdge(v, u);
             }
         }
-        return res;
+        return graph;
     }
 }
