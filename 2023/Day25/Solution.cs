@@ -41,7 +41,7 @@ class Solution : Solver {
         for (var id = 0; graph.Count > 2; id++) {
             // Decrease the the number of nodes one. First select two nodes u 
             // and v connected with an edge. Introduce a new node that inherits 
-            // every edges goint out from tehse (excluding the edges between them). 
+            // every edges going out of these (excluding the edges between them). 
             // Set the new nodes' component size to the sum of the component 
             // sizes of u and v. Remove u and v from the graph.
             var u = graph.Keys.ElementAt(r.Next(graph.Count));
@@ -62,7 +62,7 @@ class Solution : Solver {
             graph.Remove(v);
         }
 
-        // two nodes remains with some edges between them, the number of those 
+        // two nodes remain with some edges between them, the number of those 
         // edges equals to the size of the cut. Component size tells the number 
         // of nodes in the two sides created by the cut.
         var nodeA = graph.Keys.First();
