@@ -7,43 +7,35 @@ using System.Text.RegularExpressions;
 using System.Numerics;
 using System.Data;
 
-record Range(decimal begin, decimal end);
+// WIP, dont look at this :D
+
+record Vec2(decimal x, decimal y) { }
+record Mat2(decimal a, decimal b, decimal c, decimal d) {}
+record Vec3(BigInteger x, BigInteger y, BigInteger z);
 record Particle(Vec2 pos, Vec2 vel);
 record Particle3(Vec3 pos, Vec3 vel);
-
-// WIP, dont look at this :D
 
 [ProblemName("Never Tell Me The Odds")]
 class Solution : Solver {
 
     public object PartOne(string input) {
         var particles = ParseParticles(input);
-        var areaBegin = 200000000000000;
-        var areaEnd = 400000000000000;
-        var res = 0;
-        for (var i = 0; i < particles.Length; i++) {
-            for (var j = i + 1; j < particles.Length; j++) {
-                var mp = MeetPoint(particles[i], particles[j]);
-                if (mp == null) {
-                    continue;
-                }
-                if (areaBegin > mp.x || mp.x > areaEnd) {
-                    continue;
-                }
+        var begin = 200000000000000;
+        var end = 400000000000000;
 
-                if (areaBegin > mp.y || mp.y > areaEnd) {
-                    continue;
-                }
-                if (Past(particles[i], mp)) {
-                    continue;
-                }
-                if (Past(particles[j], mp)) {
-                    continue;
-                }
-                res++;
-            }
-        }
-        return res;
+        return (
+            from i in Enumerable.Range(0, particles.Length)
+            from j in Enumerable.Range(0, particles.Length)
+            where i< j
+            let intersection = Meet(particles[i], particles[j])
+            where (
+                intersection.pos != null &&
+                begin <= intersection.pos.x && intersection.pos.x <= end &&
+                begin <= intersection.pos.y && intersection.pos.y <= end &&
+                intersection.t1 >= 0 && intersection.t2 >= 0
+            )
+            select 1
+        ).Sum(); 
     }
 
     public object PartTwo(string input) {
@@ -51,31 +43,41 @@ class Solution : Solver {
         return Solve(v => v.x, particles) + Solve(v => v.y, particles) + Solve(v => v.z, particles);
     }
 
-    bool Past(Particle p, Vec2 v) {
-        // p.pos.x + t * p.vel.x = v.x
-        if (p.vel.x == 0) {
-            return true;
-        }
-        return (v.x - p.pos.x) / p.vel.x < 0;
-    }
-
-    Vec2 MeetPoint(Particle p1, Particle p2) {
-        Mat2 m1 = new Mat2(
-            p1.vel.y, -p1.vel.x,
+    // the position where the path of the particles cross and the time(s) when 
+    // they are at the meeting point. 
+    (Vec2 pos, decimal t1, decimal t2) Meet(Particle p1, Particle p2) {
+        // Solving m * x = b provides the meeting point
+        Mat2 m = new Mat2(
+            p1.vel.y, -p1.vel.x, 
             p2.vel.y, -p2.vel.x
         );
-
-        var det = m1.Det;
-        if (det == 0) {
-            return null;
-        }
-
-        Vec2 v = new Vec2(
+        Vec2 b = new Vec2(
             p1.vel.y * p1.pos.x - p1.vel.x * p1.pos.y,
             p2.vel.y * p2.pos.x - p2.vel.x * p2.pos.y
         );
 
-        return m1.Inv() * v;
+        // I don't have a matrix library at my disposal, but we just need
+        // to compute the determinant, the inverse of m, and one matrix 
+        // multiplication, so I'll inline it here. It's as ugly as it is.
+        var determinant = m.a * m.d - m.b * m.c;
+        if (determinant == 0) {
+            return (null, -1, -1); //particles don't meet
+        }
+
+        var inverse = new Mat2(
+            m.d / determinant, -m.b / determinant, 
+            -m.c / determinant, m.a / determinant
+        );
+
+        var pos = new Vec2(
+            inverse.a * b.x + inverse.b * b.y,
+            inverse.c * b.x + inverse.d * b.y
+        );
+
+        // times come from solving a linear equation for one coordinate (x):
+        var t1 = (pos.x - p1.pos.x) / p1.vel.x;
+        var t2 = (pos.x - p2.pos.x) / p2.vel.x;
+        return (pos, t1, t2);
     }
 
     BigInteger Solve(Func<Vec3, BigInteger> dim, Particle3[] particles) {
@@ -151,45 +153,6 @@ class Solution : Solver {
 
         return s % prod;
     }
-
     BigInteger ModInv(BigInteger a, BigInteger m) => BigInteger.ModPow(a, m - 2, m);
-
 }
 
-record Vec2(decimal x, decimal y) { }
-
-record Vec3(BigInteger x, BigInteger y, BigInteger z) {
-    public static Vec3 operator +(Vec3 v1, Vec3 v2) {
-        return new Vec3(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z);
-    }
-    public static Vec3 operator -(Vec3 v1, Vec3 v2) {
-        return new Vec3(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z);
-    }
-    public static Vec3 operator *(BigInteger d, Vec3 v1) {
-        return new Vec3(d * v1.x, d * v1.y, d * v1.z);
-    }
-}
-
-record Mat2(decimal a, decimal b, decimal c, decimal d) {
-    public decimal Det => a * d - b * c;
-    public Mat2 Inv() {
-        var det = Det;
-        return new Mat2(d / det, -b / det, -c / det, a / det);
-    }
-
-    public static Mat2 operator *(Mat2 m1, Mat2 m2) {
-        return new Mat2(
-            m1.a * m2.a + m1.b * m2.c,
-            m1.a * m2.b + m1.b * m2.d,
-            m1.b * m2.a + m1.d * m2.c,
-            m1.b * m2.b + m1.d * m2.d
-        );
-    }
-
-    public static Vec2 operator *(Mat2 m1, Vec2 v) {
-        return new Vec2(
-            m1.a * v.x + m1.b * v.y,
-            m1.c * v.x + m1.d * v.y
-        );
-    }
-}
