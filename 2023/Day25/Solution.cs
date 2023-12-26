@@ -46,7 +46,6 @@ class Solution : Solver {
             // sizes of u and v. Remove u and v from the graph.
             var u = graph.Keys.ElementAt(r.Next(graph.Count));
             var v = graph[u][r.Next(graph[u].Count)];
-            string[] edge = [u, v];
 
             var merged = "merge-" + id;
             graph[merged] = [
