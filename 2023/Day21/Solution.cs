@@ -38,11 +38,6 @@ class Solution : Solver {
     // I convinced myself that each and every item in the matrix must have a 
     // form that is a quadratic expression of n.
     // 
-    // It's not that hard to see as it sounds. E.g. after every 131 steps
-    // a new center tile is generated in each direction, this adds 4 new tiles.
-    // After k*131 + 66 steps, new corner tiles are born, and the number of those 
-    // can be calculated with triangular numbers (quadratic in n).
-    //
     // If we are taking these small expressions, multiply each with 
     // the number of available positions corresponding to that state
     // and sum it up, we have the solution for that particular n!
