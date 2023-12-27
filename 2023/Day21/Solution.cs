@@ -38,9 +38,9 @@ class Solution : Solver {
     // until I convinced myself that each and every item in the matrix must have 
     // a form that is a quadratic expression of n.
     // 
-    // It's not that hard to see as it sounds. After is some lead in at the 
+    // It's not that hard to see as it sounds. After some lead in at the 
     // beginning things start to work like this: in each batch of batch of 131 
-    // steps new center tiles get generated once (that's +4 tiles) and corner 
+    // steps new center tiles get generated once (that's 4 tiles) and corner 
     // tiles are generated once - the number of those can be calculated using 
     // triangular numbers i.e. they are quadratic in n. 
     // 
