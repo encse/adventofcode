@@ -18,7 +18,7 @@ class Solution : Solver {
     // reach the next tile without obstacles. This is a special property of
     // the input.
     //
-    // Each tile in that category can be in a few hundred different states. 
+    // Each tile in a category can be in a few hundred different states. 
     // The first one (what I call the 'seed') is the point where the elf 
     // enters the tile. This can be the center of an edge or one of its
     // corners. After seeding, the tile 'ages' on its own pace and it is not 
@@ -31,26 +31,26 @@ class Solution : Solver {
     //
     // But here comes the twist.
     //
-    // It turns out that if we are looking at only steps with where n = 131 * k + 65 
+    // It turns out that if we are looking at only steps where n = 131 * k + 65 
     // we can compute how many tiles are in each position of the matrix.
     // I haven't gone through this whole process, just checked a few examples until 
     // I convinced myself that each and every item in the matrix must have a 
     // form that is a quadratic expression of n.
     // 
-    // It's not that hard to see at it sounds, e.g. after every 131 steps
+    // It's not that hard to see than it sounds, e.g. after every 131 steps
     // a new center tile is generated in each direction, this adds 4 new tiles.
     // After k*131 + 66 steps, new corner tiles are born, and the number of those 
     // can be calculated with triangular numbers (quadratic in n).
     //
     // If we are taking these small expressions, multiply each with 
-    // the number of available positions corresponding to that tile + state
+    // the number of available positions corresponding to that state
     // and sum it up, we have the solution for that particular n!
     //
     // But we don't have to go through this tedious process, once we are
     // convinced. Because this means that if we reorganize the equations
     // we get to a form of:
     //
-    //     a * n^2 + b * n + c (for n = k * 131 + 65)
+    //     a * n^2 + b * n + c      (for n = k * 131 + 65)
     //
     // We can use interpolation to create this polynom using only 3 points.
     // Then just insert n = 26501365 which happens to be 202300 * 131 + 65
