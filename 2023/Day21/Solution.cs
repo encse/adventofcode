@@ -36,14 +36,14 @@ class Solution : Solver {
     // we can compute how many tiles are in each position of the matrix.
     // I haven't gone through this whole process, just checked a few examples 
     // until I convinced myself that each and every item in the matrix must have 
-    // a form that is a quadratic expression of n.
+    // a form that is a constant, or a linear / quadratic function of n.
     // 
     // It's not that hard to see as it sounds. After some lead in at the 
-    // beginning things start to work like this: in each batch of 131 steps new 
-    // center tiles are generated once (that's 4 tiles) and corner tiles are 
-    // generated once as well - the number of these is some linear function of n.
-    // That is, the grown up population for center tiles is linear in n, and
-    // quadratic for corner tiles (can be computed with triangular numbers). 
+    // beginning things start to work like this: in each batch of 131 steps a set
+    // of new center tiles is generated once (that's 4 tiles) and a new set of
+    // corner tiles is generated once as well. These are linear in n (1, 3, 5, ...)
+    // That is, the grown up population for center tiles mustb be linear in n, 
+    // and quadratic for corner tiles (can be computed with triangular numbers). 
     // 
     // But we don't have to go through this tedious process, once we are
     // convinced. Because this means that if we reorganize the equations
@@ -51,8 +51,9 @@ class Solution : Solver {
     //
     //     a * n^2 + b * n + c      (for n = k * 131 + 65)
     //
-    // We can use interpolation to create this polynom using only 3 points.
-    // Then just insert n = 26501365 which happens to be 202300 * 131 + 65
+    // We just need to compute this polyinom for 3 values and interpolate.
+    //
+    // Finally compute it for n = 26501365 which happens to be 202300 * 131 + 65
     // to get the final result.
     public object PartTwo(string input) {
        
