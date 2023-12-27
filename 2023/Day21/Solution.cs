@@ -42,7 +42,7 @@ class Solution : Solver {
     // beginning things start to work like this: in each batch of 131 steps new 
     // center tiles are generated once (that's 4 tiles) and corner tiles are 
     // generated once as well - the number of these is some linear function of n.
-    // That is, the grown up population for center tiles is a linear in n, and
+    // That is, the grown up population for center tiles is linear in n, and
     // quadratic for corner tiles (can be computed with triangular numbers). 
     // 
     // But we don't have to go through this tedious process, once we are
