@@ -38,10 +38,11 @@ class Solution : Solver {
     // I convinced myself that each and every item in the matrix must have a 
     // form that is a quadratic expression of n.
     // 
-    // If we are taking these small expressions, multiply each with 
-    // the number of available positions corresponding to that state
-    // and sum it up, we have the solution for that particular n!
-    //
+    // It's not that hard to see as it sounds. E.g. in each batch of 131 steps
+    // new center tiles are generated once (that's +4 tiles) and corner tiles are 
+    // generated once - the number of those can be calculated using triangular 
+    // numbers i.e. they are quadratic in n.
+    // 
     // But we don't have to go through this tedious process, once we are
     // convinced. Because this means that if we reorganize the equations
     // we get to a form of:
