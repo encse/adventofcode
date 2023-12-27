@@ -13,7 +13,7 @@ class Solution : Solver {
 
     // At first I solved this with carefully maintaining the number of
     // different tiles after each step. It turns out that there are only
-    // about 9 tile categories based on the direction closest to the 
+    // nine tile categories based on the direction closest to the 
     // starting point. The elf can go straight left, up, right and down and
     // reach the next tile without obstacles. This is a special property of
     // the input.
@@ -21,9 +21,10 @@ class Solution : Solver {
     // Each tile in a category can be in a few hundred different states. 
     // The first one (what I call the 'seed') is the point where the elf 
     // enters the tile. This can be the center of an edge or one of its
-    // corners. After seeding, the tile 'ages' on its own pace and it is not 
-    // affected by the surrounding tiles at all. This continues until it 'grows' 
-    // up, when it starts to oscillate between just two states back and forth.
+    // corners. After seeding, the tile 'ages' on its own pace. Thanks to an
+    // other property of the input, tiles are not affected by their neighbourhood. 
+    // Aging continues until a tile 'grows' up, when it starts to oscillate 
+    // between just two states back and forth.
     //
     // My first solution involved a 9 by 260 matrix containing the
     // number of tiles in each state. I implemented the aging process and
