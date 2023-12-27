@@ -39,9 +39,9 @@ class Solution : Solver {
     // a form that is a quadratic expression of n.
     // 
     // It's not that hard to see as it sounds. After some lead in at the 
-    // beginning things start to work like this: in each batch of batch of 131 
-    // steps new center tiles get generated once (that's 4 tiles) and corner 
-    // tiles are generated once - the number of those can be calculated using 
+    // beginning things start to work like this: in each batch of 131 steps new 
+    // center tiles are generated once (that's 4 tiles) and corner tiles are 
+    // generated once as well - the number of those can be calculated using 
     // triangular numbers i.e. they are quadratic in n. 
     // 
     // But we don't have to go through this tedious process, once we are
