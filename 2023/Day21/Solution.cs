@@ -39,7 +39,7 @@ class Solution : Solver {
     // This is not that hard to see as it sounds. After some lead in at the 
     // beginning, things start to work like this: in each batch of 131 steps a 
     // set of center tiles and a set of corner styles is generated. 
-    // Always 4 center tiles come in, but corner tiles are linear in n (1, 3, 5, ...)
+    // Always 4 center tiles come in, but corner tiles are linear in n: 1,2,3...
     // That is: the grown up population for center tiles must be linear in n, 
     // and quadratic for the corners (can be computed using triangular numbers). 
     // 
