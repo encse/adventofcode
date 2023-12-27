@@ -4,77 +4,110 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 
+record Pos(Complex p, Complex tile);
+
 [ProblemName("Step Counter")]
 class Solution : Solver {
 
-    static readonly Complex center = new Complex(65, 65);
-    static readonly Complex[] corners = [
-        new Complex(0, 0),
-        new Complex(0, 130),
-        new Complex(130, 130),
-        new Complex(130, 0),
-    ];
-    static readonly Complex[] middles = [
-        new Complex(65, 0),
-        new Complex(65, 130),
-        new Complex(0, 65),
-        new Complex(130, 65),
-    ];
-    static readonly Complex[] entrypoints = [center, .. corners, .. middles];
-    static readonly Complex[] dirs = [ 1, -1, Complex.ImaginaryOne, -Complex.ImaginaryOne ];
+    public object PartOne(string input) => Steps(ParseMap(input)).ElementAt(64);
 
-    // wip
-    public object PartOne(string input) {
-        var map = ParseMap(input);
-        var positions = new HashSet<Complex> { center };
-        for (var i = 0; i < 64; i++) {
+    // At first I solved this with carefully maintaining the number of
+    // different tiles after each step. It turns out that there are only
+    // about 9 tile categories based on the direction closest to the 
+    // starting point. The elf can go straight left, up, right and down and
+    // reach the next tile without obstacles. This is a special property of
+    // the input.
+    //
+    // Each tile in that category can be in a few hundred different states. 
+    // The first one (what I call the 'seed') is the point where the elf 
+    // enters the tile. This can be the center of an edge or one of its
+    // corners. After seeding, the tile 'ages' on its own pace and it is not 
+    // affected by the surrounding tiles at all. This continues until it 'grows' 
+    // up, when it starts to oscillate between just two states back and forth.
+    //
+    // My first solution involved a 9 by 260 matrix containing the
+    // number of tiles in each state. I implemented the aging process and
+    // carefully computed when to seed new tiles for each category.
+    //
+    // But here comes the twist.
+    //
+    // It turns out that if we are looking at only steps with where n = 131 * k + 65 
+    // we can compute how many tiles are in each position of the matrix.
+    // I haven't gone through this whole process, just checked a few examples until 
+    // I convinced myself that each and every item in the matrix must have a 
+    // form that is a quadratic expression of n.
+    // 
+    // It's not that hard to see at it sounds, e.g. after every 131 steps
+    // a new center tile is generated in each direction, this adds 4 new tiles.
+    // After k*131 + 66 steps, new corner tiles are born, and the number of those 
+    // can be calculated with triangular numbers (quadratic in n).
+    //
+    // If we are taking these small expressions, multiply each with 
+    // the number of available positions corresponding to that tile + state
+    // and sum it up, we have the solution for that particular n!
+    //
+    // But we don't have to go through this tedious process, once we are
+    // convinced. Because this means that if we reorganize the equations
+    // we get to a form of:
+    //
+    //     a * n^2 + b * n + c (for n = k * 131 + 65)
+    //
+    // We can use interpolation to create this polynom using only 3 points.
+    // Then just insert n = 26501365 which happens to be 202300 * 131 + 65
+    // to get the final result.
+    public object PartTwo(string input) {
+       
+        var n = 26501365;
+
+        // Newton interpolation for 3 points: k * 131 + 65 for k = 0, 1, 2
+        var steps = Steps(ParseMap(input)).Take(328).ToArray();
+
+        (decimal x0, decimal y0) = (65, steps[65]);
+        (decimal x1, decimal y1) = (196, steps[196]);
+        (decimal x2, decimal y2) = (327, steps[327]);
+
+        decimal y01 = (y1 - y0) / (x1 - x0);
+        decimal y12 = (y2 - y1) / (x2 - x1);
+        decimal y012 = (y12 - y01) / (x2 - x0);
+        return (long)(y0 + y01 * (n - x0) + y012 * (n - x0) * (n - x1));
+    }
+
+    // starts walking and returns the number of available positions at each step
+    IEnumerable<long> Steps(HashSet<Complex> map) {
+        var positions = new HashSet<Pos> { new Pos(new Complex(65, 65), 0) };
+        while(true) {
+            yield return positions.Count;
             positions = Step(map, positions);
         }
-        return positions.Count;
     }
+    
+    HashSet<Pos> Step(HashSet<Complex> map, HashSet<Pos> positions) {
+        Complex[] dirs = [1, -1, Complex.ImaginaryOne, -Complex.ImaginaryOne];
 
-    public object PartTwo(string input) {
-
-        var steps = 26501365; // 202300 * 131 + 65
-        var bufferSize = 270; // anything that is > 260
-        var buffers = new Dictionary<Complex, CircularBuffer<long>>();
-        foreach (var entryPoint in entrypoints) {
-            buffers[entryPoint] = new CircularBuffer<long>(bufferSize);
-        }
-
-        buffers[center][1] = 1;
-        for (var i = 1; i < steps; i++) {
-            foreach (var cb in buffers.Values) {
-                cb[^3] += cb[^1];
-            }
-            buffers[center].Shift(0);
-            foreach (var item in middles) {
-                buffers[item].Shift(i % 131 == 65 ? 1 : 0);
-            }
-            foreach (var item in corners) {
-                buffers[item].Shift(i % 131 == 0 ? i/131 : 0);
-            }
-        }
-
-        var map = ParseMap(input);
-        var res = 0L;
-        foreach (var entryPoint in entrypoints) {
-            var positions = new HashSet<Complex> { entryPoint };
-            for (var i = 0; i < bufferSize; i++) {
-                res += positions.Count * buffers[entryPoint][i];
-                positions = Step(map, positions);
-            }
-        }
-        return res;
-    }
-
-    HashSet<Complex> Step(HashSet<Complex> map, HashSet<Complex> pos) {
-        var res = new HashSet<Complex>();
-        foreach (var p in pos) {
+        var res = new HashSet<Pos>();
+        foreach (var pos in positions) {
+            // step in each direction taking care of the wrap around maintaining
+            // the tile position as well.
             foreach (var dir in dirs) {
-                var pT = p + dir;
+                var pT = pos.p + dir;
+                var tileT = pos.tile;
+
+                if (pT.Imaginary < 0) {
+                    pT += 131 * Complex.ImaginaryOne;
+                    tileT -= Complex.ImaginaryOne;
+                } else if (pT.Imaginary > 130) {
+                    pT -= 131 * Complex.ImaginaryOne;
+                    tileT += Complex.ImaginaryOne;
+                } else if (pT.Real < 0) {
+                    pT += 131;
+                    tileT -= 1;
+                } else if (pT.Real > 130) {
+                    pT -= 131;
+                    tileT += 1;
+                }
+
                 if (map.Contains(pT)) {
-                    res.Add(pT);
+                    res.Add(new Pos(pT, tileT));
                 }
             }
         }
@@ -86,26 +119,8 @@ class Solution : Solver {
         return (
             from irow in Enumerable.Range(0, lines.Length)
             from icol in Enumerable.Range(0, lines[0].Length)
-            where lines[irow][icol]  != '#'
+            where lines[irow][icol] != '#'
             select new Complex(icol, irow)
         ).ToHashSet();
-    }
-}
-
-class CircularBuffer<T>(int size) {
-    public int Count => size;
-    T[] items = new T[size];
-    int i = 0;
-
-    public T this[int index] {
-        get { return items[(i + index) % size]; }
-        set { items[(i + index) % size] = value; }
-    }
-
-    public T Shift(T t) {
-        i = (i + size - 1) % size;
-        var res = items[i];
-        items[i] = t;
-        return res;
     }
 }
