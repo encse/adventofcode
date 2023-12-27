@@ -30,28 +30,27 @@ class Solution : Solver {
     // tiles in each state. I implemented the aging process and carefully 
     // computed when to seed new tiles for each category.
     //
-    // But here comes the twist.
-    //
     // It turns out that if we are looking at only steps where n = 131 * k + 65 
     // we can compute how many tiles are in each position of the matrix.
     // I haven't gone through this whole process, just checked a few examples 
     // until I convinced myself that each and every item in the matrix must have 
-    // a form that is a constant, or a linear / quadratic function of n.
+    // be constant, or a linear or quadratic function of n.
     // 
     // It's not that hard to see as it sounds. After some lead in at the 
-    // beginning things start to work like this: in each batch of 131 steps a set
-    // of new center tiles is generated once (that's 4 tiles) and a new set of
-    // corner tiles is generated once as well. These are linear in n (1, 3, 5, ...)
-    // That is, the grown up population for center tiles mustb be linear in n, 
-    // and quadratic for corner tiles (can be computed with triangular numbers). 
+    // beginning, things start to work like this: in each batch of 131 steps a 
+    // set of center tiles and a set of corner styles is generated. 
+    // 4 center tiles will come in, but corner tiles are linear in n (1, 3, 5, ...)
+    // That is: the grown up population for center tiles must be linear in n, 
+    // and quadratic for the corners (can be computed using triangular numbers). 
     // 
-    // But we don't have to go through this tedious process, once we are
-    // convinced. Because this means that if we reorganize the equations
-    // we get to a form of:
+    // If we know the active positions for each tile category and state, we
+    // can multiply it with the number of tiles and sum it up to get the result.
+    //
+    // This all means that if we reorganize the equations we get to a form of:
     //
     //     a * n^2 + b * n + c      (for n = k * 131 + 65)
     //
-    // We just need to compute this polyinom for 3 values and interpolate.
+    // We just need to compute this polynom for 3 values and interpolate.
     //
     // Finally compute it for n = 26501365 which happens to be 202300 * 131 + 65
     // to get the final result.
