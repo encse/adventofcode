@@ -38,7 +38,7 @@ class Solution : Solver {
     // I convinced myself that each and every item in the matrix must have a 
     // form that is a quadratic expression of n.
     // 
-    // It's not that hard to see than it sounds, e.g. after every 131 steps
+    // It's not that hard to see as it sounds. E.g. after every 131 steps
     // a new center tile is generated in each direction, this adds 4 new tiles.
     // After k*131 + 66 steps, new corner tiles are born, and the number of those 
     // can be calculated with triangular numbers (quadratic in n).
