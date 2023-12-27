@@ -12,11 +12,11 @@ class Solution : Solver {
     public object PartOne(string input) => Steps(ParseMap(input)).ElementAt(64);
 
     // At first I solved this with carefully maintaining the number of
-    // different tiles after each step. It turns out that there are only
-    // nine tile categories based on the direction closest to the 
-    // starting point. The elf can go straight left, up, right and down and
-    // reach the next tile without obstacles. This is a special property of
-    // the input.
+    // different tiles (the 131x131 regions that repeat indefinetely) after each 
+    // step. It turns out that there are only nine tile categories based on the 
+    // direction closest to the starting point. The elf can go straight left, up, 
+    // right and down and reach the next tile without obstacles. This is a special 
+    // property of the input.
     //
     // Each tile in a category can be in a few hundred different states. 
     // The first one (what I call the 'seed') is the point where the elf 
