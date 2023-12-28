@@ -44,24 +44,13 @@ class Solution : Solver {
     }
 
     Vec2 Solve2D(Particle2[] particles) {
-        // We will bruteforce the velocity of the stone in the two dimensions
-        // we are working right now.
-        // 
-        // We can transform the particles to the reference frame that moves
-        // together with the stone, just subtract the stone's velocity 
-        // from the particle's velocity.
-        // 
-        // If we knew the position of the stone as well, we could use a
-        // reference frame where the stone rested at (0,0) but we dont know it yet.
-        // But if that was the case, each particle had to go through (0,0) to get 
-        // hit by the stone.
-        // 
-        // Now the twist is: our stone still has some fixed coordinates in this
-        // reference frame we selected, and it's still true that all particles
-        // has to go through that point.
-        // 
-        // So if we have the right velocity, we can find a point that is crossed
-        // by every particles. And this has to be the position of the stone.
+        // We try to guess the speed of our stone (a for loop), then supposing 
+        // that it is the right velocity we create a new reference frame that 
+        // moves with that speed. The stone doesn't move in this frame, it has 
+        // some fixed unknown coordinates. Now transform each particle into 
+        // this reference frame as well. Since the stone is not moving, if we 
+        // properly guessed the speed, we find that each particle meets at the 
+        // same point. This must be the stone's location.
 
         var translateV = (Particle2 p, Vec2 vel) =>
             new Particle2(p.pos, new Vec2(p.vel.x0 - vel.x0, p.vel.x1 - vel.x1));
