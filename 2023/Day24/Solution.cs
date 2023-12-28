@@ -53,7 +53,7 @@ class Solution : Solver {
         // 
         // If we knew the position of the stone as well, we could use a
         // reference frame where the stone rested at (0,0) but we dont know it yet.
-        // But in that was the case each particle had to go through (0,0) to get 
+        // But if that was the case, each particle had to go through (0,0) to get 
         // hit by the stone.
         // 
         // Now the twist is: our stone still has some fixed coordinates in this
