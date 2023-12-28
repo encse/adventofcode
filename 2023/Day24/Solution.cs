@@ -3,7 +3,6 @@ namespace AdventOfCode.Y2023.Day24;
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Numerics;
 using System.Data;
 
 // WIP, dont look at this :D
@@ -20,7 +19,8 @@ record Particle3(Vec3 pos, Vec3 vel);
 class Solution : Solver {
 
     public object PartOne(string input) {
-        var particles = ParseParticles(input);
+        var particles = Proj(ParseParticles(input), v => v.x, v => v.y);
+
         var begin = 200000000000000;
         var end = 400000000000000;
 
@@ -39,41 +39,51 @@ class Solution : Solver {
         ).Sum();
     }
 
+    Particle[] Proj(
+        Particle3[] ps,
+        Func<Vec3, decimal> dim1,
+        Func<Vec3, decimal> dim2
+    ) {
+        return ps.Select(p =>
+            new Particle(
+                new Vec2(dim1(p.pos), dim2(p.pos)),
+                new Vec2(dim1(p.vel), dim2(p.vel))
+            )
+        ).ToArray();
+    }
+
     public object PartTwo(string input) {
-        var particles = ParseParticles3(input);
-        var xy = Solve2D(particles, p => p.x, p => p.y);
-        var xz = Solve2D(particles, p => p.x, p => p.z);
+        var particles = ParseParticles(input);
+        var xy = Solve2D(Proj(particles, p => p.x, p => p.y));
+        var xz = Solve2D(Proj(particles, p => p.x, p => p.z));
         return Math.Round(xy.p.x + xy.p.y + xz.p.y);
     }
 
     (Vec2 p, Vec2 v) Solve2D(
-        Particle3[] particles,
-        Func<Vec3, decimal> dim1,
-        Func<Vec3, decimal> dim2
+        Particle[] particles
     ) {
         var s = 500;
         for (var v1 = -s; v1 < s; v1++) {
             for (var v2 = -s; v2 < s; v2++) {
-                var p1 = new Particle(
-                    new Vec2(dim1(particles[0].pos), dim2(particles[0].pos)),
-                    new Vec2(dim1(particles[0].vel) - v1, dim2(particles[0].vel) - v2)
+                var p1 = new Particle(particles[0].pos,
+                    new Vec2(particles[0].vel.x - v1, particles[0].vel.y - v2)
                 );
-                var p2 = new Particle(
-                    new Vec2(dim1(particles[1].pos), dim2(particles[1].pos)),
-                    new Vec2(dim1(particles[1].vel) - v1, dim2(particles[1].vel) - v2)
-                );
+                var p2 = new Particle(particles[1].pos,
+                 new Vec2(particles[1].vel.x - v1, particles[1].vel.y - v2)
+                 );
+
                 var (mp, _, __) = Meet(p1, p2);
                 if (mp == null) {
                     continue;
                 }
                 var ok = true;
                 for (var i = 0; i < particles.Length && ok; i++) {
-                    var p = new Vec2(dim1(particles[i].pos), dim2(particles[i].pos));
-                    var v = new Vec2(dim1(particles[i].vel) - v1, dim2(particles[i].vel) - v2);
+                    var pi = particles[i].pos;
+                    var vi = new Vec2(particles[i].vel.x - v1, particles[i].vel.y - v2);
 
-                    if (v.x != 0 && v.y != 0) {
-                        var tx = (mp.x - p.x) / v.x;
-                        var ty = (mp.y - p.y) / v.y;
+                    if (vi.x != 0 && vi.y != 0) {
+                        var tx = (mp.x - pi.x) / vi.x;
+                        var ty = (mp.y - pi.y) / vi.y;
                         if (Math.Abs(tx - ty) > (decimal)0.00001) {
                             ok = false;
                         }
@@ -89,22 +99,22 @@ class Solution : Solver {
 
     // the position where the path of the particles cross and the time(s) when 
     // they are at the meeting point. 
-    (Vec2 pos, decimal t1, decimal t2) Meet(Particle p1, Particle p2) {
+    (Vec2 pos, decimal t1, decimal t2) Meet(Particle part1, Particle part2) {
         // Solving m * x = b provides the meeting point
         Mat2 m = new Mat2(
-            p1.vel.y, -p1.vel.x,
-            p2.vel.y, -p2.vel.x
+            part1.vel.y, -part1.vel.x,
+            part2.vel.y, -part2.vel.x
         );
         Vec2 b = new Vec2(
-            p1.vel.y * p1.pos.x - p1.vel.x * p1.pos.y,
-            p2.vel.y * p2.pos.x - p2.vel.x * p2.pos.y
+            part1.vel.y * part1.pos.x - part1.vel.x * part1.pos.y,
+            part2.vel.y * part2.pos.x - part2.vel.x * part2.pos.y
         );
 
         // I don't have a matrix library at my disposal, but we just need
         // to compute the determinant, the inverse of m, and one matrix 
         // multiplication, so I'll inline it here. I can't make it better.
         var determinant = m.a * m.d - m.b * m.c;
-        if (determinant == 0 || p1.vel.x == 0 || p2.vel.x == 0) {
+        if (determinant == 0 || part1.vel.x == 0 || part2.vel.x == 0) {
             return (null, -1, -1); //particles don't meet
         }
 
@@ -119,18 +129,13 @@ class Solution : Solver {
         );
 
         // times come from solving pi.pos + pi.vel * t = pos for x (or y):
-        var t1 = (pos.x - p1.pos.x) / p1.vel.x;
-        var t2 = (pos.x - p2.pos.x) / p2.vel.x;
+        var t1 = (pos.x - part1.pos.x) / part1.vel.x;
+        var t2 = (pos.x - part2.pos.x) / part2.vel.x;
         return (pos, t1, t2);
     }
 
-    Particle[] ParseParticles(string input) => (
-        from line in input.Split('\n')
-        let v = Regex.Matches(line, @"-?\d+").Select(m => decimal.Parse(m.Value)).ToArray()
-        select new Particle(new Vec2(v[0], v[1]), new Vec2(v[3], v[4]))
-    ).ToArray();
 
-    Particle3[] ParseParticles3(string input) => (
+    Particle3[] ParseParticles(string input) => (
         from line in input.Split('\n')
         let v = Regex.Matches(line, @"-?\d+").Select(m => decimal.Parse(m.Value)).ToArray()
         select new Particle3(new Vec3(v[0], v[1], v[2]), new Vec3(v[3], v[4], v[5]))
