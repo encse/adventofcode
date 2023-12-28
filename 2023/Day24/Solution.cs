@@ -7,33 +7,27 @@ using System.Data;
 
 record Vec2(decimal x0, decimal x1);
 record Vec3(decimal x0, decimal x1, decimal x2);
-record Particle<T>(T pos, T vel);
+record Particle2(Vec2 pos, Vec2 vel);
+record Particle3(Vec3 pos, Vec3 vel);
 
 [ProblemName("Never Tell Me The Odds")]
 class Solution : Solver {
 
     public object PartOne(string input) {
-        var particles = Proj(ParseParticles(input), v => (v.x0, v.x1));
+        var particles = Project(ParseParticles(input), v => (v.x0, v.x1));
 
-        var begin = 200000000000000;
-        var end = 400000000000000;
+        var inRange = (decimal d) =>
+             200000000000000 <= d && d <= 400000000000000;
 
-        bool reachesInFuture(Particle<Vec2> p, Vec2 pos) {
-            if (p.vel.x0 == 0) {
-                return pos.x0 == p.pos.x0;
-            }
-            return (pos.x0 - p.pos.x0) / p.vel.x0 >= 0;
-        }
+        var future = (Particle2 p, Vec2 pos) =>
+            Math.Sign(pos.x0 - p.pos.x0) == Math.Sign(p.vel.x0);
 
         var res = 0;
         for (var i = 0; i < particles.Length; i++) {
             for (var j = i + 1; j < particles.Length; j++) {
-                var pos = Meet(particles[i], particles[j]);
-                if (pos != null &&
-                    begin <= pos.x0 && pos.x0 <= end &&
-                    begin <= pos.x1 && pos.x1 <= end &&
-                    reachesInFuture(particles[i], pos) &&
-                    reachesInFuture(particles[j], pos)
+                var pos = Intersection2D(particles[i], particles[j]);
+                if (pos != null && inRange(pos.x0) && inRange(pos.x1) &&
+                    future(particles[i], pos) && future(particles[j], pos)
                 ) {
                     res++;
                 }
@@ -44,15 +38,15 @@ class Solution : Solver {
 
     public object PartTwo(string input) {
         var particles = ParseParticles(input);
-        var stoneXY = Solve2D(Proj(particles, vec => (vec.x0, vec.x1)));
-        var stoneXZ = Solve2D(Proj(particles, vec => (vec.x0, vec.x2)));
+        var stoneXY = Solve2D(Project(particles, vec => (vec.x0, vec.x1)));
+        var stoneXZ = Solve2D(Project(particles, vec => (vec.x0, vec.x2)));
         return Math.Round(stoneXY.x0 + stoneXY.x1 + stoneXZ.x1);
     }
 
-    Particle<Vec2> TranslateV(Particle<Vec2> p, Vec2 vel) =>
-         new Particle<Vec2>(p.pos, new Vec2(p.vel.x0 - vel.x0, p.vel.x1 - vel.x1));
+    Particle2 TranslateV(Particle2 p, Vec2 vel) =>
+         new Particle2(p.pos, new Vec2(p.vel.x0 - vel.x0, p.vel.x1 - vel.x1));
 
-    Vec2 Solve2D(Particle<Vec2>[] particles) {
+    Vec2 Solve2D(Particle2[] particles) {
         // We will bruteforce the velocity of the stone in the two dimensions
         // we are working right now.
         //
@@ -76,11 +70,11 @@ class Solution : Solver {
         for (var v1 = -s; v1 < s; v1++) {
             for (var v2 = -s; v2 < s; v2++) {
                 var vel = new Vec2(v1, v2);
-                var pos = Meet(
-                    TranslateV(particles[0], vel), 
+                var pos = Intersection2D(
+                    TranslateV(particles[0], vel),
                     TranslateV(particles[1], vel)
                 );
-                
+
                 if (pos == null) {
                     continue;
                 }
@@ -88,9 +82,8 @@ class Solution : Solver {
                 var hitsAllStones = true;
                 for (var i = 0; i < particles.Length && hitsAllStones; i++) {
                     var pi = TranslateV(particles[i], vel);
-                    // ignore the case when the velocity is 0, 
-                    // we should check these as well, but it's not necessary
-                    // to solve solve my input.
+                    // ignore the case when the velocity is 0, we should check 
+                    // these as well, but it's not necessary for my input.
                     if (pi.vel.x0 != 0 && pi.vel.x1 != 0) {
                         var tx = (pos.x0 - pi.pos.x0) / pi.vel.x0;
                         var ty = (pos.x1 - pi.pos.x1) / pi.vel.x1;
@@ -108,24 +101,22 @@ class Solution : Solver {
         throw new Exception();
     }
 
-    // returns the position where the path of the particles cross
-    // I don't have a matrix library at my disposal, but we just need
-    // to compute the determinant, the inverse of m, and one matrix 
-    // multiplication, so I'll inline it here. I can't make it better.
-    Vec2 Meet(Particle<Vec2> p1, Particle<Vec2> p2) {
-
-        var (a11, a12, a21, a22)= (
+    // returns the position where the path of the particles meet
+    Vec2 Intersection2D(Particle2 p1, Particle2 p2) {
+        // we are solving ax=b here with matrix inversion, which
+        // would look way better if I had a matrix library at my disposal.
+        var (a11, a12, a21, a22) = (
             p1.vel.x1, -p1.vel.x0,
             p2.vel.x1, -p2.vel.x0
         );
-        
-        Vec2 b = new Vec2(
+
+        var b = new Vec2(
             p1.vel.x1 * p1.pos.x0 - p1.vel.x0 * p1.pos.x1,
             p2.vel.x1 * p2.pos.x0 - p2.vel.x0 * p2.pos.x1
         );
 
         var determinant = a11 * a22 - a12 * a21;
-        if (determinant == 0 || p1.vel.x0 == 0 || p2.vel.x0 == 0) {
+        if (determinant == 0) {
             return null; //particles don't meet
         }
 
@@ -140,22 +131,24 @@ class Solution : Solver {
          );
     }
 
-    Particle<Vec3>[] ParseParticles(string input) => (
+    Particle3[] ParseParticles(string input) => [..
         from line in input.Split('\n')
-        let v = Regex.Matches(line, @"-?\d+").Select(m => decimal.Parse(m.Value)).ToArray()
-        select new Particle<Vec3>(new Vec3(v[0], v[1], v[2]), new Vec3(v[3], v[4], v[5]))
-    ).ToArray();
+        let v = ParseNum(line)
+        select
+            new Particle3(
+                new Vec3(v[0], v[1], v[2]),
+                new Vec3(v[3], v[4], v[5])
+            )
+    ];
 
-    Particle<Vec2>[] Proj(
-        Particle<Vec3>[] ps, 
-        Func<Vec3, (decimal, decimal)> proj
-    ) => (
-        from p in ps
-        let pos = proj(p.pos)
-        let vel = proj(p.vel)
-        select new Particle<Vec2>(
-            new Vec2(pos.Item1, pos.Item2),
-            new Vec2(vel.Item1, vel.Item2)
+    decimal[] ParseNum(string l) =>
+        [.. from m in Regex.Matches(l, @"-?\d+") select decimal.Parse(m.Value)];
+
+    // Project the particle to a 2D plane:
+    Particle2[] Project(Particle3[] ps, Func<Vec3, (decimal, decimal)> proj) => [..
+        from p in ps select new Particle2(
+            new Vec2(proj(p.pos).Item1, proj(p.pos).Item2),
+            new Vec2(proj(p.vel).Item1, proj(p.vel).Item2)
         )
-    ).ToArray();
+    ];
 }
