@@ -72,13 +72,13 @@ class Solution : Solver {
                 var vel = new Vec2(v1, v2);
 
                 // p0 and p1 are linearly independent in my input: pos != null
-                var pos = Intersection(
+                var stone = Intersection(
                     translateV(particles[0], vel),
                     translateV(particles[1], vel)
                 );
 
-                if (particles.All(pi => Hits(translateV(pi, vel), pos))) {
-                    return pos;
+                if (particles.All(p => Hits(translateV(p, vel), stone))) {
+                    return stone;
                 }
             }
         }
