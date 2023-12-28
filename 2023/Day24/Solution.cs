@@ -80,33 +80,20 @@ class Solution : Solver {
         return Math.Abs(d) < (decimal)0.0001;
     }
 
-    // returns the position where the path of the particles meet
+    // Return the pos that is hit by both p1 and p2.
     Vec2 Intersection(Particle2 p1, Particle2 p2) {
-        // we are solving ax=b here with matrix inversion, which
-        // would look way better if I had a matrix library at my disposal.
-        var (a11, a12, a21, a22) = (
-            p1.vel.x1, -p1.vel.x0,
-            p2.vel.x1, -p2.vel.x0
-        );
-
-        var b = new Vec2(
-            p1.vel.x1 * p1.pos.x0 - p1.vel.x0 * p1.pos.x1,
-            p2.vel.x1 * p2.pos.x0 - p2.vel.x0 * p2.pos.x1
-        );
-
-        var determinant = a11 * a22 - a12 * a21;
+        // this would look way better if I had a matrix library at my disposal.
+        var determinant = p1.vel.x0 * p2.vel.x1 - p1.vel.x1 * p2.vel.x0;
         if (determinant == 0) {
             return null; //particles don't meet
         }
-
-        var (i11, i12, i21, i22) = (
-            a22 / determinant, -a12 / determinant,
-            -a21 / determinant, a11 / determinant
-        );
-
+        
+        var b0 = p1.vel.x0 * p1.pos.x1 - p1.vel.x1 * p1.pos.x0;
+        var b1 = p2.vel.x0 * p2.pos.x1 - p2.vel.x1 * p2.pos.x0;
+       
         return new Vec2(
-             i11 * b.x0 + i12 * b.x1,
-             i21 * b.x0 + i22 * b.x1
+             ( p2.vel.x0 * b0 - p1.vel.x0 * b1) / determinant,
+             ( p2.vel.x1 * b0 - p1.vel.x1 * b1) / determinant
          );
     }
 
