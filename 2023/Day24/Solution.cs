@@ -25,7 +25,7 @@ class Solution : Solver {
         var res = 0;
         for (var i = 0; i < particles.Length; i++) {
             for (var j = i + 1; j < particles.Length; j++) {
-                var pos = Intersection2D(particles[i], particles[j]);
+                var pos = Intersection(particles[i], particles[j]);
                 if (pos != null && inRange(pos.x0) && inRange(pos.x1) &&
                     future(particles[i], pos) && future(particles[j], pos)
                 ) {
@@ -43,13 +43,10 @@ class Solution : Solver {
         return Math.Round(stoneXY.x0 + stoneXY.x1 + stoneXZ.x1);
     }
 
-    Particle2 TranslateV(Particle2 p, Vec2 vel) =>
-         new Particle2(p.pos, new Vec2(p.vel.x0 - vel.x0, p.vel.x1 - vel.x1));
-
     Vec2 Solve2D(Particle2[] particles) {
         // We will bruteforce the velocity of the stone in the two dimensions
         // we are working right now.
-        //
+        // 
         // We can transform the particles to the reference frame that moves
         // together with the stone, just subtract the stone's velocity 
         // from the particle's velocity.
@@ -66,34 +63,21 @@ class Solution : Solver {
         // So if we have the right velocity, we can find a point that is crossed
         // by every particles. And this has to be the position of the stone.
 
+        var translateV = (Particle2 p, Vec2 vel) =>
+            new Particle2(p.pos, new Vec2(p.vel.x0 - vel.x0, p.vel.x1 - vel.x1));
+
         var s = 500; //arbitrary limits for the brute force that worked for me.
         for (var v1 = -s; v1 < s; v1++) {
             for (var v2 = -s; v2 < s; v2++) {
                 var vel = new Vec2(v1, v2);
-                var pos = Intersection2D(
-                    TranslateV(particles[0], vel),
-                    TranslateV(particles[1], vel)
+
+                // p0 and p1 are linearly independent in my input: pos != null
+                var pos = Intersection(
+                    translateV(particles[0], vel),
+                    translateV(particles[1], vel)
                 );
 
-                if (pos == null) {
-                    continue;
-                }
-
-                var hitsAllStones = true;
-                for (var i = 0; i < particles.Length && hitsAllStones; i++) {
-                    var pi = TranslateV(particles[i], vel);
-                    // ignore the case when the velocity is 0, we should check 
-                    // these as well, but it's not necessary for my input.
-                    if (pi.vel.x0 != 0 && pi.vel.x1 != 0) {
-                        var tx = (pos.x0 - pi.pos.x0) / pi.vel.x0;
-                        var ty = (pos.x1 - pi.pos.x1) / pi.vel.x1;
-                        if (Math.Abs(tx - ty) > (decimal)0.00001) {
-                            hitsAllStones = false;
-                        }
-                    }
-                }
-
-                if (hitsAllStones) {
+                if (particles.All(pi => Hits(translateV(pi, vel), pos))) {
                     return pos;
                 }
             }
@@ -101,8 +85,14 @@ class Solution : Solver {
         throw new Exception();
     }
 
+    // returns if a particle's line hits (goes very close to) pos
+    bool Hits(Particle2 p, Vec2 pos) {
+        var d = (pos.x0 - p.pos.x0) * p.vel.x1 - (pos.x1 - p.pos.x1) * p.vel.x0;
+        return Math.Abs(d) < (decimal)0.0001;
+    }
+
     // returns the position where the path of the particles meet
-    Vec2 Intersection2D(Particle2 p1, Particle2 p2) {
+    Vec2 Intersection(Particle2 p1, Particle2 p2) {
         // we are solving ax=b here with matrix inversion, which
         // would look way better if I had a matrix library at my disposal.
         var (a11, a12, a21, a22) = (
