@@ -71,7 +71,7 @@ class Solution : Solver {
             for (var v2 = -s; v2 < s; v2++) {
                 var vel = new Vec2(v1, v2);
 
-                // p0 and p1 are linearly independent in my input: pos != null
+                // p0 and p1 are linearly independent (for me) => stone != null
                 var stone = Intersection(
                     translateV(particles[0], vel),
                     translateV(particles[1], vel)
