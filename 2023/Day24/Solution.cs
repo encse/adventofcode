@@ -16,18 +16,20 @@ class Solution : Solver {
     public object PartOne(string input) {
         var particles = Project(ParseParticles(input), v => (v.x0, v.x1));
 
-        var inRange = (decimal d) =>
-             200000000000000 <= d && d <= 400000000000000;
+        var inRange = (decimal d) => (decimal)2e14 <= d && d <= (decimal)4e14;
 
-        var future = (Particle2 p, Vec2 pos) =>
+        var future = (Particle2 p, Vec2 pos) => 
             Math.Sign(pos.x0 - p.pos.x0) == Math.Sign(p.vel.x0);
 
         var res = 0;
         for (var i = 0; i < particles.Length; i++) {
             for (var j = i + 1; j < particles.Length; j++) {
                 var pos = Intersection(particles[i], particles[j]);
-                if (pos != null && inRange(pos.x0) && inRange(pos.x1) &&
-                    future(particles[i], pos) && future(particles[j], pos)
+                if (pos != null && 
+                    inRange(pos.x0) && 
+                    inRange(pos.x1) &&
+                    future(particles[i], pos) && 
+                    future(particles[j], pos)
                 ) {
                     res++;
                 }
@@ -74,13 +76,13 @@ class Solution : Solver {
         throw new Exception();
     }
 
-    // returns if a particle's line hits (goes very close to) pos
+    // returns if p hits (goes very close to) pos
     bool Hits(Particle2 p, Vec2 pos) {
         var d = (pos.x0 - p.pos.x0) * p.vel.x1 - (pos.x1 - p.pos.x1) * p.vel.x0;
         return Math.Abs(d) < (decimal)0.0001;
     }
 
-    // Return the pos that is hit by both p1 and p2.
+    // returns the pos hit by both p1 and p2
     Vec2 Intersection(Particle2 p1, Particle2 p2) {
         // this would look way better if I had a matrix library at my disposal.
         var determinant = p1.vel.x0 * p2.vel.x1 - p1.vel.x1 * p2.vel.x0;
@@ -91,24 +93,21 @@ class Solution : Solver {
         var b0 = p1.vel.x0 * p1.pos.x1 - p1.vel.x1 * p1.pos.x0;
         var b1 = p2.vel.x0 * p2.pos.x1 - p2.vel.x1 * p2.pos.x0;
        
-        return new Vec2(
-             ( p2.vel.x0 * b0 - p1.vel.x0 * b1) / determinant,
-             ( p2.vel.x1 * b0 - p1.vel.x1 * b1) / determinant
+        return new (
+             (p2.vel.x0 * b0 - p1.vel.x0 * b1) / determinant,
+             (p2.vel.x1 * b0 - p1.vel.x1 * b1) / determinant
          );
     }
 
     Particle3[] ParseParticles(string input) => [..
         from line in input.Split('\n')
         let v = ParseNum(line)
-        select
-            new Particle3(
-                new Vec3(v[0], v[1], v[2]),
-                new Vec3(v[3], v[4], v[5])
-            )
+        select new Particle3(new (v[0], v[1], v[2]), new (v[3], v[4], v[5]))
     ];
 
-    decimal[] ParseNum(string l) =>
-        [.. from m in Regex.Matches(l, @"-?\d+") select decimal.Parse(m.Value)];
+    decimal[] ParseNum(string l) => [.. 
+        from m in Regex.Matches(l, @"-?\d+") select decimal.Parse(m.Value)
+    ];
 
     // Project the particle to a 2D plane:
     Particle2[] Project(Particle3[] ps, Func<Vec3, (decimal, decimal)> proj) => [..
