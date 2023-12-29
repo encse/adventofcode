@@ -6,3 +6,12 @@ As you try to figure out what to do next, you notice a poster on a wall near the
 You manage to sign up as a competitor in the boat races just in time. The organizer explains that it's not really a traditional race - instead, you will get a fixed amount of time during which your boat has to travel as far as it can, and you win if your boat goes the farthest.
 
 Read the [full puzzle](https://adventofcode.com/2023/day/6).
+
+##  --- Notes ---
+This has been a simple problem, could be solved even with brute forcing, but I went the 
+maths path and implemented a quadratic equation solver instead. 
+
+It's easy to compute how far our boat moves if we wait for `x` ms at the beginning. 
+The solution to this equation tells us the `x`-es for which we break the record distance.
+
+Part 2 is just Part 1 with bigger numbers.

@@ -6,3 +6,8 @@ The Elf explains that you've arrived at <em>Snow Island</em> and apologizes for 
 As you walk, the Elf shows you a small bag and some cubes which are either red, green, or blue. Each time you play this game, he will hide a secret number of cubes of each color in the bag, and your goal is to figure out information about the number of cubes.
 
 Read the [full puzzle](https://adventofcode.com/2023/day/2).
+
+## --- Notes ---
+Ok, now we are on track. The hardest part of this problem is the parsing, but I introduced a helper that can extract a number in the context of some regular expression which works like a breeze. What's more, we only need to keep track of the maximum of the red, green and blue boxes, so our `Game` struct becomes just four integers.
+
+The actual _algorithm_ for Part 1 and Part 2 is very simple, and linq makes it quite readable as well.

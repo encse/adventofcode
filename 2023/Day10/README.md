@@ -6,3 +6,11 @@ You wander around for a while, but you don't find any people or animals. However
 The landscape here is alien; even the flowers and trees are made of metal. As you stop to admire some metal grass, you notice something metallic scurry away in your peripheral vision and jump into a big pipe! It didn't look like any animal you've ever seen; if you want a better look, you'll need to get ahead of it.
 
 Read the [full puzzle](https://adventofcode.com/2023/day/10).
+
+##  --- Notes ---
+In Part 1 we had to find the length of a loop that was defined by a funky ASCII 
+art pipe network that even used J, and F characters for the turns.
+
+Part 2 asked to compute the area of the loop, I implemented ray casting 
+for this one. There are lots of other ways to solve this, a similar problem 
+and different algorithm can be found in Day 18.

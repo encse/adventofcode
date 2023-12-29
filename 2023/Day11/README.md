@@ -6,3 +6,13 @@ He doesn't know anything about the missing machine parts; he's only visiting for
 Maybe you can help him with the analysis to speed things up?
 
 Read the [full puzzle](https://adventofcode.com/2023/day/11).
+
+##  --- Notes ---
+A pretty simple problem for today. We had to compute the sum of the pairwise Manhattan distances 
+of each galaxies (`#` symbols) in a map.
+
+The twist is that moving accross some columns or rows of the map is worths double distance points 
+(one million in Part 2). But it was not hard to incorporate this into our distance function.
+
+I did it this way, but we should mention that since we are computing the distance over each pair, and all operations are commutative and associative, it's probably possible to reorder things a bit which can result in a more efficient algorithm. 
+
