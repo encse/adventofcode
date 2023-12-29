@@ -16,9 +16,9 @@ class Solution : Solver {
     public object PartOne(string input) {
         var particles = Project(ParseParticles(input), v => (v.x0, v.x1));
 
-        var inRange = (decimal d) => (decimal)2e14 <= d && d <= (decimal)4e14;
+        var inRange = (decimal d) => 2e14m <= d && d <= 4e14m;
 
-        var future = (Particle2 p, Vec2 pos) => 
+        var inFuture = (Particle2 p, Vec2 pos) => 
             Math.Sign(pos.x0 - p.pos.x0) == Math.Sign(p.vel.x0);
 
         var res = 0;
@@ -28,8 +28,8 @@ class Solution : Solver {
                 if (pos != null && 
                     inRange(pos.x0) && 
                     inRange(pos.x1) &&
-                    future(particles[i], pos) && 
-                    future(particles[j], pos)
+                    inFuture(particles[i], pos) && 
+                    inFuture(particles[j], pos)
                 ) {
                     res++;
                 }
