@@ -1,13 +1,6 @@
 ## --- Day 2: Cube Conundrum ---
-You're launched high into the atmosphere! The apex of your trajectory just barely reaches the surface of a large island floating in the sky. You gently land in a fluffy pile of leaves. It's quite cold, but you don't see much snow. An Elf runs over to greet you.
+The task description is copyrighted, but it's available [here](https://adventofcode.com/2023/day/2).
 
-The Elf explains that you've arrived at <em>Snow Island</em> and apologizes for the lack of snow. He'll be happy to explain the situation, but it's a bit of a walk, so you have some time. They don't get many visitors up here; would you like to play a game in the meantime?
-
-As you walk, the Elf shows you a small bag and some cubes which are either red, green, or blue. Each time you play this game, he will hide a secret number of cubes of each color in the bag, and your goal is to figure out information about the number of cubes.
-
-Read the [full puzzle](https://adventofcode.com/2023/day/2).
-
-## --- Notes ---
 Ok, now we are on track. The hardest part of this problem is the parsing, but I introduced a helper that can extract a number in the context of some regular expression which works like a breeze. What's more, we only need to keep track of the maximum of the red, green and blue boxes, so our `Game` struct becomes just four integers.
 
 The actual _algorithm_ for Part 1 and Part 2 is very simple, and linq makes it quite readable as well.

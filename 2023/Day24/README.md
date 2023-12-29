@@ -1,13 +1,6 @@
 ## --- Day 24: Never Tell Me The Odds ---
-It seems like something is going wrong with the snow-making process. Instead of forming snow, the water that's been absorbed into the air seems to be forming [hail](https://en.wikipedia.org/wiki/Hail)!
+If you are not familiar with the problem, you can read it  [here](https://adventofcode.com/2023/day/24).
 
-Maybe there's something you can do to break up the hailstones?
-
-Due to strong, probably-magical winds, the hailstones are all flying through the air in perfectly linear trajectories. You make a note of each hailstone's <em>position</em> and <em>velocity</em> (your puzzle input). For example:
-
-Read the [full puzzle](https://adventofcode.com/2023/day/24).
-
-##  --- Notes ---
 A bit unexpectedly we are given a geometry problem that requires floating
 point numbers. I don't remember if this was ever needed in Advent of Code. 
 

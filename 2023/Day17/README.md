@@ -1,13 +1,6 @@
 ## --- Day 17: Clumsy Crucible ---
-The lava starts flowing rapidly once the Lava Production Facility is operational. As you leave, the reindeer offers you a parachute, allowing you to quickly reach Gear Island.
+Visit the Advent of Code website for the problem statement [here](https://adventofcode.com/2023/day/17).
 
-As you descend, your bird's-eye view of Gear Island reveals why you had trouble finding anyone on your way up: half of Gear Island is empty, but the half below you is a giant factory city!
-
-You land near the gradually-filling pool of lava at the base of your new <em>lavafall</em>. Lavaducts will eventually carry the lava throughout the city, but to make use of it immediately, Elves are loading it into large [crucibles](https://en.wikipedia.org/wiki/Crucible) on wheels.
-
-Read the [full puzzle](https://adventofcode.com/2023/day/17).
-
-##  --- Notes ---
 Part 1 and Part 2 differ only in the rules for the small and ultra crucibles. And it turns 
 out those can be represented by just two integers: one for the minimum steps the crucible 
 needs to move forward before it can make a turn (or stop), and an other one that puts an 
