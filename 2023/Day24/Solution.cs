@@ -76,13 +76,11 @@ class Solution : Solver {
         throw new Exception();
     }
 
-    // returns if p hits (goes very close to) pos
     bool Hits(Particle2 p, Vec2 pos) {
         var d = (pos.x0 - p.pos.x0) * p.vel.x1 - (pos.x1 - p.pos.x1) * p.vel.x0;
         return Math.Abs(d) < (decimal)0.0001;
     }
 
-    // returns the pos hit by both p1 and p2
     Vec2 Intersection(Particle2 p1, Particle2 p2) {
         // this would look way better if I had a matrix library at my disposal.
         var determinant = p1.vel.x0 * p2.vel.x1 - p1.vel.x1 * p2.vel.x0;
@@ -109,7 +107,7 @@ class Solution : Solver {
         from m in Regex.Matches(l, @"-?\d+") select decimal.Parse(m.Value)
     ];
 
-    // Project the particle to a 2D plane:
+    // Project particles to a 2D plane:
     Particle2[] Project(Particle3[] ps, Func<Vec3, (decimal, decimal)> proj) => [..
         from p in ps select new Particle2(
             new Vec2(proj(p.pos).Item1, proj(p.pos).Item2),
