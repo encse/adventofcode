@@ -16,11 +16,11 @@ I went looking around in others' solutions until I found a good one that is easy
 to follow.
 
 The idea is that we try to guess the speed of our stone (a for loop), then supposing
-that it is the right velocity we create a new reference frame that moves with 
+that it is the right velocity create a new reference frame that moves with 
 that speed. The stone doesn't move in this frame, it has some fixed coordinates 
 somewhere. Now transform each particle into this reference frame as well. Since the 
 stone is not moving, if we properly guessed the speed, we find that each particle 
-meets the stone's line at the _same_ point. This must be the stone's location.
+meets at the _same_ point. This must be the stone's location.
 
 We can reuse code from Part 1, just need to project everything to the XY
 plane first to compute the stone's `(x,y)` position, then do the same in the XZ
