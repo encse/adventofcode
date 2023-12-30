@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace AdventOfCode;
 
@@ -73,6 +74,15 @@ static class SolverExtensions {
              .Where(t => t.GetTypeInfo().IsClass && typeof(SplashScreen).IsAssignableFrom(t))
              .Single(t => Year(t) == solver.Year());
         return (SplashScreen)Activator.CreateInstance(tsplashScreen);
+    }
+
+    public static int Sloc(this Solver solver) {
+        var file = solver.WorkingDir() + "/Solution.cs";
+        if (File.Exists(file)) {
+              var solution = File.ReadAllText(file);
+            return Regex.Matches(solution, @"\n").Count;
+        }
+        return -1;
     }
 }
 
@@ -145,17 +155,22 @@ class Runner {
         var errors = new List<string>();
 
         var lastYear = -1;
+        List<(int day, int sloc)> slocs = new ();
         foreach (var solver in solvers) {
+
             if (lastYear != solver.Year()) {
+                SlocChart.Show(slocs);
+                slocs.Clear();
+
                 solver.SplashScreen().Show();
                 lastYear = solver.Year();
             }
-
+            slocs.Add((solver.Day(), solver.Sloc()));
             var result = RunSolver(solver);
             WriteLine();
             errors.AddRange(result.errors);
         }
-
+        SlocChart.Show(slocs);
         WriteLine();
 
         if (errors.Any()) {
