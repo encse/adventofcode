@@ -15,8 +15,6 @@ but when I check it out, a plugin called `git-crypt` decrypts all my inputs tran
 so I can work with them freely. On commit the whole process is reversed and the files get
 encrypted again.
 
-If you find this useful, please [support](https://github.com/sponsors/encse) me.
-
 ## Dependencies
 
 - This project is based on `.NET 8`  and `C# 12`. 
@@ -93,3 +91,7 @@ If you prefer, you can work directly in VSCode as well.
 
  **Note:** this feature relies on the "Memento Inputs" extension to store your session cookie, you need 
  to set it up in advance from the Command Palette with `Install Extensions`.
+
+## How can I help?
+
+If you find this useful, please [support](https://github.com/sponsors/encse) me.
