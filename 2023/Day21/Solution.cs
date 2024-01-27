@@ -1,5 +1,6 @@
 namespace AdventOfCode.Y2023.Day21;
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -23,7 +24,7 @@ class Solution : Solver {
         decimal y012 = (y12 - y01) / (x2 - x0);
 
         var n = 26501365;
-        return (long)(y0 + y01 * (n - x0) + y012 * (n - x0) * (n - x1));
+        return decimal.Round(y0 + y01 * (n - x0) + y012 * (n - x0) * (n - x1));
     }
 
     // walks around and returns the number of available positions at each step
