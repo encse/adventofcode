@@ -20,6 +20,6 @@ bit what's happening, because just blindly pressing the button will not terminat
 I layed out the graph using Graphviz to see what's going on. This immediately showed that 
 `broadcaster` feeds four different subgraphs. These work in isolation and a Nand gate
 connects their output into `rx`. Further investigation shows that each subgraph runs in a loop 
-that has prime length (at least for  my input). We just need to determine and multiply 
+that has prime length (at least for  my input). We just need to multiply 
 them to solve the second half of the problem.
 
