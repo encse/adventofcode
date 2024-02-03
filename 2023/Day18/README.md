@@ -19,6 +19,6 @@ boundary plus 1_, which sounds just _right_ and was enough for Part 2, then stil
 being puzzled I went to the solution thread and read about Pick.
 
 Pick's theorem connects the area returned by the Shoelace formula with the number 
-of _interior points_ and _points in the boundary_. The problem asked for the sum. 
+of _interior points_ and _points in the boundary_. The problem asked for the sum of these.
 
 I give myself an extra ⭐ for learning something today.
