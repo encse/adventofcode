@@ -15,7 +15,7 @@ because it was totally independent of Part 1, almost like two different problems
 I went looking around in others' solutions until I found a good one that is easy 
 to follow.
 
-The idea is that we try to guess the speed of our stone (a for loop), then supposing
+The idea is that we try to guess the speed of our stone (a for loop), then assuming
 that it is the right velocity create a new reference frame that moves with 
 that speed. The stone doesn't move in this frame, it has some fixed coordinates 
 somewhere. Now transform each particle into this reference frame as well. Since the 
