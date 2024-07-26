@@ -2,14 +2,13 @@
 The task description is copyrighted, but it's available [here](https://adventofcode.com/2023/day/20).
 
 I modeled Part 1 following the description closely. I didn't want to introduce separate
-classes for the gate types, instead I used a function parameter that maps signals to signals.
-I tells what should be emitted when a signal is received by the gate. I know that this is 
-Elf logic, but it's 🎄, what did you expect? I have one constructor function for each
-gate type (Nand, FlipFlop and Repeater) these declare the necessary state variables
-and capture it in the returned lambda. Everything is self contained, I have a single Gate type, 
-yet different behavior.
+classes for the gate types, instead created just one Gate type with a function parameter that defines the inner logic. It basically tells what should be emitted when a signal comes in the gate's input. 
 
-I made a function that triggers the button and executes all the logic until things settle down.
+Building on this, I defined factory functions for each
+gate type (Nand, FlipFlop and Repeater). I know that this is 
+Elf logic, but it's 🎄, what did you expect? 
+
+I added a function that triggers the button and executes all the logic until things settle down.
 It returns all signals that were emitted, so that I can work with them in both parts.
 
 I think Part 1 doesn't need more explanation. Part 2 however, is a different beast. It's a _reverse 
