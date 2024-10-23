@@ -102,6 +102,16 @@
             padding: 1em;
         }
 
+        #top-nav select {
+            border: none;
+            background: inherit;
+            color: inherit;
+            font-size: inherit;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background: none;
+        }
 
         #top-nav a,
         .header-container a {
@@ -127,7 +137,11 @@
             justify-content: center;
         }
 
-        #top-nav a {
+        #top-nav select {
+            margin-left: 1em;
+            margin-right: 1em;
+        }
+        #top-nav a{
             margin: 1em;
         }
 
@@ -162,7 +176,7 @@
                 width: 100%;
             }
 
-            #top-nav span {
+            #top-nav span, #top-nav select{
                 padding: 0.25em;
             }
 
@@ -209,43 +223,45 @@
 
     </div>
     <div id="bottom">
-        <span>© 2023</span>
+        <span>© <span id="currentYear"></span></span>
         <span><a href="https://adventofcode.com">Advent of Code</a> is a registered trademark in the US</span>
         <span>Images provided by <a href="https://www.bing.com/images/create">Bing</a> image creator</span>
     </div>
     <script>
+        const url = new URL(window.location.href);
         const currentDate = new Date();
         const isDecember = currentDate.getMonth() === 11;
+        const defaultYear = isDecember ? currentDate.getFullYear() : currentDate.getFullYear() - 1;
 
-        let lastUnlocked = 25;
-        if (currentDate.getFullYear() === 2023 && currentDate.getMonth() === 11) {
-            lastUnlocked = Math.min(25, currentDate.getDate() + 1);
-        }
+        let parts = url.search.substring(1).split('/');
 
-        const url = new URL(window.location.href);
-        let day = parseInt(url.searchParams.get('day'), 10);
-        if (isNaN(day)) {
-            day = (currentDate.getFullYear() === 2023 && isDecember) ? currentDate.getDate() : lastUnlocked;
-        }
+        let year = isNaN(parseInt(parts[0], 10)) ? defaultYear : parseInt(parts[0], 10)
 
-        day = Math.min(Math.max(1, day), lastUnlocked);
+        const defaultDay = year == currentDate.getFullYear() && isDecember ?  Math.min(25, currentDate.getDate() + 1) : 25;
+        const lastUnlocked = defaultDay;
+        let day =  isNaN(parseInt(parts[1], 10)) ? defaultDay : parseInt(parts[1], 10);
 
         const stDay = day.toString().padStart(2, '0');
+        const stYear = year.toString();
 
-        const storyUrl = `https://raw.githubusercontent.com/encse/adventofcode/master/2023/Day${stDay}/README.md`;
+        const storyUrl = `https://raw.githubusercontent.com/encse/adventofcode/master/${stYear}/Day${stDay}/README.md`;
+
+        if (document.getElementById('currentYear')) {
+            document.getElementById('currentYear').innerText = currentDate.getFullYear()
+        }
 
         if (document.getElementById('day')) {
             document.getElementById('day').innerText = day;
         }
 
         if (document.getElementById('problem-id')) {
-            document.getElementById('problem-id').innerText = `2023/${stDay}`;
+            document.getElementById('problem-id').innerText = `${stYear}/${stDay}`;
         }
 
-        document.getElementById('cover').src = `https://raw.githubusercontent.com/encse/adventofcode/master/2023/Day${stDay}/illustration.jpeg`;
+        document.getElementById('cover').src = `https://raw.githubusercontent.com/encse/adventofcode/master/${stYear}/Day${stDay}/illustration.jpeg`;
         document.addEventListener('DOMContentLoaded', function () {
-            const githubUrl = `https://github.com/encse/adventofcode/blob/master/2023/Day${stDay}/Solution.cs`;
-            const fileUrl = `https://raw.githubusercontent.com/encse/adventofcode/master/2023/Day${stDay}/Solution.cs`;
+            const githubUrl = `https://github.com/encse/adventofcode/blob/master/${stYear}/Day${stDay}/Solution.cs`;
+            const fileUrl = `https://raw.githubusercontent.com/encse/adventofcode/master/${stYear}/Day${stDay}/Solution.cs`;
             const codeContainer = document.getElementById('code-container');
             const codeLocation = document.getElementById('code-location');
 
@@ -294,11 +310,27 @@
 
         let topNav = document.getElementById('top-nav');
         if (topNav) {
+            const yearPicker = document.createElement('select')
+            for (let y=2015;y<=currentDate.getFullYear();y++) {
+                let q = y;
+                let option = document.createElement('option');
+                option.value = y.toString();
+                option.text =  y.toString();
+                option.selected = y == year;
+                option.onselect = () => alert(q);
+                yearPicker.appendChild(option)
+            }
+            topNav.appendChild(yearPicker);
+
+            yearPicker.addEventListener('change', function() {
+                window.location.search = this.value;
+            });
+
             for (i = 1; i <= lastUnlocked; i++) {
                 const span = document.createElement('span');
                 let link = document.createElement('a');
                 link.text = i.toString().padStart(2, '0');
-                link.href = `?day=${i}`;
+                link.href = `?${year}/${i}`;
                 if (i == day) {
                     span.classList.add("current");
                 }
