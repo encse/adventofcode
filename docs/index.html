@@ -141,7 +141,8 @@
             margin-left: 1em;
             margin-right: 1em;
         }
-        #top-nav a{
+
+        #top-nav a {
             margin: 1em;
         }
 
@@ -176,7 +177,8 @@
                 width: 100%;
             }
 
-            #top-nav span, #top-nav select{
+            #top-nav span,
+            #top-nav select {
                 padding: 0.25em;
             }
 
@@ -231,15 +233,20 @@
         const url = new URL(window.location.href);
         const currentDate = new Date();
         const isDecember = currentDate.getMonth() === 11;
-        const defaultYear = isDecember ? currentDate.getFullYear() : currentDate.getFullYear() - 1;
-
+        const lastUnlockedYear = isDecember ? currentDate.getFullYear() : currentDate.getFullYear() - 1;
         let parts = url.search.substring(1).split('/');
 
-        let year = isNaN(parseInt(parts[0], 10)) ? defaultYear : parseInt(parts[0], 10)
+        let year = isNaN(parseInt(parts[0], 10)) ? lastUnlockedYear : parseInt(parts[0], 10)
+        if (year > lastUnlockedYear || year < 2015) {
+            year = lastUnlockedYear
+        }
 
-        const defaultDay = year == currentDate.getFullYear() && isDecember ?  Math.min(25, currentDate.getDate() + 1) : 25;
-        const lastUnlocked = defaultDay;
-        let day =  isNaN(parseInt(parts[1], 10)) ? defaultDay : parseInt(parts[1], 10);
+        const lastUnlockedDay = year == lastUnlockedYear ? Math.min(25, currentDate.getDate() + 1) : 25;
+        let day = isNaN(parseInt(parts[1], 10)) ? lastUnlockedDay : parseInt(parts[1], 10);
+
+        if (day > lastUnlockedDay || day < 1) {
+            day = lastUnlockedDay
+        }
 
         const stDay = day.toString().padStart(2, '0');
         const stYear = year.toString();
@@ -311,22 +318,22 @@
         let topNav = document.getElementById('top-nav');
         if (topNav) {
             const yearPicker = document.createElement('select')
-            for (let y=2015;y<=currentDate.getFullYear();y++) {
+            for (let y = 2015; y <= lastUnlockedYear; y++) {
                 let q = y;
                 let option = document.createElement('option');
                 option.value = y.toString();
-                option.text =  y.toString();
+                option.text = y.toString();
                 option.selected = y == year;
                 option.onselect = () => alert(q);
                 yearPicker.appendChild(option)
             }
             topNav.appendChild(yearPicker);
 
-            yearPicker.addEventListener('change', function() {
+            yearPicker.addEventListener('change', function () {
                 window.location.search = this.value;
             });
 
-            for (i = 1; i <= lastUnlocked; i++) {
+            for (i = 1; i <= lastUnlockedDay; i++) {
                 const span = document.createElement('span');
                 let link = document.createElement('a');
                 link.text = i.toString().padStart(2, '0');
@@ -348,7 +355,7 @@
                 let scrollAmount = window.scrollY / 10;
                 let containerWidth = container.offsetWidth;
                 let imageSize = movingImage.offsetHeight;
-                let maxLeft = (containerWidth -  imageSize)/2;
+                let maxLeft = (containerWidth - imageSize) / 2;
                 let newLeft = maxLeft + Math.max(maxLeft, -scrollAmount);
                 movingImage.style.objectPosition = `${newLeft}px 0`;
             });
