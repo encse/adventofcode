@@ -65,17 +65,24 @@
             justify-content: center;
             gap: 1em;
             overflow: hidden;
+            position: relative;
         }
 
         .header-image {
-            width: 40%;
             display: flex;
             min-width: 400px;
             position: relative;
+            position: absolute;
+            z-index: -1;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
         }
 
         .header-image img {
             object-fit: cover;
+            object-position: 0 0;
         }
 
         .header-title {
@@ -85,6 +92,7 @@
             justify-content: center;
             flex: 1;
             text-align: center;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.7); 
         }
 
         .header-title h2 {
@@ -241,7 +249,7 @@
             year = lastUnlockedYear
         }
 
-        const lastUnlockedDay = year == lastUnlockedYear ? Math.min(25, currentDate.getDate() + 1) : 25;
+        const lastUnlockedDay = year == lastUnlockedYear && isDecember? Math.min(25, currentDate.getDate() + 1) : 25;
         let day = isNaN(parseInt(parts[1], 10)) ? lastUnlockedDay : parseInt(parts[1], 10);
 
         if (day > lastUnlockedDay || day < 1) {
@@ -352,12 +360,10 @@
             let movingImage = document.querySelector(".header-image img");
 
             window.addEventListener("scroll", function () {
-                let scrollAmount = window.scrollY / 10;
-                let containerWidth = container.offsetWidth;
-                let imageSize = movingImage.offsetHeight;
-                let maxLeft = (containerWidth - imageSize) / 2;
-                let newLeft = maxLeft + Math.max(maxLeft, -scrollAmount);
-                movingImage.style.objectPosition = `${newLeft}px 0`;
+                let scrollAmount = window.scrollY;
+                let imageSize = movingImage.clientWidth / movingImage.naturalWidth * movingImage.naturalHeight;
+                let newTop = Math.min(imageSize - container.clientHeight, scrollAmount)
+                movingImage.style.objectPosition = `0 -${newTop}px`;
             });
         });
 
