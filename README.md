@@ -3,13 +3,12 @@
 
    <a href="https://adventofcode.com"><img src="2023/calendar.svg" width="80%" /></a>
 
-   If you want to use my framework, it's probably easiest to start out from the 
+   You can freely use my framework, it's probably easiest to start out from the 
    https://github.com/encse/adventofcode-template repository.
 
-   I put a lot of effort into my solutions. I aim for clarity, which means that 
-   they are not super effective or super short, but hopefully more readable.
+   I put a lot of effort into my solutions. They are not super effective or super short, but hopefully more readable. I aim for clarity.
 
-   If you find project useful, please [support](https://github.com/sponsors/encse) me.
+   I'm happy if you consider [supporting](https://github.com/sponsors/encse) my work.
 
    ## Dependencies
    - Based on `.NET 8`  and `C# 12`. 
