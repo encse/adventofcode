@@ -11,6 +11,6 @@
    I'm happy if you consider [supporting](https://github.com/sponsors/encse) my work.
 
    ## Dependencies
-   - Based on `.NET 8`  and `C# 12`. 
+   - Based on `.NET 9`  and `C# 13`. 
    - `AngleSharp` is used for problem download.
    - git-crypt to store the input files in an encrypted form
