@@ -8,7 +8,7 @@
 
    I put a lot of effort into my solutions. They are not super effective or super short, but hopefully more readable. I aim for clarity.
 
-   I'm happy if you consider [supporting](https://github.com/sponsors/encse) my work.
+   Like what you see? Consider [supporting](https://github.com/sponsors/encse) my work.
 
    ## Dependencies
    - Based on `.NET 9` and `C# 13`. 
