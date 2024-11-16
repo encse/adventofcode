@@ -82,7 +82,6 @@
 
         .header-image img {
             object-fit: cover;
-            object-position: 0 0;
         }
 
         .header-title {
@@ -355,20 +354,6 @@
                 topNav.appendChild(span);
             }
         }
-
-
-        document.addEventListener("DOMContentLoaded", function () {
-            let container = document.querySelector(".header-image");
-            let movingImage = document.querySelector(".header-image img");
-
-            window.addEventListener("scroll", function () {
-                let scrollAmount = window.scrollY;
-                let imageSize = movingImage.clientWidth / movingImage.naturalWidth * movingImage.naturalHeight;
-                let newTop = Math.min(imageSize - container.clientHeight, scrollAmount)
-                movingImage.style.objectPosition = `0 -${newTop}px`;
-            });
-        });
-
     </script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-P8Y1BWSSF3"></script>
     <script>
