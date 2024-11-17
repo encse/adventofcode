@@ -1,14 +1,16 @@
-   # Advent of Code (2015-2023)
+   # Advent of Code (2015-2024)
    C# solutions to the [Advent of Code](https://adventofcode.com) problems.
 
    <a href="https://adventofcode.com"><img src="2023/calendar.svg" width="80%" /></a>
 
-   You can freely use my framework, it's probably easiest to start out from the 
+   I'm making a [website](https://aoc.csokavar.hu) out of this.
+   
+   You can use my framework, it's probably easiest to start with the 
    https://github.com/encse/adventofcode-template repository.
 
    I put a lot of effort into my solutions. They are not super effective or super short, but hopefully more readable. I aim for clarity.
 
-   Like what you see? Consider [supporting](https://github.com/sponsors/encse) my work.
+   Like what you see? Consider [supporting](https://github.com/sponsors/encse).
 
    ## Dependencies
    - Based on `.NET 9` and `C# 13`. 
