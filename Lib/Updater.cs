@@ -49,7 +49,6 @@ class Updater {
             years = new int[] { year };
         }
 
-        UpdateProjectReadme(years.Min(), years.Max());
         UpdateReadmeForYear(calendar);
         UpdateSplashScreen(calendar);
         UpdateReadmeForDay(problem);
@@ -203,11 +202,6 @@ class Updater {
         if (!File.Exists(file)) {
             WriteFile(file, new SolutionTemplateGenerator().Generate(problem));
         }
-    }
-
-    void UpdateProjectReadme(int firstYear, int lastYear) {
-        var file = Path.Combine("README.md");
-        WriteFile(file, new ProjectReadmeGenerator().Generate(firstYear, lastYear));
     }
 
     void UpdateReadmeForYear(Calendar calendar) {
