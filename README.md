@@ -4,11 +4,11 @@
    <a href="https://adventofcode.com"><img src="2023/calendar.svg" width="80%" /></a>
 
    I'm making a [website](https://aoc.csokavar.hu) out of this. A lot of effort goes into my solutions, 
-   I aim for clarity. In other words: they are not super effective or super short, but hopefully more readable.
+   I aim for clarity. In other words, they are not super effective or super short, but hopefully more readable.
    
    Like what you see? Consider [sponsoring](https://github.com/sponsors/encse) me.
    
-   You are free to use my framework, it's pretty streamlined by now. You can start with the 
+   The framework I'm using is freely available. It's pretty streamlined by now. You can start with the 
    https://github.com/encse/adventofcode-template repository.
 
    ## Dependencies
