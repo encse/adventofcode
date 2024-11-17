@@ -9,7 +9,7 @@
    You can use my framework, it's probably easiest to start with the 
    https://github.com/encse/adventofcode-template repository.
 
-   Like what you see? Consider [supporting](https://github.com/sponsors/encse).
+   Like what you see? Consider [sponsoring](https://github.com/sponsors/encse) me.
 
    ## Dependencies
    - Based on `.NET 9` and `C# 13`. 
