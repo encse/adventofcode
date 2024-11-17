@@ -1,14 +1,13 @@
    # Advent of Code (2015-2024)
-   C# solutions to the [Advent of Code](https://adventofcode.com) problems.
+   C# solutions to the [Advent of Code](https://adventofcode.com) problems. 
 
    <a href="https://adventofcode.com"><img src="2023/calendar.svg" width="80%" /></a>
 
-   I'm making a [website](https://aoc.csokavar.hu) out of this.
+   I'm making a [website](https://aoc.csokavar.hu) out of this. I put a lot of effort into my solutions. 
+   They are not super effective or super short, but hopefully more readable. I aim for clarity.
    
    You can use my framework, it's probably easiest to start with the 
    https://github.com/encse/adventofcode-template repository.
-
-   I put a lot of effort into my solutions. They are not super effective or super short, but hopefully more readable. I aim for clarity.
 
    Like what you see? Consider [supporting](https://github.com/sponsors/encse).
 
