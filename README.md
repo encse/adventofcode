@@ -3,13 +3,12 @@
 
    <a href="https://adventofcode.com"><img src="2023/calendar.svg" width="80%" /></a>
 
-   I'm making a [website](https://aoc.csokavar.hu) out of this. I put a lot of effort into my solutions. 
-   They are not super effective or super short, but hopefully more readable. I aim for clarity.
-   
-   You can use my framework, it's probably easiest to start with the 
-   https://github.com/encse/adventofcode-template repository.
-
+   I'm making a [website](https://aoc.csokavar.hu) out of this. A lot of effort goes into my solutions 
+   They are not super effective or super short, but hopefully more readable. I aim for clarity. 
    Like what you see? Consider [sponsoring](https://github.com/sponsors/encse) me.
+   
+   You are free to use my framework, it's pretty streamlined by now. You can start with the 
+   https://github.com/encse/adventofcode-template repository.
 
    ## Dependencies
    - Based on `.NET 9` and `C# 13`. 
