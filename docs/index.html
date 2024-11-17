@@ -281,7 +281,6 @@
 
         document.getElementById('cover').src = `https://raw.githubusercontent.com/encse/adventofcode/master/${stYear}/Day${stDay}/illustration.jpeg`;
         document.addEventListener('DOMContentLoaded', function () {
-            const githubUrl = `https://github.com/encse/adventofcode/blob/master/${stYear}/Day${stDay}/Solution.cs`;
             const fileUrl = `https://raw.githubusercontent.com/encse/adventofcode/master/${stYear}/Day${stDay}/Solution.cs`;
             const codeContainer = document.getElementById('code-container');
             const codeLocation = document.getElementById('code-location');
@@ -296,7 +295,7 @@
                             block.textContent = response.text;
                             hljs.highlightElement(block);
                             codeLocation.innerHTML = `
-                                <p>Please ☆ my <a href="${githubUrl}">repo</a> if you like it!</p>
+                                <p>Please ☆ my <a href="https://github.com/encse/adventofcode/">repo</a> if you like it!</p>
                             `;
                         }
                     })
