@@ -8,7 +8,7 @@
    
    Like what you see? Consider [sponsoring](https://github.com/sponsors/encse) me.
    
-   The framework I'm using is freely available. It's pretty streamlined by now. You can start with the 
+   The framework I'm using is freely available and it's pretty streamlined by now. You can start with the 
    https://github.com/encse/adventofcode-template repository.
 
    ## Dependencies
