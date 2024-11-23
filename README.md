@@ -7,10 +7,10 @@
    time on presenting things in an easy to understand and elegant way. In other words, the solutions are
    not the most effective or shortest, but hopefully more readable.
    
-   Like what you see? Consider [sponsoring](https://github.com/sponsors/encse) me.
-   
    The framework I'm using is freely available and it's pretty streamlined by now. You can start with the 
    https://github.com/encse/adventofcode-template repository.
+
+   Like what you see? Consider [sponsoring](https://github.com/sponsors/encse) me.
 
    ## Dependencies
    - Based on `.NET 9` and `C# 13`. 
