@@ -4,7 +4,7 @@
    <a href="https://adventofcode.com"><img src="2023/calendar.svg" width="80%" /></a>
 
    I'm making a [website](https://aoc.csokavar.hu) out of this. A lot of effort goes into my solutions spending
-   time on simplifying things in an easy to understand and elegant way. In other words, the solutions are
+   time on presenting things in an easy to understand and elegant way. In other words, the solutions are
    not the most effective or shortest, but hopefully more readable.
    
    Like what you see? Consider [sponsoring](https://github.com/sponsors/encse) me.
