@@ -255,7 +255,7 @@
             year = lastUnlockedYear
         }
 
-        const lastUnlockedDay = year == lastUnlockedYear && isDecember? Math.min(25, currentDate.getDate() + 1) : 25;
+        const lastUnlockedDay = year == lastUnlockedYear && isDecember? Math.min(25, currentDate.getDate()) : 25;
         let day = isNaN(parseInt(parts[1], 10)) ? lastUnlockedDay : parseInt(parts[1], 10);
 
         if (day > lastUnlockedDay || day < 1) {
