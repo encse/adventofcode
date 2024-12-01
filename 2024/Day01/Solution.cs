@@ -15,10 +15,10 @@ class Solution : Solver {
             .Sum();
 
     public object PartTwo(string input) {
-        // sum the elements of the left column weighted by its of occurrences in the right
+        // sum the elements of the left column weighted by its occurrences in the right
         // ⭐ .Net 9 comes with a new CountBy function
-        var numberCount = Column(input, 1).CountBy(x=>x).ToDictionary();
-        return Column(input, 0).Select(num => numberCount.GetValueOrDefault(num) * num).Sum();
+        var weights = Column(input, 1).CountBy(x=>x).ToDictionary();
+        return Column(input, 0).Select(num => weights.GetValueOrDefault(num) * num).Sum();
     }
 
     IEnumerable<int> Column(string input, int column) =>
