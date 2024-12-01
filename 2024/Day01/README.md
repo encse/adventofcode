@@ -5,5 +5,5 @@ Read the [full puzzle](https://adventofcode.com/2024/day/1).
 
 Our warm-up puzzle involves list comparisons. It'll take me a bit of time to get back into C#, as I find it a bit noisy now, but anyway... The first half is simply calculating the pairwise differences between two lists. The second half involves summing the elements of the first list, weighted by their occurrences in the second list.
 
-This is a much better starting point than last year's infamous `oneeight` puzzle!
+This is a much better starting point than last year's infamous `oneight` puzzle!
 
