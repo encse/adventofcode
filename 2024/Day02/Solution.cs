@@ -18,14 +18,15 @@ class Solution : Solver {
         let samples = line.Split(" ").Select(int.Parse)
         select samples.ToArray();
 
-    // Attenuate leaves out _at most_ one sample from the input in all possible ways
+    // Generates all possible variations of the input sequence by omitting 
+    // either zero or one element from it.
     IEnumerable<int[]> Attenuate(int[] samples) =>
         from i in Enumerable.Range(0, samples.Length+1)
         let before = samples.Take(i - 1)
         let after = samples.Skip(i)
         select Enumerable.Concat(before, after).ToArray();
 
-    // Checks the monothinicity condition by examining the consecutive elements
+    // Checks the monothinicity condition by examining consecutive elements
     bool Valid(int[] samples) {
         var pairs = Enumerable.Zip(samples, samples.Skip(1));
         return
