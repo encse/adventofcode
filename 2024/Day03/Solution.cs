@@ -19,7 +19,8 @@ class Solution : Solver {
                 (m.Value, acc.res, acc.enabled) switch {
                     ("don't()", _, _)      => (false, acc.res),
                     ("do()", _, _)         => (true, acc.res),
-                    (var v, var res, true) => (true, res + int.Parse(m.Groups[1].Value) * int.Parse(m.Groups[2].Value)),
+                    (var v, var res, true) => 
+                        (true, res + int.Parse(m.Groups[1].Value) * int.Parse(m.Groups[2].Value)),
                     _ => acc
                 },
             acc => acc.res

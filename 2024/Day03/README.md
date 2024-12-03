@@ -3,6 +3,6 @@
 
 The shopkeeper turns to you. "Any chance you can see why our computers are having issues again?"
 
-The computer appears to be trying to run a program, but its memory (your puzzle input) is <em>corrupted</em>. All of the instructions have been jumbled up!
-
 Read the [full puzzle](https://adventofcode.com/2024/day/3).
+
+I took a functional approach today. Regular expressions are ugly beasts, I normally try avoid them. Fortunately, we're not writing production code here. Otherwise... everything is just a fold if you look at it from a distance.
