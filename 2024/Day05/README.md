@@ -7,4 +7,6 @@ The Elf must recognize you, because they waste no time explaining that the new <
 
 Read the [full puzzle](https://adventofcode.com/2024/day/5).
 
-The constraints in both my input and the provided sample input define a total ordering of the pages, which I leveraged in my solution. I implemented a custom parser that returns the list of updates to be printed and a page comparison function. That's all we need. In `Part1`, we check which updates are in the correct order, while in `Part2`, we handle the remaining updates by applying .NET's built-in `OrderBy` function with our custom comparer.
+The constraints in both my input and the provided sample input define a total ordering (*) of the pages, which I leveraged in my solution. I implemented a custom parser that returns the list of updates to be printed and a page comparison function. That's all we need. In `Part1`, we check which updates are in the correct order, while in `Part2`, we handle the remaining updates by applying .NET's built-in `OrderBy` function with our custom comparer.
+
+* others say that the ordering is not total, in fact there are loops in it. But it was not an issue for the update lines we need to sort. So the thing below works only because of the Elf magic of X-mas.
