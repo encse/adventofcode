@@ -31,6 +31,7 @@ class Solution : Solver {
         var updates = parts[1].Split("\n").Select(line => line.Split(",")).ToArray();
         return (updates, comparer);
     }
+    
     int GetMiddlePage(string[] nums) => int.Parse(nums[nums.Length / 2]);
    
     bool Sorted(string[] pages, Comparer<string> comparer) =>
