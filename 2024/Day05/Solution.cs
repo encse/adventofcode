@@ -1,6 +1,5 @@
 namespace AdventOfCode.Y2024.Day05;
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,43 +7,33 @@ using System.Linq;
 class Solution : Solver {
 
     public object PartOne(string input) {
-        var (expected, updates) = Parse(input);
+        var (updates, comparer) = Parse(input);
         return updates
-            .Where(pages => Sorted(expected, pages))
+            .Where(pages => Sorted(pages, comparer))
             .Sum(GetMiddlePage);
     }
 
     public object PartTwo(string input) {
-        var (expected, updates) = Parse(input);
+        var (updates, comparer) = Parse(input);
         return updates
-            .Where(pages => !Sorted(expected, pages))
-            .Select(pages => Sort(expected, pages))
+            .Where(pages => !Sorted(pages, comparer))
+            .Select(pages => pages.OrderBy(p => p, comparer).ToArray())
             .Sum(GetMiddlePage);
     }
 
-    (HashSet<string> expected, string[][] updates) Parse(string input) {
+    (string[][] updates, Comparer<string>) Parse(string input) {
         var parts = input.Split("\n\n");
-        var expected = new HashSet<string>(parts[0].Split("\n"));
+
+        var ordering = new HashSet<string>(parts[0].Split("\n"));
+        var comparer = 
+            Comparer<string>.Create((p1, p2) => ordering.Contains(p1 + "|" + p2) ? -1 : 1);
+
         var updates = parts[1].Split("\n").Select(line => line.Split(",")).ToArray();
-        return (expected, updates);
+        return (updates, comparer);
     }
     int GetMiddlePage(string[] nums) => int.Parse(nums[nums.Length / 2]);
    
-    // checks that all possible pairs in pages are in the right order
-    bool Sorted(HashSet<string> expected, string[] pages) {
-        var actuals = (
-            from i in Enumerable.Range(0, pages.Length - 1)
-            from j in Enumerable.Range(i + 1, pages.Length - i - 1)
-            select pages[i] + "|" + pages[j]
-        );
-        return actuals.All(expected.Contains);
-    }
+    bool Sorted(string[] pages, Comparer<string> comparer) =>
+        Enumerable.SequenceEqual(pages, pages.OrderBy(x=>x, comparer));
 
-    string[] Sort(HashSet<string> expected, string[] pages) {
-        // Ideally we would do some topological sorting, but it's an overkill for today. 
-        // A single call to Array.Sort solves my input, so that' how life is... I might
-        // get back to this later but probably not :D
-        Array.Sort(pages, (page1, page2) => expected.Contains(page1 + "|" + page2) ? -1 : 1);
-        return pages;
-    }
 }
