@@ -9,4 +9,6 @@ This has been a straightforward implementation challenge. I wrote a `Walk` funct
 
 To make a 90º turn in 2D you need swap the coordinates and multiply _one_ of them by -1. The turn can be clockwise or counterclockwise, it depends on which coordinate was multiplied. 
 
-Here we use complex numbers to represent coordinates, and we get the same effect by simply multiplying with ImaginaryOne or `i`. `-i` turns right, and `i` to left (but this depends on how you draw your coordinate system of course, 'i' points upwards in mine). If this sounds a bit magical to You, I suggest trying it out on a few vectors by hand.
+Here we use complex numbers to represent coordinates, and we get the same effect by simply multiplying with ImaginaryOne or `i`. `-i` turns right, and `i` to left (but this depends on how you draw your coordinate system of course, 'i' points upwards in mine). 
+
+It's not complicated at all, but if sounds a bit magical to You, try it out on a few vectors by hand.
