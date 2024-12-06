@@ -6,3 +6,5 @@ You still have to be careful of time paradoxes, and so it will be important to a
 Read the [full puzzle](https://adventofcode.com/2024/day/6).
 
 This was a straightforward implementation challenge. I wrote a `Walk` function that tracks the guard's movement and returns the visited locations. It also determines whether the guard enters a loop or exits the grid. `Part1` utilizes only the location information, while `Part2` adds blockers along the guard's path and counts the instances where he starts walking in a cycle.
+
+I use complex numbers to keep track of the guard's position and direction. To make a 90º degree in 2D coordinates you need swap the coordinates and multiply _one_ of them by -1. The turn can be clockwise or counterclockwise, it depends on which coordinate was multiplied. Here w use complex numbers to represent coordinates, and we get the same effect by simply multiplying with ImaginaryOne or `i`. `-i` turns right, and `i` to left (but this depends on how you draw your coordinate system of course, 'i' points upwards in mine). If this still sounds a bit magical, try it on a few vectors by hand.
