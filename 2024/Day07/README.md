@@ -7,6 +7,8 @@ You ask how long it'll take; the engineers tell you that it only needs final cal
 
 Read the [full puzzle](https://adventofcode.com/2024/day/7).
 
-It's time to pull out the recursion guns. I introduced a checker logic that go through the numbers in one line of input and tries all possible operators on the accumulated result to reach the target.
+It's time to pull out the recursion guns. I introduced a checker logic that goes through the numbers in one line of input and tries all possible operators on the accumulated result to reach the target.
 
-The common logic that parses the input and executes the checker was extracted into a single `Solve` function, but I found it more readable to have distinct checkers for the two parts of the problem. Everything runs in about a second, but since it's just a single line, I added an optimization in `Check2` to exit early when the accumulated result exceeds the target.
+The common logic that parses the input and executes the checker was extracted into a single `Solve` function, but I found it more readable to have distinct checkers for the two parts of the problem. 
+
+Everything runs in about a second, but since it's just a single line, I couldn't stand and added an optimization in `Check2` to exit early when the accumulated result exceeds the target.
