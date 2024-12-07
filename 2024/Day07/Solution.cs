@@ -17,7 +17,7 @@ class Solution : Solver {
             let parts = Regex.Matches(line, @"\d+").Select(m=>long.Parse(m.Value))
             let target = parts.First()
             let nums = parts.Skip(1).ToList()
-        where check(target, 0, nums)
+        where check(target, nums[0], nums[1..])
         select target;
 
     // separate checkers provided for the two parts, these recursive functions go
