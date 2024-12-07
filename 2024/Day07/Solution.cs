@@ -21,7 +21,7 @@ class Solution : Solver {
         select target;
 
     // separate checkers provided for the two parts, these recursive functions go
-    // over the numbers and use all alloved operators to update the accumulated result.
+    // over the numbers and use all allowed operators to update the accumulated result.
     // at the end of the recursion we simply check if we reached the target
     private bool Check1(long target, long acc, List<long> nums) =>
         nums switch {
