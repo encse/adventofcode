@@ -11,7 +11,7 @@ class Solution : Solver {
     public object PartOne(string input) => Filter(input, Check1).Sum();
     public object PartTwo(string input) => Filter(input, Check2).Sum();
 
-    // returns those calibrations returns that are valid according to the checker
+    // returns those calibrations that are valid according to the checker
     private IEnumerable<long> Filter(string input, Func<long,long,List<long>, bool> check) => 
         from line in input.Split("\n")
             let parts = Regex.Matches(line, @"\d+").Select(m=>long.Parse(m.Value))
