@@ -6,3 +6,7 @@ When you go to cross the bridge, you notice a group of engineers trying to repai
 You ask how long it'll take; the engineers tell you that it only needs final calibrations, but some young elephants were playing nearby and <em>stole all the operators</em> from their calibration equations! They could finish the calibrations if only someone could determine which test values could possibly be produced by placing any combination of operators into their calibration equations (your puzzle input).
 
 Read the [full puzzle](https://adventofcode.com/2024/day/7).
+
+It's time to pull out the recursion guns. I introduced a checker logic that go through the numbers in one line of input and tries all possible operators on the accumulated result to reach the target.
+
+The common logic that parses the input and executes the checker was extracted into a single `Solve` function, but I found it more readable to have distinct checkers for the two parts of the problem. Everything runs in about a second, but since it's just a single line, I added an optimization in `Check2` to exit early when the accumulated result exceeds the target.
