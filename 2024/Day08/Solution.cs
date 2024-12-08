@@ -13,7 +13,7 @@ class Solution : Solver {
     public object PartOne(string input) => GetUniquePositions(input, GetAntinodes1).Count();
     public object PartTwo(string input) => GetUniquePositions(input, GetAntinodes2).Count();
 
-    HashSet<Complex> GetUniquePositions(string input, GetAntinodes antinodePostions) {
+    HashSet<Complex> GetUniquePositions(string input, GetAntinodes getAntinodes) {
         var map = GetMap(input);
 
         var antennaLocations = (
@@ -26,18 +26,18 @@ class Solution : Solver {
              from srcAntenna in antennaLocations
              from dstAntenna in antennaLocations
              where srcAntenna != dstAntenna && map[srcAntenna] == map[dstAntenna]
-             from antinode in antinodePostions(srcAntenna, dstAntenna, map)
+             from antinode in getAntinodes(srcAntenna, dstAntenna, map)
              select antinode
          ).ToHashSet();
     }
 
-    // returns the antinode positions on the srcAntenna side induced by dstAntenna
+    // returns the antinode positions of srcAntenna on the dstAntenna side
     delegate IEnumerable<Complex> GetAntinodes(Complex srcAntenna, Complex dstAntenna, Map map);
 
     // in part 1 we just look at the immediate neighbour
     IEnumerable<Complex> GetAntinodes1(Complex srcAntenna, Complex dstAntenna, Map map) {
         var dir = dstAntenna - srcAntenna;
-        var antinote = srcAntenna - dir;
+        var antinote = dstAntenna + dir;
         if (map.Keys.Contains(antinote)) {
             yield return antinote;
         }
@@ -46,10 +46,10 @@ class Solution : Solver {
     // in part 2 this becomes a cycle, plus srcAntenna is also a valid position now
     IEnumerable<Complex> GetAntinodes2(Complex srcAntenna, Complex dstAntenna, Map map) {
         var dir = dstAntenna - srcAntenna;
-        var antinote = srcAntenna;
+        var antinote = dstAntenna;
         while (map.Keys.Contains(antinote)) {
             yield return antinote;
-            antinote -= dir;
+            antinote += dir;
         }
     }
 
