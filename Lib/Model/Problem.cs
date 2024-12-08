@@ -16,7 +16,7 @@ class Problem {
 
     public static Problem Parse(int year, int day, string url, IDocument document, string input) {
 
-        var md = ParseMdIntro(document, 3, url);
+        var md = ParseMdIntro(document, 2, url);
 
         var answers = ParseAnswers(document);
         var title = document.QuerySelector("h2").TextContent;
