@@ -43,7 +43,7 @@ class Solution : Solver {
         }
     }
 
-    // in part 2 this becomes a cycle, plus srcAntenna is also a valid position now
+    // in part 2 this becomes a cycle, plus dstAntenna is also a valid position now
     IEnumerable<Complex> GetAntinodes2(Complex srcAntenna, Complex dstAntenna, Map map) {
         var dir = dstAntenna - srcAntenna;
         var antinote = dstAntenna;
