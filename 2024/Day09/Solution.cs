@@ -12,9 +12,9 @@ using System.Security.AccessControl;
 class Solution : Solver {
 
     // WIP
-    
+
     public object PartOne(string input) {
-        return Defragment(Flatten(Parse(input)).ToList());
+        return Defragment1(Parse(input));
     }
     // public object PartOne(string input) {
     //     var extracted = Extract(input);
@@ -41,10 +41,50 @@ class Solution : Solver {
     // }
 
     public object PartTwo(string input) {
-        return Defragment(Parse(input));
+        return Defragment2(Parse(input));
     }
 
-    public long Defragment(List<Part> fs) {
+    public long Defragment1(List<Part> fs) {
+        var j = fs.Count - 1;
+        while (j > 0) {
+            if (fs[j].inode == -1) {
+                j--;
+            } else {
+                for (var i = 0; i <= j; i++) {
+                    if (i == j) {
+                        j--;
+                        break;
+                    } else if (fs[i].inode == -1 && fs[i].length == fs[j].length) {
+                        (fs[i], fs[j]) = (fs[j], fs[i]);
+                        j--;
+                        break;
+                    } else if (fs[i].inode == -1 && fs[i].length > fs[j].length) {
+                        fs.Insert(i+1, new Part(-1, fs[i].length - fs[j].length));
+                        j++;
+                        (fs[i], fs[j]) = (fs[j], new Part(-1, fs[j].length));
+                        j--;
+                        break;
+                    } else if (fs[i].inode == -1 && fs[i].length < fs[j].length) {
+                        fs[i] =  new Part(fs[j].inode, fs[i].length);
+                        fs[j] =  new Part(fs[j].inode, fs[j].length - fs[i].length);
+                        break;
+                    }
+
+                }
+            }
+        }
+
+        var q = Flatten(fs).ToArray();
+        var res = 0L;
+        for (var i = 0; i < q.Length; i++) {
+            if (q[i].inode != -1) {
+                res += i * q[i].inode;
+            }
+        }
+        return res;
+    }
+
+      public long Defragment2(List<Part> fs) {
         var j = fs.Count - 1;
         while (j > 0) {
             if (fs[j].inode == -1) {
