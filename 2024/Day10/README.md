@@ -5,7 +5,7 @@ The reindeer is holding a book titled "Lava Island Hiking Guide". However, when 
 
 Read the [full puzzle](https://adventofcode.com/2024/day/10).
 
-Today's problem is surprisingly straightforward compared to yesterday's pointer nightmare. We finally get to use our favorite queue data structure to implement a flood fill. I saw this coming...  
+Today's problem is surprisingly straightforward compared to yesterday's pointer juggling. We finally get to use our favorite queue data structure to implement a flood fill. I saw this coming...  
 
 As usual, we use a dictionary with complex numbers to parse the input. The meat of the solution is in `GetTrailsFrom`, which returns all trails starting at a specific trailhead. 
 
