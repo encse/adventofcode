@@ -21,7 +21,6 @@ class Solution : Solver {
 
     Dictionary<Complex, List<Complex>> GetAllTrails(string input) {
         var map = GetMap(input);
-        var trailHeads = map.Keys.Where(k => map[k] == '0');
         return GetTrailHeads(map).ToDictionary(t => t, t => GetTrailsFrom(map, t));
     }
 
