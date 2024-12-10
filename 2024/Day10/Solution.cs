@@ -16,30 +16,30 @@ class Solution : Solver {
     Complex Left = -1;
     Complex Right = 1;
 
-    public object PartOne(string input) => GetAllTrails(input).Sum(x => x.Value.Distinct().Count());
-    public object PartTwo(string input) => GetAllTrails(input).Sum(x => x.Value.Count());
+    public object PartOne(string input) => GetAllTrails(input).Sum(t => t.Value.Distinct().Count());
+    public object PartTwo(string input) => GetAllTrails(input).Sum(t => t.Value.Count());
 
     Dictionary<Complex, List<Complex>> GetAllTrails(string input) {
         var map = GetMap(input);
         var trailHeads = map.Keys.Where(k => map[k] == '0');
-        return GetTrailHeads(map).ToDictionary(x => x, trailHead => GetTrailsFrom(map, trailHead));
+        return GetTrailHeads(map).ToDictionary(t => t, t => GetTrailsFrom(map, t));
     }
 
-    IEnumerable<Complex> GetTrailHeads(Map map) => map.Keys.Where(k => map[k] == '0');
+    IEnumerable<Complex> GetTrailHeads(Map map) => map.Keys.Where(pos => map[pos] == '0');
 
     List<Complex> GetTrailsFrom(Map map, Complex trailHead) {
         // standard floodfill algorithm using a queue
-        var points = new Queue<Complex>();
-        points.Enqueue(trailHead);
+        var positions = new Queue<Complex>();
+        positions.Enqueue(trailHead);
         var trails = new List<Complex>();
-        while (points.Any()) {
-            var point = points.Dequeue();
+        while (positions.Any()) {
+            var point = positions.Dequeue();
             if (map[point] == '9') {
                 trails.Add(point);
             } else {
                 foreach (var dir in new[] { Up, Down, Left, Right }) {
                     if (map.GetValueOrDefault(point + dir) == map[point] + 1) {
-                        points.Enqueue(point + dir);
+                        positions.Enqueue(point + dir);
                     }
                 }
             }
