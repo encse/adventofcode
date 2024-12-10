@@ -13,6 +13,7 @@ class SolutionTemplateGenerator {
             using System.Linq;
             using System.Text.RegularExpressions;
             using System.Text;
+            using System.Numerics;
             
             [ProblemName("{{problem.Title}}")]
             class Solution : Solver {
