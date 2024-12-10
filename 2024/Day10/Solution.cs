@@ -28,7 +28,7 @@ class Solution : Solver {
     IEnumerable<Complex> GetTrailHeads(Map map) => map.Keys.Where(k => map[k] == '0');
 
     List<Complex> GetTrailsFrom(Map map, Complex trailHead) {
-        // standard floodfill algorithm with a queue
+        // standard floodfill algorithm using a queue
         var points = new Queue<Complex>();
         points.Enqueue(trailHead);
         var trails = new List<Complex>();
