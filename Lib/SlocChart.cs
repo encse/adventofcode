@@ -1,17 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.VisualBasic;
 
 namespace AdventOfCode;
 
 
 class SlocChart {
-    public static void Show(List<(int day, int sloc)> slocs) {
+    public static void Show(int year, List<(int day, int sloc)> slocs) {
         if (slocs.Count < 2) {
             return;
         }
 
-        Console.WriteLine("  In code lines");
+        Console.WriteLine($"  {year } in code lines");
         Console.WriteLine("");
 
         var chars = "█▁▂▃▄▅▆▇";

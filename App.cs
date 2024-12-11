@@ -56,22 +56,22 @@ var action =
         var tsolversSelected = tsolvers.First(tsolver =>
             SolverExtensions.Year(tsolver) == year &&
             SolverExtensions.Day(tsolver) == day);
-        return () => Runner.RunAll(GetSolvers(tsolversSelected));
+        return () => Runner.RunAll(true, true, true, GetSolvers(tsolversSelected));
     }) ??
         Command(args, Args("[0-9]+"), m => {
             var year = int.Parse(m[0]);
             var tsolversSelected = tsolvers.Where(tsolver =>
                 SolverExtensions.Year(tsolver) == year);
-            return () => Runner.RunAll(GetSolvers(tsolversSelected.ToArray()));
+            return () => Runner.RunAll(true, true, true, GetSolvers(tsolversSelected.ToArray()));
         }) ??
     Command(args, Args("([0-9]+)/all"), m => {
         var year = int.Parse(m[0]);
         var tsolversSelected = tsolvers.Where(tsolver =>
             SolverExtensions.Year(tsolver) == year);
-        return () => Runner.RunAll(GetSolvers(tsolversSelected.ToArray()));
+        return () => Runner.RunAll(true, true, true, GetSolvers(tsolversSelected.ToArray()));
     }) ??
     Command(args, Args("all"), m => {
-        return () => Runner.RunAll(GetSolvers(tsolvers));
+        return () => Runner.RunAll(true, true, true, GetSolvers(tsolvers));
     }) ??
     Command(args, Args("today"), m => {
         var dt = DateTime.UtcNow.AddHours(-5);
@@ -82,26 +82,17 @@ var action =
                 SolverExtensions.Day(tsolver) == dt.Day);
 
             return () =>
-                Runner.RunAll(GetSolvers(tsolversSelected));
+                Runner.RunAll(true, true, true, GetSolvers(tsolversSelected));
 
         } else {
             throw new AocCommuncationError("Event is not active. This option works in Dec 1-25 only)");
         }
     }) ??
     Command(args, Args("calendars"), _ => {
-        return () => {
-            var tsolversSelected = (
-                    from tsolver in tsolvers
-                    group tsolver by SolverExtensions.Year(tsolver) into g
-                    orderby SolverExtensions.Year(g.First()) descending
-                    select g.First()
-                ).ToArray();
-
-            var solvers = GetSolvers(tsolversSelected);
-            foreach (var solver in solvers) {
-                solver.SplashScreen().Show();
-            }
-        };
+         return () => Runner.RunAll(false, true, false, GetSolvers(tsolvers));
+    }) ??
+    Command(args, Args("loc"), _ => {
+        return () => Runner.RunAll(false, false, true, GetSolvers(tsolvers));
     }) ??
     new Action(() => {
         Console.WriteLine(Usage.Get());
@@ -156,6 +147,7 @@ class Usage {
              all                   Solve everything
 
              calendars             Show the calendars
+             loc                   Show the line of code charts
 
             2) To start working on new problems:
             login to https://adventofcode.com, then copy your session cookie, and export 

@@ -150,7 +150,7 @@ class Runner {
         return new SolverResult(answers.ToArray(), errors.ToArray());
     }
 
-    public static void RunAll(params Solver[] solvers) {
+    public static void RunAll(bool executeSolvers, bool showSplashScreen, bool showLocChart, params Solver[] solvers) {
 
         var errors = new List<string>();
 
@@ -159,19 +159,27 @@ class Runner {
         foreach (var solver in solvers) {
 
             if (lastYear != solver.Year()) {
-                SlocChart.Show(slocs);
+                if (showLocChart){
+                    SlocChart.Show(lastYear, slocs);
+                }
                 slocs.Clear();
-
-                solver.SplashScreen().Show();
+        
+                if (showSplashScreen){
+                    solver.SplashScreen().Show();
+                }
                 lastYear = solver.Year();
             }
             slocs.Add((solver.Day(), solver.Sloc()));
-            var result = RunSolver(solver);
-            WriteLine();
-            errors.AddRange(result.errors);
+            if (executeSolvers){
+                var result = RunSolver(solver);
+                WriteLine();
+                errors.AddRange(result.errors);
+            }
         }
-        SlocChart.Show(slocs);
-        WriteLine();
+        if (showLocChart){
+            SlocChart.Show(lastYear, slocs);
+            WriteLine();
+        }
 
         if (errors.Any()) {
             WriteLine(ConsoleColor.Red, "Errors:\n" + string.Join("\n", errors));
