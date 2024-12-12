@@ -50,18 +50,23 @@ class Solution : Solver {
     int FindCorners(Dictionary<Complex, Region> map, Complex pt) {
         var res = 0;
         var region = map[pt];
-        
+
         // rotate du and dv and check for the 4 corner types
         foreach (var (du, dv) in new[] { (Up, Right), (Right, Down), (Down, Left), (Left, Up) }) {
             //  yy
             //  xy
-            if (map.GetValueOrDefault(pt + du) != region &&  map.GetValueOrDefault(pt + dv) != region) {
+            if (map.GetValueOrDefault(pt + du) != region && 
+                map.GetValueOrDefault(pt + dv) != region
+            ) {
                 res++; 
             }
 
             //  xy
             //  xx
-            if (map.GetValueOrDefault(pt + du) == region && map.GetValueOrDefault(pt + dv) == region &&  map.GetValueOrDefault(pt + du + dv) != region) {
+            if (map.GetValueOrDefault(pt + du) == region && 
+                map.GetValueOrDefault(pt + dv) == region &&  
+                map.GetValueOrDefault(pt + du + dv) != region
+            ) {
                 res++;
             }
         }
