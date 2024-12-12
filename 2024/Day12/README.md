@@ -5,10 +5,6 @@ You're about to settle near a complex arrangement of garden plots when some Elve
 
 Read the [full puzzle](https://adventofcode.com/2024/day/12).
 
-Here's an improved version with corrected grammar and flow:
-
----
-
 One can sense that the difficulty has ramped up today with a more complex problem involving area and perimeter calculations. 
 
 First we determine the connected components (regions) of plants of the same type. This is done by picking a position of the 
