@@ -17,7 +17,7 @@ The second part of the problem, however, is more intriguing: how do we calculate
 relatively simple because we just iterate through each region and count the neighboring cells that belong to a different regions. 
 This tells how many fence is needed. Unfortunately, this logic doesn't work for part 2...
 
-Then I attempted a "walk-around" approach, which involves finding a fence segment and tracing it like a line-following 
+I attempted to implement a "walk-around" approach, which involves finding a fence segment and tracing it like a line-following 
 robot while counting the turns. The challenge with this approach is that some regions have holes, that require fences as well 
 and I didnt want to implement hole finding.
 
@@ -26,6 +26,6 @@ from top to bottom an right to left. This is how I solved the problem.
 
 Finally went to reddit and read the hint: the number of segments equal to the number of corners... In other words difference
 between part 1 and 2 is very small. In part 1 we are building an edge detector which becomes a corner detector in part 2. I changed
-my implementation to that.
+my implementation to that. 
 
 This concludes our day 12. I'll take an extra ⭐ for learning something new again.
