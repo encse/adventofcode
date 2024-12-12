@@ -1,3 +1,4 @@
 bin
 obj
 aoc-crypt.key
+docs/node_modules

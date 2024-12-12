@@ -15,7 +15,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/a11y-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <title>Advent of Code {{problem-id}} '{{problem-name}}'' in C# by encse</title>
+
+    <head>
+        <meta property="og:title" content="Advent of Code {{problem-id}} '{{problem-name}}' in C# by encse<">
+        <meta property="og:description" content="C# solution to the '{{problem-name}}' Advent of Code problem.">
+        <meta property="og:image" content="{{url}}/illustration.jpeg">
+        <meta property="og:url" content="{{url}}">
+        <meta property="og:type" content="website">
+      </head>
+
 
     <style>
         html {
@@ -160,7 +169,6 @@
         #code-container {
             overflow: auto;
             scroll-behavior: smooth;
-            padding: 1em;
         }
 
         .hljs {
@@ -208,19 +216,19 @@
 
 <body lang="en-US">
     <div id="top-nav">
-        <div id="year-picker"></div>
-        <div id="day-picker"></div>
+        <div id="year-picker">{{year-picker}}</div>
+        <div id="day-picker">{{day-picker}}</div>
     </div>
     <div class="main">
         <div class="header-container">
             <div class="header-image">
-                <img id="cover" width="100%" onerror="this.onerror=null; this.src='elf.jpeg'" />
+                <img id="cover" width="100%" src="illustration.jpeg" />
             </div>
 
             <div class="header-title">
                 <p class="text">Advent of Code</p>
-                <h2 id="problem-id"></h2>
-                <h2 id="problem-name"></h2>
+                <h2 id="problem-id">{{problem-id}}</h2>
+                <h2 id="problem-name">{{problem-name}}</h2>
                 <p class="text">in C#</p>
                 <p class="text"></p>
                 <p class="text"><em>by <a style="text-decoration: underline"
@@ -230,11 +238,9 @@
         </div>
 
         <div class="content">
-            <div id="notes">
-            </div>
-            <div id="code-container" class="hljs language-csharp">
-            </div>
-            <div id="code-location"></div>
+            <div id="notes">{{notes}}</div>
+            <div id="code-container"><pre class="hljs language-csharp"><code>{{code}}</code></pre></div>
+            <div id="code-location"> <p>Please ☆ my <a href="https://github.com/encse/adventofcode/">repo</a> if you like it!</p></div>
         </div>
 
     </div>
@@ -243,125 +249,23 @@
         <span><a href="https://adventofcode.com">Advent of Code</a> is a registered trademark in the US</span>
         <span>Images provided by <a href="https://www.bing.com/images/create">Bing</a> image creator</span>
     </div>
+ 
     <script>
-        const url = new URL(window.location.href);
-        const currentDate = new Date();
-        const isDecember = currentDate.getMonth() === 11;
-        const lastUnlockedYear = isDecember ? currentDate.getFullYear() : currentDate.getFullYear() - 1;
-        let parts = url.search.substring(1).split('/');
-
-        let year = isNaN(parseInt(parts[0], 10)) ? lastUnlockedYear : parseInt(parts[0], 10)
-        if (year > lastUnlockedYear || year < 2015) {
-            year = lastUnlockedYear
-        }
-
-        const lastUnlockedDay = year == lastUnlockedYear && isDecember? Math.min(25, currentDate.getDate()) : 25;
-        let day = isNaN(parseInt(parts[1], 10)) ? lastUnlockedDay : parseInt(parts[1], 10);
-
-        if (day > lastUnlockedDay || day < 1) {
-            day = lastUnlockedDay
-        }
-
-        const stDay = day.toString().padStart(2, '0');
-        const stYear = year.toString();
-
-        const storyUrl = `https://raw.githubusercontent.com/encse/adventofcode/master/${stYear}/Day${stDay}/README.md`;
-
-        if (document.getElementById('currentYear')) {
-            document.getElementById('currentYear').innerText = currentDate.getFullYear()
-        }
-
-        if (document.getElementById('day')) {
-            document.getElementById('day').innerText = day;
-        }
-
-        if (document.getElementById('problem-id')) {
-            document.getElementById('problem-id').innerText = `${stYear}/${stDay}`;
-        }
-
-        document.getElementById('cover').src = `https://raw.githubusercontent.com/encse/adventofcode/master/${stYear}/Day${stDay}/illustration.jpeg`;
+        // This will automatically apply highlight.js to all <pre><code> blocks
         document.addEventListener('DOMContentLoaded', function () {
-            const fileUrl = `https://raw.githubusercontent.com/encse/adventofcode/master/${stYear}/Day${stDay}/Solution.cs`;
-            const codeContainer = document.getElementById('code-container');
-            const codeLocation = document.getElementById('code-location');
 
-            if (codeContainer && codeLocation) {
-                fetch(fileUrl)
-                    .then(async response => ({ text: await response.text(), status: response.status }))
-                    .then(response => {
-                        if (response.status < 400) {
-                            let block = document.createElement('pre');
-                            codeContainer.appendChild(block);
-                            block.textContent = response.text;
-                            hljs.highlightElement(block);
-                            codeLocation.innerHTML = `
-                                <p>Please ☆ my <a href="https://github.com/encse/adventofcode/">repo</a> if you like it!</p>
-                            `;
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error fetching the file:', error);
-                    });
-            }
-
-        });
-
-        fetch(storyUrl)
-            .then(response => response.text())
-            .then(text => {
-                const match = text.match(/^## --- Day \d+: (.+?) ---/);
-                if (match) {
-                    document.getElementById('problem-name').innerText = match[1];
-                }
-
-                const notesContainer = document.getElementById('notes');
-                if (notesContainer) {
-                    let lines = text.split('\n');
-                    while (lines.length > 0) {
-                        let line = lines.shift();
-                        if (line.match(/^## --- Day \d+: (.+?) ---/)) {
-                            break;
-                        }
-                    }
-                    const notes = lines.join('\n');
-                    notesContainer.innerHTML = marked.parse(notes);
-                }
-            });
-
-        let yearPickerDiv = document.getElementById('year-picker');
-        let dayPickerDiv = document.getElementById('day-picker');
-        if (yearPickerDiv) {
-            const yearPicker = document.createElement('select')
-            for (let y = 2015; y <= lastUnlockedYear; y++) {
-                let q = y;
-                let option = document.createElement('option');
-                option.value = y.toString();
-                option.text = y.toString();
-                option.selected = y == year;
-                option.onselect = () => alert(q);
-                yearPicker.appendChild(option)
-            }
-            yearPickerDiv.appendChild(yearPicker);
-
+        let yearPicker = document.querySelector('#year-picker select')
+        if (yearPicker) {
             yearPicker.addEventListener('change', function () {
-                window.location.search = this.value;
+                window.location = this.value;
             });
         }
-    
-        if (dayPickerDiv) {
-            for (i = 1; i <= lastUnlockedDay; i++) {
-                const span = document.createElement('span');
-                let link = document.createElement('a');
-                link.text = i.toString().padStart(2, '0');
-                link.href = `?${year}/${i}`;
-                if (i == day) {
-                    span.classList.add("current");
-                }
-                span.appendChild(link);
-                dayPickerDiv.appendChild(span);
-            }
-        }
+
+          // Automatically highlight all <code> blocks inside <pre>
+          hljs.highlightAll();
+        });
     </script>
+
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-P8Y1BWSSF3"></script>
     <script>
         window.dataLayer = window.dataLayer || [];

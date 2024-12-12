@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+
+<script>
+    const url = new URL(window.location.href);
+    if (url.search.match(/^\?(\d{4})\/\d{1,2}/)) {
+        window.location = url.search.substring(1);
+    }
+</script>
