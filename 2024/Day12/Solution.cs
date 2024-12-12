@@ -1,12 +1,12 @@
 namespace AdventOfCode.Y2024.Day12;
 
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Numerics;
 
 using Region = System.Collections.Generic.HashSet<System.Numerics.Complex>;
-using System;
 
 [ProblemName("Garden Groups")]
 class Solution : Solver {
@@ -51,10 +51,10 @@ class Solution : Solver {
         var res = 0;
         var region = map[pt];
 
-        // rotate du and dv and check for the 4 corner types
+        // check the 4 corner types
         foreach (var (du, dv) in new[] { (Up, Right), (Right, Down), (Down, Left), (Left, Up) }) {
             //  ..
-            //  x.
+            //  x. convex corner
             if (map.GetValueOrDefault(pt + du) != region && 
                 map.GetValueOrDefault(pt + dv) != region
             ) {
@@ -62,7 +62,7 @@ class Solution : Solver {
             }
 
             //  x.
-            //  xx
+            //  xx concave corner
             if (map.GetValueOrDefault(pt + du) == region && 
                 map.GetValueOrDefault(pt + dv) == region &&  
                 map.GetValueOrDefault(pt + du + dv) != region
