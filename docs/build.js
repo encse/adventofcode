@@ -16,7 +16,7 @@ function* findReadmes(dir) {
                 const day = parseInt(match[2], 10);
 
                 // Check the directory for a readme.md file
-                const readmePath = path.join(fullPath, 'readme.md');
+                const readmePath = path.join(fullPath, 'README.md');
                 const solutionPath = path.join(fullPath, 'Solution.cs');
                 const illustrationPath = path.join(fullPath, 'illustration.jpeg');
                 if (fs.existsSync(readmePath) && fs.existsSync(solutionPath)) {
@@ -109,7 +109,7 @@ function generateDayPicker(year, day, yearToDays) {
     return res;
 }
 const template = loadTemplate('docs/template.html');
-
+const redirectTemplate = loadTemplate('docs/redirect_template.html')
 
 const yearToDays = {}; 
 for (const { year, day } of findReadmes('.')) {
@@ -123,9 +123,17 @@ for(const year of Object.keys(yearToDays)){
     yearToDays[year] = yearToDays[year].sort((a,b) => a-b);
 }
 
-
+console.log(yearToDays);
+const lastYear = Math.max(...Object.keys(yearToDays))
+const lastDay = Math.max(...yearToDays[lastYear]);
 
 copyDirectory('docs/static', 'build');
+
+const filledRedirectTemplate = fillTemplate(redirectTemplate, {
+    'default-page-url': `https://aoc.csokavar.hu/${lastYear}/${lastDay}/`,
+});
+
+fs.writeFileSync(path.join('build', 'index.html'), filledRedirectTemplate);
 
 // Iterate over readme.md files and print filled templates
 for (const { year, day, name, notes, code, illustration } of findReadmes('.')) {
@@ -143,3 +151,4 @@ for (const { year, day, name, notes, code, illustration } of findReadmes('.')) {
     fs.writeFileSync(path.join(dst, 'index.html'), filledHtml);
     fs.copyFileSync(illustration, path.join(dst, 'illustration.jpeg'));
 }
+

@@ -1,0 +1,52 @@
+name: Update Docs
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  update-docs:
+    runs-on: ubuntu-latest
+
+    permissions:
+        # Give the default GITHUB_TOKEN write permission to commit and push the
+        # added or changed files to the repository.
+        contents: write
+        
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'  # Update based on your project's requirements
+
+      - name: Build
+        run: |
+          cd docs; 
+          npm install 
+          cd ..
+          ls -la
+          node docs/build.js
+
+      - name: Deploy to Docs Branch
+        run: |
+          # Configure Git
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Preserve built files
+          mv build ..
+
+          # Switch to the docs branch
+          git checkout docs
+          git rm -rf . || true
+          cp -r ../build/* .
+          rm -rf ../build
+
+          # Commit and push changes
+          git add .
+          git commit -m "Update docs on $(date)"
+          git push --force origin docs
