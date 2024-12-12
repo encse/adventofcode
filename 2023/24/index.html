@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+    <link href='https://fonts.googleapis.com/css?family=Noto Sans' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/a11y-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js"></script>
+    <title>Advent of Code 2023/24 'Never Tell Me The Odds'' in C# by encse</title>
+
+    <head>
+        <meta property="og:title" content="Advent of Code 2023/24 'Never Tell Me The Odds' in C# by encse<">
+        <meta property="og:description" content="C# solution to the 'Never Tell Me The Odds' Advent of Code problem.">
+        <meta property="og:image" content="https://aoc.csokavar.hu/2023/24//illustration.jpeg">
+        <meta property="og:url" content="https://aoc.csokavar.hu/2023/24/">
+        <meta property="og:type" content="website">
+      </head>
+
+
+    <style>
+        html {
+            --theme-background-color: #2b2b2b;
+            --theme-background-color2: #0d1117;
+        }
+
+        * {
+            box-sizing: border-box;
+            /* text is too big without these in my iphone */
+            -moz-text-size-adjust: none;
+            -webkit-text-size-adjust: none;
+            text-size-adjust: none;
+        }
+
+        @media (min-width:2000px) {
+            html {
+                font-size: 1.9em;
+            }
+        }
+
+        a {
+            color: inherit;
+        }
+
+        body {
+            background: var(--theme-background-color);
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Sans', 'Arial', sans-serif;
+            color: white;
+        }
+
+        .main {
+            width: 100ch;
+            display: flex;
+            flex-direction: column;
+            padding: 1em;
+            margin: 4em auto;
+        }
+
+
+        .header-container {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap-reverse;
+            justify-content: center;
+            gap: 1em;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .header-image {
+            display: flex;
+            min-width: 400px;
+            position: relative;
+            position: absolute;
+            z-index: -1;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .header-image img {
+            object-fit: cover;
+        }
+
+        .header-title {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            text-align: center;
+            text-shadow: 0 0 1px rgba(0, 0, 0, 0.7); 
+            padding: 10em;
+            background-image: radial-gradient(rgba(194, 194, 194, 0.13), rgba(195, 195, 195, 0.25));
+        }
+
+        .header-title h2 {
+            font-size: 400%;
+            margin: 0;
+        }
+
+        .header-title p {
+            font-size: 150%;
+        }
+
+        #top-nav,
+        #bottom {
+            background: var(--theme-background-color2);
+            padding: 1em;
+        }
+
+        #year-picker select {
+            border: none;
+            background: inherit;
+            font-size: inherit;
+            color: inherit;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        #top-nav a,
+        .header-container a {
+            text-decoration: none;
+        }
+
+        #top-nav .current {
+            color: var(--theme-background-color2);
+            background: white;
+        }
+
+        #bottom {
+            background: var(--theme-background-color2);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2em;
+            justify-content: center;
+        }
+
+        #top-nav {
+            display: flex;
+        }
+
+        #top-nav select {
+            margin-left: 1em;
+            margin-right: 1em;
+        }
+
+        #day-picker {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        #day-picker a {
+            margin: 1em;
+        }
+
+        #code-container {
+            overflow: auto;
+            scroll-behavior: smooth;
+        }
+
+        .hljs {
+            background: var(--theme-background-color2);
+        }
+
+        .hljs-ln-numbers {
+            padding-right: 1em !important;
+            text-align: right;
+        }
+
+        .content {
+            line-height: 1.5;
+            margin-top: 2em;
+            /* hyphens: auto; */
+        }
+
+
+        @media (max-width: 1024px) {
+            .main {
+                width: inherit;
+            }
+
+            .content {
+                width: 100%;
+            }
+
+            #top-nav span,
+            #top-nav select {
+                padding: 0.25em;
+            }
+
+            .header-title h2 {
+                font-size: 300%;
+            }
+        }
+
+        @media (orientation: landscape) {
+            main {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+
+<body lang="en-US">
+    <div id="top-nav">
+        <div id="year-picker"><select><option  value="/2015/25/">2015</option><option  value="/2016/25/">2016</option><option  value="/2017/25/">2017</option><option  value="/2018/25/">2018</option><option  value="/2019/25/">2019</option><option  value="/2020/25/">2020</option><option  value="/2021/25/">2021</option><option  value="/2022/25/">2022</option><option selected="selected" value="/2023/25/">2023</option><option  value="/2024/12/">2024</option></select></div>
+        <div id="day-picker"><span><a href="/2023/1">01</a></span><span><a href="/2023/2">02</a></span><span><a href="/2023/3">03</a></span><span><a href="/2023/4">04</a></span><span><a href="/2023/5">05</a></span><span><a href="/2023/6">06</a></span><span><a href="/2023/7">07</a></span><span><a href="/2023/8">08</a></span><span><a href="/2023/9">09</a></span><span><a href="/2023/10">10</a></span><span><a href="/2023/11">11</a></span><span><a href="/2023/12">12</a></span><span><a href="/2023/13">13</a></span><span><a href="/2023/14">14</a></span><span><a href="/2023/15">15</a></span><span><a href="/2023/16">16</a></span><span><a href="/2023/17">17</a></span><span><a href="/2023/18">18</a></span><span><a href="/2023/19">19</a></span><span><a href="/2023/20">20</a></span><span><a href="/2023/21">21</a></span><span><a href="/2023/22">22</a></span><span><a href="/2023/23">23</a></span><span class="current"><a href="/2023/24">24</a></span><span><a href="/2023/25">25</a></span></div>
+    </div>
+    <div class="main">
+        <div class="header-container">
+            <div class="header-image">
+                <img id="cover" width="100%" src="illustration.jpeg" />
+            </div>
+
+            <div class="header-title">
+                <p class="text">Advent of Code</p>
+                <h2 id="problem-id">2023/24</h2>
+                <h2 id="problem-name">Never Tell Me The Odds</h2>
+                <p class="text">in C#</p>
+                <p class="text"></p>
+                <p class="text"><em>by <a style="text-decoration: underline"
+                            href="https://github.com/sponsors/encse">encse</a></em></p>
+            </div>
+
+        </div>
+
+        <div class="content">
+            <div id="notes"><p>If you are not familiar with the problem, you can read it  <a href="https://adventofcode.com/2023/day/24">here</a>.</p>
+<p>A bit unexpectedly we are given a geometry problem that requires floating
+point numbers. I don&#39;t remember if this was ever needed in Advent of Code. </p>
+<p>Part 1 asks to find the intesection of two 2 dimensional lines. This is
+simple enough, but .Net doesn&#39;t have a built in matrix library, so I had to 
+inline everything that was needed. Part 2 was much more interesting. We have 
+to find a position and velocity of a <em>stone</em> that hits all particles provided in 
+the input. The particles move in a 3D line now.</p>
+<p>I solved this first using the Chinese Remainder Theorem, but I didn&#39;t like it
+because it was totally independent of Part 1, almost like two different problems.
+I went looking around in others&#39; solutions until I found a good one that is easy 
+to follow.</p>
+<p>The idea is that we try to guess the speed of our stone (a for loop), then assuming
+that it is the right velocity create a new reference frame that moves with 
+that speed. The stone doesn&#39;t move in this frame, it has some fixed coordinates 
+somewhere. Now transform each particle into this reference frame as well. Since the 
+stone is not moving, if we properly guessed the speed, we find that each particle 
+meets at the <em>same</em> point. This must be the stone&#39;s location.</p>
+<p>We can reuse code from Part 1, just need to project everything to the XY
+plane first to compute the stone&#39;s <code>(x,y)</code> position, then do the same in the XZ
+or YZ plane to get <code>z</code> as well.</p>
+</div>
+            <div id="code-container"><pre class="hljs language-csharp"><code>namespace AdventOfCode.Y2023.Day24;
+
+using System;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Data;
+
+record Vec2(decimal x0, decimal x1);
+record Vec3(decimal x0, decimal x1, decimal x2);
+record Particle2(Vec2 pos, Vec2 vel);
+record Particle3(Vec3 pos, Vec3 vel);
+
+[ProblemName("Never Tell Me The Odds")]
+class Solution : Solver {
+
+    public object PartOne(string input) {
+        var particles = Project(ParseParticles(input), v => (v.x0, v.x1));
+
+        var inRange = (decimal d) => 2e14m <= d && d <= 4e14m;
+
+        var inFuture = (Particle2 p, Vec2 pos) => 
+            Math.Sign(pos.x0 - p.pos.x0) == Math.Sign(p.vel.x0);
+
+        var res = 0;
+        for (var i = 0; i < particles.Length; i++) {
+            for (var j = i + 1; j < particles.Length; j++) {
+                var pos = Intersection(particles[i], particles[j]);
+                if (pos != null && 
+                    inRange(pos.x0) && 
+                    inRange(pos.x1) &&
+                    inFuture(particles[i], pos) && 
+                    inFuture(particles[j], pos)
+                ) {
+                    res++;
+                }
+            }
+        }
+        return res;
+    }
+
+    public object PartTwo(string input) {
+        var particles = ParseParticles(input);
+        var stoneXY = Solve2D(Project(particles, vec => (vec.x0, vec.x1)));
+        var stoneXZ = Solve2D(Project(particles, vec => (vec.x0, vec.x2)));
+        return Math.Round(stoneXY.x0 + stoneXY.x1 + stoneXZ.x1);
+    }
+
+    Vec2 Solve2D(Particle2[] particles) {
+        // We try to guess the speed of our stone (a for loop), then supposing 
+        // that it is the right velocity we create a new reference frame that 
+        // moves with that speed. The stone doesn't move in this frame, it has 
+        // some fixed unknown coordinates. Now transform each particle into 
+        // this reference frame as well. Since the stone is not moving, if we 
+        // properly guessed the speed, we find that each particle meets at the 
+        // same point. This must be the stone's location.
+
+        var translateV = (Particle2 p, Vec2 vel) =>
+            new Particle2(p.pos, new Vec2(p.vel.x0 - vel.x0, p.vel.x1 - vel.x1));
+
+        var s = 500; //arbitrary limits for the brute force that worked for me.
+        for (var v1 = -s; v1 < s; v1++) {
+            for (var v2 = -s; v2 < s; v2++) {
+                var vel = new Vec2(v1, v2);
+
+                // p0 and p1 are linearly independent (for me) => stone != null
+                var stone = Intersection(
+                    translateV(particles[0], vel),
+                    translateV(particles[1], vel)
+                );
+
+                if (particles.All(p => Hits(translateV(p, vel), stone))) {
+                    return stone;
+                }
+            }
+        }
+        throw new Exception();
+    }
+
+    bool Hits(Particle2 p, Vec2 pos) {
+        var d = (pos.x0 - p.pos.x0) * p.vel.x1 - (pos.x1 - p.pos.x1) * p.vel.x0;
+        return Math.Abs(d) < (decimal)0.0001;
+    }
+
+    Vec2 Intersection(Particle2 p1, Particle2 p2) {
+        // this would look way better if I had a matrix library at my disposal.
+        var determinant = p1.vel.x0 * p2.vel.x1 - p1.vel.x1 * p2.vel.x0;
+        if (determinant == 0) {
+            return null; //particles don't meet
+        }
+        
+        var b0 = p1.vel.x0 * p1.pos.x1 - p1.vel.x1 * p1.pos.x0;
+        var b1 = p2.vel.x0 * p2.pos.x1 - p2.vel.x1 * p2.pos.x0;
+       
+        return new (
+             (p2.vel.x0 * b0 - p1.vel.x0 * b1) / determinant,
+             (p2.vel.x1 * b0 - p1.vel.x1 * b1) / determinant
+         );
+    }
+
+    Particle3[] ParseParticles(string input) => [..
+        from line in input.Split('\n')
+        let v = ParseNum(line)
+        select new Particle3(new (v[0], v[1], v[2]), new (v[3], v[4], v[5]))
+    ];
+
+    decimal[] ParseNum(string l) => [.. 
+        from m in Regex.Matches(l, @"-?\d+") select decimal.Parse(m.Value)
+    ];
+
+    // Project particles to a 2D plane:
+    Particle2[] Project(Particle3[] ps, Func<Vec3, (decimal, decimal)> proj) => [..
+        from p in ps select new Particle2(
+            new Vec2(proj(p.pos).Item1, proj(p.pos).Item2),
+            new Vec2(proj(p.vel).Item1, proj(p.vel).Item2)
+        )
+    ];
+}
+</code></pre></div>
+            <div id="code-location"> <p>Please ☆ my <a href="https://github.com/encse/adventofcode/">repo</a> if you like it!</p></div>
+        </div>
+
+    </div>
+    <div id="bottom">
+        <span>© <span id="currentYear"></span></span>
+        <span><a href="https://adventofcode.com">Advent of Code</a> is a registered trademark in the US</span>
+        <span>Images provided by <a href="https://www.bing.com/images/create">Bing</a> image creator</span>
+    </div>
+ 
+    <script>
+        // This will automatically apply highlight.js to all <pre><code> blocks
+        document.addEventListener('DOMContentLoaded', function () {
+
+        let yearPicker = document.querySelector('#year-picker select')
+        if (yearPicker) {
+            yearPicker.addEventListener('change', function () {
+                window.location = this.value;
+            });
+        }
+
+          // Automatically highlight all <code> blocks inside <pre>
+          hljs.highlightAll();
+        });
+    </script>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P8Y1BWSSF3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-P8Y1BWSSF3');
+    </script>
+</body>
+
+</html>

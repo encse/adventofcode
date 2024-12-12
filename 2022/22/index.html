@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+    <link href='https://fonts.googleapis.com/css?family=Noto Sans' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/a11y-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js"></script>
+    <title>Advent of Code 2022/22 'Monkey Map'' in C# by encse</title>
+
+    <head>
+        <meta property="og:title" content="Advent of Code 2022/22 'Monkey Map' in C# by encse<">
+        <meta property="og:description" content="C# solution to the 'Monkey Map' Advent of Code problem.">
+        <meta property="og:image" content="https://aoc.csokavar.hu/2022/22//illustration.jpeg">
+        <meta property="og:url" content="https://aoc.csokavar.hu/2022/22/">
+        <meta property="og:type" content="website">
+      </head>
+
+
+    <style>
+        html {
+            --theme-background-color: #2b2b2b;
+            --theme-background-color2: #0d1117;
+        }
+
+        * {
+            box-sizing: border-box;
+            /* text is too big without these in my iphone */
+            -moz-text-size-adjust: none;
+            -webkit-text-size-adjust: none;
+            text-size-adjust: none;
+        }
+
+        @media (min-width:2000px) {
+            html {
+                font-size: 1.9em;
+            }
+        }
+
+        a {
+            color: inherit;
+        }
+
+        body {
+            background: var(--theme-background-color);
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Sans', 'Arial', sans-serif;
+            color: white;
+        }
+
+        .main {
+            width: 100ch;
+            display: flex;
+            flex-direction: column;
+            padding: 1em;
+            margin: 4em auto;
+        }
+
+
+        .header-container {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap-reverse;
+            justify-content: center;
+            gap: 1em;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .header-image {
+            display: flex;
+            min-width: 400px;
+            position: relative;
+            position: absolute;
+            z-index: -1;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .header-image img {
+            object-fit: cover;
+        }
+
+        .header-title {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            text-align: center;
+            text-shadow: 0 0 1px rgba(0, 0, 0, 0.7); 
+            padding: 10em;
+            background-image: radial-gradient(rgba(194, 194, 194, 0.13), rgba(195, 195, 195, 0.25));
+        }
+
+        .header-title h2 {
+            font-size: 400%;
+            margin: 0;
+        }
+
+        .header-title p {
+            font-size: 150%;
+        }
+
+        #top-nav,
+        #bottom {
+            background: var(--theme-background-color2);
+            padding: 1em;
+        }
+
+        #year-picker select {
+            border: none;
+            background: inherit;
+            font-size: inherit;
+            color: inherit;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        #top-nav a,
+        .header-container a {
+            text-decoration: none;
+        }
+
+        #top-nav .current {
+            color: var(--theme-background-color2);
+            background: white;
+        }
+
+        #bottom {
+            background: var(--theme-background-color2);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2em;
+            justify-content: center;
+        }
+
+        #top-nav {
+            display: flex;
+        }
+
+        #top-nav select {
+            margin-left: 1em;
+            margin-right: 1em;
+        }
+
+        #day-picker {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        #day-picker a {
+            margin: 1em;
+        }
+
+        #code-container {
+            overflow: auto;
+            scroll-behavior: smooth;
+        }
+
+        .hljs {
+            background: var(--theme-background-color2);
+        }
+
+        .hljs-ln-numbers {
+            padding-right: 1em !important;
+            text-align: right;
+        }
+
+        .content {
+            line-height: 1.5;
+            margin-top: 2em;
+            /* hyphens: auto; */
+        }
+
+
+        @media (max-width: 1024px) {
+            .main {
+                width: inherit;
+            }
+
+            .content {
+                width: 100%;
+            }
+
+            #top-nav span,
+            #top-nav select {
+                padding: 0.25em;
+            }
+
+            .header-title h2 {
+                font-size: 300%;
+            }
+        }
+
+        @media (orientation: landscape) {
+            main {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+
+<body lang="en-US">
+    <div id="top-nav">
+        <div id="year-picker"><select><option  value="/2015/25/">2015</option><option  value="/2016/25/">2016</option><option  value="/2017/25/">2017</option><option  value="/2018/25/">2018</option><option  value="/2019/25/">2019</option><option  value="/2020/25/">2020</option><option  value="/2021/25/">2021</option><option selected="selected" value="/2022/25/">2022</option><option  value="/2023/25/">2023</option><option  value="/2024/12/">2024</option></select></div>
+        <div id="day-picker"><span><a href="/2022/1">01</a></span><span><a href="/2022/2">02</a></span><span><a href="/2022/3">03</a></span><span><a href="/2022/4">04</a></span><span><a href="/2022/5">05</a></span><span><a href="/2022/6">06</a></span><span><a href="/2022/7">07</a></span><span><a href="/2022/8">08</a></span><span><a href="/2022/9">09</a></span><span><a href="/2022/10">10</a></span><span><a href="/2022/11">11</a></span><span><a href="/2022/12">12</a></span><span><a href="/2022/13">13</a></span><span><a href="/2022/14">14</a></span><span><a href="/2022/15">15</a></span><span><a href="/2022/16">16</a></span><span><a href="/2022/17">17</a></span><span><a href="/2022/18">18</a></span><span><a href="/2022/19">19</a></span><span><a href="/2022/20">20</a></span><span><a href="/2022/21">21</a></span><span class="current"><a href="/2022/22">22</a></span><span><a href="/2022/23">23</a></span><span><a href="/2022/24">24</a></span><span><a href="/2022/25">25</a></span></div>
+    </div>
+    <div class="main">
+        <div class="header-container">
+            <div class="header-image">
+                <img id="cover" width="100%" src="illustration.jpeg" />
+            </div>
+
+            <div class="header-title">
+                <p class="text">Advent of Code</p>
+                <h2 id="problem-id">2022/22</h2>
+                <h2 id="problem-name">Monkey Map</h2>
+                <p class="text">in C#</p>
+                <p class="text"></p>
+                <p class="text"><em>by <a style="text-decoration: underline"
+                            href="https://github.com/sponsors/encse">encse</a></em></p>
+            </div>
+
+        </div>
+
+        <div class="content">
+            <div id="notes"><p>The monkeys take you on a surprisingly easy trail through the jungle. They&#39;re even going in roughly the right direction according to your handheld device&#39;s Grove Positioning System.</p>
+<p>As you walk, the monkeys explain that the grove is protected by a <em>force field</em>. To pass through the force field, you have to enter a password; doing so involves tracing a specific <em>path</em> on a strangely-shaped board.</p>
+<p>Read the <a href="https://adventofcode.com/2022/day/22">full puzzle</a>.</p>
+</div>
+            <div id="code-container"><pre class="hljs language-csharp"><code>using System;
+using System.Linq;
+using System.Text.RegularExpressions;
+
+namespace AdventOfCode.Y2022.Day22;
+
+[ProblemName("Monkey Map")]
+class Solution : Solver {
+    /*
+        The cube is unfolded like this. Each letter identifies an 50x50 square 
+        in the input:
+                 AB
+                 C 
+                DE
+                F 
+        A topology map tells us how cube sides are connected. For example in 
+        case of part 1 the line "A -> B0 C0 B0 E0" means that if we go to the 
+        right from A we get to B, C is down, moving to the left we find B again, 
+        and moving up from A we get to E. The order of directions is always 
+        right, down, left and up.
+
+        The number next to the letter tells us how many 90 degrees we need to 
+        rotate the destination square to point upwards. In case of part 1 we 
+        don't need to rotate so the number is always zero. In part 2 there is 
+        "A -> B0 C0 D2 F1" which means that if we are about to move up from A we 
+        get to F, but F is rotated to the right once, likewise D2 means that D 
+        is on the left of A and it is up side down.
+
+        This mapping was generated from a paper model.
+    */
+
+    public object PartOne(string input) => Solve(
+        input,
+        """"
+        A -> B0 C0 B0 E0
+        B -> A0 B0 A0 B0
+        C -> C0 E0 C0 A0
+        D -> E0 F0 E0 F0
+        E -> D0 A0 D0 C0
+        F -> F0 D0 F0 D0
+        """"
+    );
+    public object PartTwo(string input) => Solve(
+        input,
+        """
+        A -> B0 C0 D2 F1
+        B -> E2 C1 A0 F0
+        C -> B3 E0 D3 A0
+        D -> E0 F0 A2 C1
+        E -> B2 F1 D0 C0
+        F -> E3 B0 A3 D0
+        """
+    );
+
+    const int blockSize = 50;
+    const int right = 0;
+    const int down = 1;
+    const int left = 2;
+    const int up = 3;
+
+    int Solve(string input, string topology) {
+        var (map, cmds) = Parse(input);
+        var state = new State("A", new Coord(0, 0), right);
+
+        foreach (var cmd in cmds) {
+            switch (cmd) {
+                case Left:
+                    state = state with { dir = (state.dir + 3) % 4 };
+                    break;
+                case Right:
+                    state = state with { dir = (state.dir + 1) % 4 };
+                    break;
+                case Forward(var n):
+                    for (var i = 0; i < n; i++) {
+                        var stateNext = Step(topology, state);
+                        var global = ToGlobal(stateNext);
+                        if (map[global.irow][global.icol] == '.') {
+                            state = stateNext;
+                        } else {
+                            break;
+                        }
+                    }
+                    break;
+            }
+        }
+
+        return 1000 * (ToGlobal(state).irow + 1) + 
+                  4 * (ToGlobal(state).icol + 1) + 
+                      state.dir;
+    }
+
+    Coord ToGlobal(State state) => 
+        state.block switch {
+            "A" => state.coord + new Coord(0, blockSize),
+            "B" => state.coord + new Coord(0, 2 * blockSize),
+            "C" => state.coord + new Coord(blockSize, blockSize),
+            "D" => state.coord + new Coord(2 * blockSize, 0),
+            "E" => state.coord + new Coord(2 * blockSize, blockSize),
+            "F" => state.coord + new Coord(3 * blockSize, 0),
+            _ => throw new Exception()
+        };
+
+    State Step(string topology, State state) {
+
+        bool wrapsAround(Coord coord) =>
+            coord.icol < 0 || coord.icol >= blockSize || 
+            coord.irow < 0 || coord.irow >= blockSize;
+
+        var (srcBlock, coord, dir) = state;
+        var dstBlock = srcBlock;
+
+        // take one step, if there is no wrap around we are all right
+        coord = dir switch {
+            left => coord with { icol = coord.icol - 1 },
+            down => coord with { irow = coord.irow + 1 },
+            right => coord with { icol = coord.icol + 1 },
+            up => coord with { irow = coord.irow - 1 },
+            _ => throw new Exception()
+        };
+
+        if (wrapsAround(coord)) {
+            // check the topology, select the dstBlock and rotate coord and dir 
+            // as much as needed this is easier to follow through an example
+            // if srcBlock: "C", dir: 2
+
+            var line = topology.Split('\n').Single(x => x.StartsWith(srcBlock));
+            // line: C -> B3 E0 D3 A0
+
+            var mapping = line.Split(" -> ")[1].Split(" ");
+            // mapping: B3 E0 D3 A0
+
+            var neighbour = mapping[dir];
+            // neighbour: D3
+
+            dstBlock = neighbour.Substring(0, 1);
+            // dstBlock: D
+
+            var rotate = int.Parse(neighbour.Substring(1));
+            // rotate: 3
+
+            // go back to the 0..49 range first, then rotate as much as needed
+            coord = coord with {
+                irow = (coord.irow + blockSize) % blockSize,
+                icol = (coord.icol + blockSize) % blockSize,
+            };
+
+            for (var i = 0; i < rotate; i++) {
+                coord = coord with { 
+                    irow = coord.icol, 
+                    icol = blockSize - coord.irow - 1 
+                };
+                dir = (dir + 1) % 4;
+            }
+        }
+
+        return new State(dstBlock, coord, dir);
+    }
+
+    (string[] map, Cmd[] path) Parse(string input) {
+        var blocks = input.Split("\n\n");
+
+        var map = blocks[0].Split("\n");
+        var commands = Regex
+            .Matches(blocks[1], @"(\d+)|L|R")
+            .Select<Match, Cmd>(m =>
+                m.Value switch {
+                    "L" => new Left(),
+                    "R" => new Right(),
+                    string n => new Forward(int.Parse(n)),
+                })
+            .ToArray();
+
+        return (map, commands);
+    }
+
+    record State(string block, Coord coord, int dir);
+
+    record Coord(int irow, int icol) {
+        public static Coord operator +(Coord a, Coord b) =>
+            new Coord(a.irow + b.irow, a.icol + b.icol);
+
+        public static Coord operator -(Coord a, Coord b) =>
+            new Coord(a.irow - b.irow, a.icol - b.icol);
+    }
+
+    interface Cmd { }
+    record Forward(int n) : Cmd;
+    record Right() : Cmd;
+    record Left() : Cmd;
+}
+</code></pre></div>
+            <div id="code-location"> <p>Please ☆ my <a href="https://github.com/encse/adventofcode/">repo</a> if you like it!</p></div>
+        </div>
+
+    </div>
+    <div id="bottom">
+        <span>© <span id="currentYear"></span></span>
+        <span><a href="https://adventofcode.com">Advent of Code</a> is a registered trademark in the US</span>
+        <span>Images provided by <a href="https://www.bing.com/images/create">Bing</a> image creator</span>
+    </div>
+ 
+    <script>
+        // This will automatically apply highlight.js to all <pre><code> blocks
+        document.addEventListener('DOMContentLoaded', function () {
+
+        let yearPicker = document.querySelector('#year-picker select')
+        if (yearPicker) {
+            yearPicker.addEventListener('change', function () {
+                window.location = this.value;
+            });
+        }
+
+          // Automatically highlight all <code> blocks inside <pre>
+          hljs.highlightAll();
+        });
+    </script>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P8Y1BWSSF3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-P8Y1BWSSF3');
+    </script>
+</body>
+
+</html>

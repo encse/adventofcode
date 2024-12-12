@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+    <link href='https://fonts.googleapis.com/css?family=Noto Sans' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/a11y-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js"></script>
+    <title>Advent of Code 2024/10 'Hoof It'' in C# by encse</title>
+
+    <head>
+        <meta property="og:title" content="Advent of Code 2024/10 'Hoof It' in C# by encse<">
+        <meta property="og:description" content="C# solution to the 'Hoof It' Advent of Code problem.">
+        <meta property="og:image" content="https://aoc.csokavar.hu/2024/10//illustration.jpeg">
+        <meta property="og:url" content="https://aoc.csokavar.hu/2024/10/">
+        <meta property="og:type" content="website">
+      </head>
+
+
+    <style>
+        html {
+            --theme-background-color: #2b2b2b;
+            --theme-background-color2: #0d1117;
+        }
+
+        * {
+            box-sizing: border-box;
+            /* text is too big without these in my iphone */
+            -moz-text-size-adjust: none;
+            -webkit-text-size-adjust: none;
+            text-size-adjust: none;
+        }
+
+        @media (min-width:2000px) {
+            html {
+                font-size: 1.9em;
+            }
+        }
+
+        a {
+            color: inherit;
+        }
+
+        body {
+            background: var(--theme-background-color);
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Sans', 'Arial', sans-serif;
+            color: white;
+        }
+
+        .main {
+            width: 100ch;
+            display: flex;
+            flex-direction: column;
+            padding: 1em;
+            margin: 4em auto;
+        }
+
+
+        .header-container {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap-reverse;
+            justify-content: center;
+            gap: 1em;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .header-image {
+            display: flex;
+            min-width: 400px;
+            position: relative;
+            position: absolute;
+            z-index: -1;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .header-image img {
+            object-fit: cover;
+        }
+
+        .header-title {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            text-align: center;
+            text-shadow: 0 0 1px rgba(0, 0, 0, 0.7); 
+            padding: 10em;
+            background-image: radial-gradient(rgba(194, 194, 194, 0.13), rgba(195, 195, 195, 0.25));
+        }
+
+        .header-title h2 {
+            font-size: 400%;
+            margin: 0;
+        }
+
+        .header-title p {
+            font-size: 150%;
+        }
+
+        #top-nav,
+        #bottom {
+            background: var(--theme-background-color2);
+            padding: 1em;
+        }
+
+        #year-picker select {
+            border: none;
+            background: inherit;
+            font-size: inherit;
+            color: inherit;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        #top-nav a,
+        .header-container a {
+            text-decoration: none;
+        }
+
+        #top-nav .current {
+            color: var(--theme-background-color2);
+            background: white;
+        }
+
+        #bottom {
+            background: var(--theme-background-color2);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2em;
+            justify-content: center;
+        }
+
+        #top-nav {
+            display: flex;
+        }
+
+        #top-nav select {
+            margin-left: 1em;
+            margin-right: 1em;
+        }
+
+        #day-picker {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        #day-picker a {
+            margin: 1em;
+        }
+
+        #code-container {
+            overflow: auto;
+            scroll-behavior: smooth;
+        }
+
+        .hljs {
+            background: var(--theme-background-color2);
+        }
+
+        .hljs-ln-numbers {
+            padding-right: 1em !important;
+            text-align: right;
+        }
+
+        .content {
+            line-height: 1.5;
+            margin-top: 2em;
+            /* hyphens: auto; */
+        }
+
+
+        @media (max-width: 1024px) {
+            .main {
+                width: inherit;
+            }
+
+            .content {
+                width: 100%;
+            }
+
+            #top-nav span,
+            #top-nav select {
+                padding: 0.25em;
+            }
+
+            .header-title h2 {
+                font-size: 300%;
+            }
+        }
+
+        @media (orientation: landscape) {
+            main {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+
+<body lang="en-US">
+    <div id="top-nav">
+        <div id="year-picker"><select><option  value="/2015/25/">2015</option><option  value="/2016/25/">2016</option><option  value="/2017/25/">2017</option><option  value="/2018/25/">2018</option><option  value="/2019/25/">2019</option><option  value="/2020/25/">2020</option><option  value="/2021/25/">2021</option><option  value="/2022/25/">2022</option><option  value="/2023/25/">2023</option><option selected="selected" value="/2024/12/">2024</option></select></div>
+        <div id="day-picker"><span><a href="/2024/1">01</a></span><span><a href="/2024/2">02</a></span><span><a href="/2024/3">03</a></span><span><a href="/2024/4">04</a></span><span><a href="/2024/5">05</a></span><span><a href="/2024/6">06</a></span><span><a href="/2024/7">07</a></span><span><a href="/2024/8">08</a></span><span><a href="/2024/9">09</a></span><span class="current"><a href="/2024/10">10</a></span><span><a href="/2024/11">11</a></span><span><a href="/2024/12">12</a></span></div>
+    </div>
+    <div class="main">
+        <div class="header-container">
+            <div class="header-image">
+                <img id="cover" width="100%" src="illustration.jpeg" />
+            </div>
+
+            <div class="header-title">
+                <p class="text">Advent of Code</p>
+                <h2 id="problem-id">2024/10</h2>
+                <h2 id="problem-name">Hoof It</h2>
+                <p class="text">in C#</p>
+                <p class="text"></p>
+                <p class="text"><em>by <a style="text-decoration: underline"
+                            href="https://github.com/sponsors/encse">encse</a></em></p>
+            </div>
+
+        </div>
+
+        <div class="content">
+            <div id="notes"><p>You all arrive at a <em>Lava Production Facility</em> on a floating island in the sky. As the others begin to search the massive industrial complex, you feel a small nose boop your leg and look down to discover a reindeer wearing a hard hat.</p>
+<p>The reindeer is holding a book titled &quot;Lava Island Hiking Guide&quot;. However, when you open the book, you discover that most of it seems to have been scorched by lava! As you&#39;re about to ask how you can help, the reindeer brings you a blank <a href="https://en.wikipedia.org/wiki/Topographic_map">topographic map</a> of the surrounding area (your puzzle input) and looks up at you excitedly.</p>
+<p>Read the <a href="https://adventofcode.com/2024/day/10">full puzzle</a>.</p>
+<p>Today&#39;s problem is surprisingly straightforward compared to yesterday&#39;s pointer juggling. We finally get to use our favorite queue data structure to implement a flood fill. I saw this coming...  </p>
+<p>As usual, we use a dictionary with complex numbers to parse the input. The meat of the solution is in <code>GetTrailsFrom</code>, which returns all trails starting at a specific trailhead. </p>
+<p>The difference between <code>Part 1</code> and <code>Part 2</code> lies in how distinct trails are defined. I decided to return all trails keyed by their trailheads in <code>GetAllTrails</code> and delegate the distinctness logic to <code>PartOne</code> and <code>PartTwo</code>.</p>
+<p>A nice and easy task for today!</p>
+</div>
+            <div id="code-container"><pre class="hljs language-csharp"><code>namespace AdventOfCode.Y2024.Day10;
+
+using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
+using System.Numerics;
+
+using Map = System.Collections.Immutable.ImmutableDictionary<System.Numerics.Complex, char>;
+
+[ProblemName("Hoof It")]
+class Solution : Solver {
+
+    Complex Up = Complex.ImaginaryOne;
+    Complex Down = -Complex.ImaginaryOne;
+    Complex Left = -1;
+    Complex Right = 1;
+
+    public object PartOne(string input) => GetAllTrails(input).Sum(t => t.Value.Distinct().Count());
+    public object PartTwo(string input) => GetAllTrails(input).Sum(t => t.Value.Count());
+
+    Dictionary<Complex, List<Complex>> GetAllTrails(string input) {
+        var map = GetMap(input);
+        return GetTrailHeads(map).ToDictionary(t => t, t => GetTrailsFrom(map, t));
+    }
+
+    IEnumerable<Complex> GetTrailHeads(Map map) => map.Keys.Where(pos => map[pos] == '0');
+
+    List<Complex> GetTrailsFrom(Map map, Complex trailHead) {
+        // standard floodfill algorithm using a queue
+        var positions = new Queue<Complex>();
+        positions.Enqueue(trailHead);
+        var trails = new List<Complex>();
+        while (positions.Any()) {
+            var point = positions.Dequeue();
+            if (map[point] == '9') {
+                trails.Add(point);
+            } else {
+                foreach (var dir in new[] { Up, Down, Left, Right }) {
+                    if (map.GetValueOrDefault(point + dir) == map[point] + 1) {
+                        positions.Enqueue(point + dir);
+                    }
+                }
+            }
+        }
+        return trails;
+    }
+
+    // store the points in a dictionary so that we can iterate over them and 
+    // to easily deal with points outside the area using GetValueOrDefault
+    Map GetMap(string input) {
+        var map = input.Split("\n");
+        return (
+            from y in Enumerable.Range(0, map.Length)
+            from x in Enumerable.Range(0, map[0].Length)
+            select new KeyValuePair<Complex, char>(x + y * Down, map[y][x])
+        ).ToImmutableDictionary();
+    }
+}
+</code></pre></div>
+            <div id="code-location"> <p>Please ☆ my <a href="https://github.com/encse/adventofcode/">repo</a> if you like it!</p></div>
+        </div>
+
+    </div>
+    <div id="bottom">
+        <span>© <span id="currentYear"></span></span>
+        <span><a href="https://adventofcode.com">Advent of Code</a> is a registered trademark in the US</span>
+        <span>Images provided by <a href="https://www.bing.com/images/create">Bing</a> image creator</span>
+    </div>
+ 
+    <script>
+        // This will automatically apply highlight.js to all <pre><code> blocks
+        document.addEventListener('DOMContentLoaded', function () {
+
+        let yearPicker = document.querySelector('#year-picker select')
+        if (yearPicker) {
+            yearPicker.addEventListener('change', function () {
+                window.location = this.value;
+            });
+        }
+
+          // Automatically highlight all <code> blocks inside <pre>
+          hljs.highlightAll();
+        });
+    </script>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P8Y1BWSSF3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-P8Y1BWSSF3');
+    </script>
+</body>
+
+</html>

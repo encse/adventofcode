@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+    <link href='https://fonts.googleapis.com/css?family=Noto Sans' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/a11y-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js"></script>
+    <title>Advent of Code 2017/22 'Sporifica Virus'' in C# by encse</title>
+
+    <head>
+        <meta property="og:title" content="Advent of Code 2017/22 'Sporifica Virus' in C# by encse<">
+        <meta property="og:description" content="C# solution to the 'Sporifica Virus' Advent of Code problem.">
+        <meta property="og:image" content="https://aoc.csokavar.hu/2017/22//illustration.jpeg">
+        <meta property="og:url" content="https://aoc.csokavar.hu/2017/22/">
+        <meta property="og:type" content="website">
+      </head>
+
+
+    <style>
+        html {
+            --theme-background-color: #2b2b2b;
+            --theme-background-color2: #0d1117;
+        }
+
+        * {
+            box-sizing: border-box;
+            /* text is too big without these in my iphone */
+            -moz-text-size-adjust: none;
+            -webkit-text-size-adjust: none;
+            text-size-adjust: none;
+        }
+
+        @media (min-width:2000px) {
+            html {
+                font-size: 1.9em;
+            }
+        }
+
+        a {
+            color: inherit;
+        }
+
+        body {
+            background: var(--theme-background-color);
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Sans', 'Arial', sans-serif;
+            color: white;
+        }
+
+        .main {
+            width: 100ch;
+            display: flex;
+            flex-direction: column;
+            padding: 1em;
+            margin: 4em auto;
+        }
+
+
+        .header-container {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap-reverse;
+            justify-content: center;
+            gap: 1em;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .header-image {
+            display: flex;
+            min-width: 400px;
+            position: relative;
+            position: absolute;
+            z-index: -1;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .header-image img {
+            object-fit: cover;
+        }
+
+        .header-title {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            text-align: center;
+            text-shadow: 0 0 1px rgba(0, 0, 0, 0.7); 
+            padding: 10em;
+            background-image: radial-gradient(rgba(194, 194, 194, 0.13), rgba(195, 195, 195, 0.25));
+        }
+
+        .header-title h2 {
+            font-size: 400%;
+            margin: 0;
+        }
+
+        .header-title p {
+            font-size: 150%;
+        }
+
+        #top-nav,
+        #bottom {
+            background: var(--theme-background-color2);
+            padding: 1em;
+        }
+
+        #year-picker select {
+            border: none;
+            background: inherit;
+            font-size: inherit;
+            color: inherit;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        #top-nav a,
+        .header-container a {
+            text-decoration: none;
+        }
+
+        #top-nav .current {
+            color: var(--theme-background-color2);
+            background: white;
+        }
+
+        #bottom {
+            background: var(--theme-background-color2);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2em;
+            justify-content: center;
+        }
+
+        #top-nav {
+            display: flex;
+        }
+
+        #top-nav select {
+            margin-left: 1em;
+            margin-right: 1em;
+        }
+
+        #day-picker {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        #day-picker a {
+            margin: 1em;
+        }
+
+        #code-container {
+            overflow: auto;
+            scroll-behavior: smooth;
+        }
+
+        .hljs {
+            background: var(--theme-background-color2);
+        }
+
+        .hljs-ln-numbers {
+            padding-right: 1em !important;
+            text-align: right;
+        }
+
+        .content {
+            line-height: 1.5;
+            margin-top: 2em;
+            /* hyphens: auto; */
+        }
+
+
+        @media (max-width: 1024px) {
+            .main {
+                width: inherit;
+            }
+
+            .content {
+                width: 100%;
+            }
+
+            #top-nav span,
+            #top-nav select {
+                padding: 0.25em;
+            }
+
+            .header-title h2 {
+                font-size: 300%;
+            }
+        }
+
+        @media (orientation: landscape) {
+            main {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+
+<body lang="en-US">
+    <div id="top-nav">
+        <div id="year-picker"><select><option  value="/2015/25/">2015</option><option  value="/2016/25/">2016</option><option selected="selected" value="/2017/25/">2017</option><option  value="/2018/25/">2018</option><option  value="/2019/25/">2019</option><option  value="/2020/25/">2020</option><option  value="/2021/25/">2021</option><option  value="/2022/25/">2022</option><option  value="/2023/25/">2023</option><option  value="/2024/12/">2024</option></select></div>
+        <div id="day-picker"><span><a href="/2017/1">01</a></span><span><a href="/2017/2">02</a></span><span><a href="/2017/3">03</a></span><span><a href="/2017/4">04</a></span><span><a href="/2017/5">05</a></span><span><a href="/2017/6">06</a></span><span><a href="/2017/7">07</a></span><span><a href="/2017/8">08</a></span><span><a href="/2017/9">09</a></span><span><a href="/2017/10">10</a></span><span><a href="/2017/11">11</a></span><span><a href="/2017/12">12</a></span><span><a href="/2017/13">13</a></span><span><a href="/2017/14">14</a></span><span><a href="/2017/15">15</a></span><span><a href="/2017/16">16</a></span><span><a href="/2017/17">17</a></span><span><a href="/2017/18">18</a></span><span><a href="/2017/19">19</a></span><span><a href="/2017/20">20</a></span><span><a href="/2017/21">21</a></span><span class="current"><a href="/2017/22">22</a></span><span><a href="/2017/23">23</a></span><span><a href="/2017/24">24</a></span><span><a href="/2017/25">25</a></span></div>
+    </div>
+    <div class="main">
+        <div class="header-container">
+            <div class="header-image">
+                <img id="cover" width="100%" src="illustration.jpeg" />
+            </div>
+
+            <div class="header-title">
+                <p class="text">Advent of Code</p>
+                <h2 id="problem-id">2017/22</h2>
+                <h2 id="problem-name">Sporifica Virus</h2>
+                <p class="text">in C#</p>
+                <p class="text"></p>
+                <p class="text"><em>by <a style="text-decoration: underline"
+                            href="https://github.com/sponsors/encse">encse</a></em></p>
+            </div>
+
+        </div>
+
+        <div class="content">
+            <div id="notes"><p>Diagnostics indicate that the local <em>grid computing cluster</em> has been contaminated with the <em>Sporifica Virus</em>. The grid computing cluster is a seemingly-infinite two-dimensional grid of compute nodes.  Each node is either <em>clean</em> or <em>infected</em> by the virus.</p>
+<p>Read the <a href="https://adventofcode.com/2017/day/22">full puzzle</a>.</p>
+</div>
+            <div id="code-container"><pre class="hljs language-csharp"><code>using System;
+using System.Collections.Generic;
+
+namespace AdventOfCode.Y2017.Day22;
+
+enum State {
+    Clean,
+    Weakened,
+    Infected,
+    Flagged
+}
+
+[ProblemName("Sporifica Virus")]
+class Solution : Solver {
+
+    public object PartOne(string input) =>
+        Iterate(input, 10000,
+            (state, drow, dcol) =>
+                state switch {
+                    State.Clean => (State.Infected, -dcol, drow),
+                    State.Infected => (State.Clean, dcol, -drow),
+                    _ => throw new ArgumentException()
+                }
+        );
+
+    public object PartTwo(string input) =>
+        Iterate(input, 10000000,
+            (state, drow, dcol) =>
+                state switch {
+                    State.Clean => (State.Weakened, -dcol, drow),
+                    State.Weakened => (State.Infected, drow, dcol),
+                    State.Infected => (State.Flagged, dcol, -drow),
+                    State.Flagged => (State.Clean, -drow, -dcol),
+                    _ => throw new ArgumentException()
+                }
+        );
+
+
+    int Iterate(string input, int iterations, Func<State, int, int, (State State, int irow, int icol)> update) {
+        var lines = input.Split('\n');
+        var crow = lines.Length;
+        var ccol = lines[0].Length;
+        var cells = new Dictionary<(int irow, int icol), State>();
+        for (int irowT = 0; irowT < crow; irowT++) {
+            for (int icolT = 0; icolT < ccol; icolT++) {
+                if (lines[irowT][icolT] == '#') {
+                    cells.Add((irowT, icolT), State.Infected);
+                }
+            }
+        }
+        var (irow, icol) = (crow / 2, ccol / 2);
+        var (drow, dcol) = (-1, 0);
+        var infections = 0;
+        for (int i = 0; i < iterations; i++) {
+            var state = cells.TryGetValue((irow, icol), out var s) ? s : State.Clean;
+
+            (state, drow, dcol) = update(state, drow, dcol);
+
+            if (state == State.Infected) {
+                infections++;
+            }
+            if (state == State.Clean) {
+                cells.Remove((irow, icol));
+            } else {
+                cells[(irow, icol)] = state;
+            }
+            (irow, icol) = (irow + drow, icol + dcol);
+        }
+        return infections;
+    }
+}
+</code></pre></div>
+            <div id="code-location"> <p>Please ☆ my <a href="https://github.com/encse/adventofcode/">repo</a> if you like it!</p></div>
+        </div>
+
+    </div>
+    <div id="bottom">
+        <span>© <span id="currentYear"></span></span>
+        <span><a href="https://adventofcode.com">Advent of Code</a> is a registered trademark in the US</span>
+        <span>Images provided by <a href="https://www.bing.com/images/create">Bing</a> image creator</span>
+    </div>
+ 
+    <script>
+        // This will automatically apply highlight.js to all <pre><code> blocks
+        document.addEventListener('DOMContentLoaded', function () {
+
+        let yearPicker = document.querySelector('#year-picker select')
+        if (yearPicker) {
+            yearPicker.addEventListener('change', function () {
+                window.location = this.value;
+            });
+        }
+
+          // Automatically highlight all <code> blocks inside <pre>
+          hljs.highlightAll();
+        });
+    </script>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P8Y1BWSSF3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-P8Y1BWSSF3');
+    </script>
+</body>
+
+</html>

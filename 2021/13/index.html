@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+    <link href='https://fonts.googleapis.com/css?family=Noto Sans' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/a11y-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js"></script>
+    <title>Advent of Code 2021/13 'Transparent Origami'' in C# by encse</title>
+
+    <head>
+        <meta property="og:title" content="Advent of Code 2021/13 'Transparent Origami' in C# by encse<">
+        <meta property="og:description" content="C# solution to the 'Transparent Origami' Advent of Code problem.">
+        <meta property="og:image" content="https://aoc.csokavar.hu/2021/13//illustration.jpeg">
+        <meta property="og:url" content="https://aoc.csokavar.hu/2021/13/">
+        <meta property="og:type" content="website">
+      </head>
+
+
+    <style>
+        html {
+            --theme-background-color: #2b2b2b;
+            --theme-background-color2: #0d1117;
+        }
+
+        * {
+            box-sizing: border-box;
+            /* text is too big without these in my iphone */
+            -moz-text-size-adjust: none;
+            -webkit-text-size-adjust: none;
+            text-size-adjust: none;
+        }
+
+        @media (min-width:2000px) {
+            html {
+                font-size: 1.9em;
+            }
+        }
+
+        a {
+            color: inherit;
+        }
+
+        body {
+            background: var(--theme-background-color);
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Sans', 'Arial', sans-serif;
+            color: white;
+        }
+
+        .main {
+            width: 100ch;
+            display: flex;
+            flex-direction: column;
+            padding: 1em;
+            margin: 4em auto;
+        }
+
+
+        .header-container {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap-reverse;
+            justify-content: center;
+            gap: 1em;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .header-image {
+            display: flex;
+            min-width: 400px;
+            position: relative;
+            position: absolute;
+            z-index: -1;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .header-image img {
+            object-fit: cover;
+        }
+
+        .header-title {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            text-align: center;
+            text-shadow: 0 0 1px rgba(0, 0, 0, 0.7); 
+            padding: 10em;
+            background-image: radial-gradient(rgba(194, 194, 194, 0.13), rgba(195, 195, 195, 0.25));
+        }
+
+        .header-title h2 {
+            font-size: 400%;
+            margin: 0;
+        }
+
+        .header-title p {
+            font-size: 150%;
+        }
+
+        #top-nav,
+        #bottom {
+            background: var(--theme-background-color2);
+            padding: 1em;
+        }
+
+        #year-picker select {
+            border: none;
+            background: inherit;
+            font-size: inherit;
+            color: inherit;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        #top-nav a,
+        .header-container a {
+            text-decoration: none;
+        }
+
+        #top-nav .current {
+            color: var(--theme-background-color2);
+            background: white;
+        }
+
+        #bottom {
+            background: var(--theme-background-color2);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2em;
+            justify-content: center;
+        }
+
+        #top-nav {
+            display: flex;
+        }
+
+        #top-nav select {
+            margin-left: 1em;
+            margin-right: 1em;
+        }
+
+        #day-picker {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        #day-picker a {
+            margin: 1em;
+        }
+
+        #code-container {
+            overflow: auto;
+            scroll-behavior: smooth;
+        }
+
+        .hljs {
+            background: var(--theme-background-color2);
+        }
+
+        .hljs-ln-numbers {
+            padding-right: 1em !important;
+            text-align: right;
+        }
+
+        .content {
+            line-height: 1.5;
+            margin-top: 2em;
+            /* hyphens: auto; */
+        }
+
+
+        @media (max-width: 1024px) {
+            .main {
+                width: inherit;
+            }
+
+            .content {
+                width: 100%;
+            }
+
+            #top-nav span,
+            #top-nav select {
+                padding: 0.25em;
+            }
+
+            .header-title h2 {
+                font-size: 300%;
+            }
+        }
+
+        @media (orientation: landscape) {
+            main {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+
+<body lang="en-US">
+    <div id="top-nav">
+        <div id="year-picker"><select><option  value="/2015/25/">2015</option><option  value="/2016/25/">2016</option><option  value="/2017/25/">2017</option><option  value="/2018/25/">2018</option><option  value="/2019/25/">2019</option><option  value="/2020/25/">2020</option><option selected="selected" value="/2021/25/">2021</option><option  value="/2022/25/">2022</option><option  value="/2023/25/">2023</option><option  value="/2024/12/">2024</option></select></div>
+        <div id="day-picker"><span><a href="/2021/1">01</a></span><span><a href="/2021/2">02</a></span><span><a href="/2021/3">03</a></span><span><a href="/2021/4">04</a></span><span><a href="/2021/5">05</a></span><span><a href="/2021/6">06</a></span><span><a href="/2021/7">07</a></span><span><a href="/2021/8">08</a></span><span><a href="/2021/9">09</a></span><span><a href="/2021/10">10</a></span><span><a href="/2021/11">11</a></span><span><a href="/2021/12">12</a></span><span class="current"><a href="/2021/13">13</a></span><span><a href="/2021/14">14</a></span><span><a href="/2021/15">15</a></span><span><a href="/2021/16">16</a></span><span><a href="/2021/17">17</a></span><span><a href="/2021/18">18</a></span><span><a href="/2021/19">19</a></span><span><a href="/2021/20">20</a></span><span><a href="/2021/21">21</a></span><span><a href="/2021/22">22</a></span><span><a href="/2021/23">23</a></span><span><a href="/2021/24">24</a></span><span><a href="/2021/25">25</a></span></div>
+    </div>
+    <div class="main">
+        <div class="header-container">
+            <div class="header-image">
+                <img id="cover" width="100%" src="illustration.jpeg" />
+            </div>
+
+            <div class="header-title">
+                <p class="text">Advent of Code</p>
+                <h2 id="problem-id">2021/13</h2>
+                <h2 id="problem-name">Transparent Origami</h2>
+                <p class="text">in C#</p>
+                <p class="text"></p>
+                <p class="text"><em>by <a style="text-decoration: underline"
+                            href="https://github.com/sponsors/encse">encse</a></em></p>
+            </div>
+
+        </div>
+
+        <div class="content">
+            <div id="notes"><p>You reach another volcanically active part of the cave. It would be nice if you could do some kind of thermal imaging so you could tell ahead of time which caves are too hot to safely enter.</p>
+<p>Fortunately, the submarine seems to be equipped with a thermal camera! When you activate it, you are greeted with:</p>
+<p>Read the <a href="https://adventofcode.com/2021/day/13">full puzzle</a>.</p>
+</div>
+            <div id="code-container"><pre class="hljs language-csharp"><code>using System.Collections.Generic;
+using System.Linq;
+
+namespace AdventOfCode.Y2021.Day13;
+
+[ProblemName("Transparent Origami")]
+class Solution : Solver {
+
+    public object PartOne(string input) => GetFolds(input).First().Count();
+    public object PartTwo(string input) => ToString(GetFolds(input).Last()).Ocr();
+
+    IEnumerable<HashSet<Point>> GetFolds(string input) {
+        var blocks = input.Split("\n\n");
+        // parse points into a hashset
+        var points = (
+            from line in blocks[0].Split("\n")
+            let coords = line.Split(",")
+            select new Point(int.Parse(coords[0]), int.Parse(coords[1]))
+        ).ToHashSet();
+
+        // fold line by line, yielding a new hashset
+        foreach (var line in blocks[1].Split("\n")) {
+            var rule = line.Split("=");
+            if (rule[0].EndsWith("x")) {
+                points = FoldX(int.Parse(rule[1]), points);
+            } else {
+                points = FoldY(int.Parse(rule[1]), points);
+            }
+            yield return points;
+        }
+    }
+
+    string ToString(HashSet<Point> d) {
+        var res = "";
+        var height = d.MaxBy(p=>p.y).y;
+        var width = d.MaxBy(p=>p.x).x;
+        for (var y = 0; y <= height; y++) {
+            for (var x = 0; x <= width; x++) {
+                res += d.Contains(new Point(x, y)) ? '#' : ' ';
+            }
+            res += "\n";
+        }
+        return res;
+    }
+
+    HashSet<Point> FoldX(int x, HashSet<Point> d) =>
+        d.Select(p => p.x > x ? p with { x = 2 * x - p.x } : p).ToHashSet();
+
+    HashSet<Point> FoldY(int y, HashSet<Point> d) =>
+        d.Select(p => p.y > y ? p with { y = 2 * y - p.y } : p).ToHashSet();
+
+}
+
+record Point(int x, int y);
+</code></pre></div>
+            <div id="code-location"> <p>Please ☆ my <a href="https://github.com/encse/adventofcode/">repo</a> if you like it!</p></div>
+        </div>
+
+    </div>
+    <div id="bottom">
+        <span>© <span id="currentYear"></span></span>
+        <span><a href="https://adventofcode.com">Advent of Code</a> is a registered trademark in the US</span>
+        <span>Images provided by <a href="https://www.bing.com/images/create">Bing</a> image creator</span>
+    </div>
+ 
+    <script>
+        // This will automatically apply highlight.js to all <pre><code> blocks
+        document.addEventListener('DOMContentLoaded', function () {
+
+        let yearPicker = document.querySelector('#year-picker select')
+        if (yearPicker) {
+            yearPicker.addEventListener('change', function () {
+                window.location = this.value;
+            });
+        }
+
+          // Automatically highlight all <code> blocks inside <pre>
+          hljs.highlightAll();
+        });
+    </script>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P8Y1BWSSF3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-P8Y1BWSSF3');
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+    <link href='https://fonts.googleapis.com/css?family=Noto Sans' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/a11y-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js"></script>
+    <title>Advent of Code 2023/16 'The Floor Will Be Lava'' in C# by encse</title>
+
+    <head>
+        <meta property="og:title" content="Advent of Code 2023/16 'The Floor Will Be Lava' in C# by encse<">
+        <meta property="og:description" content="C# solution to the 'The Floor Will Be Lava' Advent of Code problem.">
+        <meta property="og:image" content="https://aoc.csokavar.hu/2023/16//illustration.jpeg">
+        <meta property="og:url" content="https://aoc.csokavar.hu/2023/16/">
+        <meta property="og:type" content="website">
+      </head>
+
+
+    <style>
+        html {
+            --theme-background-color: #2b2b2b;
+            --theme-background-color2: #0d1117;
+        }
+
+        * {
+            box-sizing: border-box;
+            /* text is too big without these in my iphone */
+            -moz-text-size-adjust: none;
+            -webkit-text-size-adjust: none;
+            text-size-adjust: none;
+        }
+
+        @media (min-width:2000px) {
+            html {
+                font-size: 1.9em;
+            }
+        }
+
+        a {
+            color: inherit;
+        }
+
+        body {
+            background: var(--theme-background-color);
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Sans', 'Arial', sans-serif;
+            color: white;
+        }
+
+        .main {
+            width: 100ch;
+            display: flex;
+            flex-direction: column;
+            padding: 1em;
+            margin: 4em auto;
+        }
+
+
+        .header-container {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap-reverse;
+            justify-content: center;
+            gap: 1em;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .header-image {
+            display: flex;
+            min-width: 400px;
+            position: relative;
+            position: absolute;
+            z-index: -1;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .header-image img {
+            object-fit: cover;
+        }
+
+        .header-title {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            text-align: center;
+            text-shadow: 0 0 1px rgba(0, 0, 0, 0.7); 
+            padding: 10em;
+            background-image: radial-gradient(rgba(194, 194, 194, 0.13), rgba(195, 195, 195, 0.25));
+        }
+
+        .header-title h2 {
+            font-size: 400%;
+            margin: 0;
+        }
+
+        .header-title p {
+            font-size: 150%;
+        }
+
+        #top-nav,
+        #bottom {
+            background: var(--theme-background-color2);
+            padding: 1em;
+        }
+
+        #year-picker select {
+            border: none;
+            background: inherit;
+            font-size: inherit;
+            color: inherit;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        #top-nav a,
+        .header-container a {
+            text-decoration: none;
+        }
+
+        #top-nav .current {
+            color: var(--theme-background-color2);
+            background: white;
+        }
+
+        #bottom {
+            background: var(--theme-background-color2);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2em;
+            justify-content: center;
+        }
+
+        #top-nav {
+            display: flex;
+        }
+
+        #top-nav select {
+            margin-left: 1em;
+            margin-right: 1em;
+        }
+
+        #day-picker {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        #day-picker a {
+            margin: 1em;
+        }
+
+        #code-container {
+            overflow: auto;
+            scroll-behavior: smooth;
+        }
+
+        .hljs {
+            background: var(--theme-background-color2);
+        }
+
+        .hljs-ln-numbers {
+            padding-right: 1em !important;
+            text-align: right;
+        }
+
+        .content {
+            line-height: 1.5;
+            margin-top: 2em;
+            /* hyphens: auto; */
+        }
+
+
+        @media (max-width: 1024px) {
+            .main {
+                width: inherit;
+            }
+
+            .content {
+                width: 100%;
+            }
+
+            #top-nav span,
+            #top-nav select {
+                padding: 0.25em;
+            }
+
+            .header-title h2 {
+                font-size: 300%;
+            }
+        }
+
+        @media (orientation: landscape) {
+            main {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+
+<body lang="en-US">
+    <div id="top-nav">
+        <div id="year-picker"><select><option  value="/2015/25/">2015</option><option  value="/2016/25/">2016</option><option  value="/2017/25/">2017</option><option  value="/2018/25/">2018</option><option  value="/2019/25/">2019</option><option  value="/2020/25/">2020</option><option  value="/2021/25/">2021</option><option  value="/2022/25/">2022</option><option selected="selected" value="/2023/25/">2023</option><option  value="/2024/12/">2024</option></select></div>
+        <div id="day-picker"><span><a href="/2023/1">01</a></span><span><a href="/2023/2">02</a></span><span><a href="/2023/3">03</a></span><span><a href="/2023/4">04</a></span><span><a href="/2023/5">05</a></span><span><a href="/2023/6">06</a></span><span><a href="/2023/7">07</a></span><span><a href="/2023/8">08</a></span><span><a href="/2023/9">09</a></span><span><a href="/2023/10">10</a></span><span><a href="/2023/11">11</a></span><span><a href="/2023/12">12</a></span><span><a href="/2023/13">13</a></span><span><a href="/2023/14">14</a></span><span><a href="/2023/15">15</a></span><span class="current"><a href="/2023/16">16</a></span><span><a href="/2023/17">17</a></span><span><a href="/2023/18">18</a></span><span><a href="/2023/19">19</a></span><span><a href="/2023/20">20</a></span><span><a href="/2023/21">21</a></span><span><a href="/2023/22">22</a></span><span><a href="/2023/23">23</a></span><span><a href="/2023/24">24</a></span><span><a href="/2023/25">25</a></span></div>
+    </div>
+    <div class="main">
+        <div class="header-container">
+            <div class="header-image">
+                <img id="cover" width="100%" src="illustration.jpeg" />
+            </div>
+
+            <div class="header-title">
+                <p class="text">Advent of Code</p>
+                <h2 id="problem-id">2023/16</h2>
+                <h2 id="problem-name">The Floor Will Be Lava</h2>
+                <p class="text">in C#</p>
+                <p class="text"></p>
+                <p class="text"><em>by <a style="text-decoration: underline"
+                            href="https://github.com/sponsors/encse">encse</a></em></p>
+            </div>
+
+        </div>
+
+        <div class="content">
+            <div id="notes"><p>The original problem description is available <a href="https://adventofcode.com/2023/day/16">here</a>.</p>
+<p>I was a bit worried when I saw Part 1, because it let the window open for a complicated optimization
+for Part 2. But it just turned out to be the same thing as Part 1 iterated along the edges of the map. </p>
+<p>I went with the proven strategy and represented the map as a dictionary indexed by complex numbers. It&#39;s
+easy to check the bounds, and changing positions is just complex arithmetic.</p>
+<p>At first I created a long switch case to determine how a beam changes its way when encountering
+mirrors and splitters, but it turns out that in many cases it just continues in the same direction.
+Splitting can be handled in just two lines for the vertical and horizontal case. Finally my choice of 
+the coordinate system makes turning around mirrors very simple: the coordinates flip when the mirror 
+is facing <code>\</code> and just an additional multiplication by -1 is needed for the <code>/</code> case.</p>
+</div>
+            <div id="code-container"><pre class="hljs language-csharp"><code>namespace AdventOfCode.Y2023.Day16;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Numerics;
+using Map = System.Collections.Generic.Dictionary<System.Numerics.Complex, char>;
+using Beam = (System.Numerics.Complex pos, System.Numerics.Complex dir);
+
+[ProblemName("The Floor Will Be Lava")]
+class Solution : Solver {
+
+    static readonly Complex Up = -Complex.ImaginaryOne;
+    static readonly Complex Down = Complex.ImaginaryOne;
+    static readonly Complex Left = -Complex.One;
+    static readonly Complex Right = Complex.One;
+
+    public object PartOne(string input) =>
+        EnergizedCells(ParseMap(input), (Complex.Zero, Right));
+
+    public object PartTwo(string input) {
+        var map = ParseMap(input);
+        return (from beam in StartBeams(map) select EnergizedCells(map, beam)).Max();
+    }
+
+    // follow the beam in the map and return the energized cell count. 
+    int EnergizedCells(Map map, Beam beam) {
+
+        // this is essentially just a flood fill algorithm.
+        var q = new Queue<Beam>([beam]);
+        var seen = new HashSet<Beam>();
+
+        while (q.TryDequeue(out beam)) {
+            seen.Add(beam);
+            foreach (var dir in Exits(map[beam.pos], beam.dir)) {
+                var pos = beam.pos + dir;
+                if (map.ContainsKey(pos) && !seen.Contains((pos, dir))) {
+                    q.Enqueue((pos, dir));
+                }
+            }
+        }
+
+        return seen.Select(beam => beam.pos).Distinct().Count();
+    }
+
+    // go around the edges (top, right, bottom, left order) of the map
+    // and return the inward pointing directions
+    IEnumerable<Beam> StartBeams(Map map) {
+        var br = map.Keys.MaxBy(pos => pos.Imaginary + pos.Real);
+        return [
+            ..from pos in map.Keys where pos.Real == 0 select (pos, Down),
+            ..from pos in map.Keys where pos.Real == br.Real select (pos, Left),
+            ..from pos in map.Keys where pos.Imaginary == br.Imaginary select (pos, Up),
+            ..from pos in map.Keys where pos.Imaginary == 0 select (pos, Right),
+        ];
+    }
+
+    // using a dictionary helps with bounds check (simply containskey):
+    Map ParseMap(string input) {
+        var lines = input.Split('\n');
+        return (
+            from irow in Enumerable.Range(0, lines.Length)
+            from icol in Enumerable.Range(0, lines[0].Length)
+            let cell = lines[irow][icol]
+            let pos = new Complex(icol, irow)
+            select new KeyValuePair<Complex, char>(pos, cell)
+        ).ToDictionary();
+    }
+
+    // the 'exit' direction(s) of the given cell when entered by a beam moving in 'dir'
+    // we have some special cases for mirrors and spliters, the rest keeps the direction
+    Complex[] Exits(char cell, Complex dir) => cell switch {
+        '-' when dir == Up || dir == Down => [Left, Right],
+        '|' when dir == Left || dir == Right => [Up, Down],
+        '/' => [-new Complex(dir.Imaginary, dir.Real)],
+        '\\' => [new Complex(dir.Imaginary, dir.Real)],
+        _ => [dir]
+    };
+}</code></pre></div>
+            <div id="code-location"> <p>Please ☆ my <a href="https://github.com/encse/adventofcode/">repo</a> if you like it!</p></div>
+        </div>
+
+    </div>
+    <div id="bottom">
+        <span>© <span id="currentYear"></span></span>
+        <span><a href="https://adventofcode.com">Advent of Code</a> is a registered trademark in the US</span>
+        <span>Images provided by <a href="https://www.bing.com/images/create">Bing</a> image creator</span>
+    </div>
+ 
+    <script>
+        // This will automatically apply highlight.js to all <pre><code> blocks
+        document.addEventListener('DOMContentLoaded', function () {
+
+        let yearPicker = document.querySelector('#year-picker select')
+        if (yearPicker) {
+            yearPicker.addEventListener('change', function () {
+                window.location = this.value;
+            });
+        }
+
+          // Automatically highlight all <code> blocks inside <pre>
+          hljs.highlightAll();
+        });
+    </script>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P8Y1BWSSF3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-P8Y1BWSSF3');
+    </script>
+</body>
+
+</html>
