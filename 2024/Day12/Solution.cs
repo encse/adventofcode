@@ -39,7 +39,7 @@ class Solution : Solver {
         var res = 0;
         var region = map[pt];
         foreach (var du in new[] { Right, Down, Left, Up}) {
-            // xy 
+            // x.
             if (map.GetValueOrDefault(pt + du) != region) {
                 res++;
             }
@@ -53,15 +53,15 @@ class Solution : Solver {
 
         // rotate du and dv and check for the 4 corner types
         foreach (var (du, dv) in new[] { (Up, Right), (Right, Down), (Down, Left), (Left, Up) }) {
-            //  yy
-            //  xy
+            //  ..
+            //  x.
             if (map.GetValueOrDefault(pt + du) != region && 
                 map.GetValueOrDefault(pt + dv) != region
             ) {
                 res++; 
             }
 
-            //  xy
+            //  x.
             //  xx
             if (map.GetValueOrDefault(pt + du) == region && 
                 map.GetValueOrDefault(pt + dv) == region &&  
