@@ -4,7 +4,7 @@
     <TargetFramework>net9.0</TargetFramework>
     <LangVersion>13</LangVersion>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-    <SelfContained>true</SelfContained>
+    <UseAppHost>false</UseAppHost>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="AngleSharp" Version="0.14.0" />
