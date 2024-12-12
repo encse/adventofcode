@@ -134,6 +134,7 @@ const filledRedirectTemplate = fillTemplate(redirectTemplate, {
 
 fs.writeFileSync(path.join('build', 'index.html'), filledRedirectTemplate);
 
+const currentYear = new Date().getFullYear();
 // Iterate over readme.md files and print filled templates
 for (const { year, day, name, notes, code, illustration } of findReadmes('.')) {
     const filledHtml = fillTemplate(template, {
@@ -142,6 +143,7 @@ for (const { year, day, name, notes, code, illustration } of findReadmes('.')) {
         'problem-name': `${name}`,
         'year-picker': generateYearPicker(year,day, yearToDays),
         'day-picker': generateDayPicker(year, day, yearToDays),
+        'current-year': `${currentYear}`,
         notes,
         code,
     });
