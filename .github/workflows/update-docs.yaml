@@ -17,6 +17,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+   
+      - name: Configure Git
+        run: |
+          # Configure Git
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -31,22 +37,17 @@ jobs:
           ls -la
           node docs/build.js
 
-      - name: Deploy to Docs Branch
+ 
+      - name: Checkout docs repository
+        uses: actions/checkout@v3
+        with:
+          path: distr
+          ref: docs
+
+      - name: Deploy docs
         run: |
-          # Configure Git
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-          # Preserve built files
-          mv build ..
-
-          # Switch to the docs branch
-          git checkout docs
-          git rm -rf . || true
-          cp -r ../build/* .
-          rm -rf ../build
-
-          # Commit and push changes
+          rsync -av --exclude='.git/' --del build/ distr/
+          cd distr
           git add .
           git commit -m "Update docs on $(date)"
           git push --force origin docs
