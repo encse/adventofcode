@@ -123,7 +123,6 @@ for(const year of Object.keys(yearToDays)){
     yearToDays[year] = yearToDays[year].sort((a,b) => a-b);
 }
 
-console.log(yearToDays);
 const lastYear = Math.max(...Object.keys(yearToDays))
 const lastDay = Math.max(...yearToDays[lastYear]);
 
