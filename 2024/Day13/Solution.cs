@@ -21,8 +21,8 @@ class Solution : Solver {
         var i = Det(p, b) / Det(a, b);
         var j = Det(a, p) / Det(a, b);
 
-        // return the prize when an _integer_ solution is found
-        if (a.x * i + b.x * j == p.x && a.y * i + b.y * j == p.y) {
+        // return the prize when a non negative _integer_ solution is found
+        if (i >= 0 && j >= 0 && a.x * i + b.x * j == p.x && a.y * i + b.y * j == p.y) {
             return 3 * i + j;
         } else {
             return 0;
