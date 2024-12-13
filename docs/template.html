@@ -114,6 +114,36 @@
             font-size: 150%;
         }
 
+        #dropdown-label {
+            text-align: center;
+        }
+         #dropdown-label  span {
+            padding: 0;
+            margin: 0 0.25em;
+        }
+
+        .dropdown-toggle {
+            display: none; /* Hide the checkbox */
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            z-index: 1;
+            list-style: none;
+            background-color: #0d1117;
+        }
+
+        .dropdown-content {
+            flex-direction: column;
+            padding: 1em;
+            gap: 0.5em;
+            padding: 1em;
+        }
+        #dropdown-toggle:checked  ~ .dropdown-content {
+            display: flex; 
+        }
+
         #top-nav,
         #bottom {
             background: var(--theme-background-color2);
@@ -196,8 +226,9 @@
                 width: 100%;
             }
 
+
             #top-nav span,
-            #top-nav select {
+            #top-nav .dropdown {
                 padding: 0.25em;
             }
 

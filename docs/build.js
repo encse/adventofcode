@@ -90,14 +90,19 @@ function fillTemplate(template, replacements) {
 }
 
 function generateYearPicker(year, day, yearToDays) {
-    let res = '';
+    let options = '';
     for (let y of Object.keys(yearToDays).sort()){
         let lastDay =  yearToDays[y][yearToDays[y].length-1];
         let target = `/${y}/${lastDay}/`
-        let selected = y == year ? 'selected="selected"' : '';
-        res += `<option ${selected} value="${target}">${y}</option>`
+        options += `<a href="${target}">${y}</a>`
     }
-    return `<select>${res}</select>`;
+
+    return `<nav class="dropdown">
+            <input type="checkbox" id="dropdown-toggle" class="dropdown-toggle">
+            <label id="dropdown-label" for="dropdown-toggle"><span class="current">${year}<span></label>
+            <div class="dropdown-content">${options}</div>
+        </nav>
+     `;
 }
 
 function generateDayPicker(year, day, yearToDays) {
