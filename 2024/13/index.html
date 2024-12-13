@@ -277,7 +277,7 @@
             <div id="notes"><p>Next up: the <em>lobby</em> of a resort on a tropical island. The Historians take a moment to admire the hexagonal floor tiles before spreading out.</p>
 <p>Fortunately, it looks like the resort has a new <a href="https://en.wikipedia.org/wiki/Amusement_arcade">arcade</a>! Maybe you can win some prizes from the <a href="https://en.wikipedia.org/wiki/Claw_machine">claw machines</a>?</p>
 <p>Read the <a href="https://adventofcode.com/2024/day/13">full puzzle</a>.</p>
-<p>We got a math problem today. The movements triggered by buttons A, B and the target position P form a linear equation that we can solve for the two unknowns: the number of button presses. Using math terms, if <em>i</em> and <em>j</em> marks the number of button presses, we are to solve <code>A * i + B * j = P</code>. This is simple enough to do using <a href="https://en.wikipedia.org/wiki/Cramer%27s_rule">Cramer&#39;s rule</a>, especially with two dimensional vectors. In this case the determinats can be computed with a simple cross product. We should not forget about the special cases: A and B can be parallel (didn&#39;t occur in my input), and the solution needs to be integer for <em>i</em> and <em>j</em>. </p>
+<p>We got a math problem today. The movements triggered by buttons A, B and the target position P form a linear equation that we can solve for the two unknowns: the number of button presses. Using math terms, if <em>i</em> and <em>j</em> marks the number of button presses, we are to solve <code>A * i + B * j = P</code>. This is simple enough to do using <a href="https://en.wikipedia.org/wiki/Cramer%27s_rule">Cramer&#39;s rule</a>, especially with two dimensional vectors. In this case the determinats can be computed with a simple cross product. We should not forget about the special cases: A and B can be parallel (didn&#39;t occur in my input), and the solution needs to be non negative integer for <em>i</em> and <em>j</em>.</p>
 </div>
             <div id="code-container"><pre class="hljs language-csharp"><code>namespace AdventOfCode.Y2024.Day13;
 
@@ -302,8 +302,8 @@ class Solution : Solver {
         var i = Det(p, b) / Det(a, b);
         var j = Det(a, p) / Det(a, b);
 
-        // return the prize when an _integer_ solution is found
-        if (a.x * i + b.x * j == p.x && a.y * i + b.y * j == p.y) {
+        // return the prize when a non negative _integer_ solution is found
+        if (i >= 0 && j >= 0 && a.x * i + b.x * j == p.x && a.y * i + b.y * j == p.y) {
             return 3 * i + j;
         } else {
             return 0;
