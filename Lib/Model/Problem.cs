@@ -31,7 +31,7 @@ class Problem {
     static string ParseMdIntro(IDocument document, int paragraphs, string url) {
         var article = ParseMd(document).Split("\n\n").ToList(); 
         article = article.Take(Math.Min(paragraphs, article.Count)).ToList();
-        article.Add($"Read the [full puzzle]({url}).\n");
+        article.Add($"_Visit the website for the full story and [full puzzle]({url}) description._\n");
         return string.Join("\n\n", article);
     }
     

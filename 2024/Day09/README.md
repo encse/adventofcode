@@ -3,7 +3,7 @@ Another push of the button leaves you in the familiar hallways of some friendly 
 
 While The Historians quickly figure out how to pilot these things, you notice an amphipod in the corner struggling with his computer. He's trying to make more contiguous free space by compacting all of the files, but his program isn't working; you offer to help.
 
-Read the [full puzzle](https://adventofcode.com/2024/day/9).
+_Visit the website for the full story and [puzzle](https://adventofcode.com/2024/day/9) description._
 
 I'm taking a break from using LINQ today and turning my attention to the low-level world of linked lists instead. I discovered a way to express both paths using a single `CompactFs` function with a `fragmentsEnabled` parameter. `CompactFs` operates with two pointers, `i` and `j`, which define the scan range we’re working on. `i` starts at the beginning of the disk, while `j` starts at the end and moves backward. When `i` points to a free space and `j` points to a used space, we call `RelocateBlock`, which moves `j` (or parts of `j`, depending on whether fragmentation is enabled) to a free space found after `i`.
 

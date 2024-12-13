@@ -3,7 +3,7 @@ The Historians use their fancy __device__ again, this time to whisk you all away
 
 You still have to be careful of time paradoxes, and so it will be important to avoid anyone from 1518 while The Historians search for the Chief. Unfortunately, a single <em>guard</em> is patrolling this part of the lab.
 
-Read the [full puzzle](https://adventofcode.com/2024/day/6).
+_Visit the website for the full story and [puzzle](https://adventofcode.com/2024/day/6) description._
 
 This has been a straightforward implementation challenge. I wrote a `Walk` function that tracks the guard's movement and returns the visited locations. It also determines whether the guard enters a loop or exits the grid. `Part1` utilizes only the location information, while `Part2` adds blockers along the guard's path and counts the instances where he starts walking in a cycle.
 

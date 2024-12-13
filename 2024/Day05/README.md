@@ -5,7 +5,7 @@ The North Pole printing department is busier than ever this close to Christmas, 
 
 The Elf must recognize you, because they waste no time explaining that the new <em>sleigh launch safety manual</em> updates won't print correctly. Failure to update the safety manuals would be dire indeed, so you offer your services.
 
-Read the [full puzzle](https://adventofcode.com/2024/day/5).
+_Visit the website for the full story and [puzzle](https://adventofcode.com/2024/day/5) description._
 
 The constraints in both my input and the provided sample input define a total ordering of the pages, which I leveraged in my solution. (*) I implemented a custom parser that returns the list of updates to be printed and a page comparison function. That's all we need. In `Part1`, we check which updates are in the correct order, while in `Part2`, we handle the remaining updates by applying .NET's built-in `OrderBy` function with our custom comparer.
 

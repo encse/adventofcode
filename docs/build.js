@@ -99,7 +99,7 @@ function generateYearPicker(year, day, yearToDays) {
 
     return `<nav class="dropdown">
             <input type="checkbox" id="dropdown-toggle" class="dropdown-toggle">
-            <label id="dropdown-label" for="dropdown-toggle"><span class="current">${year}<span></label>
+            <span class="current"><label id="dropdown-label" for="dropdown-toggle">${year}</label></span>
             <div class="dropdown-content">${options}</div>
         </nav>
      `;
@@ -134,7 +134,7 @@ const lastDay = Math.max(...yearToDays[lastYear]);
 copyDirectory('docs/static', 'build');
 
 const filledRedirectTemplate = fillTemplate(redirectTemplate, {
-    'default-page-url': `https://aoc.csokavar.hu/${lastYear}/${lastDay}/`,
+    'default-page': `/${lastYear}/${lastDay}/`,
 });
 
 fs.writeFileSync(path.join('build', 'index.html'), filledRedirectTemplate);

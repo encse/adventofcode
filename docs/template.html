@@ -116,10 +116,7 @@
 
         #dropdown-label {
             text-align: center;
-        }
-         #dropdown-label  span {
-            padding: 0;
-            margin: 0 0.25em;
+            margin: 1em;
         }
 
         .dropdown-toggle {
@@ -136,10 +133,13 @@
 
         .dropdown-content {
             flex-direction: column;
-            padding: 1em;
-            gap: 0.5em;
-            padding: 1em;
+
         }
+
+        .dropdown-content a {
+            margin: 0.5em 1em;
+        }
+
         #dropdown-toggle:checked  ~ .dropdown-content {
             display: flex; 
         }
@@ -228,7 +228,8 @@
 
 
             #top-nav span,
-            #top-nav .dropdown {
+            #top-nav .dropdown 
+            #top-nav .dropdown-content {
                 padding: 0.25em;
             }
 

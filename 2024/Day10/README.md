@@ -3,7 +3,7 @@ You all arrive at a _Lava Production Facility_ on a floating island in the sky. 
 
 The reindeer is holding a book titled "Lava Island Hiking Guide". However, when you open the book, you discover that most of it seems to have been scorched by lava! As you're about to ask how you can help, the reindeer brings you a blank [topographic map](https://en.wikipedia.org/wiki/Topographic_map) of the surrounding area (your puzzle input) and looks up at you excitedly.
 
-Read the [full puzzle](https://adventofcode.com/2024/day/10).
+_Visit the website for the full story and [puzzle](https://adventofcode.com/2024/day/10) description._
 
 Today's problem is surprisingly straightforward compared to yesterday's pointer juggling. We finally get to use our favorite queue data structure to implement a flood fill. I saw this coming...  
 

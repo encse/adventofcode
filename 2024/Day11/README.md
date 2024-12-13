@@ -3,7 +3,7 @@ The ancient civilization on _Pluto_ was known for its ability to manipulate spac
 
 At first glance, they seem like normal stones: they're arranged in a perfectly <em>straight line</em>, and each stone has a <em>number</em> engraved on it.
 
-Read the [full puzzle](https://adventofcode.com/2024/day/11).
+_Visit the website for the full story and [puzzle](https://adventofcode.com/2024/day/11) description._
 
 Today is all about dynamic programming and cached calculations. Our goal is to determine the number of stones based on specific rules derived from the numbers engraved on them. Without careful optimization, this process can quickly spiral out of control.
 

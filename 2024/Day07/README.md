@@ -3,7 +3,7 @@ The Historians take you to a familiar _rope bridge_ over a river in the middle o
 
 When you go to cross the bridge, you notice a group of engineers trying to repair it. (Apparently, it breaks pretty frequently.) You won't be able to cross until it's fixed.
 
-Read the [full puzzle](https://adventofcode.com/2024/day/7).
+_Visit the website for the full story and [puzzle](https://adventofcode.com/2024/day/7) description._
 
 It's time to pull out the recursion guns. I introduced a checker logic that goes through the numbers in one line of input and tries all possible operators on the accumulated result to reach the target.
 

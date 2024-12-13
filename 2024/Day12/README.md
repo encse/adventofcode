@@ -3,7 +3,7 @@ Why not search for the Chief Historian near the _gardener_ and his _massive farm
 
 You're about to settle near a complex arrangement of garden plots when some Elves ask if you can lend a hand. They'd like to set up fences around each region of garden plots, but they can't figure out how much fence they need to order or how much it will cost. They hand you a map (your puzzle input) of the garden plots.
 
-Read the [full puzzle](https://adventofcode.com/2024/day/12).
+_Visit the website for the full story and [puzzle](https://adventofcode.com/2024/day/12) description._
 
 One can sense that the difficulty has ramped up today with a more complex problem involving area and perimeter calculations. 
 
