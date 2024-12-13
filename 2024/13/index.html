@@ -15,13 +15,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/a11y-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js"></script>
-    <title>Advent of Code 2017/6 'Memory Reallocation'' in C# by encse</title>
+    <title>Advent of Code 2024/13 'Claw Contraption'' in C# by encse</title>
 
     <head>
-        <meta property="og:title" content="Advent of Code 2017/6 'Memory Reallocation' in C# by encse<">
-        <meta property="og:description" content="C# solution to the 'Memory Reallocation' Advent of Code problem.">
-        <meta property="og:image" content="https://aoc.csokavar.hu/2017/6//illustration.jpeg">
-        <meta property="og:url" content="https://aoc.csokavar.hu/2017/6/">
+        <meta property="og:title" content="Advent of Code 2024/13 'Claw Contraption' in C# by encse<">
+        <meta property="og:description" content="C# solution to the 'Claw Contraption' Advent of Code problem.">
+        <meta property="og:image" content="https://aoc.csokavar.hu/2024/13//illustration.jpeg">
+        <meta property="og:url" content="https://aoc.csokavar.hu/2024/13/">
         <meta property="og:type" content="website">
       </head>
 
@@ -216,8 +216,8 @@
 
 <body lang="en-US">
     <div id="top-nav">
-        <div id="year-picker"><select><option  value="/2015/25/">2015</option><option  value="/2016/25/">2016</option><option selected="selected" value="/2017/25/">2017</option><option  value="/2018/25/">2018</option><option  value="/2019/25/">2019</option><option  value="/2020/25/">2020</option><option  value="/2021/25/">2021</option><option  value="/2022/25/">2022</option><option  value="/2023/25/">2023</option><option  value="/2024/13/">2024</option></select></div>
-        <div id="day-picker"><span><a href="/2017/1">01</a></span><span><a href="/2017/2">02</a></span><span><a href="/2017/3">03</a></span><span><a href="/2017/4">04</a></span><span><a href="/2017/5">05</a></span><span class="current"><a href="/2017/6">06</a></span><span><a href="/2017/7">07</a></span><span><a href="/2017/8">08</a></span><span><a href="/2017/9">09</a></span><span><a href="/2017/10">10</a></span><span><a href="/2017/11">11</a></span><span><a href="/2017/12">12</a></span><span><a href="/2017/13">13</a></span><span><a href="/2017/14">14</a></span><span><a href="/2017/15">15</a></span><span><a href="/2017/16">16</a></span><span><a href="/2017/17">17</a></span><span><a href="/2017/18">18</a></span><span><a href="/2017/19">19</a></span><span><a href="/2017/20">20</a></span><span><a href="/2017/21">21</a></span><span><a href="/2017/22">22</a></span><span><a href="/2017/23">23</a></span><span><a href="/2017/24">24</a></span><span><a href="/2017/25">25</a></span></div>
+        <div id="year-picker"><select><option  value="/2015/25/">2015</option><option  value="/2016/25/">2016</option><option  value="/2017/25/">2017</option><option  value="/2018/25/">2018</option><option  value="/2019/25/">2019</option><option  value="/2020/25/">2020</option><option  value="/2021/25/">2021</option><option  value="/2022/25/">2022</option><option  value="/2023/25/">2023</option><option selected="selected" value="/2024/13/">2024</option></select></div>
+        <div id="day-picker"><span><a href="/2024/1">01</a></span><span><a href="/2024/2">02</a></span><span><a href="/2024/3">03</a></span><span><a href="/2024/4">04</a></span><span><a href="/2024/5">05</a></span><span><a href="/2024/6">06</a></span><span><a href="/2024/7">07</a></span><span><a href="/2024/8">08</a></span><span><a href="/2024/9">09</a></span><span><a href="/2024/10">10</a></span><span><a href="/2024/11">11</a></span><span><a href="/2024/12">12</a></span><span class="current"><a href="/2024/13">13</a></span></div>
     </div>
     <div class="main">
         <div class="header-container">
@@ -227,8 +227,8 @@
 
             <div class="header-title">
                 <p class="text">Advent of Code</p>
-                <h2 id="problem-id">2017/6</h2>
-                <h2 id="problem-name">Memory Reallocation</h2>
+                <h2 id="problem-id">2024/13</h2>
+                <h2 id="problem-name">Claw Contraption</h2>
                 <p class="text">in C#</p>
                 <p class="text"></p>
                 <p class="text"><em>by <a style="text-decoration: underline"
@@ -238,54 +238,58 @@
         </div>
 
         <div class="content">
-            <div id="notes"><p>A debugger program here is having an issue: it is trying to repair a memory reallocation routine, but it keeps getting stuck in an infinite loop.</p>
-<p>In this area, there are sixteen memory banks; each memory bank can hold any number of <em>blocks</em>. The goal of the reallocation routine is to balance the blocks between the memory banks.</p>
-<p>Read the <a href="https://adventofcode.com/2017/day/6">full puzzle</a>.</p>
+            <div id="notes"><p>Next up: the <em>lobby</em> of a resort on a tropical island. The Historians take a moment to admire the hexagonal floor tiles before spreading out.</p>
+<p>Fortunately, it looks like the resort has a new <a href="https://en.wikipedia.org/wiki/Amusement_arcade">arcade</a>! Maybe you can win some prizes from the <a href="https://en.wikipedia.org/wiki/Claw_machine">claw machines</a>?</p>
+<p>Read the <a href="https://adventofcode.com/2024/day/13">full puzzle</a>.</p>
+<p>We got a math problem today. The movements triggered by buttons A, B and the target position P form a linear equation that we can solve for the two unknowns: the number of button presses. Using math terms, if <em>i</em> and <em>j</em> marks the number of button presses, we are to solve <code>A * i + B * j = P</code>. This is simple enough to do using <a href="https://en.wikipedia.org/wiki/Cramer%27s_rule">Cramer&#39;s rule</a>, especially with two dimensional vectors. In this case the determinats can be computed with a simple cross product. We should not forget about the special cases: A and B can be parallel (didn&#39;t occur in my input), and the solution needs to be integer for <em>i</em> and <em>j</em>. </p>
 </div>
-            <div id="code-container"><pre class="hljs language-csharp"><code>﻿using System.Collections.Generic;
+            <div id="code-container"><pre class="hljs language-csharp"><code>namespace AdventOfCode.Y2024.Day13;
+
+using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
-namespace AdventOfCode.Y2017.Day06;
+using Machine = (Vec2 a, Vec2 b, Vec2 p);
 
-[ProblemName("Memory Reallocation")]
+record struct Vec2(long x, long y);
+
+[ProblemName("Claw Contraption")]
 class Solution : Solver {
 
-    public object PartOne(string input) => GetStepCount(Parse(input));
+    public object PartOne(string input) => Parse(input).Sum(GetPrize);
+    public object PartTwo(string input) => Parse(input, shift: 10000000000000).Sum(GetPrize);
 
-    public object PartTwo(string input) {
-        var numbers = Parse(input);
-        GetStepCount(numbers);
-        return GetStepCount(numbers);
-    }
+    long GetPrize(Machine m) {
+        var (a, b, p) = m;
 
-    List<int> Parse(string input) => input.Split('\t').Select(int.Parse).ToList();
+        // solve a * i + b * j = p for i and j using Kramer's rule
+        var i = Det(p, b) / Det(a, b);
+        var j = Det(a, p) / Det(a, b);
 
-    int GetStepCount(List<int> numbers) {
-        var stepCount = 0;
-        var seen = new HashSet<string>();
-        while (true) {
-            var key = string.Join(";", numbers.Select(x => x.ToString()));
-            if (seen.Contains(key)) {
-                return stepCount;
-            }
-            seen.Add(key);
-            Redistribute(numbers);
-            stepCount++;
+        // return the prize when an _integer_ solution is found
+        if (a.x * i + b.x * j == p.x && a.y * i + b.y * j == p.y) {
+            return 3 * i + j;
+        } else {
+            return 0;
         }
     }
 
-    void Redistribute(List<int> numbers) {
-        var max = numbers.Max();
-        var i = numbers.IndexOf(max);
-        numbers[i] = 0;
-        while (max > 0) {
-            i++;
-            numbers[i % numbers.Count]++;
-            max--;
+    long Det(Vec2 a, Vec2 b) => a.x * b.y - a.y * b.x;
+
+    IEnumerable<Machine> Parse(string input, long shift=0) {
+        var blocks = input.Split("\n\n");
+        foreach (var block in blocks) {
+            var nums =
+                Regex.Matches(block, @"\d+", RegexOptions.Multiline)
+                    .Select(m => int.Parse(m.Value))
+                    .Chunk(2).Select(p => new Vec2(p[0], p[1]))
+                    .ToArray();
+
+            nums[2] = new Vec2(nums[2].x + shift, nums[2].y + shift);
+            yield return (nums[0], nums[1], nums[2]);
         }
     }
-}
-</code></pre></div>
+}</code></pre></div>
             <div id="code-location"> <p>Please ☆ my <a href="https://github.com/encse/adventofcode/">repo</a> if you like it!</p></div>
         </div>
 
