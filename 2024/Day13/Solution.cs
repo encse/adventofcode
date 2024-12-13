@@ -3,7 +3,6 @@ namespace AdventOfCode.Y2024.Day13;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-
 using Machine = (Vec2 a, Vec2 b, Vec2 p);
 
 record struct Vec2(long x, long y);
