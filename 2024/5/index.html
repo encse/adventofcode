@@ -116,10 +116,7 @@
 
         #dropdown-label {
             text-align: center;
-        }
-         #dropdown-label  span {
-            padding: 0;
-            margin: 0 0.25em;
+            margin: 1em;
         }
 
         .dropdown-toggle {
@@ -136,10 +133,13 @@
 
         .dropdown-content {
             flex-direction: column;
-            padding: 1em;
-            gap: 0.5em;
-            padding: 1em;
+
         }
+
+        .dropdown-content a {
+            margin: 0.5em 1em;
+        }
+
         #dropdown-toggle:checked  ~ .dropdown-content {
             display: flex; 
         }
@@ -228,7 +228,8 @@
 
 
             #top-nav span,
-            #top-nav .dropdown {
+            #top-nav .dropdown 
+            #top-nav .dropdown-content {
                 padding: 0.25em;
             }
 
@@ -249,7 +250,7 @@
     <div id="top-nav">
         <div id="year-picker"><nav class="dropdown">
             <input type="checkbox" id="dropdown-toggle" class="dropdown-toggle">
-            <label id="dropdown-label" for="dropdown-toggle"><span class="current">2024<span></label>
+            <span class="current"><label id="dropdown-label" for="dropdown-toggle">2024</label></span>
             <div class="dropdown-content"><a href="/2015/25/">2015</a><a href="/2016/25/">2016</a><a href="/2017/25/">2017</a><a href="/2018/25/">2018</a><a href="/2019/25/">2019</a><a href="/2020/25/">2020</a><a href="/2021/25/">2021</a><a href="/2022/25/">2022</a><a href="/2023/25/">2023</a><a href="/2024/13/">2024</a></div>
         </nav>
      </div>
@@ -277,7 +278,7 @@
             <div id="notes"><p>Satisfied with their search on Ceres, the squadron of scholars suggests subsequently scanning the stationery stacks of sub-basement 17.</p>
 <p>The North Pole printing department is busier than ever this close to Christmas, and while The Historians continue their search of this historically significant facility, an Elf operating a <strong>very familiar printer</strong> beckons you over.</p>
 <p>The Elf must recognize you, because they waste no time explaining that the new <em>sleigh launch safety manual</em> updates won&#39;t print correctly. Failure to update the safety manuals would be dire indeed, so you offer your services.</p>
-<p>Read the <a href="https://adventofcode.com/2024/day/5">full puzzle</a>.</p>
+<p><em>Visit the website for the full story and <a href="https://adventofcode.com/2024/day/5">puzzle</a> description.</em></p>
 <p>The constraints in both my input and the provided sample input define a total ordering of the pages, which I leveraged in my solution. (*) I implemented a custom parser that returns the list of updates to be printed and a page comparison function. That&#39;s all we need. In <code>Part1</code>, we check which updates are in the correct order, while in <code>Part2</code>, we handle the remaining updates by applying .NET&#39;s built-in <code>OrderBy</code> function with our custom comparer.</p>
 <p>(*) others say that the ordering is not total, in fact there are loops in it. But it was not an issue for the update lines we need to sort. So the thing below works only because of the Elf magic of X-mas.</p>
 </div>

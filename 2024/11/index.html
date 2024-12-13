@@ -116,10 +116,7 @@
 
         #dropdown-label {
             text-align: center;
-        }
-         #dropdown-label  span {
-            padding: 0;
-            margin: 0 0.25em;
+            margin: 1em;
         }
 
         .dropdown-toggle {
@@ -136,10 +133,13 @@
 
         .dropdown-content {
             flex-direction: column;
-            padding: 1em;
-            gap: 0.5em;
-            padding: 1em;
+
         }
+
+        .dropdown-content a {
+            margin: 0.5em 1em;
+        }
+
         #dropdown-toggle:checked  ~ .dropdown-content {
             display: flex; 
         }
@@ -228,7 +228,8 @@
 
 
             #top-nav span,
-            #top-nav .dropdown {
+            #top-nav .dropdown 
+            #top-nav .dropdown-content {
                 padding: 0.25em;
             }
 
@@ -249,7 +250,7 @@
     <div id="top-nav">
         <div id="year-picker"><nav class="dropdown">
             <input type="checkbox" id="dropdown-toggle" class="dropdown-toggle">
-            <label id="dropdown-label" for="dropdown-toggle"><span class="current">2024<span></label>
+            <span class="current"><label id="dropdown-label" for="dropdown-toggle">2024</label></span>
             <div class="dropdown-content"><a href="/2015/25/">2015</a><a href="/2016/25/">2016</a><a href="/2017/25/">2017</a><a href="/2018/25/">2018</a><a href="/2019/25/">2019</a><a href="/2020/25/">2020</a><a href="/2021/25/">2021</a><a href="/2022/25/">2022</a><a href="/2023/25/">2023</a><a href="/2024/13/">2024</a></div>
         </nav>
      </div>
@@ -276,7 +277,7 @@
         <div class="content">
             <div id="notes"><p>The ancient civilization on <em>Pluto</em> was known for its ability to manipulate spacetime, and while The Historians explore their infinite corridors, you&#39;ve noticed a strange set of physics-defying stones.</p>
 <p>At first glance, they seem like normal stones: they&#39;re arranged in a perfectly <em>straight line</em>, and each stone has a <em>number</em> engraved on it.</p>
-<p>Read the <a href="https://adventofcode.com/2024/day/11">full puzzle</a>.</p>
+<p><em>Visit the website for the full story and <a href="https://adventofcode.com/2024/day/11">puzzle</a> description.</em></p>
 <p>Today is all about dynamic programming and cached calculations. Our goal is to determine the number of stones based on specific rules derived from the numbers engraved on them. Without careful optimization, this process can quickly spiral out of control.</p>
 <p>To address this, I encoded the stone generation logic inside the <code>Eval</code> function and added a cache to prevent exponential growth.</p>
 <p>I discovered the <code>ConcurrentDictionary</code> class, which includes a convenient <code>GetOrAdd</code> method. While this functionality is missing in regular <code>Dictionary</code> variants, it allows the caching logic to be neatly encapsulated in a single place.  I decided to &quot;abuse&quot; it a bit here, even though my solution doesn’t involve any concurrency at all.</p>
