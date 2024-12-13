@@ -262,7 +262,7 @@ class Solution : Solver {
     long GetPrize(Machine m) {
         var (a, b, p) = m;
 
-        // solve a * i + b * j = p for i and j using Kramer's rule
+        // solve a * i + b * j = p for i and j using Cramer's rule
         var i = Det(p, b) / Det(a, b);
         var j = Det(a, p) / Det(a, b);
 
