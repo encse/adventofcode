@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+    <link href='https://fonts.googleapis.com/css?family=Noto Sans' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/a11y-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js"></script>
+    <title>Advent of Code 2024/12 'Garden Groups'' in C# by encse</title>
+
+    <head>
+        <meta property="og:title" content="Advent of Code 2024/12 'Garden Groups' in C# by encse<">
+        <meta property="og:description" content="C# solution to the 'Garden Groups' Advent of Code problem.">
+        <meta property="og:image" content="https://aoc.csokavar.hu//2024/day/12/illustration.jpeg">
+        <meta property="og:url" content="https://aoc.csokavar.hu//2024/day/12">
+        <meta property="og:type" content="website">
+      </head>
+
+
+    <style>
+        html {
+            --theme-background-color: #2b2b2b;
+            --theme-background-color2: #0d1117;
+        }
+
+        * {
+            box-sizing: border-box;
+            /* text is too big without these in my iphone */
+            -moz-text-size-adjust: none;
+            -webkit-text-size-adjust: none;
+            text-size-adjust: none;
+        }
+
+        @media (min-width:2000px) {
+            html {
+                font-size: 1.9em;
+            }
+        }
+
+        a {
+            color: inherit;
+        }
+
+        body {
+            background: var(--theme-background-color);
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Sans', 'Arial', sans-serif;
+            color: white;
+        }
+
+        .main {
+            width: 100ch;
+            display: flex;
+            flex-direction: column;
+            padding: 1em;
+            margin: 4em auto;
+        }
+
+
+        .header-container {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap-reverse;
+            justify-content: center;
+            gap: 1em;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .header-image {
+            display: flex;
+            min-width: 400px;
+            position: relative;
+            position: absolute;
+            z-index: -1;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .header-image img {
+            object-fit: cover;
+        }
+
+        .header-title {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            text-align: center;
+            text-shadow: 0 0 1px rgba(0, 0, 0, 0.7); 
+            padding: 10em;
+            background-image: radial-gradient(rgba(194, 194, 194, 0.13), rgba(195, 195, 195, 0.25));
+        }
+
+        .header-title h2 {
+            font-size: 400%;
+            margin: 0;
+        }
+
+        .header-title p {
+            font-size: 150%;
+        }
+
+        #dropdown-label {
+            text-align: center;
+            margin: 1em;
+        }
+
+        .dropdown-toggle {
+            display: none; /* Hide the checkbox */
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            z-index: 1;
+            list-style: none;
+            background-color: #0d1117;
+        }
+
+        .dropdown-content {
+            flex-direction: column;
+
+        }
+
+        .dropdown-content a {
+            margin: 0.5em 1em;
+        }
+
+        #dropdown-toggle:checked  ~ .dropdown-content {
+            display: flex; 
+        }
+
+        #top-nav,
+        #bottom {
+            background: var(--theme-background-color2);
+            padding: 1em;
+        }
+
+        #year-picker select {
+            border: none;
+            background: inherit;
+            font-size: inherit;
+            color: inherit;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        #top-nav a,
+        .header-container a {
+            text-decoration: none;
+        }
+
+        #top-nav .current {
+            color: var(--theme-background-color2);
+            background: white;
+        }
+
+        #bottom {
+            background: var(--theme-background-color2);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2em;
+            justify-content: center;
+        }
+
+        #top-nav {
+            display: flex;
+        }
+
+        #top-nav select {
+            margin-left: 1em;
+            margin-right: 1em;
+        }
+
+        #day-picker {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        #day-picker a {
+            margin: 1em;
+        }
+
+        #code-container {
+            overflow: auto;
+            scroll-behavior: smooth;
+        }
+
+        .hljs {
+            background: var(--theme-background-color2);
+        }
+
+        .hljs-ln-numbers {
+            padding-right: 1em !important;
+            text-align: right;
+        }
+
+        .content {
+            line-height: 1.5;
+            margin-top: 2em;
+            /* hyphens: auto; */
+        }
+
+
+        @media (max-width: 1024px) {
+            .main {
+                width: inherit;
+            }
+
+            .content {
+                width: 100%;
+            }
+
+
+            #top-nav span,
+            #top-nav .dropdown 
+            #top-nav .dropdown-content {
+                padding: 0.25em;
+            }
+
+            .header-title h2 {
+                font-size: 300%;
+            }
+        }
+
+        @media (orientation: landscape) {
+            main {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+
+<body lang="en-US">
+    <div id="top-nav">
+        <div id="year-picker"><nav class="dropdown">
+            <input type="checkbox" id="dropdown-toggle" class="dropdown-toggle">
+            <span class="current"><label id="dropdown-label" for="dropdown-toggle">2024</label></span>
+            <div class="dropdown-content"><a href="/2015/day/25">2015</a><a href="/2016/day/25">2016</a><a href="/2017/day/25">2017</a><a href="/2018/day/25">2018</a><a href="/2019/day/25">2019</a><a href="/2020/day/25">2020</a><a href="/2021/day/25">2021</a><a href="/2022/day/25">2022</a><a href="/2023/day/25">2023</a><a href="/2024/day/13">2024</a></div>
+        </nav>
+     </div>
+        <div id="day-picker"><span><a href="/2024/day/1">01</a></span><span><a href="/2024/day/2">02</a></span><span><a href="/2024/day/3">03</a></span><span><a href="/2024/day/4">04</a></span><span><a href="/2024/day/5">05</a></span><span><a href="/2024/day/6">06</a></span><span><a href="/2024/day/7">07</a></span><span><a href="/2024/day/8">08</a></span><span><a href="/2024/day/9">09</a></span><span><a href="/2024/day/10">10</a></span><span><a href="/2024/day/11">11</a></span><span class="current"><a href="/2024/day/12">12</a></span><span><a href="/2024/day/13">13</a></span></div>
+    </div>
+    <div class="main">
+        <div class="header-container">
+            <div class="header-image">
+                <img id="cover" width="100%" src="illustration.jpeg" />
+            </div>
+
+            <div class="header-title">
+                <p class="text">Advent of Code</p>
+                <h2 id="problem-id">2024/12</h2>
+                <h2 id="problem-name">Garden Groups</h2>
+                <p class="text">in C#</p>
+                <p class="text"></p>
+                <p class="text"><em>by <a style="text-decoration: underline"
+                            href="https://github.com/sponsors/encse">encse</a></em></p>
+            </div>
+
+        </div>
+
+        <div class="content">
+            <div id="notes"><p>Why not search for the Chief Historian near the <em>gardener</em> and his <em>massive farm</em>? There&#39;s plenty of food, so The Historians grab something to eat while they search.</p>
+<p>You&#39;re about to settle near a complex arrangement of garden plots when some Elves ask if you can lend a hand. They&#39;d like to set up fences around each region of garden plots, but they can&#39;t figure out how much fence they need to order or how much it will cost. They hand you a map (your puzzle input) of the garden plots.</p>
+<p><em>Visit the website for the full story and <a href="https://adventofcode.com/2024/day/12">puzzle</a> description.</em></p>
+<p>One can sense that the difficulty has ramped up today with a more complex problem involving area and perimeter calculations. </p>
+<p>First we determine the connected components (regions) of plants of the same type. This is done by picking a position of the 
+garden and applying a standard flood-fill algorithm to it. The result is a <em>region</em>. As we process each region, we carefully 
+remove all affected positions and then pick an untouched position to repeat the process. In a few iterations, the entire 
+garden is associated with the correct regions. The size of the regions corresponds to the <em>area</em>  in question. This logic 
+is implemented in the <code>GetRegions</code> function below.</p>
+<p>The second part of the problem, however, is more intriguing: how do we calculate the lengths of the fences? In part 1, this is 
+relatively simple because we just iterate through each region and count the neighboring cells that belong to a different regions. 
+This tells how many fence is needed. Unfortunately, this logic doesn&#39;t work for part 2...</p>
+<p>I attempted to implement a &quot;walk-around&quot; approach, which involves finding a fence segment and tracing it like a line-following 
+robot while counting the turns. The challenge with this approach is that some regions have holes, that require fences as well 
+and I didnt want to implement hole finding.</p>
+<p>Later realized that it is probably more straightforward to collect the fence segments along straight lines scanning the garden 
+from top to bottom an right to left. This is how I solved the problem.</p>
+<p>Finally went to reddit and read the hint: the number of segments equal to the number of corners... In other words difference
+between part 1 and 2 is very small. In part 1 we are building an edge detector which becomes a corner detector in part 2. I changed
+my implementation to that. </p>
+<p>This concludes our day 12. I&#39;ll take an extra ⭐ for learning something new again.</p>
+</div>
+            <div id="code-container"><pre class="hljs language-csharp"><code>namespace AdventOfCode.Y2024.Day12;
+
+using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
+using System.Numerics;
+
+using Region = System.Collections.Generic.HashSet<System.Numerics.Complex>;
+
+[ProblemName("Garden Groups")]
+class Solution : Solver {
+
+    Complex Up = Complex.ImaginaryOne;
+    Complex Down = -Complex.ImaginaryOne;
+    Complex Left = -1;
+    Complex Right = 1;
+
+    public object PartOne(string input) => CalculateFencePrice(input, FindEdges);
+
+    public object PartTwo(string input) => CalculateFencePrice(input, FindCorners);
+
+    int CalculateFencePrice(string input, MeasurePerimeter measure){
+        var regions = GetRegions(input);
+        var res = 0;
+        foreach (var region in regions.Values.Distinct()) {
+            var perimeter = 0;
+            foreach (var pt in region) {
+                perimeter += measure(regions, pt);
+            }
+            res += region.Count() * perimeter;
+        }
+        return res;
+    }    
+   
+    delegate int MeasurePerimeter(Dictionary<Complex, Region> map, Complex pt);
+
+    int FindEdges(Dictionary<Complex, Region> map, Complex pt) {
+        var res = 0;
+        var region = map[pt];
+        foreach (var du in new[] { Right, Down, Left, Up}) {
+            // x.
+            if (map.GetValueOrDefault(pt + du) != region) {
+                res++;
+            }
+        }
+        return res;
+    }
+
+    int FindCorners(Dictionary<Complex, Region> map, Complex pt) {
+        var res = 0;
+        var region = map[pt];
+
+        // check the 4 corner types
+        foreach (var (du, dv) in new[] { (Up, Right), (Right, Down), (Down, Left), (Left, Up) }) {
+            //  ..
+            //  x. convex corner
+            if (map.GetValueOrDefault(pt + du) != region && 
+                map.GetValueOrDefault(pt + dv) != region
+            ) {
+                res++; 
+            }
+
+            //  x.
+            //  xx concave corner
+            if (map.GetValueOrDefault(pt + du) == region && 
+                map.GetValueOrDefault(pt + dv) == region &&  
+                map.GetValueOrDefault(pt + du + dv) != region
+            ) {
+                res++;
+            }
+        }
+        return res;
+    }
+
+    // Maps the positions of plants in a garden to their corresponding regions, grouping plants 
+    // of the same type into contiguous regions.
+    Dictionary<Complex, Region> GetRegions(string input) {
+        var lines = input.Split("\n");
+        var garden = (
+            from y in Enumerable.Range(0, lines.Length)
+            from x in Enumerable.Range(0, lines[0].Length)
+            select new KeyValuePair<Complex, char>(x + y * Down, lines[y][x])
+        ).ToDictionary();
+
+        // go over the positions of the garden and use a floodfill to determine the region
+        var res = new Dictionary<Complex, Region>();
+        var positions = garden.Keys.ToHashSet();
+        while (positions.Any()) {
+            var pivot = positions.First();
+            var region = new Region { pivot };
+
+            var q = new Queue<Complex>();
+            q.Enqueue(pivot);
+
+            var plant = garden[pivot];
+
+            while (q.Any()) {
+                var point = q.Dequeue();
+                res[point] = region;
+                positions.Remove(point);
+                foreach (var dir in new[] { Up, Down, Left, Right }) {
+                    if (!region.Contains(point + dir) && garden.GetValueOrDefault(point + dir) == plant) {
+                        region.Add(point + dir);
+                        q.Enqueue(point + dir);
+                    }
+                }
+            }
+        }
+        return res;
+    }
+
+}
+</code></pre></div>
+            <div id="code-location"> <p>Please ☆ my <a href="https://github.com/encse/adventofcode/">repo</a> if you like it!</p></div>
+        </div>
+
+    </div>
+    <div id="bottom">
+        <span>© <span id="currentYear">2024</span></span>
+        <span><a href="https://adventofcode.com">Advent of Code</a> is a registered trademark in the US</span>
+        <span>Images provided by <a href="https://www.bing.com/images/create">Bing</a> image creator</span>
+    </div>
+ 
+    <script>
+        // This will automatically apply highlight.js to all <pre><code> blocks
+        document.addEventListener('DOMContentLoaded', function () {
+
+        let yearPicker = document.querySelector('#year-picker select')
+        if (yearPicker) {
+            yearPicker.addEventListener('change', function () {
+                window.location = this.value;
+            });
+        }
+
+          // Automatically highlight all <code> blocks inside <pre>
+          hljs.highlightAll();
+        });
+    </script>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P8Y1BWSSF3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-P8Y1BWSSF3');
+    </script>
+</body>
+
+</html>

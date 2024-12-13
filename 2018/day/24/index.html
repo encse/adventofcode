@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+    <link href='https://fonts.googleapis.com/css?family=Noto Sans' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/a11y-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js"></script>
+    <title>Advent of Code 2018/24 'Immune System Simulator 20XX'' in C# by encse</title>
+
+    <head>
+        <meta property="og:title" content="Advent of Code 2018/24 'Immune System Simulator 20XX' in C# by encse<">
+        <meta property="og:description" content="C# solution to the 'Immune System Simulator 20XX' Advent of Code problem.">
+        <meta property="og:image" content="https://aoc.csokavar.hu//2018/day/24/illustration.jpeg">
+        <meta property="og:url" content="https://aoc.csokavar.hu//2018/day/24">
+        <meta property="og:type" content="website">
+      </head>
+
+
+    <style>
+        html {
+            --theme-background-color: #2b2b2b;
+            --theme-background-color2: #0d1117;
+        }
+
+        * {
+            box-sizing: border-box;
+            /* text is too big without these in my iphone */
+            -moz-text-size-adjust: none;
+            -webkit-text-size-adjust: none;
+            text-size-adjust: none;
+        }
+
+        @media (min-width:2000px) {
+            html {
+                font-size: 1.9em;
+            }
+        }
+
+        a {
+            color: inherit;
+        }
+
+        body {
+            background: var(--theme-background-color);
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Sans', 'Arial', sans-serif;
+            color: white;
+        }
+
+        .main {
+            width: 100ch;
+            display: flex;
+            flex-direction: column;
+            padding: 1em;
+            margin: 4em auto;
+        }
+
+
+        .header-container {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap-reverse;
+            justify-content: center;
+            gap: 1em;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .header-image {
+            display: flex;
+            min-width: 400px;
+            position: relative;
+            position: absolute;
+            z-index: -1;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .header-image img {
+            object-fit: cover;
+        }
+
+        .header-title {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            text-align: center;
+            text-shadow: 0 0 1px rgba(0, 0, 0, 0.7); 
+            padding: 10em;
+            background-image: radial-gradient(rgba(194, 194, 194, 0.13), rgba(195, 195, 195, 0.25));
+        }
+
+        .header-title h2 {
+            font-size: 400%;
+            margin: 0;
+        }
+
+        .header-title p {
+            font-size: 150%;
+        }
+
+        #dropdown-label {
+            text-align: center;
+            margin: 1em;
+        }
+
+        .dropdown-toggle {
+            display: none; /* Hide the checkbox */
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            z-index: 1;
+            list-style: none;
+            background-color: #0d1117;
+        }
+
+        .dropdown-content {
+            flex-direction: column;
+
+        }
+
+        .dropdown-content a {
+            margin: 0.5em 1em;
+        }
+
+        #dropdown-toggle:checked  ~ .dropdown-content {
+            display: flex; 
+        }
+
+        #top-nav,
+        #bottom {
+            background: var(--theme-background-color2);
+            padding: 1em;
+        }
+
+        #year-picker select {
+            border: none;
+            background: inherit;
+            font-size: inherit;
+            color: inherit;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        #top-nav a,
+        .header-container a {
+            text-decoration: none;
+        }
+
+        #top-nav .current {
+            color: var(--theme-background-color2);
+            background: white;
+        }
+
+        #bottom {
+            background: var(--theme-background-color2);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2em;
+            justify-content: center;
+        }
+
+        #top-nav {
+            display: flex;
+        }
+
+        #top-nav select {
+            margin-left: 1em;
+            margin-right: 1em;
+        }
+
+        #day-picker {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        #day-picker a {
+            margin: 1em;
+        }
+
+        #code-container {
+            overflow: auto;
+            scroll-behavior: smooth;
+        }
+
+        .hljs {
+            background: var(--theme-background-color2);
+        }
+
+        .hljs-ln-numbers {
+            padding-right: 1em !important;
+            text-align: right;
+        }
+
+        .content {
+            line-height: 1.5;
+            margin-top: 2em;
+            /* hyphens: auto; */
+        }
+
+
+        @media (max-width: 1024px) {
+            .main {
+                width: inherit;
+            }
+
+            .content {
+                width: 100%;
+            }
+
+
+            #top-nav span,
+            #top-nav .dropdown 
+            #top-nav .dropdown-content {
+                padding: 0.25em;
+            }
+
+            .header-title h2 {
+                font-size: 300%;
+            }
+        }
+
+        @media (orientation: landscape) {
+            main {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+
+<body lang="en-US">
+    <div id="top-nav">
+        <div id="year-picker"><nav class="dropdown">
+            <input type="checkbox" id="dropdown-toggle" class="dropdown-toggle">
+            <span class="current"><label id="dropdown-label" for="dropdown-toggle">2018</label></span>
+            <div class="dropdown-content"><a href="/2015/day/25">2015</a><a href="/2016/day/25">2016</a><a href="/2017/day/25">2017</a><a href="/2018/day/25">2018</a><a href="/2019/day/25">2019</a><a href="/2020/day/25">2020</a><a href="/2021/day/25">2021</a><a href="/2022/day/25">2022</a><a href="/2023/day/25">2023</a><a href="/2024/day/13">2024</a></div>
+        </nav>
+     </div>
+        <div id="day-picker"><span><a href="/2018/day/1">01</a></span><span><a href="/2018/day/2">02</a></span><span><a href="/2018/day/3">03</a></span><span><a href="/2018/day/4">04</a></span><span><a href="/2018/day/5">05</a></span><span><a href="/2018/day/6">06</a></span><span><a href="/2018/day/7">07</a></span><span><a href="/2018/day/8">08</a></span><span><a href="/2018/day/9">09</a></span><span><a href="/2018/day/10">10</a></span><span><a href="/2018/day/11">11</a></span><span><a href="/2018/day/12">12</a></span><span><a href="/2018/day/13">13</a></span><span><a href="/2018/day/14">14</a></span><span><a href="/2018/day/15">15</a></span><span><a href="/2018/day/16">16</a></span><span><a href="/2018/day/17">17</a></span><span><a href="/2018/day/18">18</a></span><span><a href="/2018/day/19">19</a></span><span><a href="/2018/day/20">20</a></span><span><a href="/2018/day/21">21</a></span><span><a href="/2018/day/22">22</a></span><span><a href="/2018/day/23">23</a></span><span class="current"><a href="/2018/day/24">24</a></span><span><a href="/2018/day/25">25</a></span></div>
+    </div>
+    <div class="main">
+        <div class="header-container">
+            <div class="header-image">
+                <img id="cover" width="100%" src="illustration.jpeg" />
+            </div>
+
+            <div class="header-title">
+                <p class="text">Advent of Code</p>
+                <h2 id="problem-id">2018/24</h2>
+                <h2 id="problem-name">Immune System Simulator 20XX</h2>
+                <p class="text">in C#</p>
+                <p class="text"></p>
+                <p class="text"><em>by <a style="text-decoration: underline"
+                            href="https://github.com/sponsors/encse">encse</a></em></p>
+            </div>
+
+        </div>
+
+        <div class="content">
+            <div id="notes"><p>After <a href="https://www.youtube.com/watch?v=NDVjLt_QHL8&t=7">a weird buzzing noise</a>, you appear back at the man&#39;s cottage. He seems relieved to see his friend, but quickly notices that the little reindeer caught some kind of cold while out exploring.</p>
+<p>The portly man explains that this reindeer&#39;s immune system isn&#39;t similar to regular reindeer immune systems:</p>
+<p>Read the <a href="https://adventofcode.com/2018/day/24">full puzzle</a>.</p>
+</div>
+            <div id="code-container"><pre class="hljs language-csharp"><code>using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+
+namespace AdventOfCode.Y2018.Day24;
+
+[ProblemName("Immune System Simulator 20XX")]
+class Solution : Solver {
+
+    (bool immuneSystem, long units) Fight(string input, int boost) {
+        var army = Parse(input);
+        foreach (var g in army) {
+            if (g.immuneSystem) {
+                g.damage += boost;
+            }
+        }
+        var attack = true;
+        while (attack) {
+            attack = false;
+            var remainingTarget = new HashSet<Group>(army);
+            var targets = new Dictionary<Group, Group>();
+            foreach (var g in army.OrderByDescending(g => (g.effectivePower, g.initiative))) {
+                var maxDamage = remainingTarget.Select(t => g.DamageDealtTo(t)).Max();
+                if (maxDamage > 0) {
+                    var possibleTargets = remainingTarget.Where(t => g.DamageDealtTo(t) == maxDamage);
+                    targets[g] = possibleTargets.OrderByDescending(t => (t.effectivePower, t.initiative)).First();
+                    remainingTarget.Remove(targets[g]);
+                }
+            }
+            foreach (var g in targets.Keys.OrderByDescending(g => g.initiative)) {
+                if (g.units > 0) {
+                    var target = targets[g];
+                    var damage = g.DamageDealtTo(target);
+                    if (damage > 0 && target.units > 0) {
+                        var dies = damage / target.hp;
+                        target.units = Math.Max(0, target.units - dies);
+                        if (dies > 0) {
+                            attack = true;
+                        }
+                    }
+                }
+            }
+            army = army.Where(g => g.units > 0).ToList();
+        }
+        return (army.All(x => x.immuneSystem), army.Select(x => x.units).Sum());
+    }
+
+    public object PartOne(string input) => Fight(input, 0).units;
+
+    public object PartTwo(string input) {
+        var l = 0;
+        var h = int.MaxValue / 2;
+        while (h - l > 1) {
+            var m = (h + l) / 2;
+            if (Fight(input, m).immuneSystem) {
+                h = m;
+            } else {
+                l = m;
+            }
+        }
+        return Fight(input, h).units;
+    }
+
+    List<Group> Parse(string input) {
+        var lines = input.Split("\n");
+        var immuneSystem = false;
+        var res = new List<Group>();
+        foreach (var line in lines)
+            if (line == "Immune System:") {
+                immuneSystem = true;
+            } else if (line == "Infection:") {
+                immuneSystem = false;
+            } else if (line != "") {
+                //643 units each with 9928 hit points (immune to fire; weak to slashing, bludgeoning) with an attack that does 149 fire damage at initiative 14
+                var rx = @"(\d+) units each with (\d+) hit points(.*)with an attack that does (\d+)(.*)damage at initiative (\d+)";
+                var m = Regex.Match(line, rx);
+                if (m.Success) {
+                    Group g = new Group();
+                    g.immuneSystem = immuneSystem;
+                    g.units = int.Parse(m.Groups[1].Value);
+                    g.hp = int.Parse(m.Groups[2].Value);
+                    g.damage = int.Parse(m.Groups[4].Value);
+                    g.attackType = m.Groups[5].Value.Trim();
+                    g.initiative = int.Parse(m.Groups[6].Value);
+                    var st = m.Groups[3].Value.Trim();
+                    if (st != "") {
+                        st = st.Substring(1, st.Length - 2);
+                        foreach (var part in st.Split(";")) {
+                            var k = part.Split(" to ");
+                            var set = new HashSet<string>(k[1].Split(", "));
+                            var w = k[0].Trim();
+                            if (w == "immune") {
+                                g.immuneTo = set;
+                            } else if (w == "weak") {
+                                g.weakTo = set;
+                            } else {
+                                throw new Exception();
+                            }
+                        }
+                    }
+                    res.Add(g);
+                } else {
+                    throw new Exception();
+                }
+
+            }
+        return res;
+    }
+}
+
+class Group {
+    //4 units each with 9798 hit points (immune to bludgeoning) with an attack that does 1151 fire damage at initiative 9
+    public bool immuneSystem;
+    public long units;
+    public int hp;
+    public int damage;
+    public int initiative;
+    public string attackType;
+    public HashSet<string> immuneTo = new HashSet<string>();
+    public HashSet<string> weakTo = new HashSet<string>();
+
+    public long effectivePower {
+        get {
+            return units * damage;
+        }
+    }
+
+    public long DamageDealtTo(Group target) {
+        if (target.immuneSystem == immuneSystem) {
+            return 0;
+        } else if (target.immuneTo.Contains(attackType)) {
+            return 0;
+        } else if (target.weakTo.Contains(attackType)) {
+            return effectivePower * 2;
+        } else {
+            return effectivePower;
+        }
+    }
+}
+</code></pre></div>
+            <div id="code-location"> <p>Please ☆ my <a href="https://github.com/encse/adventofcode/">repo</a> if you like it!</p></div>
+        </div>
+
+    </div>
+    <div id="bottom">
+        <span>© <span id="currentYear">2024</span></span>
+        <span><a href="https://adventofcode.com">Advent of Code</a> is a registered trademark in the US</span>
+        <span>Images provided by <a href="https://www.bing.com/images/create">Bing</a> image creator</span>
+    </div>
+ 
+    <script>
+        // This will automatically apply highlight.js to all <pre><code> blocks
+        document.addEventListener('DOMContentLoaded', function () {
+
+        let yearPicker = document.querySelector('#year-picker select')
+        if (yearPicker) {
+            yearPicker.addEventListener('change', function () {
+                window.location = this.value;
+            });
+        }
+
+          // Automatically highlight all <code> blocks inside <pre>
+          hljs.highlightAll();
+        });
+    </script>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P8Y1BWSSF3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-P8Y1BWSSF3');
+    </script>
+</body>
+
+</html>

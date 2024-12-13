@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+    <link href='https://fonts.googleapis.com/css?family=Noto Sans' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/a11y-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js"></script>
+    <title>Advent of Code 2022/9 'Rope Bridge'' in C# by encse</title>
+
+    <head>
+        <meta property="og:title" content="Advent of Code 2022/9 'Rope Bridge' in C# by encse<">
+        <meta property="og:description" content="C# solution to the 'Rope Bridge' Advent of Code problem.">
+        <meta property="og:image" content="https://aoc.csokavar.hu//2022/day/9/illustration.jpeg">
+        <meta property="og:url" content="https://aoc.csokavar.hu//2022/day/9">
+        <meta property="og:type" content="website">
+      </head>
+
+
+    <style>
+        html {
+            --theme-background-color: #2b2b2b;
+            --theme-background-color2: #0d1117;
+        }
+
+        * {
+            box-sizing: border-box;
+            /* text is too big without these in my iphone */
+            -moz-text-size-adjust: none;
+            -webkit-text-size-adjust: none;
+            text-size-adjust: none;
+        }
+
+        @media (min-width:2000px) {
+            html {
+                font-size: 1.9em;
+            }
+        }
+
+        a {
+            color: inherit;
+        }
+
+        body {
+            background: var(--theme-background-color);
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Sans', 'Arial', sans-serif;
+            color: white;
+        }
+
+        .main {
+            width: 100ch;
+            display: flex;
+            flex-direction: column;
+            padding: 1em;
+            margin: 4em auto;
+        }
+
+
+        .header-container {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap-reverse;
+            justify-content: center;
+            gap: 1em;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .header-image {
+            display: flex;
+            min-width: 400px;
+            position: relative;
+            position: absolute;
+            z-index: -1;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .header-image img {
+            object-fit: cover;
+        }
+
+        .header-title {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            text-align: center;
+            text-shadow: 0 0 1px rgba(0, 0, 0, 0.7); 
+            padding: 10em;
+            background-image: radial-gradient(rgba(194, 194, 194, 0.13), rgba(195, 195, 195, 0.25));
+        }
+
+        .header-title h2 {
+            font-size: 400%;
+            margin: 0;
+        }
+
+        .header-title p {
+            font-size: 150%;
+        }
+
+        #dropdown-label {
+            text-align: center;
+            margin: 1em;
+        }
+
+        .dropdown-toggle {
+            display: none; /* Hide the checkbox */
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            z-index: 1;
+            list-style: none;
+            background-color: #0d1117;
+        }
+
+        .dropdown-content {
+            flex-direction: column;
+
+        }
+
+        .dropdown-content a {
+            margin: 0.5em 1em;
+        }
+
+        #dropdown-toggle:checked  ~ .dropdown-content {
+            display: flex; 
+        }
+
+        #top-nav,
+        #bottom {
+            background: var(--theme-background-color2);
+            padding: 1em;
+        }
+
+        #year-picker select {
+            border: none;
+            background: inherit;
+            font-size: inherit;
+            color: inherit;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        #top-nav a,
+        .header-container a {
+            text-decoration: none;
+        }
+
+        #top-nav .current {
+            color: var(--theme-background-color2);
+            background: white;
+        }
+
+        #bottom {
+            background: var(--theme-background-color2);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2em;
+            justify-content: center;
+        }
+
+        #top-nav {
+            display: flex;
+        }
+
+        #top-nav select {
+            margin-left: 1em;
+            margin-right: 1em;
+        }
+
+        #day-picker {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        #day-picker a {
+            margin: 1em;
+        }
+
+        #code-container {
+            overflow: auto;
+            scroll-behavior: smooth;
+        }
+
+        .hljs {
+            background: var(--theme-background-color2);
+        }
+
+        .hljs-ln-numbers {
+            padding-right: 1em !important;
+            text-align: right;
+        }
+
+        .content {
+            line-height: 1.5;
+            margin-top: 2em;
+            /* hyphens: auto; */
+        }
+
+
+        @media (max-width: 1024px) {
+            .main {
+                width: inherit;
+            }
+
+            .content {
+                width: 100%;
+            }
+
+
+            #top-nav span,
+            #top-nav .dropdown 
+            #top-nav .dropdown-content {
+                padding: 0.25em;
+            }
+
+            .header-title h2 {
+                font-size: 300%;
+            }
+        }
+
+        @media (orientation: landscape) {
+            main {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+
+<body lang="en-US">
+    <div id="top-nav">
+        <div id="year-picker"><nav class="dropdown">
+            <input type="checkbox" id="dropdown-toggle" class="dropdown-toggle">
+            <span class="current"><label id="dropdown-label" for="dropdown-toggle">2022</label></span>
+            <div class="dropdown-content"><a href="/2015/day/25">2015</a><a href="/2016/day/25">2016</a><a href="/2017/day/25">2017</a><a href="/2018/day/25">2018</a><a href="/2019/day/25">2019</a><a href="/2020/day/25">2020</a><a href="/2021/day/25">2021</a><a href="/2022/day/25">2022</a><a href="/2023/day/25">2023</a><a href="/2024/day/13">2024</a></div>
+        </nav>
+     </div>
+        <div id="day-picker"><span><a href="/2022/day/1">01</a></span><span><a href="/2022/day/2">02</a></span><span><a href="/2022/day/3">03</a></span><span><a href="/2022/day/4">04</a></span><span><a href="/2022/day/5">05</a></span><span><a href="/2022/day/6">06</a></span><span><a href="/2022/day/7">07</a></span><span><a href="/2022/day/8">08</a></span><span class="current"><a href="/2022/day/9">09</a></span><span><a href="/2022/day/10">10</a></span><span><a href="/2022/day/11">11</a></span><span><a href="/2022/day/12">12</a></span><span><a href="/2022/day/13">13</a></span><span><a href="/2022/day/14">14</a></span><span><a href="/2022/day/15">15</a></span><span><a href="/2022/day/16">16</a></span><span><a href="/2022/day/17">17</a></span><span><a href="/2022/day/18">18</a></span><span><a href="/2022/day/19">19</a></span><span><a href="/2022/day/20">20</a></span><span><a href="/2022/day/21">21</a></span><span><a href="/2022/day/22">22</a></span><span><a href="/2022/day/23">23</a></span><span><a href="/2022/day/24">24</a></span><span><a href="/2022/day/25">25</a></span></div>
+    </div>
+    <div class="main">
+        <div class="header-container">
+            <div class="header-image">
+                <img id="cover" width="100%" src="illustration.jpeg" />
+            </div>
+
+            <div class="header-title">
+                <p class="text">Advent of Code</p>
+                <h2 id="problem-id">2022/9</h2>
+                <h2 id="problem-name">Rope Bridge</h2>
+                <p class="text">in C#</p>
+                <p class="text"></p>
+                <p class="text"><em>by <a style="text-decoration: underline"
+                            href="https://github.com/sponsors/encse">encse</a></em></p>
+            </div>
+
+        </div>
+
+        <div class="content">
+            <div id="notes"><p>This rope bridge creaks as you walk along it. You aren&#39;t sure how old it is, or whether it can even support your weight.</p>
+<p>It seems to support the Elves just fine, though. The bridge spans a gorge which was carved out by the massive river far below you.</p>
+<p>Read the <a href="https://adventofcode.com/2022/day/9">full puzzle</a>.</p>
+</div>
+            <div id="code-container"><pre class="hljs language-csharp"><code>using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace AdventOfCode.Y2022.Day09;
+
+[ProblemName("Rope Bridge")]
+class Solution : Solver {
+
+    public object PartOne(string input) => Tails(input, 2).ToHashSet().Count;
+    public object PartTwo(string input) => Tails(input, 10).ToHashSet().Count;
+
+    // simulates a rope with the given length as its head moves
+    // according to the input and returns the position of its 
+    // tail knot in each step.
+    private IEnumerable<Knot> Tails(string input, int ropeLength) {
+        var rope = Enumerable.Repeat(new Knot(0, 0), ropeLength).ToArray();
+        yield return rope.Last();
+
+        foreach (var line in input.Split("\n")) {
+            var parts = line.Split(' ');
+            var dir = parts[0];
+            var dist = int.Parse(parts[1]);
+
+            for (var i = 0; i < dist; i++) {
+                MoveHead(rope, dir);
+                yield return rope.Last();
+            }
+        }
+    }
+
+    record struct Knot(int irow, int icol);
+
+    // moves the head in the given direction, inplace update 
+    // of the rope
+    void MoveHead(Knot[] rope, string dir) {
+        rope[0] = dir switch {
+            "U" => rope[0] with { irow = rope[0].irow - 1 },
+            "D" => rope[0] with { irow = rope[0].irow + 1 },
+            "L" => rope[0] with { icol = rope[0].icol - 1 },
+            "R" => rope[0] with { icol = rope[0].icol + 1 },
+            _ => throw new ArgumentException(dir)
+        };
+
+        // knots move when become disconnected from the previous 
+        // sibling in the rope:
+        for (var i = 1; i < rope.Length; i++) {
+            var drow = rope[i - 1].irow - rope[i].irow; 
+            var dcol = rope[i - 1].icol - rope[i].icol;
+
+            if (Math.Abs(drow) > 1 || Math.Abs(dcol) > 1) {
+                rope[i] = new Knot(
+                    rope[i].irow + Math.Sign(drow), 
+                    rope[i].icol + Math.Sign(dcol)
+                );
+            }
+        }
+    }
+}
+</code></pre></div>
+            <div id="code-location"> <p>Please ☆ my <a href="https://github.com/encse/adventofcode/">repo</a> if you like it!</p></div>
+        </div>
+
+    </div>
+    <div id="bottom">
+        <span>© <span id="currentYear">2024</span></span>
+        <span><a href="https://adventofcode.com">Advent of Code</a> is a registered trademark in the US</span>
+        <span>Images provided by <a href="https://www.bing.com/images/create">Bing</a> image creator</span>
+    </div>
+ 
+    <script>
+        // This will automatically apply highlight.js to all <pre><code> blocks
+        document.addEventListener('DOMContentLoaded', function () {
+
+        let yearPicker = document.querySelector('#year-picker select')
+        if (yearPicker) {
+            yearPicker.addEventListener('change', function () {
+                window.location = this.value;
+            });
+        }
+
+          // Automatically highlight all <code> blocks inside <pre>
+          hljs.highlightAll();
+        });
+    </script>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P8Y1BWSSF3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-P8Y1BWSSF3');
+    </script>
+</body>
+
+</html>
