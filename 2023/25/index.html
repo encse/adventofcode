@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+    <link href='https://fonts.googleapis.com/css?family=Noto Sans' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/a11y-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js"></script>
+    <title>Advent of Code 2023/25 'Snowverload'' in C# by encse</title>
+
+    <head>
+        <meta property="og:title" content="Advent of Code 2023/25 'Snowverload' in C# by encse<">
+        <meta property="og:description" content="C# solution to the 'Snowverload' Advent of Code problem.">
+        <meta property="og:image" content="https://aoc.csokavar.hu/2023/25//illustration.jpeg">
+        <meta property="og:url" content="https://aoc.csokavar.hu/2023/25/">
+        <meta property="og:type" content="website">
+      </head>
+
+
+    <style>
+        html {
+            --theme-background-color: #2b2b2b;
+            --theme-background-color2: #0d1117;
+        }
+
+        * {
+            box-sizing: border-box;
+            /* text is too big without these in my iphone */
+            -moz-text-size-adjust: none;
+            -webkit-text-size-adjust: none;
+            text-size-adjust: none;
+        }
+
+        @media (min-width:2000px) {
+            html {
+                font-size: 1.9em;
+            }
+        }
+
+        a {
+            color: inherit;
+        }
+
+        body {
+            background: var(--theme-background-color);
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Sans', 'Arial', sans-serif;
+            color: white;
+        }
+
+        .main {
+            width: 100ch;
+            display: flex;
+            flex-direction: column;
+            padding: 1em;
+            margin: 4em auto;
+        }
+
+
+        .header-container {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap-reverse;
+            justify-content: center;
+            gap: 1em;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .header-image {
+            display: flex;
+            min-width: 400px;
+            position: relative;
+            position: absolute;
+            z-index: -1;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .header-image img {
+            object-fit: cover;
+        }
+
+        .header-title {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            text-align: center;
+            text-shadow: 0 0 1px rgba(0, 0, 0, 0.7); 
+            padding: 10em;
+            background-image: radial-gradient(rgba(194, 194, 194, 0.13), rgba(195, 195, 195, 0.25));
+        }
+
+        .header-title h2 {
+            font-size: 400%;
+            margin: 0;
+        }
+
+        .header-title p {
+            font-size: 150%;
+        }
+
+        #dropdown-label {
+            text-align: center;
+            margin: 1em;
+        }
+
+        .dropdown-toggle {
+            display: none; /* Hide the checkbox */
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            z-index: 1;
+            list-style: none;
+            background-color: #0d1117;
+        }
+
+        .dropdown-content {
+            flex-direction: column;
+
+        }
+
+        .dropdown-content a {
+            margin: 0.5em 1em;
+        }
+
+        #dropdown-toggle:checked  ~ .dropdown-content {
+            display: flex; 
+        }
+
+        #top-nav,
+        #bottom {
+            background: var(--theme-background-color2);
+            padding: 1em;
+        }
+
+        #year-picker select {
+            border: none;
+            background: inherit;
+            font-size: inherit;
+            color: inherit;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        #top-nav a,
+        .header-container a {
+            text-decoration: none;
+        }
+
+        #top-nav .current {
+            color: var(--theme-background-color2);
+            background: white;
+        }
+
+        #bottom {
+            background: var(--theme-background-color2);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2em;
+            justify-content: center;
+        }
+
+        #top-nav {
+            display: flex;
+        }
+
+        #top-nav select {
+            margin-left: 1em;
+            margin-right: 1em;
+        }
+
+        #day-picker {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        #day-picker a {
+            margin: 1em;
+        }
+
+        #code-container {
+            overflow: auto;
+            scroll-behavior: smooth;
+        }
+
+        .hljs {
+            background: var(--theme-background-color2);
+        }
+
+        .hljs-ln-numbers {
+            padding-right: 1em !important;
+            text-align: right;
+        }
+
+        .content {
+            line-height: 1.5;
+            margin-top: 2em;
+            /* hyphens: auto; */
+        }
+
+
+        @media (max-width: 1024px) {
+            .main {
+                width: inherit;
+            }
+
+            .content {
+                width: 100%;
+            }
+
+
+            #top-nav span,
+            #top-nav .dropdown 
+            #top-nav .dropdown-content {
+                padding: 0.25em;
+            }
+
+            .header-title h2 {
+                font-size: 300%;
+            }
+        }
+
+        @media (orientation: landscape) {
+            main {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+
+<body lang="en-US">
+    <div id="top-nav">
+        <div id="year-picker"><nav class="dropdown">
+            <input type="checkbox" id="dropdown-toggle" class="dropdown-toggle">
+            <span class="current"><label id="dropdown-label" for="dropdown-toggle">2023</label></span>
+            <div class="dropdown-content"><a href="/2015/25/">2015</a><a href="/2016/25/">2016</a><a href="/2017/25/">2017</a><a href="/2018/25/">2018</a><a href="/2019/25/">2019</a><a href="/2020/25/">2020</a><a href="/2021/25/">2021</a><a href="/2022/25/">2022</a><a href="/2023/25/">2023</a><a href="/2024/13/">2024</a></div>
+        </nav>
+     </div>
+        <div id="day-picker"><span><a href="/2023/1">01</a></span><span><a href="/2023/2">02</a></span><span><a href="/2023/3">03</a></span><span><a href="/2023/4">04</a></span><span><a href="/2023/5">05</a></span><span><a href="/2023/6">06</a></span><span><a href="/2023/7">07</a></span><span><a href="/2023/8">08</a></span><span><a href="/2023/9">09</a></span><span><a href="/2023/10">10</a></span><span><a href="/2023/11">11</a></span><span><a href="/2023/12">12</a></span><span><a href="/2023/13">13</a></span><span><a href="/2023/14">14</a></span><span><a href="/2023/15">15</a></span><span><a href="/2023/16">16</a></span><span><a href="/2023/17">17</a></span><span><a href="/2023/18">18</a></span><span><a href="/2023/19">19</a></span><span><a href="/2023/20">20</a></span><span><a href="/2023/21">21</a></span><span><a href="/2023/22">22</a></span><span><a href="/2023/23">23</a></span><span><a href="/2023/24">24</a></span><span class="current"><a href="/2023/25">25</a></span></div>
+    </div>
+    <div class="main">
+        <div class="header-container">
+            <div class="header-image">
+                <img id="cover" width="100%" src="illustration.jpeg" />
+            </div>
+
+            <div class="header-title">
+                <p class="text">Advent of Code</p>
+                <h2 id="problem-id">2023/25</h2>
+                <h2 id="problem-name">Snowverload</h2>
+                <p class="text">in C#</p>
+                <p class="text"></p>
+                <p class="text"><em>by <a style="text-decoration: underline"
+                            href="https://github.com/sponsors/encse">encse</a></em></p>
+            </div>
+
+        </div>
+
+        <div class="content">
+            <div id="notes"><p>Those who need a refresh can read the problem <a href="https://adventofcode.com/2023/day/25">here</a>.</p>
+<p>This is our last day and these are historically not very hard. The puzzle is asking us 
+to cut an undirected graph into two components by removing only three edges. I had 
+absolutely no idea how to do that in an effective way, so it was time to consult the 
+literature. Soon enough I found <a href="https://en.wikipedia.org/wiki/Karger%27s_algorithm">Karger&#39;s algorithm</a> 
+on Wikipedia.</p>
+<p>It&#39;s a randomized algorithm that works on non-weighted, undirected graphs like ours.
+It finds <em>some cut</em> which is not necessarily minimal, but there is a good chance 
+that it finds the minimal one in a few tries. <em>This is the Elf way!</em></p>
+<p>Karger&#39;s is not hard to implement, but I&#39;m not used to do this kind of things lately, 
+so I spent quite a lot of time getting it right. One mistake was that I didn&#39;t 
+add the edges in the reverse direction: the input contains them only in one way. Then it was not obvious what to do with multiple edges between two nodes, because the algorithm needs to create these.
+But it has started to work and I just let it do its thing in a loop and it really 
+found a cut with 3 edges in a few milliseconds.</p>
+<p>It was easy to extend the algorithm to return the sizes of the two components as well. 
+Part 1 asks for the product of these. Part 2 is a meta puzzle, it requires to complete 
+all other challenges from the previous days, but I already finished those, so I can 
+conclude season today (Dec 25th). </p>
+<p>Thanks for joining me! If you find this work useful or want to get in touch 
+(even just saying hello), find me on <a href="https://github.com/encse">Github</a> or 
+<a href="https://twitter.com/encse">Twitter</a>.</p>
+<p>Psst! There is game <a href="game">hidden</a> in this site.</p>
+</div>
+            <div id="code-container"><pre class="hljs language-csharp"><code>namespace AdventOfCode.Y2023.Day25;
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+[ProblemName("Snowverload")]
+class Solution : Solver {
+
+    public object PartOne(string input) {
+        Random r = new Random(25);
+
+        // run Karger's algorithm until it finds a cut with 3 edges
+        var (cutSize, c1, c2) = FindCut(input, r);
+        while (cutSize != 3) {
+            (cutSize, c1, c2) = FindCut(input, r);
+        }
+        return c1 * c2;
+    }
+
+    // https://en.wikipedia.org/wiki/Karger%27s_algorithm
+    // Karger's algorithm finds a cut of a graph and returns its size. 
+    // It's not necessarily the minimal cut, because it's a randomized algorithm 
+    // but it's 'likely' to find the minimal cut in reasonable time. 
+    // The algorithm is extended to return the sizes of the two components 
+    // separated by the cut as well.
+    (int size, int c1, int c2) FindCut(string input, Random r) {
+        var graph = Parse(input);
+        var componentSize = graph.Keys.ToDictionary(k => k, _ => 1);
+
+        // updates backreferences of oldNode to point to newNode
+        var rebind = (string oldNode, string newNode) => {
+            foreach (var n in graph[oldNode]) {
+                while (graph[n].Remove(oldNode)) {
+                    graph[n].Add(newNode);
+                }
+            }
+        };
+
+        for (var id = 0; graph.Count > 2; id++) {
+            // decrease the the number of nodes by one. First select two nodes u 
+            // and v connected with an edge. Introduce a new node that inherits 
+            // every edge going out of these (excluding the edges between them). 
+            // Set the new nodes' component size to the sum of the component 
+            // sizes of u and v. Remove u and v from the graph.
+            var u = graph.Keys.ElementAt(r.Next(graph.Count));
+            var v = graph[u][r.Next(graph[u].Count)];
+
+            var merged = "merge-" + id;
+            graph[merged] = [
+                ..from n in graph[u] where n != v select n,
+                ..from n in graph[v] where n != u select n
+            ];
+            rebind(u, merged);
+            rebind(v, merged);
+
+            componentSize[merged] = componentSize[u] + componentSize[v];
+
+            graph.Remove(u);
+            graph.Remove(v);
+        }
+
+        // two nodes remain with some edges between them, the number of those 
+        // edges equals to the size of the cut. Component size tells the number 
+        // of nodes in the two sides created by the cut.
+        var nodeA = graph.Keys.First();
+        var nodeB = graph.Keys.Last();
+        return (graph[nodeA].Count(), componentSize[nodeA], componentSize[nodeB]);
+    }
+
+    // returns an adjacency list representation of the input. Edges are recorded 
+    // both ways, unlike in the input which contains them in one direction only.
+    Dictionary<string, List<string>> Parse(string input) {
+        var graph = new Dictionary<string, List<string>>();
+
+        var registerEdge = (string u, string v) => {
+            if (!graph.ContainsKey(u)) {
+                graph[u] = new();
+            }
+            graph[u].Add(v);
+        };
+
+        foreach (var line in input.Split('\n')) {
+            var parts = line.Split(": ");
+            var u = parts[0];
+            var nodes = parts[1].Split(' ');
+            foreach (var v in nodes) {
+                registerEdge(u, v);
+                registerEdge(v, u);
+            }
+        }
+        return graph;
+    }
+}
+</code></pre></div>
+            <div id="code-location"> <p>Please ☆ my <a href="https://github.com/encse/adventofcode/">repo</a> if you like it!</p></div>
+        </div>
+
+    </div>
+    <div id="bottom">
+        <span>© <span id="currentYear">2024</span></span>
+        <span><a href="https://adventofcode.com">Advent of Code</a> is a registered trademark in the US</span>
+        <span>Images provided by <a href="https://www.bing.com/images/create">Bing</a> image creator</span>
+    </div>
+ 
+    <script>
+        // This will automatically apply highlight.js to all <pre><code> blocks
+        document.addEventListener('DOMContentLoaded', function () {
+
+        let yearPicker = document.querySelector('#year-picker select')
+        if (yearPicker) {
+            yearPicker.addEventListener('change', function () {
+                window.location = this.value;
+            });
+        }
+
+          // Automatically highlight all <code> blocks inside <pre>
+          hljs.highlightAll();
+        });
+    </script>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P8Y1BWSSF3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-P8Y1BWSSF3');
+    </script>
+</body>
+
+</html>

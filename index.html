@@ -3,9 +3,8 @@
 <script>
     const url = new URL(window.location.href);
     if (url.search.match(/^\?(\d{4})\/\d{1,2}/)) {
-        let m = url.search.match(/^\?(\d{4})\/(\d{1,2})/);
-        window.location = m[1] + "/day/"+m[2];
+        window.location = url.search.substring(1);
     } else {
-        window.location = '/2024/day/13';
+        window.location = '/2024/13/';
     } 
 </script>
