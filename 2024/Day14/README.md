@@ -11,4 +11,40 @@ I’d bet many of us anticipated some `least common multiple` or `Chinese Remain
 
 The expected output wasn’t clearly specified — other than the fact that it should resemble a Christmas tree. I wrote a plot function to display the robot’s locations on the screen, dumped everything into a long file, and manually inspected it in my editor.
 
-Later, to automate this process, decided to search for a longer horizontal '####' pattern in the output.
+Later, to automate this process, decided to search for a longer horizontal '####' pattern in the output:
+
+```
+                ###############################
+           #    #                             #               #
+                #                             #                                   #
+                #                             #                  #
+  #             #                             #                            #
+                #              #              #
+                #             ###             #                                  #
+                #            #####            #
+          #     #           #######           #
+              # #          #########          #                                      #
+                #            #####            #
+             #  #           #######           #
+                #          #########          #
+                #         ###########         #
+                #        #############        #                                  #     #
+                #          #########          #
+       #        #         ###########         #                               #
+       #        #        #############        #
+                #       ###############       #                           #    #
+                #      #################      #                                         #
+                #        #############        #
+                #       ###############       #
+                #      #################      #
+                #     ###################     #
+           #    #    #####################    #
+                #             ###             #
+                #             ###             #                                                   #
+          #     #             ###             #                     #
+                #                             #                                 #
+                #                             #       #
+                #                             #                           #
+                #                             #                                  #               #
+    #           ###############################
+```
