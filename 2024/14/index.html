@@ -309,7 +309,7 @@ class Solution : Solver {
         return quadrants[0] * quadrants[1] * quadrants[2] * quadrants[3];
     }
 
-    // i figured that the xmas pattern has a long horizontal ### pattern in it
+    // i figured that the xmas tree pattern has a long horizontal ### pattern in it
     public object PartTwo(string input) =>
        Simulate(input)
         .TakeWhile(robots => !Plot(robots).Contains("#################"))
