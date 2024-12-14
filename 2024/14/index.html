@@ -281,7 +281,41 @@
 <p>A nice simulation challenge for today. <code>Part 1</code> was straightforward: iterate 100 times and count the robots in the different quadrants. </p>
 <p>I’d bet many of us anticipated some <code>least common multiple</code> or <code>Chinese Remainder Theorem</code> magic for <code>Part 2</code>, but Eric threw us a curveball by making us search for a Christmas tree pattern in the robot’s movement.</p>
 <p>The expected output wasn’t clearly specified — other than the fact that it should resemble a Christmas tree. I wrote a plot function to display the robot’s locations on the screen, dumped everything into a long file, and manually inspected it in my editor.</p>
-<p>Later, to automate this process, decided to search for a longer horizontal &#39;####&#39; pattern in the output.</p>
+<p>Later, to automate this process, decided to search for a longer horizontal &#39;####&#39; pattern in the output:</p>
+<pre><code>                ###############################
+           #    #                             #               #
+                #                             #                                   #
+                #                             #                  #
+  #             #                             #                            #
+                #              #              #
+                #             ###             #                                  #
+                #            #####            #
+          #     #           #######           #
+              # #          #########          #                                      #
+                #            #####            #
+             #  #           #######           #
+                #          #########          #
+                #         ###########         #
+                #        #############        #                                  #     #
+                #          #########          #
+       #        #         ###########         #                               #
+       #        #        #############        #
+                #       ###############       #                           #    #
+                #      #################      #                                         #
+                #        #############        #
+                #       ###############       #
+                #      #################      #
+                #     ###################     #
+           #    #    #####################    #
+                #             ###             #
+                #             ###             #                                                   #
+          #     #             ###             #                     #
+                #                             #                                 #
+                #                             #       #
+                #                             #                           #
+                #                             #                                  #               #
+    #           ###############################
+</code></pre>
 </div>
             <div id="code-container"><pre class="hljs language-csharp"><code>namespace AdventOfCode.Y2024.Day14;
 
