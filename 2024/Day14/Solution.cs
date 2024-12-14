@@ -5,61 +5,62 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using Robot = (Vec2 pos, Vec2 vel);
 record struct Vec2(int x, int y);
+record struct Robot(Vec2 pos, Vec2 vel);
 
 [ProblemName("Restroom Redoubt")]
 class Solution : Solver {
-    const int steps = 100;
     const int width = 101;
     const int height = 103;
 
+    // run the simulation for 100 steps and count the robots in the different quadrants.
     public object PartOne(string input) {
-        var quadrantCounts = (
-            from pos in Simulate(input).ElementAt(steps)
-            let quadrant = ToQuadrant(pos)
-            where quadrant.x != 0 && quadrant.y != 0
-            group quadrant by quadrant into g
-            select g.Count()
-        ).ToArray();
-        return quadrantCounts[0] * quadrantCounts[1] * quadrantCounts[2] * quadrantCounts[3];
+        var quadrants = Simulate(input)
+            .ElementAt(100)
+            .CountBy(GetQuadrant)
+            .Where(group =>  group.Key.x != 0 && group.Key.y != 0)
+            .Select(group => group.Value)
+            .ToArray();
+        return quadrants[0] * quadrants[1] * quadrants[2] * quadrants[3];
     }
 
-    public object PartTwo(string input) {
-        return Simulate(input).Select(Plot).Select(st => st.Contains("#################")).TakeWhile(x=> !x).Count();
-    }
+    // i figured that the xmas pattern has a long horizontal ### pattern in it
+    public object PartTwo(string input) =>
+       Simulate(input)
+        .TakeWhile(robots => !Plot(robots).Contains("#################"))
+        .Count();
 
-    IEnumerable<Vec2[]> Simulate(string input) {
+    // an infinite simulation of robot movement
+    IEnumerable<Robot[]> Simulate(string input) {
         var robots = Parse(input).ToArray();
         while (true) {
-            yield return robots.Select(r => r.pos).ToArray();
-            robots = robots.Select(r => 
-                r with {pos = new Vec2(
-                    (r.pos.x + r.vel.x) % width,
-                    (r.pos.y + r.vel.y) % height
-                )}
-            ).ToArray();
+            yield return robots;
+            robots = robots.Select(Step).ToArray();
         }
     }
 
-    Vec2 ToQuadrant(Vec2 pos) {
-        return new Vec2(
-            Math.Sign(pos.x - width / 2),
-            Math.Sign(pos.y - height / 2)
-        );
-    }
+    // advance a robot by its velocity taking care of the 'teleportation'
+    Robot Step(Robot robot) => robot with {pos = AddWithWrapAround(robot.pos, robot.vel) };
 
-    string Plot(IEnumerable<Vec2> positions) {
+    // returns the direction (-1/0/1) of the robot to the center of the room
+    Vec2 GetQuadrant(Robot robot) =>
+        new Vec2(Math.Sign(robot.pos.x - width / 2), Math.Sign(robot.pos.y - height / 2));
+
+    Vec2 AddWithWrapAround(Vec2 a, Vec2 b) =>
+        new Vec2((a.x + b.x + width) % width, (a.y + b.y + height) % height);
+
+    // shows the robot locations in the room 
+    string Plot(IEnumerable<Robot> robots) {
         var res = new char[height, width];
-        foreach (var pos in positions) {
-            res[pos.y, pos.x] = '#';
+        foreach (var robot in robots) {
+            res[robot.pos.y, robot.pos.x] = '#';
         }
         var sb = new StringBuilder();
         for (var y = 0; y < height; y++) {
             for (var x = 0; x < width; x++) {
-                sb.Append(res[y, x] == 0 ? " " : res[y, x]);
+                sb.Append(res[y, x] == '#' ? "#" : " ");
             }
-            sb.Append("\n");
+            sb.AppendLine();
         }
         return sb.ToString();
     }
@@ -67,7 +68,5 @@ class Solution : Solver {
     IEnumerable<Robot> Parse(string input) =>
         from line in input.Split("\n")
         let nums = Regex.Matches(line, @"-?\d+").Select(m => int.Parse(m.Value)).ToArray()
-        let pos = new Vec2(nums[0], nums[1])
-        let vel = new Vec2(nums[2] < 0 ? nums[2] + width : nums[2], nums[3] < 0 ? nums[3] + height : nums[3])
-        select new Robot(pos, vel);
+        select new Robot(new Vec2(nums[0], nums[1]), new Vec2(nums[2], nums[3]));
 }
