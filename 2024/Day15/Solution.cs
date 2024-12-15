@@ -4,8 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Text;
 using System.Numerics;
 
 using Map = System.Collections.Immutable.IImmutableDictionary<System.Numerics.Complex, char>;
@@ -25,107 +23,72 @@ class Solution : Solver {
         {'v', Down},
     };
 
-    public object PartOne(string input) {
+    public object PartOne(string input) => Solve(input, false);
+    public object PartTwo(string input) => Solve(input, true);
+
+    public int Solve(string input, bool scaleUp) {
         var (map, movements) = Parse(input);
+        if (scaleUp) {
+            map = ScaleUp(map);
+        }
         var robot = map.Keys.Single(k => map[k] == '@');
-        // Console.WriteLine(Show(map));
         foreach (var m in movements) {
             var dir = move[m];
-            var moved = Move(map, robot, dir);
-            if (moved.ok) {
-                map = moved.map;
+            if (Step(map, robot, dir, out map)) {
                 robot += dir;
             }
-            // Console.WriteLine(Show(map));
         }
         var res = 0.0;
-        foreach (var crate in map.Keys.Where(k => map[k] == 'O')) {
+        foreach (var crate in map.Keys.Where(k => map[k] == '[' || map[k] == 'O')) {
             res += 100 * Math.Abs(crate.Imaginary) + crate.Real;
         }
-        return res;
+        return (int)res;
     }
 
-    (bool ok, Map map) Move(Map map, Complex pos, Complex dir) {
+    bool Step(Map map, Complex pos, Complex dir, out Map mapAfter) {
+        // var mapOrig = map;
+        
         if (map[pos] == '.') {
-            return (true, map);
-        } else if (map[pos] == '#') {
-            return (false, map);
+            mapAfter = map;
+            return true;
         } else if (map[pos] == 'O' || map[pos] == '@') {
-            var (ok, mapT) = Move(map, pos + dir, dir);
-            if (ok) {
-                map = mapT;
-                map = map.SetItem(pos + dir, map[pos]);
-                map = map.SetItem(pos, '.');
-                return (true, map);
+            if (Step(map, pos + dir, dir, out mapAfter)) {
+                mapAfter = mapAfter.SetItem(pos + dir, map[pos]);
+                mapAfter = mapAfter.SetItem(pos, '.');
+                return true;
             }
         } else if (map[pos] == ']') {
-            return Move(map, pos+Left, dir);
+            return Step(map, pos + Left, dir, out mapAfter);
         } else if (map[pos] == '[') {
-            if (dir == Left && Move(map, pos + Left, Left).ok)  {
-                map = Move(map, pos + Left, Left).map;
-                map = map.SetItem(pos+Left, '[');
-                map = map.SetItem(pos, ']');
-                map = map.SetItem(pos+Right, '.');
-                return (true, map);
+            if (dir == Left) {
+                if (Step(map, pos + Left, Left, out mapAfter)) {
+                    mapAfter = mapAfter.SetItem(pos + Left, '[');
+                    mapAfter = mapAfter.SetItem(pos, ']');
+                    mapAfter = mapAfter.SetItem(pos + Right, '.');
+                    return true;
+                }
             }
-            if (dir == Right && Move(map, pos + 2*Right, dir).ok)  {
-                map = Move(map, pos + 2*Right, dir).map;
-                map = map.SetItem(pos, '.');
-                map = map.SetItem(pos+Right, '[');
-                map = map.SetItem(pos+2*Right, ']');
-                return (true, map);
+            if (dir == Right) {
+                if (Step(map, pos + 2 * Right, dir, out mapAfter)) {
+                    mapAfter = mapAfter.SetItem(pos, '.');
+                    mapAfter = mapAfter.SetItem(pos + Right, '[');
+                    mapAfter = mapAfter.SetItem(pos + 2 * Right, ']');
+                    return true;
+                }
             }
             if (dir == Up || dir == Down) {
-                 if (Move(map, pos + dir, dir).ok && Move(map, pos + Right + dir, dir).ok){
-                    map = Move(map, pos + dir, dir).map;
-                    map = Move(map, pos + Right + dir, dir).map;
-                    map = map.SetItem(pos, '.');
-                    map = map.SetItem(pos+Right, '.');
-                    map = map.SetItem(pos+dir, '[');
-                    map = map.SetItem(pos+dir+Right, ']');
-                    return (true, map);
-                 }
+                if (Step(map, pos + dir, dir, out mapAfter) && Step(mapAfter, pos + Right + dir, dir, out mapAfter)) {
+                    mapAfter = mapAfter.SetItem(pos, '.');
+                    mapAfter = mapAfter.SetItem(pos + Right, '.');
+                    mapAfter = mapAfter.SetItem(pos + dir, '[');
+                    mapAfter = mapAfter.SetItem(pos + dir + Right, ']');
+                    return true;
+                }
             }
         }
-        
-        return (false, map);
+        mapAfter = map;
+        return false;
     }
-
-
-
-    public object PartTwo(string input) {
-        var (map, movements) = Parse(input);
-        map = ScaleUp(map);
-        var robot = map.Keys.Single(k => map[k] == '@');
-        foreach (var m in movements) {
-            var dir = move[m];
-            var moved = Move(map, robot, dir);
-            if (moved.ok) {
-                map = moved.map;
-                robot += dir;
-            }
-        }
-        var res = 0.0;
-        foreach (var crate in map.Keys.Where(k => map[k] == '[')) {
-            res += 100 * Math.Abs(crate.Imaginary) + crate.Real;
-        }
-        return res;
-    }
-
-    string Show(Map map) {
-        var height = map.Keys.Max(k => (int)Math.Abs(k.Imaginary)) + 1;
-        var width = map.Keys.Max(k => (int)Math.Abs(k.Real)) + 1;
-        var res = new char[height, width];
-        var sb = new StringBuilder();
-        for (var y = 0; y < height; y++) {
-            for (var x = 0; x < width; x++) {
-                sb.Append(map[x + y * Down]);
-            }
-            sb.AppendLine();
-        }
-        return sb.ToString();
-    }
-
 
     Map ScaleUp(Map map) {
         var height = map.Keys.Max(k => (int)Math.Abs(k.Imaginary)) + 1;
