@@ -11,100 +11,83 @@ using Map = System.Collections.Immutable.IImmutableDictionary<System.Numerics.Co
 [ProblemName("Warehouse Woes")]
 class Solution : Solver {
 
-    static Complex Up = Complex.ImaginaryOne;
-    static Complex Down = -Complex.ImaginaryOne;
+    static Complex Up = -Complex.ImaginaryOne;
+    static Complex Down = Complex.ImaginaryOne;
     static Complex Left = -1;
     static Complex Right = 1;
 
-    static Dictionary<char, Complex> move = new Dictionary<char, Complex>{
-        {'^', Up},
-        {'<', Left},
-        {'>', Right},
-        {'v', Down},
-    };
+    public object PartOne(string input) => Solve(input);
+    public object PartTwo(string input) => Solve(ScaleUp(input));
 
-    public object PartOne(string input) => Solve(input, false);
-    public object PartTwo(string input) => Solve(input, true);
+    public double Solve(string input) {
+        var (map, steps) = Parse(input);
 
-    public int Solve(string input, bool scaleUp) {
-        var (map, movements) = Parse(input);
-        if (scaleUp) {
-            map = ScaleUp(map);
-        }
         var robot = map.Keys.Single(k => map[k] == '@');
-        foreach (var m in movements) {
-            var dir = move[m];
-            if (Step(map, robot, dir, out map)) {
+        foreach (var dir in steps) {
+            if (Step(ref map, robot, dir)) {
                 robot += dir;
             }
         }
-        var res = 0.0;
-        foreach (var crate in map.Keys.Where(k => map[k] == '[' || map[k] == 'O')) {
-            res += 100 * Math.Abs(crate.Imaginary) + crate.Real;
-        }
-        return (int)res;
+
+        return map.Keys
+            .Where(k => map[k] == '[' || map[k] == 'O')
+            .Sum(box => box.Real + 100 * box.Imaginary);
     }
 
-    bool Step(Map map, Complex pos, Complex dir, out Map mapAfter) {
-        // var mapOrig = map;
-        
+    // Attempts to move the robot in the given direction on the map, pushing boxes as necessary.
+    // If the move is successful, the map is updated to reflect the new positions and the function returns true.
+    // Otherwise, the map remains unchanged and the function returns false.
+    bool Step(ref Map map, Complex pos, Complex dir) {
+        var mapOrig = map;
+
         if (map[pos] == '.') {
-            mapAfter = map;
             return true;
         } else if (map[pos] == 'O' || map[pos] == '@') {
-            if (Step(map, pos + dir, dir, out mapAfter)) {
-                mapAfter = mapAfter.SetItem(pos + dir, map[pos]);
-                mapAfter = mapAfter.SetItem(pos, '.');
+            if (Step(ref map, pos + dir, dir)) {
+                map = map
+                    .SetItem(pos + dir, map[pos])
+                    .SetItem(pos, '.');
                 return true;
             }
         } else if (map[pos] == ']') {
-            return Step(map, pos + Left, dir, out mapAfter);
+            return Step(ref map, pos + Left, dir);
         } else if (map[pos] == '[') {
             if (dir == Left) {
-                if (Step(map, pos + Left, Left, out mapAfter)) {
-                    mapAfter = mapAfter.SetItem(pos + Left, '[');
-                    mapAfter = mapAfter.SetItem(pos, ']');
-                    mapAfter = mapAfter.SetItem(pos + Right, '.');
+                if (Step(ref map, pos + Left, Left)) {
+                    map = map
+                        .SetItem(pos + Left, '[')
+                        .SetItem(pos, ']')
+                        .SetItem(pos + Right, '.');
                     return true;
                 }
-            }
-            if (dir == Right) {
-                if (Step(map, pos + 2 * Right, dir, out mapAfter)) {
-                    mapAfter = mapAfter.SetItem(pos, '.');
-                    mapAfter = mapAfter.SetItem(pos + Right, '[');
-                    mapAfter = mapAfter.SetItem(pos + 2 * Right, ']');
+            } else if (dir == Right) {
+                if (Step(ref map, pos + 2 * Right, dir)) {
+                    map = map
+                        .SetItem(pos, '.')
+                        .SetItem(pos + Right, '[')
+                        .SetItem(pos + 2 * Right, ']');
                     return true;
                 }
-            }
-            if (dir == Up || dir == Down) {
-                if (Step(map, pos + dir, dir, out mapAfter) && Step(mapAfter, pos + Right + dir, dir, out mapAfter)) {
-                    mapAfter = mapAfter.SetItem(pos, '.');
-                    mapAfter = mapAfter.SetItem(pos + Right, '.');
-                    mapAfter = mapAfter.SetItem(pos + dir, '[');
-                    mapAfter = mapAfter.SetItem(pos + dir + Right, ']');
+            } else {
+                if (Step(ref map, pos + dir, dir) && Step(ref map, pos + Right + dir, dir)) {
+                    map = map
+                        .SetItem(pos, '.')
+                        .SetItem(pos + Right, '.')
+                        .SetItem(pos + dir, '[')
+                        .SetItem(pos + dir + Right, ']');
                     return true;
                 }
             }
         }
-        mapAfter = map;
+
+        map = mapOrig;
         return false;
     }
 
-    Map ScaleUp(Map map) {
-        var height = map.Keys.Max(k => (int)Math.Abs(k.Imaginary)) + 1;
-        var width = map.Keys.Max(k => (int)Math.Abs(k.Real)) + 1;
-        var res = new Dictionary<Complex, char>();
+    string ScaleUp(string input) =>
+        input.Replace("#", "##").Replace(".", "..").Replace("O", "[]").Replace("@", "@.");
 
-        for (var y = 0; y < height; y++) {
-            for (var x = 0; x < width; x++) {
-                var c = map[x + y * Down];
-                res[2 * x + y * Down] = c == 'O' ? '[' : c;
-                res[2 * x + 1 + y * Down] = c == '@' ? '.' : c == 'O' ? ']' : c;
-            }
-        }
-        return res.ToImmutableDictionary();
-    }
-    (Map, string) Parse(string input) {
+    (Map, Complex[]) Parse(string input) {
         var blocks = input.Split("\n\n");
         var lines = blocks[0].Split("\n");
         var map = (
@@ -112,7 +95,16 @@ class Solution : Solver {
             from x in Enumerable.Range(0, lines[0].Length)
             select new KeyValuePair<Complex, char>(x + y * Down, lines[y][x])
         ).ToImmutableDictionary();
-        var movements = blocks[1].ReplaceLineEndings("");
-        return (map, movements);
+
+        var steps = blocks[1].ReplaceLineEndings("").Select(ch =>
+            ch switch {
+                '^' => Up,
+                '<' => Left,
+                '>' => Right,
+                'v' => Down,
+                _ => throw new Exception()
+            });
+
+        return (map, steps.ToArray());
     }
 }
