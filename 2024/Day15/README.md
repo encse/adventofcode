@@ -5,9 +5,6 @@ You look up to see a vast school of [lanternfish](/2021/day/6) swimming past you
 
 _Visit the website for the full story and [full puzzle](https://adventofcode.com/2024/day/15) description._
 
-Here’s a revised version with improved grammar, clarity, and flow:
-
-
 A nice Sokoban-style puzzle for the weekend! The main difference is that in the original Sokoban, the robot could push only a single box, not multiple boxes. This adds complexity to both parts of the puzzle. However, it’s not that difficult to handle... I moved the hard parts into the `TryToStep` function that takes the map, a position, and a direction, then attempts to make a move in that direction.
 
 If the position corresponds to the robot or a box, the function checks whether the neighboring cell is free or can be made free by pushing boxes in the given direction. The .NET API sometimes uses the `TryToDoX` pattern, where a function returns a boolean result and provides an `out` parameter. I reused this pattern here. On success, the updated map is returned via the `ref` parameter. If the move fails, the map remains unchanged. 
