@@ -24,7 +24,7 @@ class Solution : Solver {
 
         var robot = map.Keys.Single(k => map[k] == '@');
         foreach (var dir in steps) {
-            if (Step(ref map, robot, dir)) {
+            if (TryToStep(ref map, robot, dir)) {
                 robot += dir;
             }
         }
@@ -37,23 +37,23 @@ class Solution : Solver {
     // Attempts to move the robot in the given direction on the map, pushing boxes as necessary.
     // If the move is successful, the map is updated to reflect the new positions and the function returns true.
     // Otherwise, the map remains unchanged and the function returns false.
-    bool Step(ref Map map, Complex pos, Complex dir) {
+    bool TryToStep(ref Map map, Complex pos, Complex dir) {
         var mapOrig = map;
 
         if (map[pos] == '.') {
             return true;
         } else if (map[pos] == 'O' || map[pos] == '@') {
-            if (Step(ref map, pos + dir, dir)) {
+            if (TryToStep(ref map, pos + dir, dir)) {
                 map = map
                     .SetItem(pos + dir, map[pos])
                     .SetItem(pos, '.');
                 return true;
             }
         } else if (map[pos] == ']') {
-            return Step(ref map, pos + Left, dir);
+            return TryToStep(ref map, pos + Left, dir);
         } else if (map[pos] == '[') {
             if (dir == Left) {
-                if (Step(ref map, pos + Left, Left)) {
+                if (TryToStep(ref map, pos + Left, dir)) {
                     map = map
                         .SetItem(pos + Left, '[')
                         .SetItem(pos, ']')
@@ -61,7 +61,7 @@ class Solution : Solver {
                     return true;
                 }
             } else if (dir == Right) {
-                if (Step(ref map, pos + 2 * Right, dir)) {
+                if (TryToStep(ref map, pos + 2 * Right, dir)) {
                     map = map
                         .SetItem(pos, '.')
                         .SetItem(pos + Right, '[')
@@ -69,7 +69,7 @@ class Solution : Solver {
                     return true;
                 }
             } else {
-                if (Step(ref map, pos + dir, dir) && Step(ref map, pos + Right + dir, dir)) {
+                if (TryToStep(ref map, pos + dir, dir) && TryToStep(ref map, pos + Right + dir, dir)) {
                     map = map
                         .SetItem(pos, '.')
                         .SetItem(pos + Right, '.')
