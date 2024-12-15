@@ -15,13 +15,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/a11y-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js"></script>
-    <title>Advent of Code 2021/7 'The Treachery of Whales'' in C# by encse</title>
+    <title>Advent of Code 2024/15 'Warehouse Woes'' in C# by encse</title>
 
     <head>
-        <meta property="og:title" content="Advent of Code 2021/7 'The Treachery of Whales' in C# by encse<">
-        <meta property="og:description" content="C# solution to the 'The Treachery of Whales' Advent of Code problem.">
-        <meta property="og:image" content="https://aoc.csokavar.hu/2021/7//illustration.jpeg">
-        <meta property="og:url" content="https://aoc.csokavar.hu/2021/7/">
+        <meta property="og:title" content="Advent of Code 2024/15 'Warehouse Woes' in C# by encse<">
+        <meta property="og:description" content="C# solution to the 'Warehouse Woes' Advent of Code problem.">
+        <meta property="og:image" content="https://aoc.csokavar.hu/2024/15//illustration.jpeg">
+        <meta property="og:url" content="https://aoc.csokavar.hu/2024/15/">
         <meta property="og:type" content="website">
       </head>
 
@@ -250,11 +250,11 @@
     <div id="top-nav">
         <div id="year-picker"><nav class="dropdown">
             <input type="checkbox" id="dropdown-toggle" class="dropdown-toggle">
-            <span class="current"><label id="dropdown-label" for="dropdown-toggle">2021</label></span>
+            <span class="current"><label id="dropdown-label" for="dropdown-toggle">2024</label></span>
             <div class="dropdown-content"><a href="/2015/25/">2015</a><a href="/2016/25/">2016</a><a href="/2017/25/">2017</a><a href="/2018/25/">2018</a><a href="/2019/25/">2019</a><a href="/2020/25/">2020</a><a href="/2021/25/">2021</a><a href="/2022/25/">2022</a><a href="/2023/25/">2023</a><a href="/2024/15/">2024</a></div>
         </nav>
      </div>
-        <div id="day-picker"><span><a href="/2021/1">01</a></span><span><a href="/2021/2">02</a></span><span><a href="/2021/3">03</a></span><span><a href="/2021/4">04</a></span><span><a href="/2021/5">05</a></span><span><a href="/2021/6">06</a></span><span class="current"><a href="/2021/7">07</a></span><span><a href="/2021/8">08</a></span><span><a href="/2021/9">09</a></span><span><a href="/2021/10">10</a></span><span><a href="/2021/11">11</a></span><span><a href="/2021/12">12</a></span><span><a href="/2021/13">13</a></span><span><a href="/2021/14">14</a></span><span><a href="/2021/15">15</a></span><span><a href="/2021/16">16</a></span><span><a href="/2021/17">17</a></span><span><a href="/2021/18">18</a></span><span><a href="/2021/19">19</a></span><span><a href="/2021/20">20</a></span><span><a href="/2021/21">21</a></span><span><a href="/2021/22">22</a></span><span><a href="/2021/23">23</a></span><span><a href="/2021/24">24</a></span><span><a href="/2021/25">25</a></span></div>
+        <div id="day-picker"><span><a href="/2024/1">01</a></span><span><a href="/2024/2">02</a></span><span><a href="/2024/3">03</a></span><span><a href="/2024/4">04</a></span><span><a href="/2024/5">05</a></span><span><a href="/2024/6">06</a></span><span><a href="/2024/7">07</a></span><span><a href="/2024/8">08</a></span><span><a href="/2024/9">09</a></span><span><a href="/2024/10">10</a></span><span><a href="/2024/11">11</a></span><span><a href="/2024/12">12</a></span><span><a href="/2024/13">13</a></span><span><a href="/2024/14">14</a></span><span class="current"><a href="/2024/15">15</a></span></div>
     </div>
     <div class="main">
         <div class="header-container">
@@ -264,8 +264,8 @@
 
             <div class="header-title">
                 <p class="text">Advent of Code</p>
-                <h2 id="problem-id">2021/7</h2>
-                <h2 id="problem-name">The Treachery of Whales</h2>
+                <h2 id="problem-id">2024/15</h2>
+                <h2 id="problem-name">Warehouse Woes</h2>
                 <p class="text">in C#</p>
                 <p class="text"></p>
                 <p class="text"><em>by <a style="text-decoration: underline"
@@ -275,35 +275,123 @@
         </div>
 
         <div class="content">
-            <div id="notes"><p>A giant <a href="https://en.wikipedia.org/wiki/Sperm_whale">whale</a> has decided your submarine is its next meal, and it&#39;s much faster than you are. There&#39;s nowhere to run!</p>
-<p>Suddenly, a swarm of crabs (each in its own tiny submarine - it&#39;s too deep for them otherwise) zooms in to rescue you! They seem to be preparing to blast a hole in the ocean floor; sensors indicate a <em>massive underground cave system</em> just beyond where they&#39;re aiming!</p>
-<p>Read the <a href="https://adventofcode.com/2021/day/7">full puzzle</a>.</p>
+            <div id="notes"><p>You appear back inside your own mini submarine! Each Historian drives their mini submarine in a different direction; maybe the Chief has his own submarine down here somewhere as well?</p>
+<p>You look up to see a vast school of <a href="/2021/day/6">lanternfish</a> swimming past you. On closer inspection, they seem quite anxious, so you drive your mini submarine over to see if you can help.</p>
+<p><em>Visit the website for the full story and <a href="https://adventofcode.com/2024/day/15">full puzzle</a> description.</em></p>
+<p>Here’s a revised version with improved grammar, clarity, and flow:</p>
+<p>A nice Sokoban-style puzzle for the weekend! The main difference is that in the original Sokoban, the robot could push only a single box, not multiple boxes. This adds complexity to both parts of the puzzle. However, it’s not that difficult to handle... I moved the hard parts into the <code>TryToStep</code> function that takes the map, a position, and a direction, then attempts to make a move in that direction.</p>
+<p>If the position corresponds to the robot or a box, the function checks whether the neighboring cell is free or can be made free by pushing boxes in the given direction. The .NET API sometimes uses the <code>TryToDoX</code> pattern, where a function returns a boolean result and provides an <code>out</code> parameter. I reused this pattern here. On success, the updated map is returned via the <code>ref</code> parameter. If the move fails, the map remains unchanged. </p>
+<p>The real challenge lies in <code>part 2</code>, where recursion needs to branch whenever the robot pushes more than one box at a time. In such cases, we must invoke <code>TryToStep</code> for each box. Due to the recursive nature of the algorithm, it’s possible for one branch to succeed while the other fails. When this happens, the entire map must be reset to its original state before we pop from the recursion. This could be quite tricky to manage unless you make copies of the dictionary that holds the state — or, as I did, use an immutable dictionary instead.</p>
+<p>I’m not entirely satisfied with the &quot;if-ladder&quot; structure of the <code>TryToStep</code> function, but for now, I don’t have a better idea to handle all the cases in a more readable way.</p>
 </div>
-            <div id="code-container"><pre class="hljs language-csharp"><code>using System;
+            <div id="code-container"><pre class="hljs language-csharp"><code>namespace AdventOfCode.Y2024.Day15;
+
+using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
+using System.Numerics;
 
-namespace AdventOfCode.Y2021.Day07;
+using Map = System.Collections.Immutable.IImmutableDictionary<System.Numerics.Complex, char>;
 
-[ProblemName("The Treachery of Whales")]
+[ProblemName("Warehouse Woes")]
 class Solution : Solver {
 
-    public object PartOne(string input) => 
-        FuelMin(input, fuelConsumption: distance => distance);
+    static Complex Up = -Complex.ImaginaryOne;
+    static Complex Down = Complex.ImaginaryOne;
+    static Complex Left = -1;
+    static Complex Right = 1;
 
-    public object PartTwo(string input) => 
-        FuelMin(input, fuelConsumption: distance => (1 + distance) * distance / 2);
-        
-    int FuelMin(string input, Func<int, int> fuelConsumption) {
-        var positions = input.Split(",").Select(int.Parse).ToArray();
+    public object PartOne(string input) => Solve(input);
+    public object PartTwo(string input) => Solve(ScaleUp(input));
 
-        var totalFuelToReachTarget = (int target) => 
-            positions.Select(position => fuelConsumption(Math.Abs(target - position))).Sum();
+    public double Solve(string input) {
+        var (map, steps) = Parse(input);
 
-        // Minimize the total fuel consumption checking each possible target position.
-        // We have just about 1000 of these, so an O(n^2) algorithm will suffice.
-        var minPosition = positions.Min();
-        var maxPosition = positions.Max();
-        return Enumerable.Range(minPosition, maxPosition - minPosition + 1).Select(totalFuelToReachTarget).Min();
+        var robot = map.Keys.Single(k => map[k] == '@');
+        foreach (var dir in steps) {
+            if (TryToStep(ref map, robot, dir)) {
+                robot += dir;
+            }
+        }
+
+        return map.Keys
+            .Where(k => map[k] == '[' || map[k] == 'O')
+            .Sum(box => box.Real + 100 * box.Imaginary);
+    }
+
+    // Attempts to move the robot in the given direction on the map, pushing boxes as necessary.
+    // If the move is successful, the map is updated to reflect the new positions and the function returns true.
+    // Otherwise, the map remains unchanged and the function returns false.
+    bool TryToStep(ref Map map, Complex pos, Complex dir) {
+        var mapOrig = map;
+
+        if (map[pos] == '.') {
+            return true;
+        } else if (map[pos] == 'O' || map[pos] == '@') {
+            if (TryToStep(ref map, pos + dir, dir)) {
+                map = map
+                    .SetItem(pos + dir, map[pos])
+                    .SetItem(pos, '.');
+                return true;
+            }
+        } else if (map[pos] == ']') {
+            return TryToStep(ref map, pos + Left, dir);
+        } else if (map[pos] == '[') {
+            if (dir == Left) {
+                if (TryToStep(ref map, pos + Left, dir)) {
+                    map = map
+                        .SetItem(pos + Left, '[')
+                        .SetItem(pos, ']')
+                        .SetItem(pos + Right, '.');
+                    return true;
+                }
+            } else if (dir == Right) {
+                if (TryToStep(ref map, pos + 2 * Right, dir)) {
+                    map = map
+                        .SetItem(pos, '.')
+                        .SetItem(pos + Right, '[')
+                        .SetItem(pos + 2 * Right, ']');
+                    return true;
+                }
+            } else {
+                if (TryToStep(ref map, pos + dir, dir) && TryToStep(ref map, pos + Right + dir, dir)) {
+                    map = map
+                        .SetItem(pos, '.')
+                        .SetItem(pos + Right, '.')
+                        .SetItem(pos + dir, '[')
+                        .SetItem(pos + dir + Right, ']');
+                    return true;
+                }
+            }
+        }
+
+        map = mapOrig;
+        return false;
+    }
+
+    string ScaleUp(string input) =>
+        input.Replace("#", "##").Replace(".", "..").Replace("O", "[]").Replace("@", "@.");
+
+    (Map, Complex[]) Parse(string input) {
+        var blocks = input.Split("\n\n");
+        var lines = blocks[0].Split("\n");
+        var map = (
+            from y in Enumerable.Range(0, lines.Length)
+            from x in Enumerable.Range(0, lines[0].Length)
+            select new KeyValuePair<Complex, char>(x + y * Down, lines[y][x])
+        ).ToImmutableDictionary();
+
+        var steps = blocks[1].ReplaceLineEndings("").Select(ch =>
+            ch switch {
+                '^' => Up,
+                '<' => Left,
+                '>' => Right,
+                'v' => Down,
+                _ => throw new Exception()
+            });
+
+        return (map, steps.ToArray());
     }
 }
 </code></pre></div>
