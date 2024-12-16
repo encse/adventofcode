@@ -1,109 +1,73 @@
 namespace AdventOfCode.Y2024.Day16;
 
-using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Net;
 using System.Numerics;
-using AdventOfCode.Y2018.Day13;
-using AdventOfCode.Y2023.Day15;
 using Map = System.Collections.Generic.Dictionary<System.Numerics.Complex, char>;
-using Reindeer = (System.Numerics.Complex pos, System.Numerics.Complex dir);
+using State = (System.Numerics.Complex pos, System.Numerics.Complex dir);
 
 [ProblemName("Reindeer Maze")]
 class Solution : Solver {
 
-    static readonly Complex Up = -Complex.ImaginaryOne;
-    static readonly Complex Down = Complex.ImaginaryOne;
-    static readonly Complex Left = -1;
-    static readonly Complex Right = 1;
-    static readonly Complex[] Dirs = { Up, Right, Left, Down };
+    static readonly Complex North = -Complex.ImaginaryOne;
+    static readonly Complex South = Complex.ImaginaryOne;
+    static readonly Complex West = -1;
+    static readonly Complex East = 1;
+    static readonly Complex[] Dirs = { North, East, West, South };
 
-    public object PartOne(string input) {
-        var map = GetMap(input);
-        var start = map.Keys.Single(k => map[k] == 'S');
-        var goal = map.Keys.Single(k => map[k] == 'E');
+    public object PartOne(string input) => FindDistance(GetMap(input));
+    public object PartTwo(string input) => FindBestSpots(GetMap(input));
 
-        var dist = Distances(map, goal);
-        return dist[(start, Right)];
+    int FindDistance(Map map) {
+        var dist = DistancesTo(map, Goal(map));
+        return dist[Start(map)];
     }
 
-    public object PartTwo(string input) {
-        var map = GetMap(input);
-        var start = map.Keys.Single(k => map[k] == 'S');
-        var goal = map.Keys.Single(k => map[k] == 'E');
+    // determines the number tiles that are on one of the shortest paths in the race.
+    int FindBestSpots(Map map) {
+        var dist = DistancesTo(map, Goal(map));
+        var start = Start(map);
 
-        var dist = Distances(map, goal);
-        return FindBestSpots(map, dist, start).Count;
-    }
+        // flood fill algorithm determines the best spots by following the shortest paths 
+        // using the distance map as guideline.
 
-    IEnumerable<Reindeer> Prev(Reindeer r) {
-        foreach (var dir in Dirs) {
-            if (dir == r.dir) {
-                yield return (r.pos - dir, dir);
-            } else if (dir != -r.dir) {
-                yield return (r.pos, dir);
-            }
-        }
-    }
-     IEnumerable<Reindeer> Next(Reindeer r) {
-        foreach (var dir in Dirs) {
-            if (dir == r.dir) {
-                yield return (r.pos + dir, dir);
-            } else if (dir != -r.dir) {
-                yield return (r.pos, dir);
-            }
-        }
-    }
-    HashSet<Complex> FindBestSpots(Map map, Dictionary<Reindeer, int> dist, Complex start) {
+        var q = new PriorityQueue<State, int>();
+        q.Enqueue(start, dist[start]);
+        var bestSpots = new HashSet<State> { start };
 
-        var q = new PriorityQueue<Reindeer, int>();
-        q.Enqueue((start, Right), dist[(start, Right)]);
-        var seen = new HashSet<Reindeer>{(start, Right)};
-
-        while (q.TryDequeue(out var reindeer, out var totalCost)) {
-            foreach (var next in Next(reindeer)) {
-                if (map.GetValueOrDefault(next.pos) == '#') {
-                    continue;
-                }
-                
-                if (seen.Contains(next)) {
+        while (q.TryDequeue(out var state, out var totalScore)) {
+            foreach (var (next, score) in Steps(map, state, forward: true)) {
+                if (bestSpots.Contains(next)) {
                     continue;
                 }
 
-                var cost = next.dir == reindeer.dir ? 1 : 1000;
-                var qqqq = dist[next];
-                if (dist[next] + cost == totalCost) {
-                    seen.Add(next);
+                if (dist[next] + score == totalScore) {
+                    bestSpots.Add(next);
                     q.Enqueue(next, dist[next]);
                 }
             }
         }
-        return seen.Select(x=>x.pos).ToHashSet();
+        return bestSpots.DistinctBy(state => state.pos).Count();
     }
 
-    Dictionary<Reindeer, int> Distances(Map map, Complex goal) {
-        var res = new Dictionary<Reindeer, int>();
+    Dictionary<State, int> DistancesTo(Map map, Complex goal) {
+        var res = new Dictionary<State, int>();
 
-        var q = new PriorityQueue<Reindeer, int>();
+        // a flood fill algorithm, works backwards from the goal, and 
+        // computes the distances between any location in the map and the goal
+        var q = new PriorityQueue<State, int>();
         foreach (var dir in Dirs) {
             q.Enqueue((goal, dir), 0);
             res[(goal, dir)] = 0;
         }
 
-        while (q.TryDequeue(out var reindeer, out var totalCost)) {
-            if (totalCost != res[reindeer]) {
+        while (q.TryDequeue(out var state, out var totalScore)) {
+            if (totalScore != res[state]) {
                 continue;
             }
-            foreach (var next in Prev(reindeer)) {
-                if (map.GetValueOrDefault(next.pos) == '#') {
-                    continue;
-                }
-
-                var cost = next.dir == reindeer.dir ? 1 : 1000;
-                var nextCost = totalCost + cost;
-
+            foreach (var (next, score) in Steps(map, state, forward: false)) {
+                var nextCost = totalScore + score;
                 if (res.ContainsKey(next) && res[next] < nextCost) {
                     continue;
                 }
@@ -115,44 +79,21 @@ class Solution : Solver {
         return res;
     }
 
-    (Complex dir, int totalCost) Solve(Map map, Reindeer start, Complex goal) {
 
-        var q = new PriorityQueue<Reindeer, int>();
-
-        q.Enqueue(start, 0);
-
-        var seen = new HashSet<Reindeer>();
-
-        while (q.TryDequeue(out var reindeer, out var totalCost)) {
-            if (reindeer.pos == goal) {
-                return (reindeer.dir, totalCost);
-            }
-
-            foreach (var nextDir in new[] { Right, Left, Up, Down }) {
-                var nextPos = reindeer.pos + nextDir;
-
-                if (nextDir == -reindeer.dir) {
-                    continue;
+    // returns the possible next or previous states and the associated costs for a given state.
+    // in forward mode we scan the possible states from the start state towards the goal.
+    // in backward mode we are working backwards from the goal to the start.
+    IEnumerable<(State, int cost)> Steps(Map map, State state, bool forward) {
+        foreach (var dir in Dirs) {
+            if (dir == state.dir) {
+                var pos = forward ? state.pos + dir : state.pos - dir;
+                if (map.GetValueOrDefault(pos) != '#') {
+                    yield return ((pos, dir), 1);
                 }
-
-                if (map.GetValueOrDefault(nextPos) == '#') {
-                    continue;
-                }
-
-
-                var next = (nextPos, nextDir);
-                if (seen.Contains(next)) {
-                    continue;
-                }
-
-                var cost = nextDir == reindeer.dir ? 1 : 1001;
-                seen.Add(next);
-                q.Enqueue(next, totalCost + cost);
-
+            } else if (dir != -state.dir) {
+                yield return ((state.pos, dir), 1000);
             }
         }
-
-        return (0, int.MaxValue / 2);
     }
 
     // store the points in a dictionary so that we can iterate over them and 
@@ -165,4 +106,6 @@ class Solution : Solver {
             select new KeyValuePair<Complex, char>(Complex.ImaginaryOne * y + x, map[y][x])
         ).ToDictionary();
     }
+    Complex Goal(Map map) => map.Keys.Single(k => map[k] == 'E');
+    State Start(Map map) => (map.Keys.Single(k => map[k] == 'S'), East);
 }
