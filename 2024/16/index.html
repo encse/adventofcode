@@ -278,16 +278,19 @@
             <div id="notes"><p>It&#39;s time again for the <a href="/2015/day/14">Reindeer Olympics</a>! This year, the big event is the <em>Reindeer Maze</em>, where the Reindeer compete for the <em>lowest score</em>.</p>
 <p>You and The Historians arrive to search for the Chief right as the event is about to start. It wouldn&#39;t hurt to watch a little, right?</p>
 <p><em>Visit the website for the full story and <a href="https://adventofcode.com/2024/day/16">full puzzle</a> description.</em></p>
-<p>I spent hell a lot of time on this one. I’m not sure why, because I had a good understanding of what to do for both parts. <code>Part 1</code> went reasonably well: I quickly implemented a priority queue-based approach to find the shortest path from the <code>start</code> state to the <code>goal</code>.</p>
-<p>For <code>Part 2</code>, I initially tried a few dead ends, but I found the right direction after about half an hour. The idea is to split the problem into two halves. First, we compute the optimal distances from every tile and direction to the goal node. This can be found in the <code>DistancesTo</code> function below. It is similar to how I implemented Part 1, using a priority queue, but I needed to walk backwards instead of forward.</p>
-<p>Once I have the distances, I can start an other round, now working forward from the start position and using a flood-fill-like algorithm to discover the optimal positions. This is easy to do with the distance map as a guide. I can maintain the remaining score along the path, and I just need to check if the distance from a potential next state equals to the score I still have to use. This logic can be found in the <code>FindBestSpots</code> function.</p>
+<p>I spent hell a lot of time on this one. I’m not sure why, because I had a good understanding of what to do for both parts. <code>Part 1</code> went reasonably well: I quickly used a priority based approach to find the shortest path from the <code>start</code> state to the <code>goal</code>.</p>
+<p>For <code>Part 2</code>, I initially tried a few dead ends, because I overcomplicate things as usual. But I found the right direction after about half an hour. The idea is to split the problem into two halves. First, we compute the optimal distances from every tile and direction to the goal node. This can be found using <em>Dijskstra&#39;s algorithm</em>.</p>
+<p>Once I have the distances, I can start an other round, now working forward from the start position and using a flood-fill-like algorithm to discover the positions on the shortest path. This is easy to do with the distance map as a guide. I maintain the &#39;remaining score&#39; along the path, and just need to check if the distance from a potential next state equals to the score I still have to use. This logic can be found in the <code>FindBestSpots</code> function.</p>
 </div>
             <div id="code-container"><pre class="hljs language-csharp"><code>namespace AdventOfCode.Y2024.Day16;
 
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Numerics;
+using AngleSharp.Common;
 using Map = System.Collections.Generic.Dictionary&lt;System.Numerics.Complex, char&gt;;
 using State = (System.Numerics.Complex pos, System.Numerics.Complex dir);
 
@@ -300,69 +303,55 @@ class Solution : Solver {
     static readonly Complex East = 1;
     static readonly Complex[] Dirs = { North, East, West, South };
 
-    public object PartOne(string input) =&gt; FindDistance(GetMap(input));
+    public object PartOne(string input) =&gt; FindBestScore(GetMap(input));
     public object PartTwo(string input) =&gt; FindBestSpots(GetMap(input));
 
-    int FindDistance(Map map) {
-        var dist = DistancesTo(map, Goal(map));
-        return dist[Start(map)];
-    }
+    int FindBestScore(Map map) =&gt; Dijkstra(map, Goal(map))[Start(map)];
 
-    // determines the number tiles that are on one of the shortest paths in the race.
     int FindBestSpots(Map map) {
-        var dist = DistancesTo(map, Goal(map));
+        var dist = Dijkstra(map, Goal(map));
         var start = Start(map);
 
-        // flood fill algorithm determines the best spots by following the shortest paths 
-        // using the distance map as guideline.
-
+        // track the shortest paths using the distance map as guideline.
         var q = new PriorityQueue&lt;State, int&gt;();
         q.Enqueue(start, dist[start]);
-        var bestSpots = new HashSet&lt;State&gt; { start };
 
+        var bestSpots = new HashSet&lt;State&gt; { start };
         while (q.TryDequeue(out var state, out var remainingScore)) {
             foreach (var (next, score) in Steps(map, state, forward: true)) {
-                if (bestSpots.Contains(next)) {
-                    continue;
-                }
-                var nextScore = remainingScore - score;
-                if (dist[next] == nextScore) {
+                var nextRemainingScore = remainingScore - score;
+                if (!bestSpots.Contains(next) &amp;&amp; dist[next] == nextRemainingScore) {
                     bestSpots.Add(next);
-                    q.Enqueue(next, nextScore);
+                    q.Enqueue(next, nextRemainingScore);
                 }
             }
         }
         return bestSpots.DistinctBy(state =&gt; state.pos).Count();
     }
 
-    Dictionary&lt;State, int&gt; DistancesTo(Map map, Complex goal) {
-        var res = new Dictionary&lt;State, int&gt;();
+    Dictionary&lt;State, int&gt; Dijkstra(Map map, Complex goal) {
+        // Dijkstra algorithm; works backwards from the goal returns the
+        // distances to all tiles and directions.
+        var dist = new Dictionary&lt;State, int&gt;();
 
-        // a flood fill algorithm, works backwards from the goal, and 
-        // computes the distances between any location in the map and the goal
         var q = new PriorityQueue&lt;State, int&gt;();
         foreach (var dir in Dirs) {
             q.Enqueue((goal, dir), 0);
-            res[(goal, dir)] = 0;
+            dist[(goal, dir)] = 0;
         }
 
-        while (q.TryDequeue(out var state, out var totalScore)) {
-            if (totalScore != res[state]) {
-                continue;
-            }
-            foreach (var (next, score) in Steps(map, state, forward: false)) {
-                var nextCost = totalScore + score;
-                if (res.ContainsKey(next) &amp;&amp; res[next] &lt; nextCost) {
-                    continue;
+        while (q.TryDequeue(out var cur, out var totalDistance)) {
+            foreach (var (next, score) in Steps(map, cur, forward: false)) {
+                var nextCost = totalDistance + score;
+                if (nextCost &lt; dist.GetOrDefault(next, int.MaxValue)) {
+                    q.Remove(next, out _, out _, null);
+                    dist[next] = nextCost;
+                    q.Enqueue(next, nextCost);
                 }
-
-                res[next] = nextCost;
-                q.Enqueue(next, nextCost);
             }
         }
-        return res;
+        return dist;
     }
-
 
     // returns the possible next or previous states and the associated costs for a given state.
     // in forward mode we scan the possible states from the start state towards the goal.
