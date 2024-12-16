@@ -284,11 +284,11 @@ using System.Linq;
 
 namespace AdventOfCode.Y2018.Day08;
 
-[ProblemName("Memory Maneuver")]
+[ProblemName(&quot;Memory Maneuver&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) =>
-        Parse(input).fold(0, (cur, node) => cur + node.metadata.Sum());
+    public object PartOne(string input) =&gt;
+        Parse(input).fold(0, (cur, node) =&gt; cur + node.metadata.Sum());
     
 
     public object PartTwo(string input) {
@@ -296,22 +296,22 @@ class Solution : Solver {
     }
 
     Node Parse(string input) {
-        var nums = input.Split(" ").Select(int.Parse).GetEnumerator();
-        Func<int> next = () => {
+        var nums = input.Split(&quot; &quot;).Select(int.Parse).GetEnumerator();
+        Func&lt;int&gt; next = () =&gt; {
             nums.MoveNext();
             return nums.Current;
         };
 
-        Func<Node> read = null;
-        read = () => {
+        Func&lt;Node&gt; read = null;
+        read = () =&gt; {
             var node = new Node() {
                 children = new Node[next()],
                 metadata = new int[next()]
             };
-            for (var i = 0; i < node.children.Length; i++) {
+            for (var i = 0; i &lt; node.children.Length; i++) {
                 node.children[i] = read();
             }
-            for (var i = 0; i < node.metadata.Length; i++) {
+            for (var i = 0; i &lt; node.metadata.Length; i++) {
                 node.metadata[i] = next();
             }
             return node;
@@ -325,8 +325,8 @@ class Solution : Solver {
 class Node {
     public Node[] children;
     public int[] metadata;
-    public T fold<T>(T seed, Func<T, Node, T> aggregate) {
-        return children.Aggregate(aggregate(seed, this), (cur, child) => child.fold(cur, aggregate));
+    public T fold&lt;T&gt;(T seed, Func&lt;T, Node, T&gt; aggregate) {
+        return children.Aggregate(aggregate(seed, this), (cur, child) =&gt; child.fold(cur, aggregate));
     }
 
     public int value() {
@@ -336,7 +336,7 @@ class Node {
 
         var res = 0;
         foreach(var i in metadata){
-            if(i >= 1 && i <= children.Length){
+            if(i &gt;= 1 &amp;&amp; i &lt;= children.Length){
                 res += children[i-1].value();
             }
         }

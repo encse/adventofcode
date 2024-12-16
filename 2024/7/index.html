@@ -289,16 +289,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-[ProblemName("Bridge Repair")]
+[ProblemName(&quot;Bridge Repair&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Filter(input, Check1).Sum();
-    public object PartTwo(string input) => Filter(input, Check2).Sum();
+    public object PartOne(string input) =&gt; Filter(input, Check1).Sum();
+    public object PartTwo(string input) =&gt; Filter(input, Check2).Sum();
 
     // returns those calibrations that are valid according to the checker
-    private IEnumerable<long> Filter(string input, Func<long,long,List<long>, bool> check) => 
-        from line in input.Split("\n")
-            let parts = Regex.Matches(line, @"\d+").Select(m=>long.Parse(m.Value))
+    private IEnumerable&lt;long&gt; Filter(string input, Func&lt;long,long,List&lt;long&gt;, bool&gt; check) =&gt; 
+        from line in input.Split(&quot;\n&quot;)
+            let parts = Regex.Matches(line, @&quot;\d+&quot;).Select(m=&gt;long.Parse(m.Value))
             let target = parts.First()
             let nums = parts.Skip(1).ToList()
         where check(target, nums[0], nums[1..])
@@ -307,18 +307,18 @@ class Solution : Solver {
     // separate checkers provided for the two parts, these recursive functions go
     // over the numbers and use all allowed operators to update the accumulated result.
     // at the end of the recursion we simply check if we reached the target
-    private bool Check1(long target, long acc, List<long> nums) =>
+    private bool Check1(long target, long acc, List&lt;long&gt; nums) =&gt;
         nums switch {
-            [] => target == acc,
-            _  => Check1(target, acc * nums[0], nums[1..]) ||
+            [] =&gt; target == acc,
+            _  =&gt; Check1(target, acc * nums[0], nums[1..]) ||
                   Check1(target, acc + nums[0], nums[1..])
         };
 
-    private bool Check2(long target, long acc, List<long> nums) =>
+    private bool Check2(long target, long acc, List&lt;long&gt; nums) =&gt;
         nums switch {
-            _ when acc > target => false, // optimization: early exit from deadend
-            [] => target == acc,
-            _  => Check2(target, long.Parse($"{acc}{nums[0]}"), nums[1..]) ||
+            _ when acc &gt; target =&gt; false, // optimization: early exit from deadend
+            [] =&gt; target == acc,
+            _  =&gt; Check2(target, long.Parse($&quot;{acc}{nums[0]}&quot;), nums[1..]) ||
                   Check2(target, acc * nums[0], nums[1..]) ||
                   Check2(target, acc + nums[0], nums[1..])
         };

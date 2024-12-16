@@ -290,42 +290,42 @@ using System.Text.RegularExpressions;
 
 record Range(long begin, long end);
 
-[ProblemName("If You Give A Seed A Fertilizer")]
+[ProblemName(&quot;If You Give A Seed A Fertilizer&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Solve(input, PartOneRanges);
-    public object PartTwo(string input) => Solve(input, PartTwoRanges);
+    public object PartOne(string input) =&gt; Solve(input, PartOneRanges);
+    public object PartTwo(string input) =&gt; Solve(input, PartTwoRanges);
 
-    long Solve(string input, Func<IEnumerable<long>, IEnumerable<Range>> parseSeeds) {
-        var blocks = input.Split("\n\n");
+    long Solve(string input, Func&lt;IEnumerable&lt;long&gt;, IEnumerable&lt;Range&gt;&gt; parseSeeds) {
+        var blocks = input.Split(&quot;\n\n&quot;);
         var seedRanges = parseSeeds(ParseNumbers(blocks[0])).ToList();
         var maps = blocks.Skip(1).Select(ParseMap).ToArray();
 
         // Project each range through the series of maps, this will result some
         // new ranges. Return the leftmost value (minimum) of these.
-        return maps.Aggregate(seedRanges, Project).Select(r => r.begin).Min();
+        return maps.Aggregate(seedRanges, Project).Select(r =&gt; r.begin).Min();
     }
 
-    List<Range> Project(List<Range> inputRanges, Dictionary<Range, Range> map) {
-        var input = new Queue<Range>(inputRanges);
-        var output = new List<Range>();
+    List&lt;Range&gt; Project(List&lt;Range&gt; inputRanges, Dictionary&lt;Range, Range&gt; map) {
+        var input = new Queue&lt;Range&gt;(inputRanges);
+        var output = new List&lt;Range&gt;();
 
         while (input.Any()) {
             var range = input.Dequeue();
-            // If no entry intersects our range -> just add it to the output. 
-            // If an entry completely contains the range -> add after mapping.
-            // Otherwise, some entry partly covers the range. In this case 'chop' 
+            // If no entry intersects our range -&gt; just add it to the output. 
+            // If an entry completely contains the range -&gt; add after mapping.
+            // Otherwise, some entry partly covers the range. In this case &#039;chop&#039; 
             // the range into two halfs getting rid of the intersection. The new 
             // pieces are added back to the queue for further processing and will be 
             // ultimately consumed by the first two cases.
-            var src = map.Keys.FirstOrDefault(src => Intersects(src, range));
+            var src = map.Keys.FirstOrDefault(src =&gt; Intersects(src, range));
             if (src == null) {
                 output.Add(range);
-            } else if (src.begin <= range.begin && range.end <= src.end) {
+            } else if (src.begin &lt;= range.begin &amp;&amp; range.end &lt;= src.end) {
                 var dst = map[src];
                 var shift = dst.begin - src.begin;
                 output.Add(new Range(range.begin + shift, range.end + shift));
-            } else if (range.begin < src.begin) {
+            } else if (range.begin &lt; src.begin) {
                 input.Enqueue(new Range(range.begin, src.begin - 1));
                 input.Enqueue(new Range(src.begin, range.end));
             } else {
@@ -337,23 +337,23 @@ class Solution : Solver {
     }
 
     // see https://stackoverflow.com/a/3269471
-    bool Intersects(Range r1, Range r2) => r1.begin <= r2.end && r2.begin <= r1.end;
+    bool Intersects(Range r1, Range r2) =&gt; r1.begin &lt;= r2.end &amp;&amp; r2.begin &lt;= r1.end;
 
     // consider each number as a range of 1 length
-    IEnumerable<Range> PartOneRanges(IEnumerable<long> numbers) =>
+    IEnumerable&lt;Range&gt; PartOneRanges(IEnumerable&lt;long&gt; numbers) =&gt;
         from n in numbers select new Range(n, n);
 
     // chunk is a great way to iterate over the pairs of numbers
-    IEnumerable<Range> PartTwoRanges(IEnumerable<long> numbers) =>
+    IEnumerable&lt;Range&gt; PartTwoRanges(IEnumerable&lt;long&gt; numbers) =&gt;
         from n in numbers.Chunk(2) select new Range(n[0], n[0] + n[1] - 1);
 
-    IEnumerable<long> ParseNumbers(string input) =>
-        from m in Regex.Matches(input, @"\d+") select long.Parse(m.Value);
+    IEnumerable&lt;long&gt; ParseNumbers(string input) =&gt;
+        from m in Regex.Matches(input, @&quot;\d+&quot;) select long.Parse(m.Value);
 
-    Dictionary<Range, Range> ParseMap(string input) => (
-        from line in input.Split("\n").Skip(1)
+    Dictionary&lt;Range, Range&gt; ParseMap(string input) =&gt; (
+        from line in input.Split(&quot;\n&quot;).Skip(1)
         let parts = ParseNumbers(line).ToArray()
-        select new KeyValuePair<Range, Range>(
+        select new KeyValuePair&lt;Range, Range&gt;(
             new Range(parts[1], parts[2] + parts[1] - 1),
             new Range(parts[0], parts[2] + parts[0] - 1))
     ).ToDictionary();

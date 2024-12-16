@@ -290,9 +290,9 @@ using System.Collections.Immutable;
 using System.Numerics;
 using System.Linq;
 
-using Map = System.Collections.Immutable.ImmutableDictionary<System.Numerics.Complex, char>;
+using Map = System.Collections.Immutable.ImmutableDictionary&lt;System.Numerics.Complex, char&gt;;
 
-[ProblemName("Ceres Search")]
+[ProblemName(&quot;Ceres Search&quot;)]
 class Solution : Solver {
 
     Complex Up = -Complex.ImaginaryOne;
@@ -305,7 +305,7 @@ class Solution : Solver {
         return (
             from pt in mat.Keys
             from dir in  new[] { Right, Right + Down, Down + Left, Down}
-            where Matches(mat, pt, dir, "XMAS")
+            where Matches(mat, pt, dir, &quot;XMAS&quot;)
             select 1
         ).Count();
     }
@@ -315,8 +315,8 @@ class Solution : Solver {
         return (
             from pt in mat.Keys
             where 
-                Matches(mat, pt + Up + Left, Down + Right, "MAS") && 
-                Matches(mat, pt + Down + Left, Up + Right, "MAS")
+                Matches(mat, pt + Up + Left, Down + Right, &quot;MAS&quot;) &amp;&amp; 
+                Matches(mat, pt + Down + Left, Up + Right, &quot;MAS&quot;)
             select 1
         ).Count();
     }
@@ -325,7 +325,7 @@ class Solution : Solver {
     // starting from pt
     bool Matches(Map map, Complex pt, Complex dir, string pattern) {
         var chars = Enumerable.Range(0, pattern.Length)
-            .Select(i => map.GetValueOrDefault(pt + i * dir))
+            .Select(i =&gt; map.GetValueOrDefault(pt + i * dir))
             .ToArray();
         return
             Enumerable.SequenceEqual(chars, pattern) ||
@@ -335,11 +335,11 @@ class Solution : Solver {
     // store the points in a dictionary so that we can iterate over them and 
     // to easily deal with points outside the area using GetValueOrDefault
     Map GetMap(string input) {
-        var map = input.Split("\n");
+        var map = input.Split(&quot;\n&quot;);
         return (
             from y in Enumerable.Range(0, map.Length)
             from x in Enumerable.Range(0, map[0].Length)
-            select new KeyValuePair<Complex, char>(Complex.ImaginaryOne * y + x, map[y][x])
+            select new KeyValuePair&lt;Complex, char&gt;(Complex.ImaginaryOne * y + x, map[y][x])
         ).ToImmutableDictionary();
     }
 }</code></pre></div>

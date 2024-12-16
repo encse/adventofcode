@@ -291,49 +291,49 @@ are working with and modifying the same box objects during the process.</p>
 
 using System.Collections.Generic;
 using System.Linq;
-using Boxes = System.Collections.Generic.List<Lens>[];
+using Boxes = System.Collections.Generic.List&lt;Lens&gt;[];
 
 record Lens(string label, int focalLength);
 record Step(string label, int? focalLength);
 
-[ProblemName("Lens Library")]
+[ProblemName(&quot;Lens Library&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => input.Split(',').Select(Hash).Sum();
+    public object PartOne(string input) =&gt; input.Split(&#039;,&#039;).Select(Hash).Sum();
 
-    // "funcionally imperative of imperatively functional", only for 🎄
-    public object PartTwo(string input) =>
+    // &quot;funcionally imperative of imperatively functional&quot;, only for 🎄
+    public object PartTwo(string input) =&gt;
         ParseSteps(input).Aggregate(MakeBoxes(256), UpdateBoxes, GetFocusingPower);
 
     Boxes UpdateBoxes(Boxes boxes, Step step) {
         var box = boxes[Hash(step.label)];
-        var ilens = box.FindIndex(lens => lens.label == step.label);
+        var ilens = box.FindIndex(lens =&gt; lens.label == step.label);
 
-        if (!step.focalLength.HasValue && ilens >= 0) {
+        if (!step.focalLength.HasValue &amp;&amp; ilens &gt;= 0) {
             box.RemoveAt(ilens);
-        } else if (step.focalLength.HasValue && ilens >= 0) {
+        } else if (step.focalLength.HasValue &amp;&amp; ilens &gt;= 0) {
             box[ilens] = new Lens(step.label, step.focalLength.Value);
-        } else if (step.focalLength.HasValue && ilens < 0) {
+        } else if (step.focalLength.HasValue &amp;&amp; ilens &lt; 0) {
             box.Add(new Lens(step.label, step.focalLength.Value));
         }
         return boxes;
     }
 
-    IEnumerable<Step> ParseSteps(string input) =>
-        from item in input.Split(',')
-        let parts = item.Split('-', '=')
-        select new Step(parts[0], parts[1] == "" ? null : int.Parse(parts[1]));
+    IEnumerable&lt;Step&gt; ParseSteps(string input) =&gt;
+        from item in input.Split(&#039;,&#039;)
+        let parts = item.Split(&#039;-&#039;, &#039;=&#039;)
+        select new Step(parts[0], parts[1] == &quot;&quot; ? null : int.Parse(parts[1]));
 
-    Boxes MakeBoxes(int count) =>
-        Enumerable.Range(0, count).Select(_ => new List<Lens>()).ToArray();
+    Boxes MakeBoxes(int count) =&gt;
+        Enumerable.Range(0, count).Select(_ =&gt; new List&lt;Lens&gt;()).ToArray();
 
-    int GetFocusingPower(Boxes boxes) => (
+    int GetFocusingPower(Boxes boxes) =&gt; (
         from ibox in Enumerable.Range(0, boxes.Length)
         from ilens in Enumerable.Range(0, boxes[ibox].Count)
         select (ibox + 1) * (ilens + 1) * boxes[ibox][ilens].focalLength
     ).Sum();
 
-    int Hash(string st) => st.Aggregate(0, (ch, a) => (ch + a) * 17 % 256);
+    int Hash(string st) =&gt; st.Aggregate(0, (ch, a) =&gt; (ch + a) * 17 % 256);
 }
 </code></pre></div>
             <div id="code-location"> <p>Please ☆ my <a href="https://github.com/encse/adventofcode/">repo</a> if you like it!</p></div>

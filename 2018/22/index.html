@@ -286,14 +286,14 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2018.Day22;
 
-[ProblemName("Mode Maze")]
+[ProblemName(&quot;Mode Maze&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
         var (targetX, targetY, regionType) = Parse(input);
         var riskLevel = 0;
-        for (var y = 0; y <= targetY; y++) {
-            for (var x = 0; x <= targetX; x++) {
+        for (var y = 0; y &lt;= targetY; y++) {
+            for (var x = 0; x &lt;= targetX; x++) {
                 riskLevel += (int)regionType(x, y);
             }
         }
@@ -303,15 +303,15 @@ class Solution : Solver {
 
     public object PartTwo(string input) {
         var (targetX, targetY, regionType) = Parse(input);
-        var q = new PQueue<((int x, int y) pos, Tool tool, int t)>();
-        var seen = new HashSet<((int x, int y), Tool tool)>();
+        var q = new PQueue&lt;((int x, int y) pos, Tool tool, int t)&gt;();
+        var seen = new HashSet&lt;((int x, int y), Tool tool)&gt;();
 
-        IEnumerable<((int x, int y) pos, Tool tool, int dt)> Neighbours((int x, int y) pos, Tool tool) {
+        IEnumerable&lt;((int x, int y) pos, Tool tool, int dt)&gt; Neighbours((int x, int y) pos, Tool tool) {
             yield return regionType(pos.x, pos.y) switch {
-                RegionType.Rocky => (pos, tool == Tool.ClimbingGear ? Tool.Torch : Tool.ClimbingGear, 7),
-                RegionType.Narrow => (pos, tool == Tool.Torch ? Tool.Nothing : Tool.Torch, 7),
-                RegionType.Wet => (pos, tool == Tool.ClimbingGear ? Tool.Nothing : Tool.ClimbingGear, 7),
-                _ => throw new ArgumentException()
+                RegionType.Rocky =&gt; (pos, tool == Tool.ClimbingGear ? Tool.Torch : Tool.ClimbingGear, 7),
+                RegionType.Narrow =&gt; (pos, tool == Tool.Torch ? Tool.Nothing : Tool.Torch, 7),
+                RegionType.Wet =&gt; (pos, tool == Tool.ClimbingGear ? Tool.Nothing : Tool.ClimbingGear, 7),
+                _ =&gt; throw new ArgumentException()
             };
 
             foreach (var dx in new[] { -1, 0, 1 }) {
@@ -321,7 +321,7 @@ class Solution : Solver {
                     }
 
                     var posNew = (x: pos.x + dx, y: pos.y + dy);
-                    if (posNew.x < 0 || posNew.y < 0) {
+                    if (posNew.x &lt; 0 || posNew.y &lt; 0) {
                         continue;
                     }
 
@@ -342,7 +342,7 @@ class Solution : Solver {
             var state = q.Dequeue();
             var (pos, tool, t) = state;
 
-            if (pos.x == targetX && pos.y == targetY && tool == Tool.Torch) {
+            if (pos.x == targetX &amp;&amp; pos.y == targetY &amp;&amp; tool == Tool.Torch) {
                 return t;
             }
 
@@ -365,21 +365,21 @@ class Solution : Solver {
         throw new Exception();
     }
 
-    (int targetX, int targetY, Func<int, int, RegionType> regionType) Parse(string input) {
-        var lines = input.Split("\n");
-        var depth = Regex.Matches(lines[0], @"\d+").Select(x => int.Parse(x.Value)).Single();
-        var target = Regex.Matches(lines[1], @"\d+").Select(x => int.Parse(x.Value)).ToArray();
+    (int targetX, int targetY, Func&lt;int, int, RegionType&gt; regionType) Parse(string input) {
+        var lines = input.Split(&quot;\n&quot;);
+        var depth = Regex.Matches(lines[0], @&quot;\d+&quot;).Select(x =&gt; int.Parse(x.Value)).Single();
+        var target = Regex.Matches(lines[1], @&quot;\d+&quot;).Select(x =&gt; int.Parse(x.Value)).ToArray();
         var (targetX, targetY) = (target[0], target[1]);
 
         var m = 20183;
 
-        var erosionLevelCache = new Dictionary<(int, int), int>();
+        var erosionLevelCache = new Dictionary&lt;(int, int), int&gt;();
         int erosionLevel(int x, int y) {
             var key = (x, y);
             if (!erosionLevelCache.ContainsKey(key)) {
-                if (x == targetX && y == targetY) {
+                if (x == targetX &amp;&amp; y == targetY) {
                     erosionLevelCache[key] = depth;
-                } else if (x == 0 && y == 0) {
+                } else if (x == 0 &amp;&amp; y == 0) {
                     erosionLevelCache[key] = depth;
                 } else if (x == 0) {
                     erosionLevelCache[key] = ((y * 48271) + depth) % m;
@@ -411,15 +411,15 @@ enum Tool {
     ClimbingGear
 }
 
-class PQueue<T> {
-    SortedDictionary<int, Queue<T>> d = new SortedDictionary<int, Queue<T>>();
+class PQueue&lt;T&gt; {
+    SortedDictionary&lt;int, Queue&lt;T&gt;&gt; d = new SortedDictionary&lt;int, Queue&lt;T&gt;&gt;();
     public bool Any() {
         return d.Any();
     }
 
     public void Enqueue(int p, T t) {
         if (!d.ContainsKey(p)) {
-            d[p] = new Queue<T>();
+            d[p] = new Queue&lt;T&gt;();
         }
         d[p].Enqueue(t);
     }

@@ -285,22 +285,22 @@ using System.Collections.Immutable;
 
 namespace AdventOfCode.Y2021.Day15;
 
-[ProblemName("Chiton")]
+[ProblemName(&quot;Chiton&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Solve(GetRiskLevelMap(input));
-    public object PartTwo(string input) => Solve(ScaleUp(GetRiskLevelMap(input)));
+    public object PartOne(string input) =&gt; Solve(GetRiskLevelMap(input));
+    public object PartTwo(string input) =&gt; Solve(ScaleUp(GetRiskLevelMap(input)));
 
-    int Solve(Dictionary<Point, int> riskMap) {
+    int Solve(Dictionary&lt;Point, int&gt; riskMap) {
         // Disjktra algorithm
 
         var topLeft = new Point(0, 0);
-        var bottomRight = new Point(riskMap.Keys.MaxBy(p => p.x).x, riskMap.Keys.MaxBy(p => p.y).y);
+        var bottomRight = new Point(riskMap.Keys.MaxBy(p =&gt; p.x).x, riskMap.Keys.MaxBy(p =&gt; p.y).y);
 
         // Visit points in order of cumulated risk
         // ⭐ .Net 6 finally has a PriorityQueue collection :)
-        var q = new PriorityQueue<Point, int>();
-        var totalRiskMap = new Dictionary<Point, int>();
+        var q = new PriorityQueue&lt;Point, int&gt;();
+        var totalRiskMap = new Dictionary&lt;Point, int&gt;();
 
         totalRiskMap[topLeft] = 0;
         q.Enqueue(topLeft, 0);
@@ -316,7 +316,7 @@ class Solution : Solver {
             foreach (var n in Neighbours(p)) {
                 if (riskMap.ContainsKey(n)) {
                     var totalRiskThroughP = totalRiskMap[p] + riskMap[n];
-                    if (totalRiskThroughP < totalRiskMap.GetValueOrDefault(n, int.MaxValue)) {
+                    if (totalRiskThroughP &lt; totalRiskMap.GetValueOrDefault(n, int.MaxValue)) {
                         totalRiskMap[n] = totalRiskThroughP;
                         q.Enqueue(n, totalRiskThroughP);
                     }
@@ -324,15 +324,15 @@ class Solution : Solver {
             }
         }
 
-        // return bottom right corner's total risk:
+        // return bottom right corner&#039;s total risk:
         return totalRiskMap[bottomRight];
     }
 
     // Create an 5x scaled up map, as described in part 2
-    Dictionary<Point, int> ScaleUp(Dictionary<Point, int> map) {
-        var (ccol, crow) = (map.Keys.MaxBy(p => p.x).x + 1, map.Keys.MaxBy(p => p.y).y + 1);
+    Dictionary&lt;Point, int&gt; ScaleUp(Dictionary&lt;Point, int&gt; map) {
+        var (ccol, crow) = (map.Keys.MaxBy(p =&gt; p.x).x + 1, map.Keys.MaxBy(p =&gt; p.y).y + 1);
 
-        var res = new Dictionary<Point, int>(
+        var res = new Dictionary&lt;Point, int&gt;(
             from y in Enumerable.Range(0, crow * 5)
             from x in Enumerable.Range(0, ccol * 5)
 
@@ -346,7 +346,7 @@ class Solution : Solver {
 
             // risk level wraps around from 9 to 1:
             let riskLevel = (tileRiskLevel + tileDistance - 1) % 9 + 1
-            select new KeyValuePair<Point, int>(new Point(x, y), riskLevel)
+            select new KeyValuePair&lt;Point, int&gt;(new Point(x, y), riskLevel)
         );
 
         return res;
@@ -354,16 +354,16 @@ class Solution : Solver {
 
     // store the points in a dictionary so that we can iterate over them and 
     // to easily deal with points outside the area
-    Dictionary<Point, int> GetRiskLevelMap(string input) {
-        var map = input.Split("\n");
-        return new Dictionary<Point, int>(
+    Dictionary&lt;Point, int&gt; GetRiskLevelMap(string input) {
+        var map = input.Split(&quot;\n&quot;);
+        return new Dictionary&lt;Point, int&gt;(
             from y in Enumerable.Range(0, map.Length)
             from x in Enumerable.Range(0, map[0].Length)
-            select new KeyValuePair<Point, int>(new Point(x, y), map[y][x] - '0')
+            select new KeyValuePair&lt;Point, int&gt;(new Point(x, y), map[y][x] - &#039;0&#039;)
         );
     }
 
-    IEnumerable<Point> Neighbours(Point point) =>
+    IEnumerable&lt;Point&gt; Neighbours(Point point) =&gt;
         new[] {
            point with {y = point.y + 1},
            point with {y = point.y - 1},

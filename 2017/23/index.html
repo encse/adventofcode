@@ -284,11 +284,11 @@ using System.Collections.Generic;
 
 namespace AdventOfCode.Y2017.Day23;
 
-[ProblemName("Coprocessor Conflagration")]
+[ProblemName(&quot;Coprocessor Conflagration&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
-        var regs = new Dictionary<string, int>();
+        var regs = new Dictionary&lt;string, int&gt;();
         int ip = 0;
         int getReg(string reg) {
             return int.TryParse(reg, out var n) ? n
@@ -299,29 +299,29 @@ class Solution : Solver {
             regs[reg] = value;
         }
 
-        var prog = input.Split('\n');
+        var prog = input.Split(&#039;\n&#039;);
         var mulCount = 0;
-        while (ip >= 0 && ip < prog.Length) {
+        while (ip &gt;= 0 &amp;&amp; ip &lt; prog.Length) {
             var line = prog[ip];
-            var parts = line.Split(' ');
+            var parts = line.Split(&#039; &#039;);
             switch (parts[0]) {
-                case "set":
+                case &quot;set&quot;:
                     setReg(parts[1], getReg(parts[2]));
                     ip++;
                     break;
-                case "sub":
+                case &quot;sub&quot;:
                     setReg(parts[1], getReg(parts[1]) - getReg(parts[2]));
                     ip++;
                     break;
-                case "mul":
+                case &quot;mul&quot;:
                     mulCount++;
                     setReg(parts[1], getReg(parts[1]) * getReg(parts[2]));
                     ip++;
                     break;
-                case "jnz":
+                case &quot;jnz&quot;:
                     ip += getReg(parts[1]) != 0 ? getReg(parts[2]) : 1;
                     break;
-                default: throw new Exception("Cannot parse " + line);
+                default: throw new Exception(&quot;Cannot parse &quot; + line);
             }
         }
         return mulCount;
@@ -329,7 +329,7 @@ class Solution : Solver {
 
     public object PartTwo(string input) {
         var c = 0;
-        for (int b = 107900; b <= 124900; b += 17) {
+        for (int b = 107900; b &lt;= 124900; b += 17) {
             if (!IsPrime(b)) {
                 c++;
             }
@@ -338,7 +338,7 @@ class Solution : Solver {
     }
 
     bool IsPrime(int n) {
-        for (int j = 2; j * j <= n; j++) {
+        for (int j = 2; j * j &lt;= n; j++) {
             if (n % j == 0) return false;
         }
         return true;

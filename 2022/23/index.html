@@ -286,28 +286,28 @@ using System.Numerics;
 
 namespace AdventOfCode.Y2022.Day23;
 
-[ProblemName("Unstable Diffusion")]
+[ProblemName(&quot;Unstable Diffusion&quot;)]
 class Solution : Solver {
 
     // I used complex numbers for a change. The map is represented with a hashset of positions.
 
     public object PartOne(string input) 
-        => Simulate(Parse(input)).Select(Area).ElementAt(9);
+        =&gt; Simulate(Parse(input)).Select(Area).ElementAt(9);
 
     public object PartTwo(string input) 
-        => Simulate(Parse(input)).Count();
+        =&gt; Simulate(Parse(input)).Count();
 
-    IEnumerable<HashSet<Complex>> Simulate(HashSet<Complex> elves) {
-        var lookAround = new Queue<Complex>(new []{ N, S, W, E });
+    IEnumerable&lt;HashSet&lt;Complex&gt;&gt; Simulate(HashSet&lt;Complex&gt; elves) {
+        var lookAround = new Queue&lt;Complex&gt;(new []{ N, S, W, E });
 
         for (var fixpoint = false; !fixpoint; lookAround.Enqueue(lookAround.Dequeue())) {
            
             // 1) collect proposals; for each position (key) compute the list of the elves 
             //    who want to step there
-            var proposals = new Dictionary<Complex, List<Complex>>();
+            var proposals = new Dictionary&lt;Complex, List&lt;Complex&gt;&gt;();
 
             foreach (var elf in elves) {
-                var lonely = Directions.All(dir => !elves.Contains(elf + dir));
+                var lonely = Directions.All(dir =&gt; !elves.Contains(elf + dir));
                 if (lonely) {
                     continue;
                 }
@@ -315,11 +315,11 @@ class Solution : Solver {
                 foreach (var dir in lookAround) {
                     
                     // elf proposes a postion if nobody stands in that direction
-                    var proposes = ExtendDir(dir).All(d => !elves.Contains(elf + d));
+                    var proposes = ExtendDir(dir).All(d =&gt; !elves.Contains(elf + d));
                     if (proposes) {
                         var pos = elf + dir;
                         if (!proposals.ContainsKey(pos)) {
-                            proposals[pos] = new List<Complex>();
+                            proposals[pos] = new List&lt;Complex&gt;();
                         }
                         proposals[pos].Add(elf);
                         break;
@@ -342,23 +342,23 @@ class Solution : Solver {
         }
     }
 
-    double Area(HashSet<Complex> elves) {
+    double Area(HashSet&lt;Complex&gt; elves) {
         // smallest enclosing rectangle
-        var width = elves.Select(p => p.Real).Max() - 
-                    elves.Select(p => p.Real).Min() + 1;
+        var width = elves.Select(p =&gt; p.Real).Max() - 
+                    elves.Select(p =&gt; p.Real).Min() + 1;
 
-        var height = elves.Select(p => p.Imaginary).Max() - 
-                     elves.Select(p => p.Imaginary).Min() + 1;
+        var height = elves.Select(p =&gt; p.Imaginary).Max() - 
+                     elves.Select(p =&gt; p.Imaginary).Min() + 1;
 
         return width * height - elves.Count;
     }
      
-    HashSet<Complex> Parse(string input) {
-        var lines = input.Split("\n");
+    HashSet&lt;Complex&gt; Parse(string input) {
+        var lines = input.Split(&quot;\n&quot;);
         return (
             from irow in Enumerable.Range(0, lines.Length)
             from icol in Enumerable.Range(0, lines[0].Length)
-            where lines[irow][icol] == '#'
+            where lines[irow][icol] == &#039;#&#039;
             select new Complex(icol, irow)
         ).ToHashSet();
     }
@@ -377,7 +377,7 @@ class Solution : Solver {
     static Complex[] Directions = new[] { NW, N, NE, E, SE, S, SW, W };
 
     // Extends an ordinal position with its intercardinal neighbours
-    Complex[] ExtendDir(Complex dir) =>
+    Complex[] ExtendDir(Complex dir) =&gt;
         dir == N ? new[] { NW, N, NE } :
         dir == E ? new[] { NE, E, SE } :
         dir == S ? new[] { SW, S, SE } :

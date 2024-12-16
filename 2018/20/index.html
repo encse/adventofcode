@@ -284,22 +284,22 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace AdventOfCode.Y2018.Day20;
-[ProblemName("A Regular Map")]
+[ProblemName(&quot;A Regular Map&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Solver(input).dMax;
-    public object PartTwo(string input) => Solver(input).distantRooms;
+    public object PartOne(string input) =&gt; Solver(input).dMax;
+    public object PartTwo(string input) =&gt; Solver(input).distantRooms;
 
     (int dMax, int distantRooms) Solver(string input) {
         var grid = Doors(input)
             .ToList()
-            .GroupBy(x => x.posFrom)
-            .ToDictionary(x=>x.Key, x=> x.Select(y => y.posTo).ToList());
+            .GroupBy(x =&gt; x.posFrom)
+            .ToDictionary(x=&gt;x.Key, x=&gt; x.Select(y =&gt; y.posTo).ToList());
                    
-        var queue = new Queue<((int x, int y) pos, int d)>();
+        var queue = new Queue&lt;((int x, int y) pos, int d)&gt;();
         queue.Enqueue(((0, 0), 0));
 
-        var seen = new HashSet<(int x, int y)>();
+        var seen = new HashSet&lt;(int x, int y)&gt;();
         var (dMax, distantRooms) = (int.MinValue, 0);
 
         while (queue.Any()) {
@@ -309,7 +309,7 @@ class Solution : Solver {
             }
 
             dMax = Math.Max(dMax, d);
-            if (d >= 1000) {
+            if (d &gt;= 1000) {
                 distantRooms++;
             }
 
@@ -322,22 +322,22 @@ class Solution : Solver {
         return (dMax, distantRooms);
     }
 
-    IEnumerable<((int x, int y) posFrom, (int x, int y) posTo)> Doors(string input) {
-        var s = new Stack<(int x, int y)>();
+    IEnumerable&lt;((int x, int y) posFrom, (int x, int y) posTo)&gt; Doors(string input) {
+        var s = new Stack&lt;(int x, int y)&gt;();
         (int x, int y) pos = (0, 0);
         foreach (var ch in input) {
             var prev = pos;
             switch (ch) {
-                case 'N': pos = (pos.x, pos.y - 1); break;
-                case 'S': pos = (pos.x, pos.y + 1); break;
-                case 'E': pos = (pos.x + 1, pos.y); break;
-                case 'W': pos = (pos.x - 1, pos.y); break;
-                case '(': s.Push(pos); break;
-                case '|': pos = s.Peek(); break;
-                case ')': pos = s.Pop(); break;
+                case &#039;N&#039;: pos = (pos.x, pos.y - 1); break;
+                case &#039;S&#039;: pos = (pos.x, pos.y + 1); break;
+                case &#039;E&#039;: pos = (pos.x + 1, pos.y); break;
+                case &#039;W&#039;: pos = (pos.x - 1, pos.y); break;
+                case &#039;(&#039;: s.Push(pos); break;
+                case &#039;|&#039;: pos = s.Peek(); break;
+                case &#039;)&#039;: pos = s.Pop(); break;
             }
 
-            if ("NSEW".IndexOf(ch) >= 0) {
+            if (&quot;NSEW&quot;.IndexOf(ch) &gt;= 0) {
                 yield return (prev, pos);
                 yield return (pos, prev);
             }

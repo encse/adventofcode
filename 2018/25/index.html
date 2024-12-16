@@ -285,29 +285,29 @@ using System.Linq;
 
 namespace AdventOfCode.Y2018.Day25;
 
-[ProblemName("Four-Dimensional Adventure")]
+[ProblemName(&quot;Four-Dimensional Adventure&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
-        var sets = new List<HashSet<int[]>>();
+        var sets = new List&lt;HashSet&lt;int[]&gt;&gt;();
 
-        foreach (var line in input.Split("\n")) {
-            var set = new HashSet<int[]>();
-            set.Add(line.Split(",").Select(int.Parse).ToArray());
+        foreach (var line in input.Split(&quot;\n&quot;)) {
+            var set = new HashSet&lt;int[]&gt;();
+            set.Add(line.Split(&quot;,&quot;).Select(int.Parse).ToArray());
             sets.Add(set);
         }
 
         foreach (var set in sets.ToList()) {
             var pt = set.Single();
-            var closeSets = new List<HashSet<int[]>>();
+            var closeSets = new List&lt;HashSet&lt;int[]&gt;&gt;();
             foreach (var setB in sets) {
                 foreach (var ptB in setB) {
-                    if (Dist(pt, ptB) <= 3) {
+                    if (Dist(pt, ptB) &lt;= 3) {
                         closeSets.Add(setB);
                     }
                 }
             }
-            var mergedSet = new HashSet<int[]>();
+            var mergedSet = new HashSet&lt;int[]&gt;();
             foreach (var setB in closeSets) {
                 foreach (var ptB in setB) {
                     mergedSet.Add(ptB);
@@ -320,7 +320,7 @@ class Solution : Solver {
         return sets.Count;
     }
    
-    int Dist(int[] a, int[] b) => Enumerable.Range(0, a.Length).Select(i => Math.Abs(a[i] - b[i])).Sum();
+    int Dist(int[] a, int[] b) =&gt; Enumerable.Range(0, a.Length).Select(i =&gt; Math.Abs(a[i] - b[i])).Sum();
 
 }
 </code></pre></div>

@@ -283,29 +283,29 @@
 
 namespace AdventOfCode.Y2016.Day02;
 
-[ProblemName("Bathroom Security")]
+[ProblemName(&quot;Bathroom Security&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Solve(input, "123\n456\n789");
-    public object PartTwo(string input) => Solve(input, "  1  \n 234 \n56789\n ABC \n  D  ");
+    public object PartOne(string input) =&gt; Solve(input, &quot;123\n456\n789&quot;);
+    public object PartTwo(string input) =&gt; Solve(input, &quot;  1  \n 234 \n56789\n ABC \n  D  &quot;);
 
     string Solve(string input, string keypad) {
-        var res = "";
-        var lines = keypad.Split('\n');
+        var res = &quot;&quot;;
+        var lines = keypad.Split(&#039;\n&#039;);
         var (crow, ccol) = (lines.Length, lines[0].Length);
         var (irow, icol) = (crow / 2, ccol / 2);
-        foreach (var line in input.Split('\n')) {
+        foreach (var line in input.Split(&#039;\n&#039;)) {
             foreach (var ch in line) {
                 var (drow, dcol) = ch switch {
-                    'U' => (-1, 0),
-                    'D' =>  (1, 0),
-                    'L' => (0, -1),
-                    'R' => (0, 1),
-                    _ => throw new ArgumentException()
+                    &#039;U&#039; =&gt; (-1, 0),
+                    &#039;D&#039; =&gt;  (1, 0),
+                    &#039;L&#039; =&gt; (0, -1),
+                    &#039;R&#039; =&gt; (0, 1),
+                    _ =&gt; throw new ArgumentException()
                 };
 
                 var (irowT, icolT) = (irow + drow, icol + dcol);
-                if (irowT >= 0 && irowT < crow && icolT >= 0 && icolT < ccol && lines[irowT][icolT] != ' ') {
+                if (irowT &gt;= 0 &amp;&amp; irowT &lt; crow &amp;&amp; icolT &gt;= 0 &amp;&amp; icolT &lt; ccol &amp;&amp; lines[irowT][icolT] != &#039; &#039;) {
                     (irow, icol) = (irowT, icolT);
                 }
             }

@@ -285,20 +285,20 @@ using System.Linq;
 
 namespace AdventOfCode.Y2021.Day02;
 
-[ProblemName("Dive!")]
+[ProblemName(&quot;Dive!&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
         return Parse(input)
            .Aggregate(
                new State1(0, 0),
-               (state, step) => step.dir switch {
-                   'f' => state with { x = state.x + step.amount },
-                   'u' => state with { y = state.y - step.amount },
-                   'd' => state with { y = state.y + step.amount },
-                   _ => throw new Exception(),
+               (state, step) =&gt; step.dir switch {
+                   &#039;f&#039; =&gt; state with { x = state.x + step.amount },
+                   &#039;u&#039; =&gt; state with { y = state.y - step.amount },
+                   &#039;d&#039; =&gt; state with { y = state.y + step.amount },
+                   _ =&gt; throw new Exception(),
                },
-               res => res.x * res.y
+               res =&gt; res.x * res.y
            );
     }
 
@@ -306,22 +306,22 @@ class Solution : Solver {
         return Parse(input)
            .Aggregate(
                new State2(0, 0, 0),
-               (state, step) => step.dir switch {
-                   'f' => state with { 
+               (state, step) =&gt; step.dir switch {
+                   &#039;f&#039; =&gt; state with { 
                               x = state.x + step.amount, 
                               y = state.y + step.amount * state.aim 
                           },
-                   'u' => state with { aim = state.aim - step.amount },
-                   'd' => state with { aim = state.aim + step.amount },
-                   _ => throw new Exception(),
+                   &#039;u&#039; =&gt; state with { aim = state.aim - step.amount },
+                   &#039;d&#039; =&gt; state with { aim = state.aim + step.amount },
+                   _ =&gt; throw new Exception(),
                },
-               res => res.x * res.y
+               res =&gt; res.x * res.y
            );
     }
 
-    IEnumerable<Input> Parse(string st) => 
+    IEnumerable&lt;Input&gt; Parse(string st) =&gt; 
         from 
-            line in st.Split('\n')
+            line in st.Split(&#039;\n&#039;)
             let parts = line.Split()
         select 
             new Input(parts[0][0], int.Parse(parts[1]));

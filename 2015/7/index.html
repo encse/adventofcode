@@ -286,42 +286,42 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2015.Day07;
 
-[ProblemName("Some Assembly Required")]
+[ProblemName(&quot;Some Assembly Required&quot;)]
 class Solution : Solver {
 
-    class State : Dictionary<string, int> { }
-    class Calc : Dictionary<string, Func<State, int>> { }
+    class State : Dictionary&lt;string, int&gt; { }
+    class Calc : Dictionary&lt;string, Func&lt;State, int&gt;&gt; { }
 
 
-    public object PartOne(string input) => Parse(input)["a"](new State());
+    public object PartOne(string input) =&gt; Parse(input)[&quot;a&quot;](new State());
 
     public object PartTwo(string input) {
         var calc = Parse(input);
-        return calc["a"](new State() { ["b"] = calc["a"](new State()) });
+        return calc[&quot;a&quot;](new State() { [&quot;b&quot;] = calc[&quot;a&quot;](new State()) });
     }
 
-    Calc Parse(string input) =>
-        input.Split('\n').Aggregate(new Calc(), (calc, line) =>
-            Gate(calc, line, @"(\w+) AND (\w+) -> (\w+)", pin => pin[0] & pin[1]) ??
-            Gate(calc, line, @"(\w+) OR (\w+) -> (\w+)", pin => pin[0] | pin[1]) ??
-            Gate(calc, line, @"(\w+) RSHIFT (\w+) -> (\w+)", pin => pin[0] >> pin[1]) ??
-            Gate(calc, line, @"(\w+) LSHIFT (\w+) -> (\w+)", pin => pin[0] << pin[1]) ??
-            Gate(calc, line, @"NOT (\w+) -> (\w+)", pin => ~pin[0]) ??
-            Gate(calc, line, @"(\w+) -> (\w+)", pin => pin[0]) ??
+    Calc Parse(string input) =&gt;
+        input.Split(&#039;\n&#039;).Aggregate(new Calc(), (calc, line) =&gt;
+            Gate(calc, line, @&quot;(\w+) AND (\w+) -&gt; (\w+)&quot;, pin =&gt; pin[0] &amp; pin[1]) ??
+            Gate(calc, line, @&quot;(\w+) OR (\w+) -&gt; (\w+)&quot;, pin =&gt; pin[0] | pin[1]) ??
+            Gate(calc, line, @&quot;(\w+) RSHIFT (\w+) -&gt; (\w+)&quot;, pin =&gt; pin[0] &gt;&gt; pin[1]) ??
+            Gate(calc, line, @&quot;(\w+) LSHIFT (\w+) -&gt; (\w+)&quot;, pin =&gt; pin[0] &lt;&lt; pin[1]) ??
+            Gate(calc, line, @&quot;NOT (\w+) -&gt; (\w+)&quot;, pin =&gt; ~pin[0]) ??
+            Gate(calc, line, @&quot;(\w+) -&gt; (\w+)&quot;, pin =&gt; pin[0]) ??
             throw new Exception(line)
         );
 
-    Calc Gate(Calc calc, string line, string pattern, Func<int[], int> op) {
+    Calc Gate(Calc calc, string line, string pattern, Func&lt;int[], int&gt; op) {
         var match = Regex.Match(line, pattern);
         if (!match.Success) {
             return null;
         }
-        var parts = match.Groups.Cast<Group>().Skip(1).Select(g => g.Value).ToArray();
+        var parts = match.Groups.Cast&lt;Group&gt;().Skip(1).Select(g =&gt; g.Value).ToArray();
         var pinOut = parts.Last();
         var pins = parts.Take(parts.Length - 1).ToArray();
-        calc[pinOut] = (state) => {
+        calc[pinOut] = (state) =&gt; {
             if (!state.ContainsKey(pinOut)) {
-                var args = pins.Select(pin => int.TryParse(pin, out var i) ? i : calc[pin](state)).ToArray();
+                var args = pins.Select(pin =&gt; int.TryParse(pin, out var i) ? i : calc[pin](state)).ToArray();
                 state[pinOut] = op(args);
             }
             return state[pinOut];

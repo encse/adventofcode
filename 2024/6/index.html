@@ -291,9 +291,9 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Numerics;
 
-using Map = System.Collections.Generic.Dictionary<System.Numerics.Complex, char>;
+using Map = System.Collections.Generic.Dictionary&lt;System.Numerics.Complex, char&gt;;
 
-[ProblemName("Guard Gallivant")]
+[ProblemName(&quot;Guard Gallivant&quot;)]
 class Solution : Solver {
 
     Complex Up = Complex.ImaginaryOne;
@@ -309,31 +309,31 @@ class Solution : Solver {
         var positions = Walk(map, start).positions;
         var loops = 0;
         // simply try a blocker in each locations visited by the guard and count the loops
-        foreach (var block in positions.Where(pos => map[pos] == '.')) {
-            map[block] = '#';
+        foreach (var block in positions.Where(pos =&gt; map[pos] == &#039;.&#039;)) {
+            map[block] = &#039;#&#039;;
             if (Walk(map, start).isLoop) {
                 loops++;
             }
-            map[block] = '.';
+            map[block] = &#039;.&#039;;
         }
         return loops;
     }
 
-    // returns the positions visited when starting from 'pos', isLoop is set if the 
+    // returns the positions visited when starting from &#039;pos&#039;, isLoop is set if the 
     // guard enters a cycle.
-    (IEnumerable<Complex> positions, bool isLoop) Walk(Map map, Complex pos) {
-        var seen = new HashSet<(Complex pos, Complex dir)>();
+    (IEnumerable&lt;Complex&gt; positions, bool isLoop) Walk(Map map, Complex pos) {
+        var seen = new HashSet&lt;(Complex pos, Complex dir)&gt;();
         var dir = Up;
-        while (map.ContainsKey(pos) && !seen.Contains((pos, dir))) {
+        while (map.ContainsKey(pos) &amp;&amp; !seen.Contains((pos, dir))) {
             seen.Add((pos, dir));
-            if (map.GetValueOrDefault(pos + dir) == '#') {
+            if (map.GetValueOrDefault(pos + dir) == &#039;#&#039;) {
                 dir *= TurnRight;
             } else {
                 pos += dir;
             }
         }
         return (
-            positions: seen.Select(s => s.pos).Distinct(),
+            positions: seen.Select(s =&gt; s.pos).Distinct(),
             isLoop: seen.Contains((pos, dir))
         );
     }
@@ -341,14 +341,14 @@ class Solution : Solver {
     // store the grid in a dictionary, to make bounds checks and navigation simple
     // start represents the starting postion of the guard
     (Map map, Complex start) Parse(string input) {
-        var lines = input.Split("\n");
+        var lines = input.Split(&quot;\n&quot;);
         var map = (
             from y in Enumerable.Range(0, lines.Length)
             from x in Enumerable.Range(0, lines[0].Length)
-            select new KeyValuePair<Complex, char>(-Up * y + x, lines[y][x])
+            select new KeyValuePair&lt;Complex, char&gt;(-Up * y + x, lines[y][x])
         ).ToDictionary();
 
-        var start = map.First(x => x.Value == '^').Key;
+        var start = map.First(x =&gt; x.Value == &#039;^&#039;).Key;
         
         return (map, start);
     }

@@ -289,33 +289,33 @@ how one interpreted the problem statement he could spent quite a lot of time on 
 using System.Linq;
 using System.Text.RegularExpressions;
 
-[ProblemName("Trebuchet?!")]
+[ProblemName(&quot;Trebuchet?!&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) =>
-        Solve(input, @"\d");
+    public object PartOne(string input) =&gt;
+        Solve(input, @&quot;\d&quot;);
 
-    public object PartTwo(string input) =>
-        Solve(input, @"\d|one|two|three|four|five|six|seven|eight|nine");
+    public object PartTwo(string input) =&gt;
+        Solve(input, @&quot;\d|one|two|three|four|five|six|seven|eight|nine&quot;);
 
-    int Solve(string input, string rx) => (
-        from line in input.Split("\n")
+    int Solve(string input, string rx) =&gt; (
+        from line in input.Split(&quot;\n&quot;)
         let first = Regex.Match(line, rx)
         let last = Regex.Match(line, rx, RegexOptions.RightToLeft)
         select ParseMatch(first.Value) * 10 + ParseMatch(last.Value)
     ).Sum();
 
-    int ParseMatch(string st) => st switch {
-        "one" => 1,
-        "two" => 2,
-        "three" => 3,
-        "four" => 4,
-        "five" => 5,
-        "six" => 6,
-        "seven" => 7,
-        "eight" => 8,
-        "nine" => 9,
-        var d => int.Parse(d)
+    int ParseMatch(string st) =&gt; st switch {
+        &quot;one&quot; =&gt; 1,
+        &quot;two&quot; =&gt; 2,
+        &quot;three&quot; =&gt; 3,
+        &quot;four&quot; =&gt; 4,
+        &quot;five&quot; =&gt; 5,
+        &quot;six&quot; =&gt; 6,
+        &quot;seven&quot; =&gt; 7,
+        &quot;eight&quot; =&gt; 8,
+        &quot;nine&quot; =&gt; 9,
+        var d =&gt; int.Parse(d)
     };
 }
 </code></pre></div>

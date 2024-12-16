@@ -285,31 +285,31 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2017.Day13;
 
-class Layers : List<(int depth, int range)> {
-    public Layers(IEnumerable<(int depth, int range)> layers) : base(layers) {
+class Layers : List&lt;(int depth, int range)&gt; {
+    public Layers(IEnumerable&lt;(int depth, int range)&gt; layers) : base(layers) {
     }
 }
 
-[ProblemName("Packet Scanners")]
+[ProblemName(&quot;Packet Scanners&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Severities(Parse(input), 0).Sum();
+    public object PartOne(string input) =&gt; Severities(Parse(input), 0).Sum();
 
     public object PartTwo(string input) {
         var layers = Parse(input);
         return Enumerable
             .Range(0, int.MaxValue)
-            .First(n => !Severities(layers, n).Any());
+            .First(n =&gt; !Severities(layers, n).Any());
     }
 
-    Layers Parse(string input) =>
+    Layers Parse(string input) =&gt;
         new Layers(
-            from line in input.Split('\n')
-            let parts = Regex.Split(line, ": ").Select(int.Parse).ToArray()
+            from line in input.Split(&#039;\n&#039;)
+            let parts = Regex.Split(line, &quot;: &quot;).Select(int.Parse).ToArray()
             select (parts[0], parts[1])
         );
 
-    IEnumerable<int> Severities(Layers layers, int t) {
+    IEnumerable&lt;int&gt; Severities(Layers layers, int t) {
         var packetPos = 0;
         foreach (var layer in layers) {
             t += layer.depth - packetPos;

@@ -285,25 +285,25 @@ using System.Linq;
 
 namespace AdventOfCode.Y2021.Day04;
 
-[ProblemName("Giant Squid")] 
+[ProblemName(&quot;Giant Squid&quot;)] 
 class Solution : Solver {
 
-    public object PartOne(string input) => BoardsInOrderOfCompletion(input).First().score;
-    public object PartTwo(string input) => BoardsInOrderOfCompletion(input).Last().score;
+    public object PartOne(string input) =&gt; BoardsInOrderOfCompletion(input).First().score;
+    public object PartTwo(string input) =&gt; BoardsInOrderOfCompletion(input).Last().score;
 
-    IEnumerable<BingoBoard> BoardsInOrderOfCompletion(string input) {
+    IEnumerable&lt;BingoBoard&gt; BoardsInOrderOfCompletion(string input) {
 
-        var blocks = input.Split("\n\n");
+        var blocks = input.Split(&quot;\n\n&quot;);
 
         // first block contains the numbers to be drawn, rest describe bingo boards:
-        var numbers = blocks[0].Split(",");
+        var numbers = blocks[0].Split(&quot;,&quot;);
         var boards = (from block in blocks.Skip(1) select new BingoBoard(block)).ToHashSet();
 
-        // let's play the game
+        // let&#039;s play the game
         foreach (var number in numbers) {
             foreach (var board in boards.ToArray()) {
                 board.AddNumber(number);
-                if (board.score > 0) {
+                if (board.score &gt; 0) {
                     yield return board;
                     boards.Remove(board);
                 }
@@ -314,41 +314,41 @@ class Solution : Solver {
 
 record Cell(string number, bool marked = false);
 
-// Let's be ho-ho-hoOOP this time.
+// Let&#039;s be ho-ho-hoOOP this time.
 class BingoBoard {
 
     public int score { get; private set; }
-    private List<Cell> cells;
+    private List&lt;Cell&gt; cells;
 
-    IEnumerable<Cell> CellsInRow(int irow) =>
+    IEnumerable&lt;Cell&gt; CellsInRow(int irow) =&gt;
         from icol in Enumerable.Range(0, 5) select cells[irow * 5 + icol];
 
-    IEnumerable<Cell> CellsInCol(int icol) =>
+    IEnumerable&lt;Cell&gt; CellsInCol(int icol) =&gt;
         from irow in Enumerable.Range(0, 5) select cells[irow * 5 + icol];
 
     public BingoBoard(string st) {
 
-        // split the input into words & read them numbers into cells
+        // split the input into words &amp; read them numbers into cells
         cells = (
-            from word in st.Split(" \n".ToArray(), StringSplitOptions.RemoveEmptyEntries)
+            from word in st.Split(&quot; \n&quot;.ToArray(), StringSplitOptions.RemoveEmptyEntries)
             select new Cell(word)
         ).ToList();
     }
 
     public void AddNumber(string number) {
 
-        var icell = cells.FindIndex(cell => cell.number == number);
+        var icell = cells.FindIndex(cell =&gt; cell.number == number);
 
-        if (icell >= 0) {
+        if (icell &gt;= 0) {
 
             // mark the cell
             cells[icell] = cells[icell] with { marked = true };
 
             // if the board is completed, compute score
-            for (var i = 0; i < 5; i++) {
+            for (var i = 0; i &lt; 5; i++) {
                 if (
-                    CellsInRow(i).All(cell => cell.marked) ||
-                    CellsInCol(i).All(cell => cell.marked)
+                    CellsInRow(i).All(cell =&gt; cell.marked) ||
+                    CellsInCol(i).All(cell =&gt; cell.marked)
                 ) {
 
                     var unmarkedNumbers =

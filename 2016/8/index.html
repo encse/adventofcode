@@ -285,7 +285,7 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2016.Day08;
 
-[ProblemName("Two-Factor Authentication")]
+[ProblemName(&quot;Two-Factor Authentication&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
@@ -300,12 +300,12 @@ class Solution : Solver {
 
     public object PartTwo(string input) {
         var mtx = Execute(input);
-        var res = "";
+        var res = &quot;&quot;;
         foreach (var irow in Enumerable.Range(0, mtx.GetLength(0))) {
             foreach (var icol in Enumerable.Range(0, mtx.GetLength(1))) {
-                res += mtx[irow, icol] ? "#" : " ";
+                res += mtx[irow, icol] ? &quot;#&quot; : &quot; &quot;;
             }
-            res += "\n";
+            res += &quot;\n&quot;;
         }
         return res.Ocr();
     }
@@ -313,28 +313,28 @@ class Solution : Solver {
     bool[,] Execute(string input) {
         var (crow, ccol) = (6, 50);
         var mtx = new bool[crow, ccol];
-        foreach (var line in input.Split('\n')) {
-            if (Match(line, @"rect (\d+)x(\d+)", out var m)) {
+        foreach (var line in input.Split(&#039;\n&#039;)) {
+            if (Match(line, @&quot;rect (\d+)x(\d+)&quot;, out var m)) {
                 var (ccolT, crowT) = (int.Parse(m[0]), int.Parse(m[1]));
-                for (var irow = 0; irow < crowT; irow++) {
-                    for (var icol = 0; icol < ccolT; icol++) {
+                for (var irow = 0; irow &lt; crowT; irow++) {
+                    for (var icol = 0; icol &lt; ccolT; icol++) {
                         mtx[irow, icol] = true;
                     }
                 }
-            } else if (Match(line, @"rotate row y=(\d+) by (\d+)", out m)) {
+            } else if (Match(line, @&quot;rotate row y=(\d+) by (\d+)&quot;, out m)) {
                 var (irow, d) = (int.Parse(m[0]), int.Parse(m[1]));
-                for (int i = 0; i < d; i++) {
+                for (int i = 0; i &lt; d; i++) {
                     var t = mtx[irow, ccol - 1];
-                    for (var icol = ccol - 1; icol >= 1; icol--) {
+                    for (var icol = ccol - 1; icol &gt;= 1; icol--) {
                         mtx[irow, icol] = mtx[irow, icol - 1];
                     }
                     mtx[irow, 0] = t;
                 }
-            } else if (Match(line, @"rotate column x=(\d+) by (\d+)", out m)) {
+            } else if (Match(line, @&quot;rotate column x=(\d+) by (\d+)&quot;, out m)) {
                 var (icol, d) = (int.Parse(m[0]), int.Parse(m[1]));
-                for (int i = 0; i < d; i++) {
+                for (int i = 0; i &lt; d; i++) {
                     var t = mtx[crow - 1, icol];
-                    for (var irow = crow - 1; irow >= 1; irow--) {
+                    for (var irow = crow - 1; irow &gt;= 1; irow--) {
                         mtx[irow, icol] = mtx[irow - 1, icol];
                     }
                     mtx[0, icol] = t;
@@ -348,7 +348,7 @@ class Solution : Solver {
         var match = Regex.Match(stm, pattern);
         m = null;
         if (match.Success) {
-            m = match.Groups.Cast<Group>().Skip(1).Select(g => g.Value).ToArray();
+            m = match.Groups.Cast&lt;Group&gt;().Skip(1).Select(g =&gt; g.Value).ToArray();
             return true;
         } else {
             return false;

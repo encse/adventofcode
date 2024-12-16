@@ -284,16 +284,16 @@ using System.Linq;
 
 namespace AdventOfCode.Y2018.Day19;
 
-[ProblemName("Go With The Flow")]
+[ProblemName(&quot;Go With The Flow&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
         var ip = 0;
-        var ipReg = int.Parse(input.Split("\n").First().Substring("#ip ".Length));
-        var prg = input.Split("\n").Skip(1).ToArray();
+        var ipReg = int.Parse(input.Split(&quot;\n&quot;).First().Substring(&quot;#ip &quot;.Length));
+        var prg = input.Split(&quot;\n&quot;).Skip(1).ToArray();
         var regs = new int[6];
-        while (ip >= 0 && ip < prg.Length) {
-            var args = prg[ip].Split(" ");
+        while (ip &gt;= 0 &amp;&amp; ip &lt; prg.Length) {
+            var args = prg[ip].Split(&quot; &quot;);
             regs[ipReg] = ip;
             regs = Step(regs, args[0], args.Skip(1).Select(int.Parse).ToArray());
             ip = regs[ipReg];
@@ -305,7 +305,7 @@ class Solution : Solver {
     public object PartTwo(string input) {
         var t = 10551292;
         var r0 = 0;
-        for (var x = 1; x <= t; x++) {
+        for (var x = 1; x &lt;= t; x++) {
             if (t % x == 0)
                 r0 += x;
         }
@@ -315,23 +315,23 @@ class Solution : Solver {
     int[] Step(int[] regs, string op, int[] stm) {
         regs = regs.ToArray();
         regs[stm[2]] = op switch {
-            "addr" => regs[stm[0]] + regs[stm[1]],
-            "addi" => regs[stm[0]] + stm[1],
-            "mulr" => regs[stm[0]] * regs[stm[1]],
-            "muli" => regs[stm[0]] * stm[1],
-            "banr" => regs[stm[0]] & regs[stm[1]],
-            "bani" => regs[stm[0]] & stm[1],
-            "borr" => regs[stm[0]] | regs[stm[1]],
-            "bori" => regs[stm[0]] | stm[1],
-            "setr" => regs[stm[0]],
-            "seti" => stm[0],
-            "gtir" => stm[0] > regs[stm[1]] ? 1 : 0,
-            "gtri" => regs[stm[0]] > stm[1] ? 1 : 0,
-            "gtrr" => regs[stm[0]] > regs[stm[1]] ? 1 : 0,
-            "eqir" => stm[0] == regs[stm[1]] ? 1 : 0,
-            "eqri" => regs[stm[0]] == stm[1] ? 1 : 0,
-            "eqrr" => regs[stm[0]] == regs[stm[1]] ? 1 : 0,
-            _ => throw new ArgumentException()
+            &quot;addr&quot; =&gt; regs[stm[0]] + regs[stm[1]],
+            &quot;addi&quot; =&gt; regs[stm[0]] + stm[1],
+            &quot;mulr&quot; =&gt; regs[stm[0]] * regs[stm[1]],
+            &quot;muli&quot; =&gt; regs[stm[0]] * stm[1],
+            &quot;banr&quot; =&gt; regs[stm[0]] &amp; regs[stm[1]],
+            &quot;bani&quot; =&gt; regs[stm[0]] &amp; stm[1],
+            &quot;borr&quot; =&gt; regs[stm[0]] | regs[stm[1]],
+            &quot;bori&quot; =&gt; regs[stm[0]] | stm[1],
+            &quot;setr&quot; =&gt; regs[stm[0]],
+            &quot;seti&quot; =&gt; stm[0],
+            &quot;gtir&quot; =&gt; stm[0] &gt; regs[stm[1]] ? 1 : 0,
+            &quot;gtri&quot; =&gt; regs[stm[0]] &gt; stm[1] ? 1 : 0,
+            &quot;gtrr&quot; =&gt; regs[stm[0]] &gt; regs[stm[1]] ? 1 : 0,
+            &quot;eqir&quot; =&gt; stm[0] == regs[stm[1]] ? 1 : 0,
+            &quot;eqri&quot; =&gt; regs[stm[0]] == stm[1] ? 1 : 0,
+            &quot;eqrr&quot; =&gt; regs[stm[0]] == regs[stm[1]] ? 1 : 0,
+            _ =&gt; throw new ArgumentException()
         };
         return regs;
     }

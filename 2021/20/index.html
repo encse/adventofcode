@@ -285,45 +285,45 @@ using System.Linq;
 
 namespace AdventOfCode.Y2021.Day20;
 
-[ProblemName("Trench Map")]
+[ProblemName(&quot;Trench Map&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => EnhanceN(input, 2).Count(x => x.Value == 1);
-    public object PartTwo(string input) => EnhanceN(input, 50).Count(x => x.Value == 1);
+    public object PartOne(string input) =&gt; EnhanceN(input, 2).Count(x =&gt; x.Value == 1);
+    public object PartTwo(string input) =&gt; EnhanceN(input, 50).Count(x =&gt; x.Value == 1);
 
     // return the N times enhanced image
-    Dictionary<Point, int> EnhanceN(string input, int n) {
-        var blocks = input.Split("\n\n");
+    Dictionary&lt;Point, int&gt; EnhanceN(string input, int n) {
+        var blocks = input.Split(&quot;\n\n&quot;);
         var (algo, image) = (blocks[0], GetImage(blocks[1]));
 
-        System.Diagnostics.Debug.Assert(algo[0] == '#'); // the image changes parity in each rounds
+        System.Diagnostics.Debug.Assert(algo[0] == &#039;#&#039;); // the image changes parity in each rounds
 
-        var (minX, minY, maxX, maxY) = (0, 0, image.Keys.MaxBy(p => p.x).x, image.Keys.MaxBy(p => p.y).y);
+        var (minX, minY, maxX, maxY) = (0, 0, image.Keys.MaxBy(p =&gt; p.x).x, image.Keys.MaxBy(p =&gt; p.y).y);
 
-        for (var i = 0; i < n; i++) {
-            var tmp = new Dictionary<Point, int>();
+        for (var i = 0; i &lt; n; i++) {
+            var tmp = new Dictionary&lt;Point, int&gt;();
 
-            for (var y = minY - 1; y <= maxY + 1; y++) {
-                for (var x = minX - 1; x <= maxX + 1; x++) {
+            for (var y = minY - 1; y &lt;= maxY + 1; y++) {
+                for (var x = minX - 1; x &lt;= maxX + 1; x++) {
 
                     var point = new Point(x, y);
                     
                     var index = 0;
 
-                    // it's supposed that neighbours are enumarated in the right order
+                    // it&#039;s supposed that neighbours are enumarated in the right order
                     foreach (var neighbour in Neighbours(point)) {
 
                         // the trick is in the i % 2 part,
                         // for even values of i, the infinite part of the image is all zero
-                        // for odd ones, it contains 1-s due to the way the 'algo' is set up.
+                        // for odd ones, it contains 1-s due to the way the &#039;algo&#039; is set up.
                         index = index * 2 + image.GetValueOrDefault(neighbour, i % 2);
                     }
 
-                    tmp[point] = algo[index] == '#' ? 1 : 0;
+                    tmp[point] = algo[index] == &#039;#&#039; ? 1 : 0;
                 }
             }
 
-            // update bounds & image
+            // update bounds &amp; image
             (minX, minY, maxX, maxY) = (minX - 1, minY - 1, maxX + 1, maxY + 1);
             image = tmp;
         }
@@ -333,16 +333,16 @@ class Solution : Solver {
 
     // store the points in a dictionary so that we can iterate over them and 
     // to easily deal with points outside the area
-    Dictionary<Point, int> GetImage(string input) {
-        var map = input.Split("\n");
-        return new Dictionary<Point, int>(
+    Dictionary&lt;Point, int&gt; GetImage(string input) {
+        var map = input.Split(&quot;\n&quot;);
+        return new Dictionary&lt;Point, int&gt;(
             from y in Enumerable.Range(0, map.Length)
             from x in Enumerable.Range(0, map[0].Length)
-            select new KeyValuePair<Point, int>(new Point(x, y), map[y][x] == '#' ? 1 : 0)
+            select new KeyValuePair&lt;Point, int&gt;(new Point(x, y), map[y][x] == &#039;#&#039; ? 1 : 0)
         );
     }
 
-    IEnumerable<Point> Neighbours(Point pos) =>
+    IEnumerable&lt;Point&gt; Neighbours(Point pos) =&gt;
         from y in Enumerable.Range(-1, 3)
         from x in Enumerable.Range(-1, 3)
         select new Point(pos.x + x, pos.y + y);

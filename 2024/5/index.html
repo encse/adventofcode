@@ -287,39 +287,39 @@
 using System.Collections.Generic;
 using System.Linq;
 
-[ProblemName("Print Queue")]
+[ProblemName(&quot;Print Queue&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
         var (updates, comparer) = Parse(input);
         return updates
-            .Where(pages => Sorted(pages, comparer))
+            .Where(pages =&gt; Sorted(pages, comparer))
             .Sum(GetMiddlePage);
     }
 
     public object PartTwo(string input) {
         var (updates, comparer) = Parse(input);
         return updates
-            .Where(pages => !Sorted(pages, comparer))
-            .Select(pages => pages.OrderBy(p => p, comparer).ToArray())
+            .Where(pages =&gt; !Sorted(pages, comparer))
+            .Select(pages =&gt; pages.OrderBy(p =&gt; p, comparer).ToArray())
             .Sum(GetMiddlePage);
     }
 
-    (string[][] updates, Comparer<string>) Parse(string input) {
-        var parts = input.Split("\n\n");
+    (string[][] updates, Comparer&lt;string&gt;) Parse(string input) {
+        var parts = input.Split(&quot;\n\n&quot;);
 
-        var ordering = new HashSet<string>(parts[0].Split("\n"));
+        var ordering = new HashSet&lt;string&gt;(parts[0].Split(&quot;\n&quot;));
         var comparer = 
-            Comparer<string>.Create((p1, p2) => ordering.Contains(p1 + "|" + p2) ? -1 : 1);
+            Comparer&lt;string&gt;.Create((p1, p2) =&gt; ordering.Contains(p1 + &quot;|&quot; + p2) ? -1 : 1);
 
-        var updates = parts[1].Split("\n").Select(line => line.Split(",")).ToArray();
+        var updates = parts[1].Split(&quot;\n&quot;).Select(line =&gt; line.Split(&quot;,&quot;)).ToArray();
         return (updates, comparer);
     }
     
-    int GetMiddlePage(string[] nums) => int.Parse(nums[nums.Length / 2]);
+    int GetMiddlePage(string[] nums) =&gt; int.Parse(nums[nums.Length / 2]);
    
-    bool Sorted(string[] pages, Comparer<string> comparer) =>
-        Enumerable.SequenceEqual(pages, pages.OrderBy(x=>x, comparer));
+    bool Sorted(string[] pages, Comparer&lt;string&gt; comparer) =&gt;
+        Enumerable.SequenceEqual(pages, pages.OrderBy(x=&gt;x, comparer));
 
 }
 </code></pre></div>

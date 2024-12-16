@@ -285,23 +285,23 @@ using System.Collections.Generic;
 
 namespace AdventOfCode.Y2020.Day18;
 
-[ProblemName("Operation Order")]
+[ProblemName(&quot;Operation Order&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Solve(input, true);
-    public object PartTwo(string input) => Solve(input, false);
+    public object PartOne(string input) =&gt; Solve(input, true);
+    public object PartTwo(string input) =&gt; Solve(input, false);
 
     long Solve(string input, bool part1) {
         var sum = 0L;
-        foreach (var line in input.Split("\n")) {
+        foreach (var line in input.Split(&quot;\n&quot;)) {
             // https://en.wikipedia.org/wiki/Shunting-yard_algorithm
 
-            var opStack = new Stack<char>();
-            var valStack = new Stack<long>();
+            var opStack = new Stack&lt;char&gt;();
+            var valStack = new Stack&lt;long&gt;();
 
             void evalUntil(string ops) {
                 while (!ops.Contains(opStack.Peek())) {
-                    if (opStack.Pop() == '+') {
+                    if (opStack.Pop() == &#039;+&#039;) {
                         valStack.Push(valStack.Pop() + valStack.Pop());
                     } else {
                         valStack.Push(valStack.Pop() * valStack.Pop());
@@ -309,25 +309,25 @@ class Solution : Solver {
                 }
             }
 
-            opStack.Push('(');
+            opStack.Push(&#039;(&#039;);
 
             foreach (var ch in line) {
                 switch (ch) {
-                    case ' ':
+                    case &#039; &#039;:
                         break;
-                    case '*':
-                        evalUntil("(");
-                        opStack.Push('*');
+                    case &#039;*&#039;:
+                        evalUntil(&quot;(&quot;);
+                        opStack.Push(&#039;*&#039;);
                         break;
-                    case '+':
-                        evalUntil(part1 ? "(" : "(*");
-                        opStack.Push('+');
+                    case &#039;+&#039;:
+                        evalUntil(part1 ? &quot;(&quot; : &quot;(*&quot;);
+                        opStack.Push(&#039;+&#039;);
                         break;
-                    case '(':
-                        opStack.Push('(');
+                    case &#039;(&#039;:
+                        opStack.Push(&#039;(&#039;);
                         break;
-                    case ')':
-                        evalUntil("(");
+                    case &#039;)&#039;:
+                        evalUntil(&quot;(&quot;);
                         opStack.Pop();
                         break;
                     default:
@@ -336,7 +336,7 @@ class Solution : Solver {
                 }
             }
 
-            evalUntil("(");
+            evalUntil(&quot;(&quot;);
 
             sum += valStack.Single();
         }

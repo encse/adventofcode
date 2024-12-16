@@ -286,45 +286,45 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2022.Day11;
 
-[ProblemName("Monkey in the Middle")]
+[ProblemName(&quot;Monkey in the Middle&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
         var monkeys = ParseMonkeys(input);
-        Run(20, monkeys, w => w / 3);
+        Run(20, monkeys, w =&gt; w / 3);
         return GetMonkeyBusinessLevel(monkeys);
     }
 
     public object PartTwo(string input) {
         var monkeys = ParseMonkeys(input);
-        var mod = monkeys.Aggregate(1, (mod, monkey) => mod * monkey.mod);
-        Run(10_000, monkeys, w => w % mod);
+        var mod = monkeys.Aggregate(1, (mod, monkey) =&gt; mod * monkey.mod);
+        Run(10_000, monkeys, w =&gt; w % mod);
         return GetMonkeyBusinessLevel(monkeys);
     }
 
-    Monkey[] ParseMonkeys(string input) =>
-        input.Split("\n\n").Select(ParseMonkey).ToArray();
+    Monkey[] ParseMonkeys(string input) =&gt;
+        input.Split(&quot;\n\n&quot;).Select(ParseMonkey).ToArray();
 
     Monkey ParseMonkey(string input) {
         var monkey = new Monkey();
 
-        foreach (var line in input.Split("\n")) {
+        foreach (var line in input.Split(&quot;\n&quot;)) {
             var tryParse = LineParser(line);
-            if (tryParse(@"Monkey (\d+)", out var arg)) {
+            if (tryParse(@&quot;Monkey (\d+)&quot;, out var arg)) {
                 // pass
-            } else if (tryParse("Starting items: (.*)", out arg)) {
-                monkey.items = new Queue<long>(arg.Split(", ").Select(long.Parse));
-            } else if (tryParse(@"Operation: new = old \* old", out _)) {
-                monkey.operation = old => old * old;
-            } else if (tryParse(@"Operation: new = old \* (\d+)", out arg)) {
-                monkey.operation = old => old * int.Parse(arg);
-            } else if (tryParse(@"Operation: new = old \+ (\d+)", out arg)) {
-                monkey.operation = old => old + int.Parse(arg);
-            } else if (tryParse(@"Test: divisible by (\d+)", out arg)) {
+            } else if (tryParse(&quot;Starting items: (.*)&quot;, out arg)) {
+                monkey.items = new Queue&lt;long&gt;(arg.Split(&quot;, &quot;).Select(long.Parse));
+            } else if (tryParse(@&quot;Operation: new = old \* old&quot;, out _)) {
+                monkey.operation = old =&gt; old * old;
+            } else if (tryParse(@&quot;Operation: new = old \* (\d+)&quot;, out arg)) {
+                monkey.operation = old =&gt; old * int.Parse(arg);
+            } else if (tryParse(@&quot;Operation: new = old \+ (\d+)&quot;, out arg)) {
+                monkey.operation = old =&gt; old + int.Parse(arg);
+            } else if (tryParse(@&quot;Test: divisible by (\d+)&quot;, out arg)) {
                 monkey.mod = int.Parse(arg);
-            } else if (tryParse(@"If true: throw to monkey (\d+)", out arg)) {
+            } else if (tryParse(@&quot;If true: throw to monkey (\d+)&quot;, out arg)) {
                 monkey.passToMonkeyIfDivides = int.Parse(arg);
-            } else if (tryParse(@"If false: throw to monkey (\d+)", out arg)) {
+            } else if (tryParse(@&quot;If false: throw to monkey (\d+)&quot;, out arg)) {
                 monkey.passToMonkeyOtherwise = int.Parse(arg);
             } else {
                 throw new ArgumentException(line);
@@ -333,14 +333,14 @@ class Solution : Solver {
         return monkey;
     }
 
-    long GetMonkeyBusinessLevel(IEnumerable<Monkey> monkeys) => 
+    long GetMonkeyBusinessLevel(IEnumerable&lt;Monkey&gt; monkeys) =&gt; 
         monkeys
-            .OrderByDescending(monkey => monkey.inspectedItems)
+            .OrderByDescending(monkey =&gt; monkey.inspectedItems)
             .Take(2)
-            .Aggregate(1L, (res, monkey) => res * monkey.inspectedItems);
+            .Aggregate(1L, (res, monkey) =&gt; res * monkey.inspectedItems);
 
-    void Run(int rounds, Monkey[] monkeys, Func<long, long> updateWorryLevel) {
-        for (var i = 0; i < rounds; i++) {
+    void Run(int rounds, Monkey[] monkeys, Func&lt;long, long&gt; updateWorryLevel) {
+        for (var i = 0; i &lt; rounds; i++) {
             foreach (var monkey in monkeys) {
                 while (monkey.items.Any()) {
                     monkey.inspectedItems++;
@@ -360,8 +360,8 @@ class Solution : Solver {
     }
 
     class Monkey {
-        public Queue<long> items;
-        public Func<long, long> operation;
+        public Queue&lt;long&gt; items;
+        public Func&lt;long, long&gt; operation;
         public int inspectedItems;
         public int mod;
         public int passToMonkeyIfDivides, passToMonkeyOtherwise;
@@ -375,7 +375,7 @@ class Solution : Solver {
                 arg = m.Groups[m.Groups.Count - 1].Value;
                 return true;
             } else {
-                arg = "";
+                arg = &quot;&quot;;
                 return false;
             }
         }

@@ -285,18 +285,18 @@ using System.Linq;
 
 namespace AdventOfCode.Y2019.Day08;
 
-[ProblemName("Space Image Format")]
+[ProblemName(&quot;Space Image Format&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
         var zeroMin = int.MaxValue;
         var checksum = 0;
         foreach (var layer in Layers(input)) {
-            var zero = layer.Count(item => item == 0);
-            var ones = layer.Count(item => item == 1);
-            var twos = layer.Count(item => item == 2);
+            var zero = layer.Count(item =&gt; item == 0);
+            var ones = layer.Count(item =&gt; item == 1);
+            var twos = layer.Count(item =&gt; item == 2);
 
-            if (zeroMin > zero) {
+            if (zeroMin &gt; zero) {
                 zeroMin = zero;
                 checksum = ones * twos;
             }
@@ -307,21 +307,21 @@ class Solution : Solver {
     public object PartTwo(string input) {
         var img = new char[6 * 25];
         foreach (var layer in Layers(input).Reverse()) {
-            for (var i = 0; i < img.Length; i++) {
+            for (var i = 0; i &lt; img.Length; i++) {
                 img[i] = layer[i] switch {
-                    0 => ' ',
-                    1 => '#',
-                    _ => img[i]
+                    0 =&gt; &#039; &#039;,
+                    1 =&gt; &#039;#&#039;,
+                    _ =&gt; img[i]
                 };
             }
         }
-        return string.Join("", 
-            img.Chunk(25).Select(line => string.Join("", line)+"\n")
+        return string.Join(&quot;&quot;, 
+            img.Chunk(25).Select(line =&gt; string.Join(&quot;&quot;, line)+&quot;\n&quot;)
         ).Ocr();
     }
 
-    int[][] Layers(string input) =>
-        input.Select(ch => ch - '0').Chunk(6 * 25).ToArray();
+    int[][] Layers(string input) =&gt;
+        input.Select(ch =&gt; ch - &#039;0&#039;).Chunk(6 * 25).ToArray();
 }
 </code></pre></div>
             <div id="code-location"> <p>Please ☆ my <a href="https://github.com/encse/adventofcode/">repo</a> if you like it!</p></div>

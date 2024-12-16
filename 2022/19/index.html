@@ -286,12 +286,12 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2022.Day19;
 
-[ProblemName("Not Enough Minerals")]
+[ProblemName(&quot;Not Enough Minerals&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
         var res = 0;
-        foreach (var blueprint in Parse(input).Where(bp => bp.id < 100)) {
+        foreach (var blueprint in Parse(input).Where(bp =&gt; bp.id &lt; 100)) {
             var m = MaxGeodes(blueprint, 24);
             res += blueprint.id * m;
         }
@@ -300,7 +300,7 @@ class Solution : Solver {
 
     public object PartTwo(string input) {
         var res = 1;
-        foreach (var blueprint in Parse(input).Where(bp => bp.id <= 3)) {
+        foreach (var blueprint in Parse(input).Where(bp =&gt; bp.id &lt;= 3)) {
             var m = MaxGeodes(blueprint, 32);
             res *= m;
         }
@@ -309,8 +309,8 @@ class Solution : Solver {
 
     // Priority queue based maximum search with LOTS OF PRUNING
     private int MaxGeodes(Blueprint blueprint, int timeLimit) {
-        var q = new PriorityQueue<State, int>();
-        var seen = new HashSet<State>();
+        var q = new PriorityQueue&lt;State, int&gt;();
+        var seen = new HashSet&lt;State&gt;();
 
         enqueue(new State(
             remainingTime: timeLimit, 
@@ -320,12 +320,12 @@ class Solution : Solver {
         ));
 
         var max = 0;
-        while (q.Count > 0) {
+        while (q.Count &gt; 0) {
             var state = q.Dequeue();
 
             // Queue is ordered by potentialGeodeCount, there is
             // no point in investigating the remaining items.
-            if (potentialGeodeCount(state) < max) {
+            if (potentialGeodeCount(state) &lt; max) {
                 break;
             }
 
@@ -338,7 +338,7 @@ class Solution : Solver {
                 } else {
                     // What robots can be created from the available materials?
                     var buildableRobots = blueprint.robots
-                        .Where(robot => state.available >= robot.cost)
+                        .Where(robot =&gt; state.available &gt;= robot.cost)
                         .ToArray();
 
                     // 1) build one of them right away
@@ -353,15 +353,15 @@ class Solution : Solver {
                         }
                     }
 
-                    // 2) or wait until next round for more robot types. Don't postpone
+                    // 2) or wait until next round for more robot types. Don&#039;t postpone
                     //    building of robots which are already available. This is a very
-                    //    very important prunning step. It's about 25 times faster if we 
+                    //    very important prunning step. It&#039;s about 25 times faster if we 
                     //    do it this way.
                     enqueue(
                         state with {
                             remainingTime = state.remainingTime - 1,
                             available = state.available + state.producing,
-                            dontBuild = buildableRobots.Select(robot => robot.id).Sum(),
+                            dontBuild = buildableRobots.Select(robot =&gt; robot.id).Sum(),
                         }
                     );
                 }
@@ -373,7 +373,7 @@ class Solution : Solver {
         // ------- 
 
         // Upper limit for the maximum geodes we reach when starting from this state. 
-        // Let's be optimistic and suppose that in each step we will be able to build 
+        // Let&#039;s be optimistic and suppose that in each step we will be able to build 
         // a new geode robot...
         int potentialGeodeCount(State state) {
             // sum of [state.producing.geode .. state.producing.geode + state.remainingTime - 1]
@@ -385,14 +385,14 @@ class Solution : Solver {
         bool worthBuilding(State state, Robot robot) {
             // We can explicitly ignore building some robots. 
             // Robot ids are powers of 2 used as flags in the dontBuild integer.
-            if ((state.dontBuild & robot.id) != 0) {
+            if ((state.dontBuild &amp; robot.id) != 0) {
                 return false;
             }
 
             // Our factory can build just a single robot in a round. This gives as 
             // a prunning condition. Producing more material in a round that we can 
             // spend on building a new robot is worthless.
-            return state.producing + robot.producing <= blueprint.maxCost;
+            return state.producing + robot.producing &lt;= blueprint.maxCost;
         }
 
         // Just add an item to the search queue, use -potentialGeodeCount as priority 
@@ -401,9 +401,9 @@ class Solution : Solver {
         }
     }
 
-    IEnumerable<Blueprint> Parse(string input) {
-        foreach (var line in input.Split("\n")) {
-            var numbers = Regex.Matches(line, @"(\d+)").Select(x => int.Parse(x.Value)).ToArray();
+    IEnumerable&lt;Blueprint&gt; Parse(string input) {
+        foreach (var line in input.Split(&quot;\n&quot;)) {
+            var numbers = Regex.Matches(line, @&quot;(\d+)&quot;).Select(x =&gt; int.Parse(x.Value)).ToArray();
             yield return new Blueprint(
                 id: numbers[0],
                 new Robot(id: 1, producing: Ore, cost: numbers[1] * Ore),
@@ -442,20 +442,20 @@ class Solution : Solver {
             );
         }
 
-        public static bool operator <=(Material a, Material b) {
+        public static bool operator &lt;=(Material a, Material b) {
             return
-                a.ore <= b.ore &&
-                a.clay <= b.clay &&
-                a.obsidian <= b.obsidian &&
-                a.geode <= b.geode;
+                a.ore &lt;= b.ore &amp;&amp;
+                a.clay &lt;= b.clay &amp;&amp;
+                a.obsidian &lt;= b.obsidian &amp;&amp;
+                a.geode &lt;= b.geode;
         }
 
-        public static bool operator >=(Material a, Material b) {
+        public static bool operator &gt;=(Material a, Material b) {
             return
-                a.ore >= b.ore &&
-                a.clay >= b.clay &&
-                a.obsidian >= b.obsidian &&
-                a.geode >= b.geode;
+                a.ore &gt;= b.ore &amp;&amp;
+                a.clay &gt;= b.clay &amp;&amp;
+                a.obsidian &gt;= b.obsidian &amp;&amp;
+                a.geode &gt;= b.geode;
         }
     }
 
@@ -463,9 +463,9 @@ class Solution : Solver {
     record State(int remainingTime, Material available, Material producing, int dontBuild);
     record Blueprint(int id, params Robot[] robots) {
         public Material maxCost = new Material(
-            ore: robots.Select(robot => robot.cost.ore).Max(),
-            clay: robots.Select(robot => robot.cost.clay).Max(),
-            obsidian: robots.Select(robot => robot.cost.obsidian).Max(),
+            ore: robots.Select(robot =&gt; robot.cost.ore).Max(),
+            clay: robots.Select(robot =&gt; robot.cost.clay).Max(),
+            obsidian: robots.Select(robot =&gt; robot.cost.obsidian).Max(),
             geode: int.MaxValue
         );
     }

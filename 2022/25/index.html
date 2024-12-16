@@ -284,29 +284,29 @@ using System;
 
 namespace AdventOfCode.Y2022.Day25;
 
-[ProblemName("Full of Hot Air")]
+[ProblemName(&quot;Full of Hot Air&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) =>
+    public object PartOne(string input) =&gt;
         LongToSnafu(
             input
-                .Split("\n")
+                .Split(&quot;\n&quot;)
                 .Select(SnafuToLong)
                 .Sum()
         );
     
     // This is just string to number conversion in base 5
-    // with the two special digits that's worth -2 and -1.
+    // with the two special digits that&#039;s worth -2 and -1.
     long SnafuToLong(string snafu) {
         long res = 0L;
         foreach (var digit in snafu) {
             res = res * 5;
             switch (digit) {
-                case '=': res += -2; break;
-                case '-': res += -1; break;
-                case '0': res += 0; break;
-                case '1': res += 1; break;
-                case '2': res += 2; break;
+                case &#039;=&#039;: res += -2; break;
+                case &#039;-&#039;: res += -1; break;
+                case &#039;0&#039;: res += 0; break;
+                case &#039;1&#039;: res += 1; break;
+                case &#039;2&#039;: res += 2; break;
             }
         }
         return res;
@@ -317,16 +317,16 @@ class Solution : Solver {
     // need to increment the higher decimal place so that we have
     // something to subtract 2 and 1 from.
     string LongToSnafu(long d) {
-        var res = "";
-        while (d > 0) {
+        var res = &quot;&quot;;
+        while (d &gt; 0) {
             switch (d % 5) {
-                case 0: res = '0' + res; break;
-                case 1: res = '1' + res; break;
-                case 2: res = '2' + res; break;
+                case 0: res = &#039;0&#039; + res; break;
+                case 1: res = &#039;1&#039; + res; break;
+                case 2: res = &#039;2&#039; + res; break;
                 // add 5 and emit -2 because 3 = 5 -2
-                case 3: d+=5; res = '=' + res; break; 
+                case 3: d+=5; res = &#039;=&#039; + res; break; 
                 // add 5 and emit -1 because 4 = 5 -1
-                case 4: d+=5; res = '-' + res; break;
+                case 4: d+=5; res = &#039;-&#039; + res; break;
             }
             d /= 5;
         }

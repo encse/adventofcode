@@ -286,21 +286,21 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2022.Day15;
 
-[ProblemName("Beacon Exclusion Zone")]
+[ProblemName(&quot;Beacon Exclusion Zone&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
         var pairing = Parse(input).ToArray();
 
-        var rects = pairing.Select(pair => pair.ToRect()).ToArray();
-        var left = rects.Select(r => r.Left).Min();
-        var right = rects.Select(r => r.Right).Max();
+        var rects = pairing.Select(pair =&gt; pair.ToRect()).ToArray();
+        var left = rects.Select(r =&gt; r.Left).Min();
+        var right = rects.Select(r =&gt; r.Right).Max();
 
         var y = 2000000;
         var res = 0;
-        for (var x = left; x <= right; x++) {
+        for (var x = left; x &lt;= right; x++) {
             var pos = new Pos(x, y);
-            if (pairing.Any(pair => pair.beacon != pos && pair.InRange(pos))) {
+            if (pairing.Any(pair =&gt; pair.beacon != pos &amp;&amp; pair.InRange(pos))) {
                 res++;
             }
         }
@@ -315,9 +315,9 @@ class Solution : Solver {
 
 
     // Parse the 4 numbers with regex from each line and return the list of pairings
-    IEnumerable<Pair> Parse(string input) {
-        foreach (var line in input.Split("\n")) {
-            var numbers = Regex.Matches(line, @"-?\d+").Select(m => int.Parse(m.Value)).ToArray();
+    IEnumerable&lt;Pair&gt; Parse(string input) {
+        foreach (var line in input.Split(&quot;\n&quot;)) {
+            var numbers = Regex.Matches(line, @&quot;-?\d+&quot;).Select(m =&gt; int.Parse(m.Value)).ToArray();
             yield return new Pair(
                 sensor: new Pos(numbers[0], numbers[1]),
                 beacon: new Pos(numbers[2], numbers[3])
@@ -327,21 +327,21 @@ class Solution : Solver {
 
     // Do a quadtree style recursive check for uncovered areas with early exit
     // when there is proof that the rectangle is fully covered / uncovered
-    IEnumerable<Rect> GetUncoveredAreas(Pair[] pairing, Rect rect) {
-        // empty rectangle -> doesn't have uncovered areas 👍
+    IEnumerable&lt;Rect&gt; GetUncoveredAreas(Pair[] pairing, Rect rect) {
+        // empty rectangle -&gt; doesn&#039;t have uncovered areas 👍
         if (rect.Width == 0 || rect.Height == 0) {
             yield break;
         }
 
-        // if all 4 corners of the rectangle are in range of one of the sensors -> it's covered 👍
+        // if all 4 corners of the rectangle are in range of one of the sensors -&gt; it&#039;s covered 👍
         foreach (var pair in pairing) {
-            if (rect.Corners.All(corner => pair.InRange(corner))) {
+            if (rect.Corners.All(corner =&gt; pair.InRange(corner))) {
                 yield break;
             }
         }
 
-        // if the rectangle is 1x1 -> we just proved that it's uncovered 👍
-        if (rect.Width == 1 && rect.Height == 1) {
+        // if the rectangle is 1x1 -&gt; we just proved that it&#039;s uncovered 👍
+        if (rect.Width == 1 &amp;&amp; rect.Height == 1) {
             yield return rect;
             yield break;
         }
@@ -358,11 +358,11 @@ class Solution : Solver {
 
     record struct Pos(int X, int Y);
 
-    // I don't have a better name for a sensor-bacon pair
+    // I don&#039;t have a better name for a sensor-bacon pair
     record struct Pair(Pos sensor, Pos beacon) {
         public int Radius = Manhattan(sensor, beacon);
 
-        public bool InRange(Pos pos) => Manhattan(pos, sensor) <= Radius;
+        public bool InRange(Pos pos) =&gt; Manhattan(pos, sensor) &lt;= Radius;
 
         // The smallest rectangle that covers the whole range of the pairing:
         // ............................
@@ -376,20 +376,20 @@ class Solution : Solver {
         // ..........===###===.........
         // ..........====#====.........
         // ............................
-        public Rect ToRect() =>
+        public Rect ToRect() =&gt;
              new Rect(sensor.X - Radius, sensor.Y - Radius, 2 * Radius + 1, 2 * Radius + 1);
 
-        static int Manhattan(Pos p1, Pos p2) =>
+        static int Manhattan(Pos p1, Pos p2) =&gt;
              Math.Abs(p1.X - p2.X) + Math.Abs(p1.Y - p2.Y);
     }
 
     record struct Rect(int X, int Y, int Width, int Height) {
-        public int Left => X;
-        public int Right => X + Width - 1;
-        public int Top => Y;
-        public int Bottom => Y + Height - 1;
+        public int Left =&gt; X;
+        public int Right =&gt; X + Width - 1;
+        public int Top =&gt; Y;
+        public int Bottom =&gt; Y + Height - 1;
 
-        public IEnumerable<Pos> Corners {
+        public IEnumerable&lt;Pos&gt; Corners {
             get {
                 yield return new Pos(Left, Top);
                 yield return new Pos(Right, Top);
@@ -399,7 +399,7 @@ class Solution : Solver {
         }
 
         // Creates 4 smaller rectangles, might return empty ones with width or height == 0
-        public IEnumerable<Rect> Split() {
+        public IEnumerable&lt;Rect&gt; Split() {
             var w0 = Width / 2;
             var w1 = Width - w0;
             var h0 = Height / 2;

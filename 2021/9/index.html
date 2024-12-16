@@ -285,14 +285,14 @@ using System.Linq;
 
 namespace AdventOfCode.Y2021.Day09;
 
-[ProblemName("Smoke Basin")]
+[ProblemName(&quot;Smoke Basin&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
         var map = GetMap(input);
 
-        // find the 'low points' and return a hash computed from their heights:
-        return GetLowPoints(map).Select(point => 1 + map[point]).Sum();
+        // find the &#039;low points&#039; and return a hash computed from their heights:
+        return GetLowPoints(map).Select(point =&gt; 1 + map[point]).Sum();
     }
 
     public object PartTwo(string input) {
@@ -300,24 +300,24 @@ class Solution : Solver {
 
         // find the 3 biggest basins and return a hash computed from their size:
         return GetLowPoints(map)
-            .Select(p => BasinSize(map, p))
-            .OrderByDescending(basinSize => basinSize)
+            .Select(p =&gt; BasinSize(map, p))
+            .OrderByDescending(basinSize =&gt; basinSize)
             .Take(3)
-            .Aggregate(1, (m, basinSize) => m * basinSize);
+            .Aggregate(1, (m, basinSize) =&gt; m * basinSize);
     }
 
     // store the points in a dictionary so that we can iterate over them and 
     // to easily deal with points outside the area using GetValueOrDefault
-    ImmutableDictionary<Point, int> GetMap(string input) {
-        var map = input.Split("\n");
+    ImmutableDictionary&lt;Point, int&gt; GetMap(string input) {
+        var map = input.Split(&quot;\n&quot;);
         return (
             from y in Enumerable.Range(0, map.Length)
             from x in Enumerable.Range(0, map[0].Length)
-            select new KeyValuePair<Point, int>(new Point(x, y), map[y][x] - '0')
+            select new KeyValuePair&lt;Point, int&gt;(new Point(x, y), map[y][x] - &#039;0&#039;)
         ).ToImmutableDictionary();
     }
 
-    IEnumerable<Point> Neighbours(Point point) => 
+    IEnumerable&lt;Point&gt; Neighbours(Point point) =&gt; 
         new [] {
            point with {y = point.y + 1},
            point with {y = point.y - 1},
@@ -325,16 +325,16 @@ class Solution : Solver {
            point with {x = point.x - 1},
         };
 
-    public IEnumerable<Point> GetLowPoints(ImmutableDictionary<Point, int>  map) =>
+    public IEnumerable&lt;Point&gt; GetLowPoints(ImmutableDictionary&lt;Point, int&gt;  map) =&gt;
         from point in map.Keys 
         // point is low if each of its neighbours is higher:
-        where Neighbours(point).All(neighbour => map[point] < map.GetValueOrDefault(neighbour, 9))
+        where Neighbours(point).All(neighbour =&gt; map[point] &lt; map.GetValueOrDefault(neighbour, 9))
         select point;
 
-    public int BasinSize(ImmutableDictionary<Point, int> map, Point point) {
+    public int BasinSize(ImmutableDictionary&lt;Point, int&gt; map, Point point) {
         // flood fill algorithm
-        var filled = new HashSet<Point>{point};
-        var queue = new Queue<Point>(filled);
+        var filled = new HashSet&lt;Point&gt;{point};
+        var queue = new Queue&lt;Point&gt;(filled);
 
         while (queue.Any()) {
             foreach (var neighbour in Neighbours(queue.Dequeue()).Except(filled)) {

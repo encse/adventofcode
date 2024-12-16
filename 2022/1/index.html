@@ -284,19 +284,19 @@ using System.Linq;
 
 namespace AdventOfCode.Y2022.Day01;
 
-[ProblemName("Calorie Counting")]      
+[ProblemName(&quot;Calorie Counting&quot;)]      
 class Solution : Solver {
 
-    public object PartOne(string input) => 
+    public object PartOne(string input) =&gt; 
         GetCaloriesPerElf(input).First();
 
-    public object PartTwo(string input) =>
+    public object PartTwo(string input) =&gt;
         GetCaloriesPerElf(input).Take(3).Sum();
 
     // Returns the calories carried by the elves in descending order.
-    private IEnumerable<int> GetCaloriesPerElf(string input) =>
-        from elf in input.Split("\n\n")
-        let calories = elf.Split('\n').Select(int.Parse).Sum()
+    private IEnumerable&lt;int&gt; GetCaloriesPerElf(string input) =&gt;
+        from elf in input.Split(&quot;\n\n&quot;)
+        let calories = elf.Split(&#039;\n&#039;).Select(int.Parse).Sum()
         orderby calories descending
         select calories;
 }

@@ -286,7 +286,7 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2017.Day20;
 
-[ProblemName("Particle Swarm")]
+[ProblemName(&quot;Particle Swarm&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
@@ -310,22 +310,22 @@ class Solution : Solver {
         var T = collisionTimes.Max();
 
         var t = 0;
-        while (t <= T) {
+        while (t &lt;= T) {
             var particlesByPos = (from particle in particles orderby particle.pos.x, particle.pos.y, particle.pos.z select particle).ToArray();
             
             var particlePrev = particlesByPos[0];
 
-            for (int i = 1; i < particlesByPos.Length; i++) {
+            for (int i = 1; i &lt; particlesByPos.Length; i++) {
                 var particle = particlesByPos[i];
-                if (particlePrev.pos.x == particle.pos.x && particlePrev.pos.y == particle.pos.y && particlePrev.pos.z == particle.pos.z) {
+                if (particlePrev.pos.x == particle.pos.x &amp;&amp; particlePrev.pos.y == particle.pos.y &amp;&amp; particlePrev.pos.z == particle.pos.z) {
                     particlePrev.destroyed = true;
                     particle.destroyed = true;
                 }
                 particlePrev = particle;
             }
 
-            if (particles.Any(p => p.destroyed)) {
-                particles = particles.Where(particle => !particle.destroyed).ToList();
+            if (particles.Any(p =&gt; p.destroyed)) {
+                particles = particles.Where(particle =&gt; !particle.destroyed).ToList();
             }
 
             foreach (var particle in particles) {
@@ -338,11 +338,11 @@ class Solution : Solver {
     }
 
 
-    List<Particle> Parse(string input) {
-        var lines = input.Split('\n');
+    List&lt;Particle&gt; Parse(string input) {
+        var lines = input.Split(&#039;\n&#039;);
         return (
-             from q in Enumerable.Zip(lines, Enumerable.Range(0, int.MaxValue), (line, i) => (i: i, line: line))
-             let nums = Regex.Matches(q.line, "-?[0-9]+").Select(m => int.Parse(m.Value)).ToArray()
+             from q in Enumerable.Zip(lines, Enumerable.Range(0, int.MaxValue), (line, i) =&gt; (i: i, line: line))
+             let nums = Regex.Matches(q.line, &quot;-?[0-9]+&quot;).Select(m =&gt; int.Parse(m.Value)).ToArray()
              let p = new Point(nums[0], nums[1], nums[2])
              let v = new Point(nums[3], nums[4], nums[5])
              let a = new Point(nums[6], nums[7], nums[8])
@@ -356,7 +356,7 @@ class Point {
     public int y;
     public int z;
 
-    public int Len() => Math.Abs(x) + Math.Abs(y) + Math.Abs(z);
+    public int Len() =&gt; Math.Abs(x) + Math.Abs(y) + Math.Abs(z);
 
     public Point(int x, int y, int z) {
         this.x = x;
@@ -385,19 +385,19 @@ class Particle {
         (pos.x, pos.y, pos.z) = (pos.x + vel.x, pos.y + vel.y, pos.z + vel.z);
     }
 
-    public IEnumerable<int> CollisionTime(Particle particle) {
+    public IEnumerable&lt;int&gt; CollisionTime(Particle particle) {
         return
             from tx in CollisionTimeOnAxis(particle.acc.x - acc.x, particle.vel.x - vel.x, particle.pos.x - pos.x)
             from ty in CollisionTimeOnAxis(particle.acc.y - acc.y, particle.vel.y - vel.y, particle.pos.y - pos.y)
             from tz in CollisionTimeOnAxis(particle.acc.z - acc.x, particle.vel.z - vel.z, particle.pos.z - pos.z)
-            where tx == ty && ty == tz
+            where tx == ty &amp;&amp; ty == tz
             select (tx);
     }
 
-    private IEnumerable<int> CollisionTimeOnAxis(int da, int dv, int dp) =>
+    private IEnumerable&lt;int&gt; CollisionTimeOnAxis(int da, int dv, int dp) =&gt;
         SolveIntEq(da / 2, dv, dp);
 
-    private IEnumerable<int> SolveIntEq(int a, int b, int c) {
+    private IEnumerable&lt;int&gt; SolveIntEq(int a, int b, int c) {
         if (a == 0) {
             if (b == 0) {
                 if (c == 0) {
@@ -410,7 +410,7 @@ class Particle {
             var d = b * b - 4 * a * c;
             if (d == 0) {
                 yield return -b / (2 * a);
-            } else if (d > 0) {
+            } else if (d &gt; 0) {
                 var ds = Math.Sqrt(d);
                 if (ds * ds == d) {
                     yield return (int)((-b + ds) / (2 * a));

@@ -287,25 +287,25 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 
-[ProblemName("Historian Hysteria")]
+[ProblemName(&quot;Historian Hysteria&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => 
+    public object PartOne(string input) =&gt; 
         // go over the sorted columns pairwise and sum the difference of the pairs
         Enumerable.Zip(Column(input, 0), Column(input, 1))
-            .Select(p =>  Math.Abs(p.First - p.Second))
+            .Select(p =&gt;  Math.Abs(p.First - p.Second))
             .Sum();
 
     public object PartTwo(string input) {
         // sum the elements of the left column weighted by its occurrences in the right
         // ⭐ .Net 9 comes with a new CountBy function
-        var weights = Column(input, 1).CountBy(x=>x).ToDictionary();
-        return Column(input, 0).Select(num => weights.GetValueOrDefault(num) * num).Sum();
+        var weights = Column(input, 1).CountBy(x=&gt;x).ToDictionary();
+        return Column(input, 0).Select(num =&gt; weights.GetValueOrDefault(num) * num).Sum();
     }
 
-    IEnumerable<int> Column(string input, int column) =>
-        from line in input.Split("\n")
-        let nums = line.Split("   ").Select(int.Parse).ToArray()
+    IEnumerable&lt;int&gt; Column(string input, int column) =&gt;
+        from line in input.Split(&quot;\n&quot;)
+        let nums = line.Split(&quot;   &quot;).Select(int.Parse).ToArray()
         orderby nums[column]
         select nums[column];
 }

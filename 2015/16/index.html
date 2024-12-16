@@ -285,42 +285,42 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2015.Day16;
 
-[ProblemName("Aunt Sue")]
+[ProblemName(&quot;Aunt Sue&quot;)]
 class Solution : Solver {
 
-    private Dictionary<string, int> target = new Dictionary<string, int> {
-        ["children"] = 3,
-        ["cats"] = 7,
-        ["samoyeds"] = 2,
-        ["pomeranians"] = 3,
-        ["akitas"] = 0,
-        ["vizslas"] = 0,
-        ["goldfish"] = 5,
-        ["trees"] = 3,
-        ["cars"] = 2,
-        ["perfumes"] = 1,
+    private Dictionary&lt;string, int&gt; target = new Dictionary&lt;string, int&gt; {
+        [&quot;children&quot;] = 3,
+        [&quot;cats&quot;] = 7,
+        [&quot;samoyeds&quot;] = 2,
+        [&quot;pomeranians&quot;] = 3,
+        [&quot;akitas&quot;] = 0,
+        [&quot;vizslas&quot;] = 0,
+        [&quot;goldfish&quot;] = 5,
+        [&quot;trees&quot;] = 3,
+        [&quot;cars&quot;] = 2,
+        [&quot;perfumes&quot;] = 1,
     };
 
-    public object PartOne(string input) =>
-        Parse(input).FindIndex(p => p.Keys.All(k => p[k] == target[k])) + 1;
+    public object PartOne(string input) =&gt;
+        Parse(input).FindIndex(p =&gt; p.Keys.All(k =&gt; p[k] == target[k])) + 1;
 
-    public object PartTwo(string input) =>
-        Parse(input).FindIndex(p => p.Keys.All(k => {
-            if (k == "cats" || k == "trees") {
-                return p[k] > target[k];
-            } else if (k == "pomeranians" || k == "goldfish") {
-                return p[k] < target[k];
+    public object PartTwo(string input) =&gt;
+        Parse(input).FindIndex(p =&gt; p.Keys.All(k =&gt; {
+            if (k == &quot;cats&quot; || k == &quot;trees&quot;) {
+                return p[k] &gt; target[k];
+            } else if (k == &quot;pomeranians&quot; || k == &quot;goldfish&quot;) {
+                return p[k] &lt; target[k];
             } else {
                 return p[k] == target[k];
             }
         })) + 1;
 
-    List<Dictionary<string, int>> Parse(string input) => (
-            from line in input.Split('\n')
-            let parts = Regex.Matches(line, @"(\w+): (\d+)")
+    List&lt;Dictionary&lt;string, int&gt;&gt; Parse(string input) =&gt; (
+            from line in input.Split(&#039;\n&#039;)
+            let parts = Regex.Matches(line, @&quot;(\w+): (\d+)&quot;)
             select parts.ToDictionary(
-                part => part.Groups[1].Value,
-                part => int.Parse(part.Groups[2].Value))
+                part =&gt; part.Groups[1].Value,
+                part =&gt; int.Parse(part.Groups[2].Value))
          ).ToList();
 }
 </code></pre></div>

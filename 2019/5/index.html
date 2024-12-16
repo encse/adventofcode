@@ -283,12 +283,12 @@
 
 namespace AdventOfCode.Y2019.Day05;
 
-[ProblemName("Sunny with a Chance of Asteroids")]
+[ProblemName(&quot;Sunny with a Chance of Asteroids&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => new IntCodeMachine(input).Run(1).Last();
+    public object PartOne(string input) =&gt; new IntCodeMachine(input).Run(1).Last();
 
-    public object PartTwo(string input) => new IntCodeMachine(input).Run(5).Last();
+    public object PartTwo(string input) =&gt; new IntCodeMachine(input).Run(5).Last();
 
 }
 </code></pre></div>

@@ -285,17 +285,17 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2015.Day14;
 
-[ProblemName("Reindeer Olympics")]
+[ProblemName(&quot;Reindeer Olympics&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Race(Parse(input)).Skip(2502).First().Max();
-    public object PartTwo(string input) => Race2(Parse(input)).Skip(2502).First().Max();
+    public object PartOne(string input) =&gt; Race(Parse(input)).Skip(2502).First().Max();
+    public object PartTwo(string input) =&gt; Race2(Parse(input)).Skip(2502).First().Max();
 
-    IEnumerable<int>[] Parse(string input) => input.Split('\n').Select(Reindeer).ToArray();
+    IEnumerable&lt;int&gt;[] Parse(string input) =&gt; input.Split(&#039;\n&#039;).Select(Reindeer).ToArray();
 
-    IEnumerable<int[]> Race(IEnumerable<int>[] reindeers) {
+    IEnumerable&lt;int[]&gt; Race(IEnumerable&lt;int&gt;[] reindeers) {
         var res = new int[reindeers.Length];
-        var enumarators = reindeers.Select(r => r.GetEnumerator()).ToArray();
+        var enumarators = reindeers.Select(r =&gt; r.GetEnumerator()).ToArray();
         while (true) {
             yield return (from en in enumarators
                           let _ = en.MoveNext()
@@ -303,11 +303,11 @@ class Solution : Solver {
         }
     }
 
-    IEnumerable<int[]> Race2(IEnumerable<int>[] reindeers) {
+    IEnumerable&lt;int[]&gt; Race2(IEnumerable&lt;int&gt;[] reindeers) {
         var points = new int[reindeers.Length];
         foreach (var step in Race(reindeers)) {
             var m = step.Max();
-            for (var i = 0; i < step.Length; i++) {
+            for (var i = 0; i &lt; step.Length; i++) {
                 if (step[i] == m) {
                     points[i]++;
                 }
@@ -316,8 +316,8 @@ class Solution : Solver {
         }
     }
     
-    IEnumerable<int> Reindeer(string line) {
-        var m = Regex.Match(line, @"(.*) can fly (.*) km/s for (.*) seconds, but then must rest for (.*) seconds.");
+    IEnumerable&lt;int&gt; Reindeer(string line) {
+        var m = Regex.Match(line, @&quot;(.*) can fly (.*) km/s for (.*) seconds, but then must rest for (.*) seconds.&quot;);
         var speed = int.Parse(m.Groups[2].Value);
         var flightTime = int.Parse(m.Groups[3].Value);
         var restTime = int.Parse(m.Groups[4].Value);
@@ -329,7 +329,7 @@ class Solution : Solver {
                 dist += speed;
             }
             t++;
-            if ((flying && t == flightTime) || (!flying && t == restTime)) {
+            if ((flying &amp;&amp; t == flightTime) || (!flying &amp;&amp; t == restTime)) {
                 t = 0;
                 flying = !flying;
             }

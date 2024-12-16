@@ -304,13 +304,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-[ProblemName("Snowverload")]
+[ProblemName(&quot;Snowverload&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
         Random r = new Random(25);
 
-        // run Karger's algorithm until it finds a cut with 3 edges
+        // run Karger&#039;s algorithm until it finds a cut with 3 edges
         var (cutSize, c1, c2) = FindCut(input, r);
         while (cutSize != 3) {
             (cutSize, c1, c2) = FindCut(input, r);
@@ -319,17 +319,17 @@ class Solution : Solver {
     }
 
     // https://en.wikipedia.org/wiki/Karger%27s_algorithm
-    // Karger's algorithm finds a cut of a graph and returns its size. 
-    // It's not necessarily the minimal cut, because it's a randomized algorithm 
-    // but it's 'likely' to find the minimal cut in reasonable time. 
+    // Karger&#039;s algorithm finds a cut of a graph and returns its size. 
+    // It&#039;s not necessarily the minimal cut, because it&#039;s a randomized algorithm 
+    // but it&#039;s &#039;likely&#039; to find the minimal cut in reasonable time. 
     // The algorithm is extended to return the sizes of the two components 
     // separated by the cut as well.
     (int size, int c1, int c2) FindCut(string input, Random r) {
         var graph = Parse(input);
-        var componentSize = graph.Keys.ToDictionary(k => k, _ => 1);
+        var componentSize = graph.Keys.ToDictionary(k =&gt; k, _ =&gt; 1);
 
         // updates backreferences of oldNode to point to newNode
-        var rebind = (string oldNode, string newNode) => {
+        var rebind = (string oldNode, string newNode) =&gt; {
             foreach (var n in graph[oldNode]) {
                 while (graph[n].Remove(oldNode)) {
                     graph[n].Add(newNode);
@@ -337,16 +337,16 @@ class Solution : Solver {
             }
         };
 
-        for (var id = 0; graph.Count > 2; id++) {
+        for (var id = 0; graph.Count &gt; 2; id++) {
             // decrease the the number of nodes by one. First select two nodes u 
             // and v connected with an edge. Introduce a new node that inherits 
             // every edge going out of these (excluding the edges between them). 
-            // Set the new nodes' component size to the sum of the component 
+            // Set the new nodes&#039; component size to the sum of the component 
             // sizes of u and v. Remove u and v from the graph.
             var u = graph.Keys.ElementAt(r.Next(graph.Count));
             var v = graph[u][r.Next(graph[u].Count)];
 
-            var merged = "merge-" + id;
+            var merged = &quot;merge-&quot; + id;
             graph[merged] = [
                 ..from n in graph[u] where n != v select n,
                 ..from n in graph[v] where n != u select n
@@ -370,20 +370,20 @@ class Solution : Solver {
 
     // returns an adjacency list representation of the input. Edges are recorded 
     // both ways, unlike in the input which contains them in one direction only.
-    Dictionary<string, List<string>> Parse(string input) {
-        var graph = new Dictionary<string, List<string>>();
+    Dictionary&lt;string, List&lt;string&gt;&gt; Parse(string input) {
+        var graph = new Dictionary&lt;string, List&lt;string&gt;&gt;();
 
-        var registerEdge = (string u, string v) => {
+        var registerEdge = (string u, string v) =&gt; {
             if (!graph.ContainsKey(u)) {
                 graph[u] = new();
             }
             graph[u].Add(v);
         };
 
-        foreach (var line in input.Split('\n')) {
-            var parts = line.Split(": ");
+        foreach (var line in input.Split(&#039;\n&#039;)) {
+            var parts = line.Split(&quot;: &quot;);
             var u = parts[0];
-            var nodes = parts[1].Split(' ');
+            var nodes = parts[1].Split(&#039; &#039;);
             foreach (var v in nodes) {
                 registerEdge(u, v);
                 registerEdge(v, u);

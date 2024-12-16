@@ -285,29 +285,29 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2022.Day07;
 
-[ProblemName("No Space Left On Device")]
+[ProblemName(&quot;No Space Left On Device&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
-        return GetDirectorySizes(input).Where(size => size < 100000).Sum();
+        return GetDirectorySizes(input).Where(size =&gt; size &lt; 100000).Sum();
     }
 
     public object PartTwo(string input) {
         var directorySizes = GetDirectorySizes(input);
         var freeSpace = 70000000 - directorySizes.Max();
-        return directorySizes.Where(size => size + freeSpace >= 30000000).Min();
+        return directorySizes.Where(size =&gt; size + freeSpace &gt;= 30000000).Min();
     }
 
-    private List<int> GetDirectorySizes(string input) {
-        var path = new Stack<string>();
-        var sizes = new Dictionary<string, int>();
-        foreach (var line in input.Split("\n")) {
-            if (line == "$ cd ..") {
+    private List&lt;int&gt; GetDirectorySizes(string input) {
+        var path = new Stack&lt;string&gt;();
+        var sizes = new Dictionary&lt;string, int&gt;();
+        foreach (var line in input.Split(&quot;\n&quot;)) {
+            if (line == &quot;$ cd ..&quot;) {
                 path.Pop();
-            } else if (line.StartsWith("$ cd")) {
-                path.Push(string.Join("", path)+line.Split(" ")[2]);
-            } else if (Regex.Match(line, @"\d+").Success) {
-                var size = int.Parse(line.Split(" ")[0]);
+            } else if (line.StartsWith(&quot;$ cd&quot;)) {
+                path.Push(string.Join(&quot;&quot;, path)+line.Split(&quot; &quot;)[2]);
+            } else if (Regex.Match(line, @&quot;\d+&quot;).Success) {
+                var size = int.Parse(line.Split(&quot; &quot;)[0]);
                 foreach (var dir in path) {
                     sizes[dir] = sizes.GetValueOrDefault(dir) + size;
                 }

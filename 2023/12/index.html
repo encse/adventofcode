@@ -288,74 +288,74 @@ algorithm we came up with in Part 1.</p>
 using System;
 using System.Collections.Immutable;
 using System.Linq;
-using Cache = System.Collections.Generic.Dictionary<
-    (string, System.Collections.Immutable.ImmutableStack<int>), long>;
+using Cache = System.Collections.Generic.Dictionary&lt;
+    (string, System.Collections.Immutable.ImmutableStack&lt;int&gt;), long&gt;;
 
-[ProblemName("Hot Springs")]
+[ProblemName(&quot;Hot Springs&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Solve(input, 1);
-    public object PartTwo(string input) => Solve(input, 5);
+    public object PartOne(string input) =&gt; Solve(input, 1);
+    public object PartTwo(string input) =&gt; Solve(input, 5);
 
     // After unfolding the input we process it line by line computing the possible 
     // combinations for each. We use memoized recursion to speed up PartTwo.
     // 
     // The computation is recursive by nature, and goes over the pattern and numbers
-    // in tandem branching on '?' symbols and consuming as much of dead springs
-    // as dictated by the next number when a '#' is found. The symbol that follows 
-    // a dead range needs special treatment: it cannot be a '#', and if it was a '?'
-    // we should consider it as a '.' according to the problem statement.
+    // in tandem branching on &#039;?&#039; symbols and consuming as much of dead springs
+    // as dictated by the next number when a &#039;#&#039; is found. The symbol that follows 
+    // a dead range needs special treatment: it cannot be a &#039;#&#039;, and if it was a &#039;?&#039;
+    // we should consider it as a &#039;.&#039; according to the problem statement.
     // 
     // I like to use immutable datastructures when dealing with problems that
-    // involves backtracking, it's not immediately obvious from the solution below
+    // involves backtracking, it&#039;s not immediately obvious from the solution below
     // but using a mutable stack or list would cause a lot of headache.
 
-    long Solve(string input, int repeat) => (
-        from line in input.Split("\n")
-        let parts = line.Split(" ")
-        let pattern = Unfold(parts[0], '?', repeat)
-        let numString = Unfold(parts[1], ',', repeat)
-        let nums = numString.Split(',').Select(int.Parse)
+    long Solve(string input, int repeat) =&gt; (
+        from line in input.Split(&quot;\n&quot;)
+        let parts = line.Split(&quot; &quot;)
+        let pattern = Unfold(parts[0], &#039;?&#039;, repeat)
+        let numString = Unfold(parts[1], &#039;,&#039;, repeat)
+        let nums = numString.Split(&#039;,&#039;).Select(int.Parse)
         select
             Compute(pattern, ImmutableStack.CreateRange(nums.Reverse()), new Cache())
     ).Sum();
 
-    string Unfold(string st, char join, int unfold) =>
+    string Unfold(string st, char join, int unfold) =&gt;
         string.Join(join, Enumerable.Repeat(st, unfold));
 
-    long Compute(string pattern, ImmutableStack<int> nums, Cache cache) {
+    long Compute(string pattern, ImmutableStack&lt;int&gt; nums, Cache cache) {
         if (!cache.ContainsKey((pattern, nums))) {
             cache[(pattern, nums)] = Dispatch(pattern, nums, cache);
         }
         return cache[(pattern, nums)];
     }
 
-    long Dispatch(string pattern, ImmutableStack<int> nums, Cache cache) {
+    long Dispatch(string pattern, ImmutableStack&lt;int&gt; nums, Cache cache) {
         return pattern.FirstOrDefault() switch {
-            '.' => ProcessDot(pattern, nums, cache),
-            '?' => ProcessQuestion(pattern, nums, cache),
-            '#' => ProcessHash(pattern, nums, cache),
-            _ => ProcessEnd(pattern, nums, cache),
+            &#039;.&#039; =&gt; ProcessDot(pattern, nums, cache),
+            &#039;?&#039; =&gt; ProcessQuestion(pattern, nums, cache),
+            &#039;#&#039; =&gt; ProcessHash(pattern, nums, cache),
+            _ =&gt; ProcessEnd(pattern, nums, cache),
         };
     }
 
-    long ProcessEnd(string _, ImmutableStack<int> nums, Cache __) {
-        // no numbers left at the end of pattern -> good
+    long ProcessEnd(string _, ImmutableStack&lt;int&gt; nums, Cache __) {
+        // no numbers left at the end of pattern -&gt; good
         return nums.Any() ? 0 : 1;
     }
 
-    long ProcessDot(string pattern, ImmutableStack<int> nums, Cache cache) {
+    long ProcessDot(string pattern, ImmutableStack&lt;int&gt; nums, Cache cache) {
         // consume one spring and recurse
         return Compute(pattern[1..], nums, cache);
     }
 
-    long ProcessQuestion(string pattern, ImmutableStack<int> nums, Cache cache) {
+    long ProcessQuestion(string pattern, ImmutableStack&lt;int&gt; nums, Cache cache) {
         // recurse both ways
-        return Compute("." + pattern[1..], nums, cache) +
-            Compute("#" + pattern[1..], nums, cache);
+        return Compute(&quot;.&quot; + pattern[1..], nums, cache) +
+            Compute(&quot;#&quot; + pattern[1..], nums, cache);
     }
 
-    long ProcessHash(string pattern, ImmutableStack<int> nums, Cache cache) {
+    long ProcessHash(string pattern, ImmutableStack&lt;int&gt; nums, Cache cache) {
         // take the first number and consume that many dead springs, recurse
 
         if (!nums.Any()) {
@@ -365,14 +365,14 @@ class Solution : Solver {
         var n = nums.Peek();
         nums = nums.Pop();
 
-        var potentiallyDead = pattern.TakeWhile(s => s == '#' || s == '?').Count();
+        var potentiallyDead = pattern.TakeWhile(s =&gt; s == &#039;#&#039; || s == &#039;?&#039;).Count();
 
-        if (potentiallyDead < n) {
+        if (potentiallyDead &lt; n) {
             return 0; // not enough dead springs 
         } else if (pattern.Length == n) {
-            return Compute("", nums, cache);
-        } else if (pattern[n] == '#') {
-            return 0; // dead spring follows the range -> not good
+            return Compute(&quot;&quot;, nums, cache);
+        } else if (pattern[n] == &#039;#&#039;) {
+            return 0; // dead spring follows the range -&gt; not good
         } else {
             return Compute(pattern[(n + 1)..], nums, cache);
         }

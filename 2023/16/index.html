@@ -291,10 +291,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using Map = System.Collections.Generic.Dictionary<System.Numerics.Complex, char>;
+using Map = System.Collections.Generic.Dictionary&lt;System.Numerics.Complex, char&gt;;
 using Beam = (System.Numerics.Complex pos, System.Numerics.Complex dir);
 
-[ProblemName("The Floor Will Be Lava")]
+[ProblemName(&quot;The Floor Will Be Lava&quot;)]
 class Solution : Solver {
 
     static readonly Complex Up = -Complex.ImaginaryOne;
@@ -302,7 +302,7 @@ class Solution : Solver {
     static readonly Complex Left = -Complex.One;
     static readonly Complex Right = Complex.One;
 
-    public object PartOne(string input) =>
+    public object PartOne(string input) =&gt;
         EnergizedCells(ParseMap(input), (Complex.Zero, Right));
 
     public object PartTwo(string input) {
@@ -314,26 +314,26 @@ class Solution : Solver {
     int EnergizedCells(Map map, Beam beam) {
 
         // this is essentially just a flood fill algorithm.
-        var q = new Queue<Beam>([beam]);
-        var seen = new HashSet<Beam>();
+        var q = new Queue&lt;Beam&gt;([beam]);
+        var seen = new HashSet&lt;Beam&gt;();
 
         while (q.TryDequeue(out beam)) {
             seen.Add(beam);
             foreach (var dir in Exits(map[beam.pos], beam.dir)) {
                 var pos = beam.pos + dir;
-                if (map.ContainsKey(pos) && !seen.Contains((pos, dir))) {
+                if (map.ContainsKey(pos) &amp;&amp; !seen.Contains((pos, dir))) {
                     q.Enqueue((pos, dir));
                 }
             }
         }
 
-        return seen.Select(beam => beam.pos).Distinct().Count();
+        return seen.Select(beam =&gt; beam.pos).Distinct().Count();
     }
 
     // go around the edges (top, right, bottom, left order) of the map
     // and return the inward pointing directions
-    IEnumerable<Beam> StartBeams(Map map) {
-        var br = map.Keys.MaxBy(pos => pos.Imaginary + pos.Real);
+    IEnumerable&lt;Beam&gt; StartBeams(Map map) {
+        var br = map.Keys.MaxBy(pos =&gt; pos.Imaginary + pos.Real);
         return [
             ..from pos in map.Keys where pos.Real == 0 select (pos, Down),
             ..from pos in map.Keys where pos.Real == br.Real select (pos, Left),
@@ -344,24 +344,24 @@ class Solution : Solver {
 
     // using a dictionary helps with bounds check (simply containskey):
     Map ParseMap(string input) {
-        var lines = input.Split('\n');
+        var lines = input.Split(&#039;\n&#039;);
         return (
             from irow in Enumerable.Range(0, lines.Length)
             from icol in Enumerable.Range(0, lines[0].Length)
             let cell = lines[irow][icol]
             let pos = new Complex(icol, irow)
-            select new KeyValuePair<Complex, char>(pos, cell)
+            select new KeyValuePair&lt;Complex, char&gt;(pos, cell)
         ).ToDictionary();
     }
 
-    // the 'exit' direction(s) of the given cell when entered by a beam moving in 'dir'
+    // the &#039;exit&#039; direction(s) of the given cell when entered by a beam moving in &#039;dir&#039;
     // we have some special cases for mirrors and spliters, the rest keeps the direction
-    Complex[] Exits(char cell, Complex dir) => cell switch {
-        '-' when dir == Up || dir == Down => [Left, Right],
-        '|' when dir == Left || dir == Right => [Up, Down],
-        '/' => [-new Complex(dir.Imaginary, dir.Real)],
-        '\\' => [new Complex(dir.Imaginary, dir.Real)],
-        _ => [dir]
+    Complex[] Exits(char cell, Complex dir) =&gt; cell switch {
+        &#039;-&#039; when dir == Up || dir == Down =&gt; [Left, Right],
+        &#039;|&#039; when dir == Left || dir == Right =&gt; [Up, Down],
+        &#039;/&#039; =&gt; [-new Complex(dir.Imaginary, dir.Real)],
+        &#039;\\&#039; =&gt; [new Complex(dir.Imaginary, dir.Real)],
+        _ =&gt; [dir]
     };
 }</code></pre></div>
             <div id="code-location"> <p>Please ☆ my <a href="https://github.com/encse/adventofcode/">repo</a> if you like it!</p></div>

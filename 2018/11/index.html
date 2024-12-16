@@ -281,26 +281,26 @@
 </div>
             <div id="code-container"><pre class="hljs language-csharp"><code>namespace AdventOfCode.Y2018.Day11;
 
-[ProblemName("Chronal Charge")]
+[ProblemName(&quot;Chronal Charge&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
         var res = Solver(int.Parse(input), 3);
-        return $"{res.xMax},{res.yMax}";
+        return $&quot;{res.xMax},{res.yMax}&quot;;
     }
 
     public object PartTwo(string input) {
         var res = Solver(int.Parse(input), 300);
-        return $"{res.xMax},{res.yMax},{res.dMax}";
+        return $&quot;{res.xMax},{res.yMax},{res.dMax}&quot;;
     }
 
     (int xMax, int yMax, int dMax) Solver(int gridSerialNumber, int D) {
         var gridOriginal = new int[300, 300];
-        for (var irow = 0; irow < 300; irow++) {
-            for (var icol = 0; icol < 300; icol++) {
+        for (var irow = 0; irow &lt; 300; irow++) {
+            for (var icol = 0; icol &lt; 300; icol++) {
                 var x = icol + 1;
                 var y = irow + 1;
-                //  Find the fuel cell's *rack ID*, which is its *X coordinate plus 10*.
+                //  Find the fuel cell&#039;s *rack ID*, which is its *X coordinate plus 10*.
                 var rackId = x + 10;
                 // - Begin with a power level of the *rack ID* times the *Y coordinate*.
                 var powerLevel = rackId * y;
@@ -323,22 +323,22 @@ class Solution : Solver {
         var dMax = int.MinValue;
 
         var grid = new int[300, 300];
-        for (var d = 1; d <= D; d++) {
-            for (var irow = 0; irow < 300 - d; irow++) {
-                for (var icol = 0; icol < 300; icol++) {
+        for (var d = 1; d &lt;= D; d++) {
+            for (var irow = 0; irow &lt; 300 - d; irow++) {
+                for (var icol = 0; icol &lt; 300; icol++) {
                     grid[irow, icol] += gridOriginal[irow + d - 1, icol];
                 }
             }
 
-            for (var irow = 0; irow < 300 - d; irow++) {
-                for (var icol = 0; icol < 300 - d; icol++) {
+            for (var irow = 0; irow &lt; 300 - d; irow++) {
+                for (var icol = 0; icol &lt; 300 - d; icol++) {
                     var totalPower = 0;
 
-                    for (var i = 0; i < d; i++) {
+                    for (var i = 0; i &lt; d; i++) {
                         totalPower += grid[irow, icol + i];
                     }
 
-                    if (totalPower > maxTotalPower) {
+                    if (totalPower &gt; maxTotalPower) {
                         maxTotalPower = totalPower;
                         yMax = irow + 1;
                         xMax = icol + 1;

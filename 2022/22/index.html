@@ -285,7 +285,7 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2022.Day22;
 
-[ProblemName("Monkey Map")]
+[ProblemName(&quot;Monkey Map&quot;)]
 class Solution : Solver {
     /*
         The cube is unfolded like this. Each letter identifies an 50x50 square 
@@ -295,42 +295,42 @@ class Solution : Solver {
                 DE
                 F 
         A topology map tells us how cube sides are connected. For example in 
-        case of part 1 the line "A -> B0 C0 B0 E0" means that if we go to the 
+        case of part 1 the line &quot;A -&gt; B0 C0 B0 E0&quot; means that if we go to the 
         right from A we get to B, C is down, moving to the left we find B again, 
         and moving up from A we get to E. The order of directions is always 
         right, down, left and up.
 
         The number next to the letter tells us how many 90 degrees we need to 
         rotate the destination square to point upwards. In case of part 1 we 
-        don't need to rotate so the number is always zero. In part 2 there is 
-        "A -> B0 C0 D2 F1" which means that if we are about to move up from A we 
+        don&#039;t need to rotate so the number is always zero. In part 2 there is 
+        &quot;A -&gt; B0 C0 D2 F1&quot; which means that if we are about to move up from A we 
         get to F, but F is rotated to the right once, likewise D2 means that D 
         is on the left of A and it is up side down.
 
         This mapping was generated from a paper model.
     */
 
-    public object PartOne(string input) => Solve(
+    public object PartOne(string input) =&gt; Solve(
         input,
-        """"
-        A -> B0 C0 B0 E0
-        B -> A0 B0 A0 B0
-        C -> C0 E0 C0 A0
-        D -> E0 F0 E0 F0
-        E -> D0 A0 D0 C0
-        F -> F0 D0 F0 D0
-        """"
+        &quot;&quot;&quot;&quot;
+        A -&gt; B0 C0 B0 E0
+        B -&gt; A0 B0 A0 B0
+        C -&gt; C0 E0 C0 A0
+        D -&gt; E0 F0 E0 F0
+        E -&gt; D0 A0 D0 C0
+        F -&gt; F0 D0 F0 D0
+        &quot;&quot;&quot;&quot;
     );
-    public object PartTwo(string input) => Solve(
+    public object PartTwo(string input) =&gt; Solve(
         input,
-        """
-        A -> B0 C0 D2 F1
-        B -> E2 C1 A0 F0
-        C -> B3 E0 D3 A0
-        D -> E0 F0 A2 C1
-        E -> B2 F1 D0 C0
-        F -> E3 B0 A3 D0
-        """
+        &quot;&quot;&quot;
+        A -&gt; B0 C0 D2 F1
+        B -&gt; E2 C1 A0 F0
+        C -&gt; B3 E0 D3 A0
+        D -&gt; E0 F0 A2 C1
+        E -&gt; B2 F1 D0 C0
+        F -&gt; E3 B0 A3 D0
+        &quot;&quot;&quot;
     );
 
     const int blockSize = 50;
@@ -341,7 +341,7 @@ class Solution : Solver {
 
     int Solve(string input, string topology) {
         var (map, cmds) = Parse(input);
-        var state = new State("A", new Coord(0, 0), right);
+        var state = new State(&quot;A&quot;, new Coord(0, 0), right);
 
         foreach (var cmd in cmds) {
             switch (cmd) {
@@ -352,10 +352,10 @@ class Solution : Solver {
                     state = state with { dir = (state.dir + 1) % 4 };
                     break;
                 case Forward(var n):
-                    for (var i = 0; i < n; i++) {
+                    for (var i = 0; i &lt; n; i++) {
                         var stateNext = Step(topology, state);
                         var global = ToGlobal(stateNext);
-                        if (map[global.irow][global.icol] == '.') {
+                        if (map[global.irow][global.icol] == &#039;.&#039;) {
                             state = stateNext;
                         } else {
                             break;
@@ -370,44 +370,44 @@ class Solution : Solver {
                       state.dir;
     }
 
-    Coord ToGlobal(State state) => 
+    Coord ToGlobal(State state) =&gt; 
         state.block switch {
-            "A" => state.coord + new Coord(0, blockSize),
-            "B" => state.coord + new Coord(0, 2 * blockSize),
-            "C" => state.coord + new Coord(blockSize, blockSize),
-            "D" => state.coord + new Coord(2 * blockSize, 0),
-            "E" => state.coord + new Coord(2 * blockSize, blockSize),
-            "F" => state.coord + new Coord(3 * blockSize, 0),
-            _ => throw new Exception()
+            &quot;A&quot; =&gt; state.coord + new Coord(0, blockSize),
+            &quot;B&quot; =&gt; state.coord + new Coord(0, 2 * blockSize),
+            &quot;C&quot; =&gt; state.coord + new Coord(blockSize, blockSize),
+            &quot;D&quot; =&gt; state.coord + new Coord(2 * blockSize, 0),
+            &quot;E&quot; =&gt; state.coord + new Coord(2 * blockSize, blockSize),
+            &quot;F&quot; =&gt; state.coord + new Coord(3 * blockSize, 0),
+            _ =&gt; throw new Exception()
         };
 
     State Step(string topology, State state) {
 
-        bool wrapsAround(Coord coord) =>
-            coord.icol < 0 || coord.icol >= blockSize || 
-            coord.irow < 0 || coord.irow >= blockSize;
+        bool wrapsAround(Coord coord) =&gt;
+            coord.icol &lt; 0 || coord.icol &gt;= blockSize || 
+            coord.irow &lt; 0 || coord.irow &gt;= blockSize;
 
         var (srcBlock, coord, dir) = state;
         var dstBlock = srcBlock;
 
         // take one step, if there is no wrap around we are all right
         coord = dir switch {
-            left => coord with { icol = coord.icol - 1 },
-            down => coord with { irow = coord.irow + 1 },
-            right => coord with { icol = coord.icol + 1 },
-            up => coord with { irow = coord.irow - 1 },
-            _ => throw new Exception()
+            left =&gt; coord with { icol = coord.icol - 1 },
+            down =&gt; coord with { irow = coord.irow + 1 },
+            right =&gt; coord with { icol = coord.icol + 1 },
+            up =&gt; coord with { irow = coord.irow - 1 },
+            _ =&gt; throw new Exception()
         };
 
         if (wrapsAround(coord)) {
             // check the topology, select the dstBlock and rotate coord and dir 
             // as much as needed this is easier to follow through an example
-            // if srcBlock: "C", dir: 2
+            // if srcBlock: &quot;C&quot;, dir: 2
 
-            var line = topology.Split('\n').Single(x => x.StartsWith(srcBlock));
-            // line: C -> B3 E0 D3 A0
+            var line = topology.Split(&#039;\n&#039;).Single(x =&gt; x.StartsWith(srcBlock));
+            // line: C -&gt; B3 E0 D3 A0
 
-            var mapping = line.Split(" -> ")[1].Split(" ");
+            var mapping = line.Split(&quot; -&gt; &quot;)[1].Split(&quot; &quot;);
             // mapping: B3 E0 D3 A0
 
             var neighbour = mapping[dir];
@@ -425,7 +425,7 @@ class Solution : Solver {
                 icol = (coord.icol + blockSize) % blockSize,
             };
 
-            for (var i = 0; i < rotate; i++) {
+            for (var i = 0; i &lt; rotate; i++) {
                 coord = coord with { 
                     irow = coord.icol, 
                     icol = blockSize - coord.irow - 1 
@@ -438,16 +438,16 @@ class Solution : Solver {
     }
 
     (string[] map, Cmd[] path) Parse(string input) {
-        var blocks = input.Split("\n\n");
+        var blocks = input.Split(&quot;\n\n&quot;);
 
-        var map = blocks[0].Split("\n");
+        var map = blocks[0].Split(&quot;\n&quot;);
         var commands = Regex
-            .Matches(blocks[1], @"(\d+)|L|R")
-            .Select<Match, Cmd>(m =>
+            .Matches(blocks[1], @&quot;(\d+)|L|R&quot;)
+            .Select&lt;Match, Cmd&gt;(m =&gt;
                 m.Value switch {
-                    "L" => new Left(),
-                    "R" => new Right(),
-                    string n => new Forward(int.Parse(n)),
+                    &quot;L&quot; =&gt; new Left(),
+                    &quot;R&quot; =&gt; new Right(),
+                    string n =&gt; new Forward(int.Parse(n)),
                 })
             .ToArray();
 
@@ -457,10 +457,10 @@ class Solution : Solver {
     record State(string block, Coord coord, int dir);
 
     record Coord(int irow, int icol) {
-        public static Coord operator +(Coord a, Coord b) =>
+        public static Coord operator +(Coord a, Coord b) =&gt;
             new Coord(a.irow + b.irow, a.icol + b.icol);
 
-        public static Coord operator -(Coord a, Coord b) =>
+        public static Coord operator -(Coord a, Coord b) =&gt;
             new Coord(a.irow - b.irow, a.icol - b.icol);
     }
 

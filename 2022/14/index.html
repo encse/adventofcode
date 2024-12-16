@@ -286,38 +286,38 @@ using System.Numerics;
 
 namespace AdventOfCode.Y2022.Day14;
 
-[ProblemName("Regolith Reservoir")]
+[ProblemName(&quot;Regolith Reservoir&quot;)]
 class Solution : Solver {
     public object PartOne(string input) 
-        => new Cave(input, hasFloor: false).FillWithSand(new Complex(500, 0));
+        =&gt; new Cave(input, hasFloor: false).FillWithSand(new Complex(500, 0));
 
     public object PartTwo(string input)
-         => new Cave(input, hasFloor: true).FillWithSand(new Complex(500, 0));
+         =&gt; new Cave(input, hasFloor: true).FillWithSand(new Complex(500, 0));
 }
 
 class Cave {
     bool hasFloor;
 
-    Dictionary<Complex, char> map;
+    Dictionary&lt;Complex, char&gt; map;
     int maxImaginary;
 
     public Cave(string input, bool hasFloor) {
         this.hasFloor = hasFloor;
-        this.map = new Dictionary<Complex, char>();
+        this.map = new Dictionary&lt;Complex, char&gt;();
 
-        foreach (var line in input.Split("\n")) {
+        foreach (var line in input.Split(&quot;\n&quot;)) {
             var steps = (
-                from step in line.Split(" -> ")
-                let parts = step.Split(",")
+                from step in line.Split(&quot; -&gt; &quot;)
+                let parts = step.Split(&quot;,&quot;)
                 select new Complex(int.Parse(parts[0]), int.Parse(parts[1]))
             ).ToArray();
 
-            for (var i = 1; i < steps.Length; i++) {
+            for (var i = 1; i &lt; steps.Length; i++) {
                 FillWithRocks(steps[i - 1], steps[i]);
             }
         }
 
-        this.maxImaginary = (int)this.map.Keys.Select(pos => pos.Imaginary).Max();
+        this.maxImaginary = (int)this.map.Keys.Select(pos =&gt; pos.Imaginary).Max();
     }
 
     // Adds a line of rocks to the cave
@@ -329,7 +329,7 @@ class Cave {
 
         var steps = 0;
         for (var pos = from; pos != to + dir; pos += dir) {
-            map[pos] = '#';
+            map[pos] = &#039;#&#039;;
             steps ++;
         }
         return steps;
@@ -347,14 +347,14 @@ class Cave {
             }
 
             // flows out into the void
-            if (!hasFloor && location.Imaginary == maxImaginary + 1) {
+            if (!hasFloor &amp;&amp; location.Imaginary == maxImaginary + 1) {
                 break;
             }
 
-            map[location] = 'o';
+            map[location] = &#039;o&#039;;
         }
 
-        return map.Values.Count(x => x == 'o');
+        return map.Values.Count(x =&gt; x == &#039;o&#039;);
     }
 
     // Returns the final location of a falling unit of sand following the rules of cave physics
@@ -363,7 +363,7 @@ class Cave {
         var left = new Complex(-1, 1);
         var right = new Complex(1, 1);
 
-        while (sand.Imaginary < maxImaginary + 1) {
+        while (sand.Imaginary &lt; maxImaginary + 1) {
             if (!map.ContainsKey(sand + down)) {
                 sand += down;
             } else if (!map.ContainsKey(sand + left)) {

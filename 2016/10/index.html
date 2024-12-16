@@ -286,23 +286,23 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2016.Day10;
 
-[ProblemName("Balance Bots")]
+[ProblemName(&quot;Balance Bots&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) =>
-        Execute(Parse(input)).Single(v => v.min == 17 && v.max == 61).id.Split(' ')[1];
+    public object PartOne(string input) =&gt;
+        Execute(Parse(input)).Single(v =&gt; v.min == 17 &amp;&amp; v.max == 61).id.Split(&#039; &#039;)[1];
 
     public object PartTwo(string input) {
         var m = Execute(Parse(input)).Last().machine;
-        return m["output 0"].values.Single() * m["output 1"].values.Single() * m["output 2"].values.Single();
+        return m[&quot;output 0&quot;].values.Single() * m[&quot;output 1&quot;].values.Single() * m[&quot;output 2&quot;].values.Single();
     }
 
-    IEnumerable<(Dictionary<string, Node> machine, string id, int min, int max)> Execute(Dictionary<string, Node> machine) {
+    IEnumerable&lt;(Dictionary&lt;string, Node&gt; machine, string id, int min, int max)&gt; Execute(Dictionary&lt;string, Node&gt; machine) {
         var any = true;
         while (any) {
             any = false;
             foreach (var node in machine.Values) {
-                if (node.values.Count == 2 && node.outHigh != null) {
+                if (node.values.Count == 2 &amp;&amp; node.outHigh != null) {
                     any = true;
                     var (min, max) = (node.values.Min(), node.values.Max());
                     machine[node.outLow].values.Add(min);
@@ -314,8 +314,8 @@ class Solution : Solver {
         }
     }
 
-    Dictionary<string, Node> Parse(string input) {
-        var res = new Dictionary<string, Node>();
+    Dictionary&lt;string, Node&gt; Parse(string input) {
+        var res = new Dictionary&lt;string, Node&gt;();
         void ensureNodes(params string[] ids) {
             foreach (var id in ids) {
                 if (!res.ContainsKey(id)) {
@@ -323,12 +323,12 @@ class Solution : Solver {
                 }
             }
         }
-        foreach (var line in input.Split('\n')) {
-            if (Match(line, @"(.+) gives low to (.+) and high to (.+)", out var m)) {
+        foreach (var line in input.Split(&#039;\n&#039;)) {
+            if (Match(line, @&quot;(.+) gives low to (.+) and high to (.+)&quot;, out var m)) {
                 ensureNodes(m);
                 res[m[0]].outLow = m[1];
                 res[m[0]].outHigh = m[2];
-            } else if (Match(line, @"value (\d+) goes to (.+)", out m)) {
+            } else if (Match(line, @&quot;value (\d+) goes to (.+)&quot;, out m)) {
                 ensureNodes(m[1]);
                 res[m[1]].values.Add(int.Parse(m[0]));
             } else {
@@ -342,7 +342,7 @@ class Solution : Solver {
         var match = Regex.Match(stm, pattern);
         m = null;
         if (match.Success) {
-            m = match.Groups.Cast<Group>().Skip(1).Select(g => g.Value).ToArray();
+            m = match.Groups.Cast&lt;Group&gt;().Skip(1).Select(g =&gt; g.Value).ToArray();
             return true;
         } else {
             return false;
@@ -352,7 +352,7 @@ class Solution : Solver {
 
 class Node {
     public string id;
-    public List<int> values = new List<int>();
+    public List&lt;int&gt; values = new List&lt;int&gt;();
     public string outLow;
     public string outHigh;
 }

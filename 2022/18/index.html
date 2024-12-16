@@ -284,7 +284,7 @@ using System.Linq;
 
 namespace AdventOfCode.Y2022.Day18;
 
-[ProblemName("Boiling Boulders")]
+[ProblemName(&quot;Boiling Boulders&quot;)]
 class Solution : Solver {
 
     record class Point(int x, int y, int z);
@@ -292,29 +292,29 @@ class Solution : Solver {
 
     public object PartOne(string input) {
         var lavaLocations = GetLavaLocations(input).ToHashSet();
-        return lavaLocations.SelectMany(Neighbours).Count(p => !lavaLocations.Contains(p));
+        return lavaLocations.SelectMany(Neighbours).Count(p =&gt; !lavaLocations.Contains(p));
     }
 
     public object PartTwo(string input) {
         var lavaLocations = GetLavaLocations(input).ToHashSet();
         var bounds = GetBounds(lavaLocations);
         var waterLocations = FillWithWater(bounds.min, bounds, lavaLocations);
-        return lavaLocations.SelectMany(Neighbours).Count(p => waterLocations.Contains(p));
+        return lavaLocations.SelectMany(Neighbours).Count(p =&gt; waterLocations.Contains(p));
     }
     
     // fills a region with water starting from the given point and avoiding lavalLocations
     // standard flood fill algorithm
-    HashSet<Point> FillWithWater(Point from, Bounds bounds, HashSet<Point> lavaLocations) {
-        var result = new HashSet<Point>();
-        var q = new Queue<Point>();
+    HashSet&lt;Point&gt; FillWithWater(Point from, Bounds bounds, HashSet&lt;Point&gt; lavaLocations) {
+        var result = new HashSet&lt;Point&gt;();
+        var q = new Queue&lt;Point&gt;();
 
         result.Add(from);
         q.Enqueue(from);
         while (q.Any()) {
             var water = q.Dequeue();
             foreach (var neighbour in Neighbours(water)) {
-                if (!result.Contains(neighbour) && 
-                    Within(bounds, neighbour) && 
+                if (!result.Contains(neighbour) &amp;&amp; 
+                    Within(bounds, neighbour) &amp;&amp; 
                     !lavaLocations.Contains(neighbour)
                 ) {
                     result.Add(neighbour);
@@ -326,31 +326,31 @@ class Solution : Solver {
         return result;
     }
 
-    IEnumerable<Point> GetLavaLocations(string input) =>
-        from line in input.Split("\n")
-        let coords = line.Split(",").Select(int.Parse).ToArray()
+    IEnumerable&lt;Point&gt; GetLavaLocations(string input) =&gt;
+        from line in input.Split(&quot;\n&quot;)
+        let coords = line.Split(&quot;,&quot;).Select(int.Parse).ToArray()
         select new Point(coords[0], coords[1], coords[2]);
 
     // returns the enclosing box of a point set, the min and max values are padded by one
-    Bounds GetBounds(IEnumerable<Point> points) {
-        var minX = points.Select(p => p.x).Min() - 1;
-        var maxX = points.Select(p => p.x).Max() + 1;
+    Bounds GetBounds(IEnumerable&lt;Point&gt; points) {
+        var minX = points.Select(p =&gt; p.x).Min() - 1;
+        var maxX = points.Select(p =&gt; p.x).Max() + 1;
 
-        var minY = points.Select(p => p.y).Min() - 1;
-        var maxY = points.Select(p => p.y).Max() + 1;
+        var minY = points.Select(p =&gt; p.y).Min() - 1;
+        var maxY = points.Select(p =&gt; p.y).Max() + 1;
 
-        var minZ = points.Select(p => p.z).Min() - 1;
-        var maxZ = points.Select(p => p.z).Max() + 1;
+        var minZ = points.Select(p =&gt; p.z).Min() - 1;
+        var maxZ = points.Select(p =&gt; p.z).Max() + 1;
 
         return new Bounds(new Point(minX, minY, minZ), new Point(maxX, maxY, maxZ));
     }
 
-    bool Within(Bounds bounds, Point point) =>
-        bounds.min.x <= point.x && point.x <= bounds.max.x &&
-        bounds.min.y <= point.y && point.y <= bounds.max.y &&
-        bounds.min.z <= point.z && point.z <= bounds.max.z;
+    bool Within(Bounds bounds, Point point) =&gt;
+        bounds.min.x &lt;= point.x &amp;&amp; point.x &lt;= bounds.max.x &amp;&amp;
+        bounds.min.y &lt;= point.y &amp;&amp; point.y &lt;= bounds.max.y &amp;&amp;
+        bounds.min.z &lt;= point.z &amp;&amp; point.z &lt;= bounds.max.z;
 
-    IEnumerable<Point> Neighbours(Point point) =>
+    IEnumerable&lt;Point&gt; Neighbours(Point point) =&gt;
         new[]{
            point with { x = point.x - 1 },
            point with { x = point.x + 1 },

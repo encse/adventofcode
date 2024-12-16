@@ -287,35 +287,35 @@ using System.Linq;
 
 namespace AdventOfCode.Y2021.Day10;
 
-[ProblemName("Syntax Scoring")]
+[ProblemName(&quot;Syntax Scoring&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => GetScores(input, getSyntaxErrorScore: true).Sum();
-    public object PartTwo(string input) => Median(GetScores(input, getSyntaxErrorScore: false));
+    public object PartOne(string input) =&gt; GetScores(input, getSyntaxErrorScore: true).Sum();
+    public object PartTwo(string input) =&gt; Median(GetScores(input, getSyntaxErrorScore: false));
 
-    public long Median(IEnumerable<long> items) =>
-        items.OrderBy(x => x).ElementAt(items.Count() / 2);
+    public long Median(IEnumerable&lt;long&gt; items) =&gt;
+        items.OrderBy(x =&gt; x).ElementAt(items.Count() / 2);
 
-    IEnumerable<long> GetScores(string input, bool getSyntaxErrorScore) =>
-        input.Split("\n").Select(line => GetScore(line, getSyntaxErrorScore)).Where(score => score > 0);
+    IEnumerable&lt;long&gt; GetScores(string input, bool getSyntaxErrorScore) =&gt;
+        input.Split(&quot;\n&quot;).Select(line =&gt; GetScore(line, getSyntaxErrorScore)).Where(score =&gt; score &gt; 0);
 
     long GetScore(string line, bool getSyntaxErrorScore) {
         // standard stack based approach
-        var stack = new Stack<char>();
+        var stack = new Stack&lt;char&gt;();
 
         foreach (var ch in line) {
             switch ((stack.FirstOrDefault(), ch)) {
                 // matching closing parenthesis:
-                case ('(', ')'): stack.Pop(); break;
-                case ('[', ']'): stack.Pop(); break;
-                case ('{', '}'): stack.Pop(); break;
-                case ('<', '>'): stack.Pop(); break;
+                case (&#039;(&#039;, &#039;)&#039;): stack.Pop(); break;
+                case (&#039;[&#039;, &#039;]&#039;): stack.Pop(); break;
+                case (&#039;{&#039;, &#039;}&#039;): stack.Pop(); break;
+                case (&#039;&lt;&#039;, &#039;&gt;&#039;): stack.Pop(); break;
                 // return early if syntax error found:
-                case (_, ')'): return getSyntaxErrorScore ? 3     : 0;
-                case (_, ']'): return getSyntaxErrorScore ? 57    : 0;
-                case (_, '}'): return getSyntaxErrorScore ? 1197  : 0;
-                case (_, '>'): return getSyntaxErrorScore ? 25137 : 0;
-                // otherwise, it's an opening parenthesis:
+                case (_, &#039;)&#039;): return getSyntaxErrorScore ? 3     : 0;
+                case (_, &#039;]&#039;): return getSyntaxErrorScore ? 57    : 0;
+                case (_, &#039;}&#039;): return getSyntaxErrorScore ? 1197  : 0;
+                case (_, &#039;&gt;&#039;): return getSyntaxErrorScore ? 25137 : 0;
+                // otherwise, it&#039;s an opening parenthesis:
                 case (_, _): stack.Push(ch); break;
             }
         }
@@ -324,8 +324,8 @@ class Solution : Solver {
             return 0;
         } else {
             return stack
-                .Select(item => 1 + "([{<".IndexOf(item)) // convert chars to digits
-                .Aggregate(0L, (acc, item) => acc * 5 + item); // get base 5 number
+                .Select(item =&gt; 1 + &quot;([{&lt;&quot;.IndexOf(item)) // convert chars to digits
+                .Aggregate(0L, (acc, item) =&gt; acc * 5 + item); // get base 5 number
         }
     }
 }

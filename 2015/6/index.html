@@ -285,19 +285,19 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2015.Day06;
 
-[ProblemName("Probably a Fire Hazard")]
+[ProblemName(&quot;Probably a Fire Hazard&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Run(input, _ => 1, _ => 0, v => 1 - v);
-    public object PartTwo(string input) => Run(input, v => v + 1, v => v > 0 ? v - 1 : 0, v => v + 2);
+    public object PartOne(string input) =&gt; Run(input, _ =&gt; 1, _ =&gt; 0, v =&gt; 1 - v);
+    public object PartTwo(string input) =&gt; Run(input, v =&gt; v + 1, v =&gt; v &gt; 0 ? v - 1 : 0, v =&gt; v + 2);
 
-    int Run(string input, Func<int, int> turnOn, Func<int, int> turnOff, Func<int, int> toggle) {
-        int[] apply(int[] grid, string line, string pattern, Func<int, int> dg) {
+    int Run(string input, Func&lt;int, int&gt; turnOn, Func&lt;int, int&gt; turnOff, Func&lt;int, int&gt; toggle) {
+        int[] apply(int[] grid, string line, string pattern, Func&lt;int, int&gt; dg) {
             var match = Regex.Match(line, pattern);
             if (match.Success) {
-                var rect = match.Groups.Cast<Group>().Skip(1).Select(g => int.Parse(g.Value)).ToArray();
-                for (int irow = rect[0]; irow <= rect[2]; irow++) {
-                    for (int icol = rect[1]; icol <= rect[3]; icol++) {
+                var rect = match.Groups.Cast&lt;Group&gt;().Skip(1).Select(g =&gt; int.Parse(g.Value)).ToArray();
+                for (int irow = rect[0]; irow &lt;= rect[2]; irow++) {
+                    for (int icol = rect[1]; icol &lt;= rect[3]; icol++) {
                         grid[irow * 1000 + icol] = dg(grid[irow * 1000 + icol]);
                     }
                 }
@@ -306,11 +306,11 @@ class Solution : Solver {
                 return null;
             }
         }
-        return input.Split('\n')
-            .Aggregate(new int[1000 * 1000], (grid, line) =>
-                apply(grid, line, @"turn on (\d+),(\d+) through (\d+),(\d+)", turnOn) ??
-                apply(grid, line, @"turn off (\d+),(\d+) through (\d+),(\d+)", turnOff) ??
-                apply(grid, line, @"toggle (\d+),(\d+) through (\d+),(\d+)", toggle) ??
+        return input.Split(&#039;\n&#039;)
+            .Aggregate(new int[1000 * 1000], (grid, line) =&gt;
+                apply(grid, line, @&quot;turn on (\d+),(\d+) through (\d+),(\d+)&quot;, turnOn) ??
+                apply(grid, line, @&quot;turn off (\d+),(\d+) through (\d+),(\d+)&quot;, turnOff) ??
+                apply(grid, line, @&quot;toggle (\d+),(\d+) through (\d+),(\d+)&quot;, toggle) ??
                 throw new Exception(line))
             .Sum();
     }

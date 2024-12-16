@@ -284,58 +284,58 @@ using System.Linq;
 
 namespace AdventOfCode.Y2016.Day07;
 
-[ProblemName("Internet Protocol Version 7")]
+[ProblemName(&quot;Internet Protocol Version 7&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) =>
-        input.Split('\n').Count(TLS);
+    public object PartOne(string input) =&gt;
+        input.Split(&#039;\n&#039;).Count(TLS);
 
-    public object PartTwo(string input) =>
-        input.Split('\n').Count(SSL);
+    public object PartTwo(string input) =&gt;
+        input.Split(&#039;\n&#039;).Count(SSL);
 
 
-    bool TLS(string st) =>
-        Classify(st).Any(c => !c.f && Abba(c.st).Any()) &&
-        Classify(st).All(c => !c.f || !Abba(c.st).Any());
+    bool TLS(string st) =&gt;
+        Classify(st).Any(c =&gt; !c.f &amp;&amp; Abba(c.st).Any()) &amp;&amp;
+        Classify(st).All(c =&gt; !c.f || !Abba(c.st).Any());
 
-    bool SSL(string st) => (
+    bool SSL(string st) =&gt; (
         from c1 in Classify(st)
         from c2 in Classify(st)
-        where !c1.f && c2.f
+        where !c1.f &amp;&amp; c2.f
         from aba in Aba(c1.st)
-        let bab = $"{aba[1]}{aba[0]}{aba[1]}"
+        let bab = $&quot;{aba[1]}{aba[0]}{aba[1]}&quot;
         where c2.st.Contains(bab)
         select true
     ).Any();
 
-    IEnumerable<(string st, bool f)> Classify(string st) {
-        var part = "";
-        for (var i = 0; i < st.Length; i++) {
+    IEnumerable&lt;(string st, bool f)&gt; Classify(string st) {
+        var part = &quot;&quot;;
+        for (var i = 0; i &lt; st.Length; i++) {
             var ch = st[i];
-            if (ch == '[') {
+            if (ch == &#039;[&#039;) {
                 yield return (part, false);
-                part = "";
-            } else if (ch == ']') {
+                part = &quot;&quot;;
+            } else if (ch == &#039;]&#039;) {
                 yield return (part, true);
-                part = "";
+                part = &quot;&quot;;
             } else {
                 part += ch;
             }
         }
-        if (part != "")
+        if (part != &quot;&quot;)
             yield return (part, false);
     }
 
-    IEnumerable<string> Abba(string st) {
-        for (var i = 0; i < st.Length - 3; i++) {
-            if(st[i + 2] == st[i + 1] && st[i] == st[i + 3] && st[i] != st[i + 2])
+    IEnumerable&lt;string&gt; Abba(string st) {
+        for (var i = 0; i &lt; st.Length - 3; i++) {
+            if(st[i + 2] == st[i + 1] &amp;&amp; st[i] == st[i + 3] &amp;&amp; st[i] != st[i + 2])
                 yield return st.Substring(i, 4);
         }
     }
     
-    IEnumerable<string> Aba(string st) {
-        for (var i = 0; i < st.Length -2; i++) {
-            if(st[i] == st[i + 2] && st[i] != st[i + 1])
+    IEnumerable&lt;string&gt; Aba(string st) {
+        for (var i = 0; i &lt; st.Length -2; i++) {
+            if(st[i] == st[i + 2] &amp;&amp; st[i] != st[i + 1])
                 yield return st.Substring(i, 3);
         }
     }

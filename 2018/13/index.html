@@ -285,7 +285,7 @@ using System.Linq;
 
 namespace AdventOfCode.Y2018.Day13;
 
-[ProblemName("Mine Cart Madness")]
+[ProblemName(&quot;Mine Cart Madness&quot;)]
 class Solution : Solver {
 
    
@@ -301,30 +301,30 @@ class Solution : Solver {
 
     public object PartTwo(string input) {
         var (mat, carts) = Parse(input);
-        while (carts.Count > 1) {
+        while (carts.Count &gt; 1) {
             var newState = Step(mat, carts);
             carts = newState.carts;
         }
         return Tsto(carts[0]);
     }
 
-    string Tsto(Cart cart) => $"{cart.pos.icol},{cart.pos.irow}";
+    string Tsto(Cart cart) =&gt; $&quot;{cart.pos.icol},{cart.pos.irow}&quot;;
 
-    (List<Cart> crashed, List<Cart> carts) Step(string[] mat, List<Cart> carts) {
-        var crashed = new List<Cart>();
+    (List&lt;Cart&gt; crashed, List&lt;Cart&gt; carts) Step(string[] mat, List&lt;Cart&gt; carts) {
+        var crashed = new List&lt;Cart&gt;();
 
-        foreach (var cart in carts.OrderBy((cartT) => cartT.pos)) {
+        foreach (var cart in carts.OrderBy((cartT) =&gt; cartT.pos)) {
             cart.pos = (irow: cart.pos.irow + cart.drow, icol: cart.pos.icol + cart.dcol);
             
             foreach (var cart2 in carts.ToArray()) {
-                if (cart != cart2 && cart.pos.irow == cart2.pos.irow && cart.pos.icol == cart2.pos.icol) {
+                if (cart != cart2 &amp;&amp; cart.pos.irow == cart2.pos.irow &amp;&amp; cart.pos.icol == cart2.pos.icol) {
                     crashed.Add(cart);
                     crashed.Add(cart2);
 
                 }
             }
             switch (mat[cart.pos.irow][cart.pos.icol]) {
-                case '\\':
+                case &#039;\\&#039;:
                     if (cart.dcol == 1 || cart.dcol == -1) {
                         cart.Rotate(Dir.Right);
                     } else if (cart.drow == -1 || cart.drow == 1) {
@@ -333,41 +333,41 @@ class Solution : Solver {
                         throw new Exception();
                     }
                     break;
-                case '/':
+                case &#039;/&#039;:
                     if (cart.dcol == 1 || cart.dcol == -1) {
                         cart.Rotate(Dir.Left);
                     } else if (cart.drow == 1 || cart.drow == -1) {
                         cart.Rotate(Dir.Right);
                     }
                     break;
-                case '+':
+                case &#039;+&#039;:
                     cart.Turn();
                     break;
             }
         }
-        return (crashed, carts.Where(cart => !crashed.Contains(cart)).ToList());
+        return (crashed, carts.Where(cart =&gt; !crashed.Contains(cart)).ToList());
     }
 
-    (string[] mat, List<Cart> carts) Parse(string input){
-        var mat = input.Split("\n");
+    (string[] mat, List&lt;Cart&gt; carts) Parse(string input){
+        var mat = input.Split(&quot;\n&quot;);
         var crow = mat.Length;
         var ccol = mat[0].Length;
 
-        var carts = new List<Cart>();
-        for (var irow = 0; irow < crow; irow++) {
-            for (var icol = 0; icol < ccol; icol++) {
+        var carts = new List&lt;Cart&gt;();
+        for (var irow = 0; irow &lt; crow; irow++) {
+            for (var icol = 0; icol &lt; ccol; icol++) {
                 var ch = mat[irow][icol];
                 switch (ch) {
-                    case '^':
+                    case &#039;^&#039;:
                         carts.Add(new Cart { pos = (irow: irow, icol: icol), dcol = 0, drow = -1 });
                         break;
-                    case 'v':
+                    case &#039;v&#039;:
                         carts.Add(new Cart { pos = (irow: irow, icol: icol), dcol = 0, drow = 1 });
                         break;
-                    case '<':
+                    case &#039;&lt;&#039;:
                         carts.Add(new Cart { pos = (irow: irow, icol: icol), dcol = -1, drow = 0 });
                         break;
-                    case '>':
+                    case &#039;&gt;&#039;:
                         carts.Add(new Cart { pos = (irow: irow, icol: icol), dcol = 1, drow = 0 });
                         break;
                 }
@@ -386,10 +386,10 @@ class Cart {
 
     public void Rotate(Dir dir) {
          (drow, dcol) = dir switch {
-             Dir.Left => (-dcol, drow),
-             Dir.Right => (dcol, -drow),
-             Dir.Forward => (drow, dcol),
-             _ => throw new ArgumentException()
+             Dir.Left =&gt; (-dcol, drow),
+             Dir.Right =&gt; (dcol, -drow),
+             Dir.Forward =&gt; (drow, dcol),
+             _ =&gt; throw new ArgumentException()
          };
     }
 

@@ -286,7 +286,7 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2018.Day24;
 
-[ProblemName("Immune System Simulator 20XX")]
+[ProblemName(&quot;Immune System Simulator 20XX&quot;)]
 class Solution : Solver {
 
     (bool immuneSystem, long units) Fight(string input, int boost) {
@@ -299,40 +299,40 @@ class Solution : Solver {
         var attack = true;
         while (attack) {
             attack = false;
-            var remainingTarget = new HashSet<Group>(army);
-            var targets = new Dictionary<Group, Group>();
-            foreach (var g in army.OrderByDescending(g => (g.effectivePower, g.initiative))) {
-                var maxDamage = remainingTarget.Select(t => g.DamageDealtTo(t)).Max();
-                if (maxDamage > 0) {
-                    var possibleTargets = remainingTarget.Where(t => g.DamageDealtTo(t) == maxDamage);
-                    targets[g] = possibleTargets.OrderByDescending(t => (t.effectivePower, t.initiative)).First();
+            var remainingTarget = new HashSet&lt;Group&gt;(army);
+            var targets = new Dictionary&lt;Group, Group&gt;();
+            foreach (var g in army.OrderByDescending(g =&gt; (g.effectivePower, g.initiative))) {
+                var maxDamage = remainingTarget.Select(t =&gt; g.DamageDealtTo(t)).Max();
+                if (maxDamage &gt; 0) {
+                    var possibleTargets = remainingTarget.Where(t =&gt; g.DamageDealtTo(t) == maxDamage);
+                    targets[g] = possibleTargets.OrderByDescending(t =&gt; (t.effectivePower, t.initiative)).First();
                     remainingTarget.Remove(targets[g]);
                 }
             }
-            foreach (var g in targets.Keys.OrderByDescending(g => g.initiative)) {
-                if (g.units > 0) {
+            foreach (var g in targets.Keys.OrderByDescending(g =&gt; g.initiative)) {
+                if (g.units &gt; 0) {
                     var target = targets[g];
                     var damage = g.DamageDealtTo(target);
-                    if (damage > 0 && target.units > 0) {
+                    if (damage &gt; 0 &amp;&amp; target.units &gt; 0) {
                         var dies = damage / target.hp;
                         target.units = Math.Max(0, target.units - dies);
-                        if (dies > 0) {
+                        if (dies &gt; 0) {
                             attack = true;
                         }
                     }
                 }
             }
-            army = army.Where(g => g.units > 0).ToList();
+            army = army.Where(g =&gt; g.units &gt; 0).ToList();
         }
-        return (army.All(x => x.immuneSystem), army.Select(x => x.units).Sum());
+        return (army.All(x =&gt; x.immuneSystem), army.Select(x =&gt; x.units).Sum());
     }
 
-    public object PartOne(string input) => Fight(input, 0).units;
+    public object PartOne(string input) =&gt; Fight(input, 0).units;
 
     public object PartTwo(string input) {
         var l = 0;
         var h = int.MaxValue / 2;
-        while (h - l > 1) {
+        while (h - l &gt; 1) {
             var m = (h + l) / 2;
             if (Fight(input, m).immuneSystem) {
                 h = m;
@@ -343,18 +343,18 @@ class Solution : Solver {
         return Fight(input, h).units;
     }
 
-    List<Group> Parse(string input) {
-        var lines = input.Split("\n");
+    List&lt;Group&gt; Parse(string input) {
+        var lines = input.Split(&quot;\n&quot;);
         var immuneSystem = false;
-        var res = new List<Group>();
+        var res = new List&lt;Group&gt;();
         foreach (var line in lines)
-            if (line == "Immune System:") {
+            if (line == &quot;Immune System:&quot;) {
                 immuneSystem = true;
-            } else if (line == "Infection:") {
+            } else if (line == &quot;Infection:&quot;) {
                 immuneSystem = false;
-            } else if (line != "") {
+            } else if (line != &quot;&quot;) {
                 //643 units each with 9928 hit points (immune to fire; weak to slashing, bludgeoning) with an attack that does 149 fire damage at initiative 14
-                var rx = @"(\d+) units each with (\d+) hit points(.*)with an attack that does (\d+)(.*)damage at initiative (\d+)";
+                var rx = @&quot;(\d+) units each with (\d+) hit points(.*)with an attack that does (\d+)(.*)damage at initiative (\d+)&quot;;
                 var m = Regex.Match(line, rx);
                 if (m.Success) {
                     Group g = new Group();
@@ -365,15 +365,15 @@ class Solution : Solver {
                     g.attackType = m.Groups[5].Value.Trim();
                     g.initiative = int.Parse(m.Groups[6].Value);
                     var st = m.Groups[3].Value.Trim();
-                    if (st != "") {
+                    if (st != &quot;&quot;) {
                         st = st.Substring(1, st.Length - 2);
-                        foreach (var part in st.Split(";")) {
-                            var k = part.Split(" to ");
-                            var set = new HashSet<string>(k[1].Split(", "));
+                        foreach (var part in st.Split(&quot;;&quot;)) {
+                            var k = part.Split(&quot; to &quot;);
+                            var set = new HashSet&lt;string&gt;(k[1].Split(&quot;, &quot;));
                             var w = k[0].Trim();
-                            if (w == "immune") {
+                            if (w == &quot;immune&quot;) {
                                 g.immuneTo = set;
-                            } else if (w == "weak") {
+                            } else if (w == &quot;weak&quot;) {
                                 g.weakTo = set;
                             } else {
                                 throw new Exception();
@@ -398,8 +398,8 @@ class Group {
     public int damage;
     public int initiative;
     public string attackType;
-    public HashSet<string> immuneTo = new HashSet<string>();
-    public HashSet<string> weakTo = new HashSet<string>();
+    public HashSet&lt;string&gt; immuneTo = new HashSet&lt;string&gt;();
+    public HashSet&lt;string&gt; weakTo = new HashSet&lt;string&gt;();
 
     public long effectivePower {
         get {

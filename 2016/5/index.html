@@ -290,13 +290,13 @@ using System.Threading.Tasks;
 
 namespace AdventOfCode.Y2016.Day05;
 
-[ProblemName("How About a Nice Game of Chess?")]
+[ProblemName(&quot;How About a Nice Game of Chess?&quot;)]
 class Solution : Solver
 {
 
     public object PartOne(string input)
     {
-       return string.Join("", Hashes(input).Select(hash => hash[5]).Take(8));
+       return string.Join(&quot;&quot;, Hashes(input).Select(hash =&gt; hash[5]).Take(8));
     }
 
     public object PartTwo(string input)
@@ -305,8 +305,8 @@ class Solution : Solver
         var found = 0;
         foreach (var hash in Hashes(input))
         {
-            var idx = hash[5] - '0';
-            if (0 <= idx && idx < 8 && res[idx] == 0)
+            var idx = hash[5] - &#039;0&#039;;
+            if (0 &lt;= idx &amp;&amp; idx &lt; 8 &amp;&amp; res[idx] == 0)
             {
                 res[idx] = hash[6];
                 found++;
@@ -316,40 +316,40 @@ class Solution : Solver
             }
            
         }
-        return string.Join("", res);
+        return string.Join(&quot;&quot;, res);
     }
 
-    public IEnumerable<string> Hashes(string input)
+    public IEnumerable&lt;string&gt; Hashes(string input)
     {
 
-        for (var i = 0; i < int.MaxValue; i++)
+        for (var i = 0; i &lt; int.MaxValue; i++)
         {
-            var q = new ConcurrentQueue<(int i, string hash)>();
+            var q = new ConcurrentQueue&lt;(int i, string hash)&gt;();
 
             Parallel.ForEach(
                 NumbersFrom(i),
-                () => MD5.Create(),
-                (i, state, md5) =>
+                () =&gt; MD5.Create(),
+                (i, state, md5) =&gt;
                 {
                     var hash = md5.ComputeHash(Encoding.ASCII.GetBytes(input + i));
-                    var hashString = string.Join("", hash.Select(x => x.ToString("x2")));
+                    var hashString = string.Join(&quot;&quot;, hash.Select(x =&gt; x.ToString(&quot;x2&quot;)));
 
-                    if (hashString.StartsWith("00000"))
+                    if (hashString.StartsWith(&quot;00000&quot;))
                     {
                         q.Enqueue((i, hashString));
                         state.Stop();
                     }
                     return md5;
                 },
-                (_) => { }
+                (_) =&gt; { }
             );
-            var item = q.OrderBy(x => x.i).First();
+            var item = q.OrderBy(x =&gt; x.i).First();
             i = item.i;
             yield return item.hash;
         }
     }
 
-    IEnumerable<int> NumbersFrom(int i)
+    IEnumerable&lt;int&gt; NumbersFrom(int i)
     {
         for (;;) yield return i++;
     }

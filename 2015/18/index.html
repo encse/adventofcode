@@ -284,18 +284,18 @@ using System.Linq;
 
 namespace AdventOfCode.Y2015.Day18;
 
-[ProblemName("Like a GIF For Your Yard")]
+[ProblemName(&quot;Like a GIF For Your Yard&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) =>
-        Enumerable.Range(0, 100).Aggregate(Parse(input), (acc, _) => Step(acc, false)).Select(row => row.Sum()).Sum();
+    public object PartOne(string input) =&gt;
+        Enumerable.Range(0, 100).Aggregate(Parse(input), (acc, _) =&gt; Step(acc, false)).Select(row =&gt; row.Sum()).Sum();
 
-    public object PartTwo(string input) =>
-        Enumerable.Range(0, 100).Aggregate(Parse(input), (acc, _) => Step(acc, true)).Select(row => row.Sum()).Sum();
+    public object PartTwo(string input) =&gt;
+        Enumerable.Range(0, 100).Aggregate(Parse(input), (acc, _) =&gt; Step(acc, true)).Select(row =&gt; row.Sum()).Sum();
 
     int[][] Step(int[][] input, bool stuck) {
         
-        var res = new List<int[]>();
+        var res = new List&lt;int[]&gt;();
         var (crow, ccol) = (input.Length, input[0].Length);
 
         if (stuck) {
@@ -304,12 +304,12 @@ class Solution : Solver {
             input[0][ccol - 1] = 1;
             input[crow - 1][ccol - 1] = 1;
         }
-        for (var irow = 0; irow < crow; irow++) {
-            var row = new List<int>();
-            for (var icol = 0; icol < ccol; icol++) {
-                if (stuck && 
-                    ((icol == 0 && irow == 0) || (icol == ccol - 1 && irow == 0) || 
-                        (icol == 0 && irow == crow - 1) || (icol == ccol - 1 && irow == crow - 1))
+        for (var irow = 0; irow &lt; crow; irow++) {
+            var row = new List&lt;int&gt;();
+            for (var icol = 0; icol &lt; ccol; icol++) {
+                if (stuck &amp;&amp; 
+                    ((icol == 0 &amp;&amp; irow == 0) || (icol == ccol - 1 &amp;&amp; irow == 0) || 
+                        (icol == 0 &amp;&amp; irow == crow - 1) || (icol == ccol - 1 &amp;&amp; irow == crow - 1))
                 ) {
                     row.Add(1);
                 } else {
@@ -317,7 +317,7 @@ class Solution : Solver {
                         (from d in new(int row, int col)[] { (-1, -1), (0, -1), (1, -1), (-1, 0), (1, 0), (-1, 1), (0, 1), (1, 1) }
                          let irowT = irow + d.row
                          let icolT = icol + d.col
-                         where irowT >= 0 && irowT < crow && icolT >= 0 && icolT < ccol && input[irowT][icolT] == 1
+                         where irowT &gt;= 0 &amp;&amp; irowT &lt; crow &amp;&amp; icolT &gt;= 0 &amp;&amp; icolT &lt; ccol &amp;&amp; input[irowT][icolT] == 1
                          select 1).Sum();
                     if (input[irow][icol] == 1) {
                         row.Add(new[] { 0, 0, 1, 1, 0, 0, 0, 0, 0, 0 }[neighbours]);
@@ -331,10 +331,10 @@ class Solution : Solver {
         return res.ToArray();
     }
 
-    int[][] Parse(string input) =>(
-            from line in input.Split('\n')
+    int[][] Parse(string input) =&gt;(
+            from line in input.Split(&#039;\n&#039;)
             select 
-                (from ch in line select ch == '#' ? 1 : 0).ToArray()
+                (from ch in line select ch == &#039;#&#039; ? 1 : 0).ToArray()
         ).ToArray();
 }
 </code></pre></div>

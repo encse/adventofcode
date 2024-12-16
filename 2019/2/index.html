@@ -283,16 +283,16 @@
 
 namespace AdventOfCode.Y2019.Day02;
 
-[ProblemName("1202 Program Alarm")]
+[ProblemName(&quot;1202 Program Alarm&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => ExecIntCode(new IntCodeMachine(input), 12, 2);
+    public object PartOne(string input) =&gt; ExecIntCode(new IntCodeMachine(input), 12, 2);
 
     public object PartTwo(string input) {
         var icm = new IntCodeMachine(input);
 
         for (var sum = 0; ; sum++) {
-            for (var verb = 0; verb <= sum; verb++) {
+            for (var verb = 0; verb &lt;= sum; verb++) {
                 var noun = sum - verb;
                 var res = ExecIntCode(icm, noun, verb);
                 if (res == 19690720) {

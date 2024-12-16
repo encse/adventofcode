@@ -285,23 +285,23 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2020.Day07;
 
-[ProblemName("Handy Haversacks")]
+[ProblemName(&quot;Handy Haversacks&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
-        var parentsOf = new Dictionary<string, HashSet<string>>();
-        foreach (var line in input.Split("\n")) {
+        var parentsOf = new Dictionary&lt;string, HashSet&lt;string&gt;&gt;();
+        foreach (var line in input.Split(&quot;\n&quot;)) {
             var descr = ParseLine(line);
 
             foreach (var (_, bag) in descr.children) {
                 if (!parentsOf.ContainsKey(bag)) {
-                    parentsOf[bag] = new HashSet<string>();
+                    parentsOf[bag] = new HashSet&lt;string&gt;();
                 }
                 parentsOf[bag].Add(descr.bag);
             }
         }
 
-        IEnumerable<string> PathsToRoot(string bag) {
+        IEnumerable&lt;string&gt; PathsToRoot(string bag) {
             yield return bag;
 
             if (parentsOf.ContainsKey(bag)) {
@@ -313,29 +313,29 @@ class Solution : Solver {
             }
         }
 
-        return PathsToRoot("shiny gold bag").ToHashSet().Count - 1;
+        return PathsToRoot(&quot;shiny gold bag&quot;).ToHashSet().Count - 1;
     }
 
     public object PartTwo(string input) {
-        var childrenOf = new Dictionary<string, List<(int count, string bag)>>();
-        foreach (var line in input.Split("\n")) {
+        var childrenOf = new Dictionary&lt;string, List&lt;(int count, string bag)&gt;&gt;();
+        foreach (var line in input.Split(&quot;\n&quot;)) {
             var descr = ParseLine(line);
             childrenOf[descr.bag] = descr.children;
         }
 
-        long CountWithChildren(string bag) =>
+        long CountWithChildren(string bag) =&gt;
             1 + (from child in childrenOf[bag] select child.count * CountWithChildren(child.bag)).Sum();
 
-        return CountWithChildren("shiny gold bag") - 1;
+        return CountWithChildren(&quot;shiny gold bag&quot;) - 1;
     }
 
-    (string bag, List<(int count, string bag)> children) ParseLine(string line){
-        var bag = Regex.Match(line, "^[a-z]+ [a-z]+ bag").Value;
+    (string bag, List&lt;(int count, string bag)&gt; children) ParseLine(string line){
+        var bag = Regex.Match(line, &quot;^[a-z]+ [a-z]+ bag&quot;).Value;
 
         var children =
             Regex
-                .Matches(line, "(\\d+) ([a-z]+ [a-z]+ bag)")
-                .Select(x => (count: int.Parse(x.Groups[1].Value), bag: x.Groups[2].Value))
+                .Matches(line, &quot;(\\d+) ([a-z]+ [a-z]+ bag)&quot;)
+                .Select(x =&gt; (count: int.Parse(x.Groups[1].Value), bag: x.Groups[2].Value))
                 .ToList();
         
         return (bag, children);

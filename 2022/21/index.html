@@ -284,15 +284,15 @@ using System.Linq;
 
 namespace AdventOfCode.Y2022.Day21;
 
-[ProblemName("Monkey Math")]
+[ProblemName(&quot;Monkey Math&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
-        return Parse(input, "root", false).Simplify();
+        return Parse(input, &quot;root&quot;, false).Simplify();
     }
 
     public object PartTwo(string input) {
-        var expr = Parse(input, "root", true) as Eq;
+        var expr = Parse(input, &quot;root&quot;, true) as Eq;
 
         while (!(expr.left is Var)) {
             expr = Solve(expr);
@@ -300,37 +300,37 @@ class Solution : Solver {
         return expr.right;
     }
 
-    // One step in rearranging the equation to <variable> = <constant> form.
+    // One step in rearranging the equation to &lt;variable&gt; = &lt;constant&gt; form.
     // It is supposed that there is only one variable occurrence in the whole 
     // expression tree.
-    Eq Solve(Eq eq) =>
+    Eq Solve(Eq eq) =&gt;
         eq.left switch {
-            Op(Const l, "+", Expr r) => new Eq(r, new Op(eq.right, "-", l).Simplify()),
-            Op(Const l, "*", Expr r) => new Eq(r, new Op(eq.right, "/", l).Simplify()),
-            Op(Expr  l, "+", Expr r) => new Eq(l, new Op(eq.right, "-", r).Simplify()),
-            Op(Expr  l, "-", Expr r) => new Eq(l, new Op(eq.right, "+", r).Simplify()),
-            Op(Expr  l, "*", Expr r) => new Eq(l, new Op(eq.right, "/", r).Simplify()),
-            Op(Expr  l, "/", Expr r) => new Eq(l, new Op(eq.right, "*", r).Simplify()),
-            Const                    => new Eq(eq.right, eq.left),
-            _ => eq
+            Op(Const l, &quot;+&quot;, Expr r) =&gt; new Eq(r, new Op(eq.right, &quot;-&quot;, l).Simplify()),
+            Op(Const l, &quot;*&quot;, Expr r) =&gt; new Eq(r, new Op(eq.right, &quot;/&quot;, l).Simplify()),
+            Op(Expr  l, &quot;+&quot;, Expr r) =&gt; new Eq(l, new Op(eq.right, &quot;-&quot;, r).Simplify()),
+            Op(Expr  l, &quot;-&quot;, Expr r) =&gt; new Eq(l, new Op(eq.right, &quot;+&quot;, r).Simplify()),
+            Op(Expr  l, &quot;*&quot;, Expr r) =&gt; new Eq(l, new Op(eq.right, &quot;/&quot;, r).Simplify()),
+            Op(Expr  l, &quot;/&quot;, Expr r) =&gt; new Eq(l, new Op(eq.right, &quot;*&quot;, r).Simplify()),
+            Const                    =&gt; new Eq(eq.right, eq.left),
+            _ =&gt; eq
         };
 
     // parses the input including the special rules for part2 
     // and returns the expression with the specified name
     Expr Parse(string input, string name, bool part2) {
 
-        var context = new Dictionary<string, string[]>();
-        foreach (var line in input.Split("\n")) {
-            var parts = line.Split(" ");
-            context[parts[0].TrimEnd(':')] = parts.Skip(1).ToArray();
+        var context = new Dictionary&lt;string, string[]&gt;();
+        foreach (var line in input.Split(&quot;\n&quot;)) {
+            var parts = line.Split(&quot; &quot;);
+            context[parts[0].TrimEnd(&#039;:&#039;)] = parts.Skip(1).ToArray();
         }
 
         Expr buildExpr(string name) {
             var parts = context[name];
             if (part2) {
-                if (name == "humn") {
-                    return new Var("humn");
-                } else if (name == "root") {
+                if (name == &quot;humn&quot;) {
+                    return new Var(&quot;humn&quot;);
+                } else if (name == &quot;root&quot;) {
                     return new Eq(buildExpr(parts[0]), buildExpr(parts[2]));
                 }
             }
@@ -350,29 +350,29 @@ class Solution : Solver {
     }
 
     record Const(long Value) : Expr {
-        public override string ToString() => Value.ToString();
-        public Expr Simplify() => this;
+        public override string ToString() =&gt; Value.ToString();
+        public Expr Simplify() =&gt; this;
     }
 
     record Var(string name) : Expr {
-        public override string ToString() => name;
-        public Expr Simplify() => this;
+        public override string ToString() =&gt; name;
+        public Expr Simplify() =&gt; this;
     }
 
     record Eq(Expr left, Expr right) : Expr {
-        public override string ToString() => $"{left} == {right}";
-        public Expr Simplify() => new Eq(left.Simplify(), right.Simplify());
+        public override string ToString() =&gt; $&quot;{left} == {right}&quot;;
+        public Expr Simplify() =&gt; new Eq(left.Simplify(), right.Simplify());
     }
 
     record Op(Expr left, string op, Expr right) : Expr {
-        public override string ToString() => $"({left}) {op} ({right})";
+        public override string ToString() =&gt; $&quot;({left}) {op} ({right})&quot;;
         public Expr Simplify() {
             return (left.Simplify(), op, right.Simplify()) switch {
-                (Const l, "+", Const r) => new Const(l.Value + r.Value),
-                (Const l, "-", Const r) => new Const(l.Value - r.Value),
-                (Const l, "*", Const r) => new Const(l.Value * r.Value),
-                (Const l, "/", Const r) => new Const(l.Value / r.Value),
-                (Expr l, _, Expr r) => new Op(l, op, r),
+                (Const l, &quot;+&quot;, Const r) =&gt; new Const(l.Value + r.Value),
+                (Const l, &quot;-&quot;, Const r) =&gt; new Const(l.Value - r.Value),
+                (Const l, &quot;*&quot;, Const r) =&gt; new Const(l.Value * r.Value),
+                (Const l, &quot;/&quot;, Const r) =&gt; new Const(l.Value / r.Value),
+                (Expr l, _, Expr r) =&gt; new Op(l, op, r),
             };
         }
     }

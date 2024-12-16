@@ -286,20 +286,20 @@ using System.Linq;
 
 namespace AdventOfCode.Y2015.Day24;
 
-[ProblemName("It Hangs in the Balance")]
+[ProblemName(&quot;It Hangs in the Balance&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Solve(Parse(input), 3);
+    public object PartOne(string input) =&gt; Solve(Parse(input), 3);
 
-    public object PartTwo(string input) => Solve(Parse(input), 4);
+    public object PartTwo(string input) =&gt; Solve(Parse(input), 4);
 
-    int[] Parse(string input) =>
-        input.Split("\n").Select(int.Parse).ToArray();
+    int[] Parse(string input) =&gt;
+        input.Split(&quot;\n&quot;).Select(int.Parse).ToArray();
 
     long Solve(int[] nums, int groups) {
-        var mul = (ImmutableList<int> l) => l.Aggregate(1L, (m, x) => m*x);
+        var mul = (ImmutableList&lt;int&gt; l) =&gt; l.Aggregate(1L, (m, x) =&gt; m*x);
 
-        for(var i =0;i<nums.Length;i++) {
+        for(var i =0;i&lt;nums.Length;i++) {
             var parts = Pick(nums, i, 0, nums.Sum() / groups);
             if (parts.Any()){
                 return parts.Select(mul).Min();
@@ -308,17 +308,17 @@ class Solution : Solver {
         throw new Exception();
     }
     
-    IEnumerable<ImmutableList<int>> Pick(int[] nums, int count, int i, int sum) {
+    IEnumerable&lt;ImmutableList&lt;int&gt;&gt; Pick(int[] nums, int count, int i, int sum) {
         if (sum == 0) {
-            yield return ImmutableList.Create<int>();
+            yield return ImmutableList.Create&lt;int&gt;();
             yield break;
         }
 
-        if (count < 0 || sum < 0 || i >= nums.Length) {
+        if (count &lt; 0 || sum &lt; 0 || i &gt;= nums.Length) {
             yield break;
         }
         
-        if (nums[i] <= sum) {
+        if (nums[i] &lt;= sum) {
             foreach (var x in Pick(nums, count-1, i + 1, sum - nums[i])) {
                 yield return x.Add(nums[i]);
             }

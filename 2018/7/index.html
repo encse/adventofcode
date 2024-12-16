@@ -285,7 +285,7 @@ using System.Text;
 
 namespace AdventOfCode.Y2018.Day07;
 
-[ProblemName("The Sum of Its Parts")]
+[ProblemName(&quot;The Sum of Its Parts&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
@@ -296,7 +296,7 @@ class Solution : Solver {
             char minKey = char.MaxValue;
             foreach (var key in graph.Keys) {
                 if (graph[key].Count == 0) {
-                    if (key < minKey) {
+                    if (key &lt; minKey) {
                         minKey = key;
                     }
                 }
@@ -317,20 +317,20 @@ class Solution : Solver {
         var works = new int[5];
         var items = new char[works.Length];
 
-        while (graph.Any() || works.Any(work => work > 0)) {
-            for (var i = 0; i < works.Length && graph.Any(); i++) {
+        while (graph.Any() || works.Any(work =&gt; work &gt; 0)) {
+            for (var i = 0; i &lt; works.Length &amp;&amp; graph.Any(); i++) {
                 // start working
                 if (works[i] == 0) {
                     char minKey = char.MaxValue;
                     foreach (var key in graph.Keys) {
                         if (graph[key].Count == 0) {
-                            if (key < minKey) {
+                            if (key &lt; minKey) {
                                 minKey = key;
                             }
                         }
                     }
                     if (minKey != char.MaxValue) {
-                        works[i] = 60 + minKey - 'A' + 1;
+                        works[i] = 60 + minKey - &#039;A&#039; + 1;
                         items[i] = minKey;
                         graph.Remove(items[i]);
                     }
@@ -339,7 +339,7 @@ class Solution : Solver {
 
             time++;
 
-            for (var i = 0; i < works.Length; i++) {
+            for (var i = 0; i &lt; works.Length; i++) {
                 if (works[i] == 0) {
                     // wait
                     continue;
@@ -350,7 +350,7 @@ class Solution : Solver {
                         graph[key].Remove(items[i]);
                     }
 
-                } else if (works[i] > 0) {
+                } else if (works[i] &gt; 0) {
                     // step
                     works[i]--;
                 }
@@ -360,20 +360,20 @@ class Solution : Solver {
         return time;
     }
 
-    Dictionary<char, List<char>> Parse(string input) {
+    Dictionary&lt;char, List&lt;char&gt;&gt; Parse(string input) {
         var dict = (
-            from line in input.Split("\n")
-            let parts = line.Split(" ")
+            from line in input.Split(&quot;\n&quot;)
+            let parts = line.Split(&quot; &quot;)
             let part = parts[7][0]
             let partDependsOn = parts[1][0]
             group partDependsOn by part into g
             select g
-        ).ToDictionary(g => g.Key, g => g.ToList());
+        ).ToDictionary(g =&gt; g.Key, g =&gt; g.ToList());
 
-        foreach (var key in new List<char>(dict.Keys)) {
+        foreach (var key in new List&lt;char&gt;(dict.Keys)) {
             foreach (var d in dict[key]) {
                 if (!dict.ContainsKey(d)) {
-                    dict.Add(d, new List<char>());
+                    dict.Add(d, new List&lt;char&gt;());
                 }
             }
         }

@@ -290,40 +290,40 @@ enum State {
     Flagged
 }
 
-[ProblemName("Sporifica Virus")]
+[ProblemName(&quot;Sporifica Virus&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) =>
+    public object PartOne(string input) =&gt;
         Iterate(input, 10000,
-            (state, drow, dcol) =>
+            (state, drow, dcol) =&gt;
                 state switch {
-                    State.Clean => (State.Infected, -dcol, drow),
-                    State.Infected => (State.Clean, dcol, -drow),
-                    _ => throw new ArgumentException()
+                    State.Clean =&gt; (State.Infected, -dcol, drow),
+                    State.Infected =&gt; (State.Clean, dcol, -drow),
+                    _ =&gt; throw new ArgumentException()
                 }
         );
 
-    public object PartTwo(string input) =>
+    public object PartTwo(string input) =&gt;
         Iterate(input, 10000000,
-            (state, drow, dcol) =>
+            (state, drow, dcol) =&gt;
                 state switch {
-                    State.Clean => (State.Weakened, -dcol, drow),
-                    State.Weakened => (State.Infected, drow, dcol),
-                    State.Infected => (State.Flagged, dcol, -drow),
-                    State.Flagged => (State.Clean, -drow, -dcol),
-                    _ => throw new ArgumentException()
+                    State.Clean =&gt; (State.Weakened, -dcol, drow),
+                    State.Weakened =&gt; (State.Infected, drow, dcol),
+                    State.Infected =&gt; (State.Flagged, dcol, -drow),
+                    State.Flagged =&gt; (State.Clean, -drow, -dcol),
+                    _ =&gt; throw new ArgumentException()
                 }
         );
 
 
-    int Iterate(string input, int iterations, Func<State, int, int, (State State, int irow, int icol)> update) {
-        var lines = input.Split('\n');
+    int Iterate(string input, int iterations, Func&lt;State, int, int, (State State, int irow, int icol)&gt; update) {
+        var lines = input.Split(&#039;\n&#039;);
         var crow = lines.Length;
         var ccol = lines[0].Length;
-        var cells = new Dictionary<(int irow, int icol), State>();
-        for (int irowT = 0; irowT < crow; irowT++) {
-            for (int icolT = 0; icolT < ccol; icolT++) {
-                if (lines[irowT][icolT] == '#') {
+        var cells = new Dictionary&lt;(int irow, int icol), State&gt;();
+        for (int irowT = 0; irowT &lt; crow; irowT++) {
+            for (int icolT = 0; icolT &lt; ccol; icolT++) {
+                if (lines[irowT][icolT] == &#039;#&#039;) {
                     cells.Add((irowT, icolT), State.Infected);
                 }
             }
@@ -331,7 +331,7 @@ class Solution : Solver {
         var (irow, icol) = (crow / 2, ccol / 2);
         var (drow, dcol) = (-1, 0);
         var infections = 0;
-        for (int i = 0; i < iterations; i++) {
+        for (int i = 0; i &lt; iterations; i++) {
             var state = cells.TryGetValue((irow, icol), out var s) ? s : State.Clean;
 
             (state, drow, dcol) = update(state, drow, dcol);

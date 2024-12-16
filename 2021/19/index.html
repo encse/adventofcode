@@ -285,12 +285,12 @@ using System.Linq;
 
 namespace AdventOfCode.Y2021.Day19;
 
-[ProblemName("Beacon Scanner")]
+[ProblemName(&quot;Beacon Scanner&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) =>
+    public object PartOne(string input) =&gt;
         LocateScanners(input)
-            .SelectMany(scanner => scanner.GetBeaconsInWorld())
+            .SelectMany(scanner =&gt; scanner.GetBeaconsInWorld())
             .Distinct()
             .Count();
 
@@ -307,10 +307,10 @@ class Solution : Solver {
         ).Max();
     }
 
-    HashSet<Scanner> LocateScanners(string input) {
-        var scanners = new HashSet<Scanner>(Parse(input));
-        var locatedScanners = new HashSet<Scanner>();
-        var q = new Queue<Scanner>();
+    HashSet&lt;Scanner&gt; LocateScanners(string input) {
+        var scanners = new HashSet&lt;Scanner&gt;(Parse(input));
+        var locatedScanners = new HashSet&lt;Scanner&gt;();
+        var q = new Queue&lt;Scanner&gt;();
 
         // when a scanner is located, it gets into the queue so that we can
         // explore its neighbours.
@@ -342,7 +342,7 @@ class Solution : Solver {
         foreach (var (beaconInA, beaconInB) in PotentialMatchingBeacons(scannerA, scannerB)) {
             // now try to find the orientation for B:
             var rotatedB = scannerB;
-            for (var rotation = 0; rotation < 24; rotation++, rotatedB = rotatedB.Rotate()) {
+            for (var rotation = 0; rotation &lt; 24; rotation++, rotatedB = rotatedB.Rotate()) {
                 // Moving the rotated scanner so that beaconA and beaconB overlaps. Are there 12 matches? 
                 var beaconInRotatedB = rotatedB.Transform(beaconInB);
 
@@ -352,7 +352,7 @@ class Solution : Solver {
                     beaconInA.z - beaconInRotatedB.z
                 ));
 
-                if (locatedB.GetBeaconsInWorld().Intersect(beaconsInA).Count() >= 12) {
+                if (locatedB.GetBeaconsInWorld().Intersect(beaconsInA).Count() &gt;= 12) {
                     return locatedB;
                 }
             }
@@ -362,7 +362,7 @@ class Solution : Solver {
         return null;
     }
 
-    IEnumerable<(Coord beaconInA, Coord beaconInB)> PotentialMatchingBeacons(Scanner scannerA, Scanner scannerB) {
+    IEnumerable&lt;(Coord beaconInA, Coord beaconInB)&gt; PotentialMatchingBeacons(Scanner scannerA, Scanner scannerB) {
         // If we had a matching beaconInA and beaconInB and moved the center
         // of the scanners to these then we would find at least 12 beacons 
         // with the same coordinates.
@@ -375,7 +375,7 @@ class Solution : Solver {
         // taking the absolute values of the x y and z coordinates of their beacons 
         // and compare those. 
 
-        IEnumerable<int> absCoordinates(Scanner scanner) =>
+        IEnumerable&lt;int&gt; absCoordinates(Scanner scanner) =&gt;
             from coord in scanner.GetBeaconsInWorld()
             from v in new[] { coord.x, coord.y, coord.z }
             select Math.Abs(v);
@@ -384,9 +384,9 @@ class Solution : Solver {
         // have at least 3 * 12 common values (with multiplicity).
 
         // 🐦 We can also considerably speed up the search with the pigeonhole principle 
-        // which says that it's enough to take all but 11 beacons from A and B. 
+        // which says that it&#039;s enough to take all but 11 beacons from A and B. 
         // If there is no match amongst those, there cannot be 12 matching pairs:
-        IEnumerable<T> pick<T>(IEnumerable<T> ts) => ts.Take(ts.Count() - 11);
+        IEnumerable&lt;T&gt; pick&lt;T&gt;(IEnumerable&lt;T&gt; ts) =&gt; ts.Take(ts.Count() - 11);
 
         foreach (var beaconInA in pick(scannerA.GetBeaconsInWorld())) {
             var absA = absCoordinates(
@@ -398,27 +398,27 @@ class Solution : Solver {
                     scannerB.Translate(new Coord(-beaconInB.x, -beaconInB.y, -beaconInB.z))
                 );
 
-                if (absB.Count(d => absA.Contains(d)) >= 3 * 12) {
+                if (absB.Count(d =&gt; absA.Contains(d)) &gt;= 3 * 12) {
                     yield return (beaconInA, beaconInB);
                 }
             }
         }
     }
 
-    Scanner[] Parse(string input) => (
-        from block in input.Split("\n\n")
+    Scanner[] Parse(string input) =&gt; (
+        from block in input.Split(&quot;\n\n&quot;)
         let beacons =
-            from line in block.Split("\n").Skip(1)
-            let parts = line.Split(",").Select(int.Parse).ToArray()
+            from line in block.Split(&quot;\n&quot;).Skip(1)
+            let parts = line.Split(&quot;,&quot;).Select(int.Parse).ToArray()
             select new Coord(parts[0], parts[1], parts[2])
         select new Scanner(new Coord(0, 0, 0), 0, beacons.ToList())
     ).ToArray();
 }
 
 record Coord(int x, int y, int z);
-record Scanner(Coord center, int rotation, List<Coord> beaconsInLocal) {
-    public Scanner Rotate() => new Scanner(center, rotation + 1, beaconsInLocal);
-    public Scanner Translate(Coord t) => new Scanner(
+record Scanner(Coord center, int rotation, List&lt;Coord&gt; beaconsInLocal) {
+    public Scanner Rotate() =&gt; new Scanner(center, rotation + 1, beaconsInLocal);
+    public Scanner Translate(Coord t) =&gt; new Scanner(
         new Coord(center.x + t.x, center.y + t.y, center.z + t.z), rotation, beaconsInLocal);
 
     public Coord Transform(Coord coord) {
@@ -447,7 +447,7 @@ record Scanner(Coord center, int rotation, List<Coord> beaconsInLocal) {
         return new Coord(center.x + x, center.y + y, center.z + z);
     }
 
-    public IEnumerable<Coord> GetBeaconsInWorld() {
+    public IEnumerable&lt;Coord&gt; GetBeaconsInWorld() {
         return beaconsInLocal.Select(Transform);
     }
 }

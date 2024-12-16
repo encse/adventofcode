@@ -285,30 +285,30 @@ using System.Linq;
 
 namespace AdventOfCode.Y2017.Day18;
 
-[ProblemName("Duet")]
+[ProblemName(&quot;Duet&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) =>
+    public object PartOne(string input) =&gt;
         new Machine1()
             .Execute(input)
-            .First(received => received != null).Value;
+            .First(received =&gt; received != null).Value;
 
     public object PartTwo(string input) {
-        var p0Input = new Queue<long>();
-        var p1Input = new Queue<long>();
+        var p0Input = new Queue&lt;long&gt;();
+        var p1Input = new Queue&lt;long&gt;();
 
         return Enumerable
             .Zip(
                 new Machine2(0, p0Input, p1Input).Execute(input), 
                 new Machine2(1, p1Input, p0Input).Execute(input), 
-                (state0, state1) => (state0: state0, state1: state1))
-            .First(x => !x.state0.running && !x.state1.running)
+                (state0, state1) =&gt; (state0: state0, state1: state1))
+            .First(x =&gt; !x.state0.running &amp;&amp; !x.state1.running)
             .state1.valueSent;
     }
 }
 
-abstract class Machine<TState> {
-    private Dictionary<string, long> regs = new Dictionary<string, long>();
+abstract class Machine&lt;TState&gt; {
+    private Dictionary&lt;string, long&gt; regs = new Dictionary&lt;string, long&gt;();
 
     protected bool running;
     protected int ip = 0;
@@ -323,22 +323,22 @@ abstract class Machine<TState> {
         }
     }
 
-    public IEnumerable<TState> Execute(string input) {
-        var prog = input.Split('\n').ToArray();
+    public IEnumerable&lt;TState&gt; Execute(string input) {
+        var prog = input.Split(&#039;\n&#039;).ToArray();
 
-        while (ip >= 0 && ip < prog.Length) {
+        while (ip &gt;= 0 &amp;&amp; ip &lt; prog.Length) {
             running = true;
             var line = prog[ip];
-            var parts = line.Split(' ');
+            var parts = line.Split(&#039; &#039;);
             switch (parts[0]) {
-                case "snd": snd(parts[1]); break;
-                case "rcv": rcv(parts[1]); break;
-                case "set": set(parts[1], parts[2]); break;
-                case "add": add(parts[1], parts[2]); break;
-                case "mul": mul(parts[1], parts[2]); break;
-                case "mod": mod(parts[1], parts[2]); break;
-                case "jgz": jgz(parts[1], parts[2]); break;
-                default: throw new Exception("Cannot parse " + line);
+                case &quot;snd&quot;: snd(parts[1]); break;
+                case &quot;rcv&quot;: rcv(parts[1]); break;
+                case &quot;set&quot;: set(parts[1], parts[2]); break;
+                case &quot;add&quot;: add(parts[1], parts[2]); break;
+                case &quot;mul&quot;: mul(parts[1], parts[2]); break;
+                case &quot;mod&quot;: mod(parts[1], parts[2]); break;
+                case &quot;jgz&quot;: jgz(parts[1], parts[2]); break;
+                default: throw new Exception(&quot;Cannot parse &quot; + line);
             }
             yield return State();
         }
@@ -374,11 +374,11 @@ abstract class Machine<TState> {
     }
 
     protected void jgz(string reg0, string reg1) {
-        ip += this[reg0] > 0 ? (int)this[reg1] : 1;
+        ip += this[reg0] &gt; 0 ? (int)this[reg1] : 1;
     }
 }
 
-class Machine1 : Machine<long?> {
+class Machine1 : Machine&lt;long?&gt; {
     private long? sent = null;
     private long? received = null;
 
@@ -400,13 +400,13 @@ class Machine1 : Machine<long?> {
 
 }
 
-class Machine2 : Machine<(bool running, int valueSent)> {
+class Machine2 : Machine&lt;(bool running, int valueSent)&gt; {
     private int valueSent = 0;
-    private Queue<long> qIn;
-    private Queue<long> qOut;
+    private Queue&lt;long&gt; qIn;
+    private Queue&lt;long&gt; qOut;
 
-    public Machine2(long p, Queue<long> qIn, Queue<long> qOut) {
-        this["p"] = p;
+    public Machine2(long p, Queue&lt;long&gt; qIn, Queue&lt;long&gt; qOut) {
+        this[&quot;p&quot;] = p;
         this.qIn = qIn;
         this.qOut = qOut;
     }

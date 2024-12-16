@@ -293,45 +293,45 @@ class Node {
     public int TreeWeight = -1;
 }
 
-class Tree : Dictionary<string, Node> { }
+class Tree : Dictionary&lt;string, Node&gt; { }
 
-[ProblemName("Recursive Circus")]
+[ProblemName(&quot;Recursive Circus&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Root(Parse(input)).Id;
+    public object PartOne(string input) =&gt; Root(Parse(input)).Id;
 
     public object PartTwo(string input) {
         var tree = Parse(input);
         var root = Root(tree);
         ComputeTreeWeights(root, tree);
         var bogusChild = BogusChild(root, tree);
-        var desiredWeight = tree[root.Children.First(childId => childId != bogusChild.Id)].TreeWeight;
+        var desiredWeight = tree[root.Children.First(childId =&gt; childId != bogusChild.Id)].TreeWeight;
         return Fix(bogusChild, desiredWeight, tree);
     }
 
     Tree Parse(string input) {
         var tree = new Tree();
-        foreach (var line in input.Split('\n')) {
-            var parts = Regex.Match(line, @"(?<id>[a-z]+) \((?<weight>[0-9]+)\)( -> (?<children>.*))?");
+        foreach (var line in input.Split(&#039;\n&#039;)) {
+            var parts = Regex.Match(line, @&quot;(?&lt;id&gt;[a-z]+) \((?&lt;weight&gt;[0-9]+)\)( -&gt; (?&lt;children&gt;.*))?&quot;);
 
             tree.Add(
-                parts.Groups["id"].Value,
+                parts.Groups[&quot;id&quot;].Value,
                 new Node {
-                    Id = parts.Groups["id"].Value,
-                    Weight = int.Parse(parts.Groups["weight"].Value),
-                    Children = string.IsNullOrEmpty(parts.Groups["children"].Value)
+                    Id = parts.Groups[&quot;id&quot;].Value,
+                    Weight = int.Parse(parts.Groups[&quot;weight&quot;].Value),
+                    Children = string.IsNullOrEmpty(parts.Groups[&quot;children&quot;].Value)
                         ? new string[0]
-                        : Regex.Split(parts.Groups["children"].Value, ", "),
+                        : Regex.Split(parts.Groups[&quot;children&quot;].Value, &quot;, &quot;),
                 });
         }
         return tree;
     }
 
-    Node Root(Tree tree) =>
-        tree.Values.First(node => !tree.Values.Any(nodeParent => nodeParent.Children.Contains(node.Id)));
+    Node Root(Tree tree) =&gt;
+        tree.Values.First(node =&gt; !tree.Values.Any(nodeParent =&gt; nodeParent.Children.Contains(node.Id)));
 
     int ComputeTreeWeights(Node node, Tree tree) {
-        node.TreeWeight = node.Weight + node.Children.Select(childId => ComputeTreeWeights(tree[childId], tree)).Sum();
+        node.TreeWeight = node.Weight + node.Children.Select(childId =&gt; ComputeTreeWeights(tree[childId], tree)).Sum();
         return node.TreeWeight;
     }
 
@@ -347,7 +347,7 @@ class Solution : Solver {
     }
 
     int Fix(Node node, int desiredWeight, Tree tree) {
-        if (node.Children.Length < 2) {
+        if (node.Children.Length &lt; 2) {
             throw new NotImplementedException();
         } 
 

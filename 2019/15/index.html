@@ -285,7 +285,7 @@ using System.Linq;
 
 namespace AdventOfCode.Y2019.Day15;
 
-[ProblemName("Oxygen System")]
+[ProblemName(&quot;Oxygen System&quot;)]
 class Solution : Solver {
 
     enum Tile {
@@ -296,25 +296,25 @@ class Solution : Solver {
 
     public object PartOne(string input) {
         var iicm = new ImmutableIntCodeMachine(input);
-        return Bfs(iicm).First(s => s.tile == Tile.O2).path.Count;
+        return Bfs(iicm).First(s =&gt; s.tile == Tile.O2).path.Count;
     }
 
     public object PartTwo(string input) {
-        var iicm = Bfs(new ImmutableIntCodeMachine(input)).First(s => s.tile == Tile.O2).iicm;
+        var iicm = Bfs(new ImmutableIntCodeMachine(input)).First(s =&gt; s.tile == Tile.O2).iicm;
         return Bfs(iicm).Last().path.Count;
     }
 
-    IEnumerable<(ImmutableIntCodeMachine iicm, ImmutableList<int> path, Tile tile)> Bfs(ImmutableIntCodeMachine startIicm) {
+    IEnumerable&lt;(ImmutableIntCodeMachine iicm, ImmutableList&lt;int&gt; path, Tile tile)&gt; Bfs(ImmutableIntCodeMachine startIicm) {
 
         (int dx, int dy)[] dirs = new[] { (0, -1), (0, 1), (-1, 0), (1, 0) };
 
-        var seen = new HashSet<(int x, int y)> { (0, 0) };
-        var q = new Queue<(ImmutableIntCodeMachine iicm, ImmutableList<int> path, int x, int y)>();
-        q.Enqueue((startIicm, ImmutableList<int>.Empty, 0, 0));
+        var seen = new HashSet&lt;(int x, int y)&gt; { (0, 0) };
+        var q = new Queue&lt;(ImmutableIntCodeMachine iicm, ImmutableList&lt;int&gt; path, int x, int y)&gt;();
+        q.Enqueue((startIicm, ImmutableList&lt;int&gt;.Empty, 0, 0));
         while (q.Any()) {
             var current = q.Dequeue();
 
-            for (var i = 0; i < dirs.Length; i++) {
+            for (var i = 0; i &lt; dirs.Length; i++) {
                 var (nextX, nextY) = (current.x + dirs[i].dx, current.y + dirs[i].dy);
 
                 if (!seen.Contains((nextX, nextY))) {

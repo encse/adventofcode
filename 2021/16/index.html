@@ -286,17 +286,17 @@ using System.Linq;
 
 namespace AdventOfCode.Y2021.Day16;
 
-[ProblemName("Packet Decoder")]
+[ProblemName(&quot;Packet Decoder&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) =>
+    public object PartOne(string input) =&gt;
         GetTotalVersion(GetPacket(GetReader(input)));
 
-    public object PartTwo(string input) =>
+    public object PartTwo(string input) =&gt;
         Evaluate(GetPacket(GetReader(input)));
 
     // recursively sum the versions of a packet and its content for part 1:
-    int GetTotalVersion(Packet packet) =>
+    int GetTotalVersion(Packet packet) =&gt;
         packet.version + packet.packets.Select(GetTotalVersion).Sum();
 
     // recursively evaluate the packet and its contents based on the type tag for part 2:
@@ -304,27 +304,27 @@ class Solution : Solver {
 
         var parts = packet.packets.Select(Evaluate).ToArray();
         return packet.type switch {
-            0 => parts.Sum(),
-            1 => parts.Aggregate(1L, (acc, x) => acc * x),
-            2 => parts.Min(),
-            3 => parts.Max(),
-            4 => packet.payload, // <--- literal packet is handled uniformly
-            5 => parts[0] > parts[1] ? 1 : 0,
-            6 => parts[0] < parts[1] ? 1 : 0,
-            7 => parts[0] == parts[1] ? 1 : 0,
-            _ => throw new Exception()
+            0 =&gt; parts.Sum(),
+            1 =&gt; parts.Aggregate(1L, (acc, x) =&gt; acc * x),
+            2 =&gt; parts.Min(),
+            3 =&gt; parts.Max(),
+            4 =&gt; packet.payload, // &lt;--- literal packet is handled uniformly
+            5 =&gt; parts[0] &gt; parts[1] ? 1 : 0,
+            6 =&gt; parts[0] &lt; parts[1] ? 1 : 0,
+            7 =&gt; parts[0] == parts[1] ? 1 : 0,
+            _ =&gt; throw new Exception()
         };
     }
 
     // convert hex string to bit sequence reader
-    BitSequenceReader GetReader(string input) => new BitSequenceReader(
+    BitSequenceReader GetReader(string input) =&gt; new BitSequenceReader(
         new BitArray((
             from hexChar in input
             // get the 4 bits out of a hex char:
             let value = Convert.ToInt32(hexChar.ToString(), 16)
             // convert to bitmask
             from mask in new []{8,4,2,1}
-            select (mask & value) != 0
+            select (mask &amp; value) != 0
         ).ToArray()
     ));
 
@@ -332,7 +332,7 @@ class Solution : Solver {
     Packet GetPacket(BitSequenceReader reader) {
         var version = reader.ReadInt(3);
         var type = reader.ReadInt(3);
-        var packets = new List<Packet>();
+        var packets = new List&lt;Packet&gt;();
         var payload = 0L;
 
         if (type == 0x4) {
@@ -345,14 +345,14 @@ class Solution : Solver {
                 }
             }
         } else if (reader.ReadInt(1) == 0) {
-            // operator, the next 'length' long bit sequence encodes the sub packages:
+            // operator, the next &#039;length&#039; long bit sequence encodes the sub packages:
             var length = reader.ReadInt(15);
             var subPackages = reader.GetBitSequenceReader(length);
             while (subPackages.Any()) {
                 packets.Add(GetPacket(subPackages));
             }
         } else {
-            // operator with 'packetCount' sub packages:
+            // operator with &#039;packetCount&#039; sub packages:
             var packetCount = reader.ReadInt(11);
             packets.AddRange(from _ in Enumerable.Range(0, packetCount) select GetPacket(reader));
         }
@@ -371,12 +371,12 @@ class BitSequenceReader {
     }
 
     public bool Any() {
-        return ptr < bits.Length;
+        return ptr &lt; bits.Length;
     }
 
     public BitSequenceReader GetBitSequenceReader(int bitCount) {
         var bitArray = new BitArray(bitCount);
-        for (var i = 0; i < bitCount; i++) {
+        for (var i = 0; i &lt; bitCount; i++) {
             bitArray.Set(i, bits[ptr++]);
         }
         return new BitSequenceReader(bitArray);
@@ -384,7 +384,7 @@ class BitSequenceReader {
 
     public int ReadInt(int bitCount) {
         var res = 0;
-        for (var i = 0; i < bitCount; i++) {
+        for (var i = 0; i &lt; bitCount; i++) {
             res = res * 2 + (bits[ptr++] ? 1 : 0);
         }
         return res;

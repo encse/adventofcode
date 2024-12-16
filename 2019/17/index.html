@@ -286,7 +286,7 @@ using System.Linq;
 
 namespace AdventOfCode.Y2019.Day17;
 
-[ProblemName("Set and Forget")]
+[ProblemName(&quot;Set and Forget&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
@@ -294,13 +294,13 @@ class Solution : Solver {
 
         var crow = mx.Length;
         var ccol = mx[0].Length;
-        var cross = ".#.\n###\n.#.".Split("\n");
+        var cross = &quot;.#.\n###\n.#.&quot;.Split(&quot;\n&quot;);
 
-        bool crossing(int irow, int icol) => (
+        bool crossing(int irow, int icol) =&gt; (
             from drow in new[] { -1, 0, 1 }
             from dcol in new[] { -1, 0, 1 }
             select cross[1 + drow][1 + dcol] == mx[irow + drow][icol + dcol]
-        ).All(x => x);
+        ).All(x =&gt; x);
 
         return (
             from irow in Enumerable.Range(1, crow - 2)
@@ -321,17 +321,17 @@ class Solution : Solver {
     string[] Screenshot(string input) {
         var icm = new IntCodeMachine(input);
         var output = icm.Run();
-        return output.ToAscii().Split("\n").Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
+        return output.ToAscii().Split(&quot;\n&quot;).Where(x =&gt; !string.IsNullOrWhiteSpace(x)).ToArray();
     }
 
-    IEnumerable<string> GeneratePrograms(string path) {
+    IEnumerable&lt;string&gt; GeneratePrograms(string path) {
 
-        IEnumerable<(ImmutableList<int> indices, ImmutableList<string> functions)> GenerateRec(string path, ImmutableList<string> functions) {
+        IEnumerable&lt;(ImmutableList&lt;int&gt; indices, ImmutableList&lt;string&gt; functions)&gt; GenerateRec(string path, ImmutableList&lt;string&gt; functions) {
             if (path.Length == 0) {
-                yield return (ImmutableList<int>.Empty, functions);
+                yield return (ImmutableList&lt;int&gt;.Empty, functions);
             }
 
-            for (var i = 0; i < functions.Count; i++) {
+            for (var i = 0; i &lt; functions.Count; i++) {
                 var function = functions[i];
 
                 if (path.StartsWith(function)) {
@@ -343,8 +343,8 @@ class Solution : Solver {
                 }
             }
 
-            if (functions.Count < 3) {
-                for (var length = 1; length <= path.Length; length++) {
+            if (functions.Count &lt; 3) {
+                for (var length = 1; length &lt;= path.Length; length++) {
                     var function = path[0..length].ToString();
                     var functionsT = functions.Add(function);
                     var idx = functions.Count;
@@ -356,38 +356,38 @@ class Solution : Solver {
             }
         }
 
-        foreach (var (indices, functions) in GenerateRec(path, ImmutableList<string>.Empty)) {
+        foreach (var (indices, functions) in GenerateRec(path, ImmutableList&lt;string&gt;.Empty)) {
 
             var compressed = functions.Select(Compress).ToArray();
-            if (indices.Count <= 20 && compressed.All(c => c.Length <= 20)) {
+            if (indices.Count &lt;= 20 &amp;&amp; compressed.All(c =&gt; c.Length &lt;= 20)) {
 
-                var main = string.Join(",", indices.Select(i => "ABC"[i]));
-                yield return $"{main}\n{compressed[0]}\n{compressed[1]}\n{compressed[2]}\nn\n";
+                var main = string.Join(&quot;,&quot;, indices.Select(i =&gt; &quot;ABC&quot;[i]));
+                yield return $&quot;{main}\n{compressed[0]}\n{compressed[1]}\n{compressed[2]}\nn\n&quot;;
             }
 
         }
     }
 
     string Compress(string st) {
-        var steps = new List<string>();
+        var steps = new List&lt;string&gt;();
         var l = 0;
-        for (var i = 0; i < st.Length; i++) {
+        for (var i = 0; i &lt; st.Length; i++) {
             var ch = st[i];
 
-            if (l > 0 && ch != 'F') {
+            if (l &gt; 0 &amp;&amp; ch != &#039;F&#039;) {
                 steps.Add(l.ToString());
                 l = 0;
             }
-            if (ch == 'R' || ch == 'L') {
+            if (ch == &#039;R&#039; || ch == &#039;L&#039;) {
                 steps.Add(ch.ToString());
             } else {
                 l++;
             }
         }
-        if (l > 0) {
+        if (l &gt; 0) {
             steps.Add(l.ToString());
         }
-        return string.Join(",", steps);
+        return string.Join(&quot;,&quot;, steps);
     }
 
     string Path(string input) {
@@ -398,20 +398,20 @@ class Solution : Solver {
         var (pos, dir) = FindRobot(mx);
         char look((int irow, int icol) pos) {
             var (irow, icol) = pos;
-            return irow < 0 || irow >= crow || icol < 0 || icol >= ccol ? '.' : mx[irow][icol];
+            return irow &lt; 0 || irow &gt;= crow || icol &lt; 0 || icol &gt;= ccol ? &#039;.&#039; : mx[irow][icol];
         }
 
-        var path = "";
+        var path = &quot;&quot;;
         var finished = false;
         while (!finished) {
             finished = true;
             foreach (var (nextDir, step) in new[]{
-                ((drow:  dir.drow, dcol:  dir.dcol), "F"),
-                ((drow: -dir.dcol, dcol:  dir.drow), "LF"),
-                ((drow:  dir.dcol, dcol: -dir.drow), "RF")
+                ((drow:  dir.drow, dcol:  dir.dcol), &quot;F&quot;),
+                ((drow: -dir.dcol, dcol:  dir.drow), &quot;LF&quot;),
+                ((drow:  dir.dcol, dcol: -dir.drow), &quot;RF&quot;)
             }) {
                 var nextPos = (pos.irow + nextDir.drow, pos.icol + nextDir.dcol);
-                if (look(nextPos) == '#') {
+                if (look(nextPos) == &#039;#&#039;) {
                     path += step;
                     pos = nextPos;
                     dir = nextDir;
@@ -423,18 +423,18 @@ class Solution : Solver {
         return path;
     }
 
-    ((int irow, int icol) pos, (int drow, int dcol) dir) FindRobot(string[] mx) => (
+    ((int irow, int icol) pos, (int drow, int dcol) dir) FindRobot(string[] mx) =&gt; (
         from irow in Enumerable.Range(0, mx.Length)
         from icol in Enumerable.Range(0, mx[0].Length)
         let ch = mx[irow][icol]
-        where "^v<>".Contains(ch)
+        where &quot;^v&lt;&gt;&quot;.Contains(ch)
         let dir = mx[irow][icol] switch
         {
-            '^' => (-1, 0),
-            'v' => (1, 0),
-            '<' => (0, -1),
-            '>' => (0, 1),
-            _ => throw new Exception()
+            &#039;^&#039; =&gt; (-1, 0),
+            &#039;v&#039; =&gt; (1, 0),
+            &#039;&lt;&#039; =&gt; (0, -1),
+            &#039;&gt;&#039; =&gt; (0, 1),
+            _ =&gt; throw new Exception()
         }
         select ((irow, icol), dir)
     ).First();

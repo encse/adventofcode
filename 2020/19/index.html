@@ -281,50 +281,50 @@
 </div>
             <div id="code-container"><pre class="hljs language-csharp"><code>using System.Collections.Generic;
 using System.Linq;
-using Parser = System.Func<string, System.Collections.Generic.IEnumerable<string>>;
+using Parser = System.Func&lt;string, System.Collections.Generic.IEnumerable&lt;string&gt;&gt;;
 
 namespace AdventOfCode.Y2020.Day19;
 
-[ProblemName("Monster Messages")]
+[ProblemName(&quot;Monster Messages&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Solve(input, true);
-    public object PartTwo(string input) => Solve(input, false);
+    public object PartOne(string input) =&gt; Solve(input, true);
+    public object PartTwo(string input) =&gt; Solve(input, false);
 
     int Solve(string input, bool part1) {
         var blocks = (
-            from block in input.Split("\n\n") 
-            select block.Split("\n")
+            from block in input.Split(&quot;\n\n&quot;) 
+            select block.Split(&quot;\n&quot;)
         ).ToArray();
 
-        var rules = new Dictionary<int, string>(
+        var rules = new Dictionary&lt;int, string&gt;(
             from line in blocks[0]
-                let parts = line.Split(": ")
+                let parts = line.Split(&quot;: &quot;)
                 let index = int.Parse(parts[0])
                 let rule = parts[1]
             select 
-                new KeyValuePair<int, string>(index, rule)
+                new KeyValuePair&lt;int, string&gt;(index, rule)
         );
 
         if (!part1) {
-            rules[8] = "42 | 42 8";
-            rules[11] = "42 31 | 42 11 31";
+            rules[8] = &quot;42 | 42 8&quot;;
+            rules[11] = &quot;42 31 | 42 11 31&quot;;
         }
 
         // a parser will process some prefix of the input and return the possible remainders (nothing in case of error).
-        var parsers = new Dictionary<int, Parser>();
+        var parsers = new Dictionary&lt;int, Parser&gt;();
         Parser getParser(int index) {
             if (!parsers.ContainsKey(index)) {
-                parsers[index] = (input) => getParser(index)(input); //avoid stack overflows in case of recursion in the grammar
+                parsers[index] = (input) =&gt; getParser(index)(input); //avoid stack overflows in case of recursion in the grammar
 
                 parsers[index] = 
                     alt(
-                        from sequence in rules[index].Split(" | ") 
+                        from sequence in rules[index].Split(&quot; | &quot;) 
                         select 
                             seq(
-                                from item in sequence.Split(" ") 
+                                from item in sequence.Split(&quot; &quot;) 
                                 select
-                                    int.TryParse(item, out var i) ? getParser(i) : literal(item.Trim('"'))
+                                    int.TryParse(item, out var i) ? getParser(i) : literal(item.Trim(&#039;&quot;&#039;))
                             )
                     );
             }
@@ -332,14 +332,14 @@ class Solution : Solver {
         }
 
         var parser = getParser(0);
-        return blocks[1].Count(data => parser(data).Any(st => st == ""));
+        return blocks[1].Count(data =&gt; parser(data).Any(st =&gt; st == &quot;&quot;));
     }
 
     // Parser combinators
-    static Parser literal(string st) =>
-        input => input.StartsWith(st) ? new[] { input.Substring(st.Length) } : new string[0];
+    static Parser literal(string st) =&gt;
+        input =&gt; input.StartsWith(st) ? new[] { input.Substring(st.Length) } : new string[0];
 
-    static Parser seq(IEnumerable<Parser> parsers) {
+    static Parser seq(IEnumerable&lt;Parser&gt; parsers) {
         if (parsers.Count() == 1) {
             return parsers.Single();
         }
@@ -347,19 +347,19 @@ class Solution : Solver {
         var parseHead = parsers.First();
         var parseTail = seq(parsers.Skip(1));
 
-        return input => 
+        return input =&gt; 
             from tail in parseHead(input)
             from rest in parseTail(tail)
             select rest;
     }
 
-    static Parser alt(IEnumerable<Parser> parsers) {
+    static Parser alt(IEnumerable&lt;Parser&gt; parsers) {
         if (parsers.Count() == 1) {
             return parsers.Single();
         }
         
-        var arr = parsers.ToArray(); // don't recalc the enumerable in the parse phase
-        return input => 
+        var arr = parsers.ToArray(); // don&#039;t recalc the enumerable in the parse phase
+        return input =&gt; 
             from parser in arr
             from rest in parser(input)
             select rest;

@@ -289,7 +289,7 @@ record Pos2(int irow, int icol);
 record Pos3(int irow, int icol, int level);
 record PosD(int irow, int icol, int dlevel);
 
-[ProblemName("Donut Maze")]
+[ProblemName(&quot;Donut Maze&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
@@ -301,18 +301,18 @@ class Solution : Solver {
     }
 
     int Solve(string input, bool part2) {
-        var mx = input.Split("\n").Select(x => x.ToCharArray()).ToArray();
+        var mx = input.Split(&quot;\n&quot;).Select(x =&gt; x.ToCharArray()).ToArray();
         var (portals, start, end) = Explore(mx);
 
         var pos = start;
         var dist = 0;
-        var q = new Queue<(Pos3, int dist)>();
+        var q = new Queue&lt;(Pos3, int dist)&gt;();
         q.Enqueue((pos, dist));
 
-        var seen = new HashSet<Pos3>();
+        var seen = new HashSet&lt;Pos3&gt;();
         seen.Add(pos);
 
-        IEnumerable<Pos3> Neighbours(Pos3 pos) {
+        IEnumerable&lt;Pos3&gt; Neighbours(Pos3 pos) {
             foreach (var (drow, dcol) in new[] { (0, -1), (0, 1), (-1, 0), (1, 0) }) {
                 yield return new (pos.irow + drow, pos.icol + dcol, pos.level);
             }
@@ -324,7 +324,7 @@ class Solution : Solver {
                     dlevel = 0;
                 }
 
-                if (pos.level + dlevel >= 0) {
+                if (pos.level + dlevel &gt;= 0) {
                     yield return new (irowT, icolT, pos.level + dlevel);
                 }
             }
@@ -339,7 +339,7 @@ class Solution : Solver {
             foreach (var posT in Neighbours(pos)) {
                 if (!seen.Contains(posT)) {
                     var distT = dist + 1;
-                    if (mx[posT.irow][posT.icol] == '.') {
+                    if (mx[posT.irow][posT.icol] == &#039;.&#039;) {
                         seen.Add(posT);
                         q.Enqueue((posT, distT));
                     }
@@ -350,17 +350,17 @@ class Solution : Solver {
         throw new Exception();
     }
 
-    (Dictionary<Pos2, PosD> portals, Pos3 start, Pos3 goal) Explore(char[][] mx) {
-        var portals = new Dictionary<Pos2, PosD>();
-        var tmp = new Dictionary<string, Pos2>();
+    (Dictionary&lt;Pos2, PosD&gt; portals, Pos3 start, Pos3 goal) Explore(char[][] mx) {
+        var portals = new Dictionary&lt;Pos2, PosD&gt;();
+        var tmp = new Dictionary&lt;string, Pos2&gt;();
         var ccol = mx[0].Length;
         var crow = mx.Length;
-        for (var irow = 0; irow < crow - 1; irow++) {
-            for (var icol = 0; icol < ccol - 1; icol++) {
+        for (var irow = 0; irow &lt; crow - 1; irow++) {
+            for (var icol = 0; icol &lt; ccol - 1; icol++) {
                 foreach (var (drow, dcol) in new[] { (0, 1), (1, 0) }) {
-                    var st = $"{mx[irow][icol]}{mx[irow + drow][icol + dcol]}";
+                    var st = $&quot;{mx[irow][icol]}{mx[irow + drow][icol + dcol]}&quot;;
                     if (st.All(char.IsLetter)) {
-                        var portal = irow - drow >= 0 && icol - dcol >= 0 && mx[irow - drow][icol - dcol] == '.' ?
+                        var portal = irow - drow &gt;= 0 &amp;&amp; icol - dcol &gt;= 0 &amp;&amp; mx[irow - drow][icol - dcol] == &#039;.&#039; ?
                             new Pos2(irow - drow, icol - dcol) :
                             new Pos2(irow + 2 * drow, icol + 2 * dcol);
 
@@ -371,14 +371,14 @@ class Solution : Solver {
                         } else {
                             tmp[st] = portal;
                         }
-                        mx[irow][icol] = ' ';
-                        mx[irow + drow][icol + dcol] = ' ';
+                        mx[irow][icol] = &#039; &#039;;
+                        mx[irow + drow][icol + dcol] = &#039; &#039;;
                     }
                 }
             }
         }
 
-        return (portals, new (tmp["AA"].irow, tmp["AA"].icol, 0), new (tmp["ZZ"].irow, tmp["ZZ"].icol, 0));
+        return (portals, new (tmp[&quot;AA&quot;].irow, tmp[&quot;AA&quot;].icol, 0), new (tmp[&quot;ZZ&quot;].irow, tmp[&quot;ZZ&quot;].icol, 0));
     }
 }
 </code></pre></div>

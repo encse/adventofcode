@@ -283,17 +283,17 @@
 
 namespace AdventOfCode.Y2018.Day02;
 
-[ProblemName("Inventory Management System")]
+[ProblemName(&quot;Inventory Management System&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
         var doubles = (
-            from line in input.Split("\n")
+            from line in input.Split(&quot;\n&quot;)
             where CheckLine(line, 2)
             select line
         ).Count();
         var tripples = (
-            from line in input.Split("\n")
+            from line in input.Split(&quot;\n&quot;)
             where CheckLine(line, 3)
             select line
         ).Count();
@@ -303,11 +303,11 @@ class Solution : Solver {
     bool CheckLine(string line, int n) {
         return (from ch in line
                 group ch by ch into g
-                select g.Count()).Any(cch => cch == n);
+                select g.Count()).Any(cch =&gt; cch == n);
     }
 
     public object PartTwo(string input) {
-        var lines = input.Split("\n");
+        var lines = input.Split(&quot;\n&quot;);
         return (from i in Enumerable.Range(0, lines.Length)
                 from j in Enumerable.Range(i + 1, lines.Length - i - 1)
                 let line1 = lines[i]
@@ -319,12 +319,12 @@ class Solution : Solver {
 
     int Diff(string line1, string line2) {
         return line1.Zip(line2, 
-            (chA, chB) => chA == chB
-        ).Count(x => x == false);
+            (chA, chB) =&gt; chA == chB
+        ).Count(x =&gt; x == false);
     }
 
     string Common(string line1, string line2) {
-        return string.Join("", line1.Zip(line2, (chA, chB) => chA == chB ? chA.ToString() : ""));
+        return string.Join(&quot;&quot;, line1.Zip(line2, (chA, chB) =&gt; chA == chB ? chA.ToString() : &quot;&quot;));
     }
 }
 </code></pre></div>

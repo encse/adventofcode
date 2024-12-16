@@ -285,7 +285,7 @@ using System.Linq;
 
 namespace AdventOfCode.Y2016.Day25;
 
-[ProblemName("Clock Signal")]
+[ProblemName(&quot;Clock Signal&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
@@ -306,9 +306,9 @@ class Solution : Solver {
         }
     }
     
-    IEnumerable<int> Run(string input, int a) {
+    IEnumerable&lt;int&gt; Run(string input, int a) {
         var prg = Parse(input);
-        var regs = new Dictionary<string, int>();
+        var regs = new Dictionary&lt;string, int&gt;();
         var ip = 0;
         int getReg(string reg) {
             return int.TryParse(reg, out var n) ? n
@@ -321,38 +321,38 @@ class Solution : Solver {
             }
         }
 
-        setReg("a", a);
+        setReg(&quot;a&quot;, a);
 
-        while (ip < prg.Length) {
+        while (ip &lt; prg.Length) {
             var stm = prg[ip];
             switch (stm[0]) {
-                case "cpy":
+                case &quot;cpy&quot;:
                     setReg(stm[2], getReg(stm[1]));
                     ip++;
                     break;
-                case "inc":
+                case &quot;inc&quot;:
                     setReg(stm[1], getReg(stm[1]) + 1);
                     ip++;
                     break;
-                case "out":
+                case &quot;out&quot;:
                     yield return getReg(stm[1]);
                     ip++;
                     break;
-                case "dec":
+                case &quot;dec&quot;:
                     setReg(stm[1], getReg(stm[1]) - 1);
                     ip++;
                     break;
-                case "jnz":
+                case &quot;jnz&quot;:
                     ip += getReg(stm[1]) != 0 ? getReg(stm[2]) : 1;
                     break;
                 default:
-                    throw new Exception("Cannot parse " + string.Join(" ", stm));
+                    throw new Exception(&quot;Cannot parse &quot; + string.Join(&quot; &quot;, stm));
             }
         }
     }
     
-    string[][] Parse(string input) =>
-        input.Split('\n').Select(line => line.Split(' ')).ToArray();
+    string[][] Parse(string input) =&gt;
+        input.Split(&#039;\n&#039;).Select(line =&gt; line.Split(&#039; &#039;)).ToArray();
 }
 </code></pre></div>
             <div id="code-location"> <p>Please ☆ my <a href="https://github.com/encse/adventofcode/">repo</a> if you like it!</p></div>

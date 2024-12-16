@@ -285,16 +285,16 @@
 
 using System.Linq;
 
-using Fs = System.Collections.Generic.LinkedList<Block>;
-using Node = System.Collections.Generic.LinkedListNode<Block>;
+using Fs = System.Collections.Generic.LinkedList&lt;Block&gt;;
+using Node = System.Collections.Generic.LinkedListNode&lt;Block&gt;;
 record struct Block(int fileId, int length) { }
 
-[ProblemName("Disk Fragmenter")]
+[ProblemName(&quot;Disk Fragmenter&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Checksum(CompactFs(Parse(input), fragmentsEnabled: true));
+    public object PartOne(string input) =&gt; Checksum(CompactFs(Parse(input), fragmentsEnabled: true));
 
-    public object PartTwo(string input) => Checksum(CompactFs(Parse(input), fragmentsEnabled: false));
+    public object PartTwo(string input) =&gt; Checksum(CompactFs(Parse(input), fragmentsEnabled: false));
 
     // moves used blocks of the filesystem towards the beginning of the disk using RelocateBlock
     Fs CompactFs(Fs fs, bool fragmentsEnabled) {
@@ -326,13 +326,13 @@ class Solution : Solver {
             } else if (i.Value.length == j.Value.length) {
                 (i.Value, j.Value) = (j.Value, i.Value);
                 return;
-            } else if (i.Value.length > j.Value.length) {
+            } else if (i.Value.length &gt; j.Value.length) {
                 var d = i.Value.length - j.Value.length;
                 i.Value = j.Value;
                 j.Value = j.Value with { fileId = -1 };
                 fs.AddAfter(i, new Block(-1, d));
                 return;
-            } else if (i.Value.length < j.Value.length && fragmentsEnabled) {
+            } else if (i.Value.length &lt; j.Value.length &amp;&amp; fragmentsEnabled) {
                 var d = j.Value.length - i.Value.length;
                 i.Value = i.Value with { fileId = j.Value.fileId };
                 j.Value = j.Value with { length = d };
@@ -345,7 +345,7 @@ class Solution : Solver {
         var res = 0L;
         var l = 0;
         for (var i = fs.First; i != null; i = i.Next) {
-            for (var k = 0; k < i.Value.length; k++) {
+            for (var k = 0; k &lt; i.Value.length; k++) {
                 if (i.Value.fileId != -1) {
                     res += l * i.Value.fileId;
                 }
@@ -356,7 +356,7 @@ class Solution : Solver {
     }
 
     Fs Parse(string input) {
-        return new Fs(input.Select((ch, i) => new Block(i % 2 == 1 ? -1 : i / 2, ch - '0')));
+        return new Fs(input.Select((ch, i) =&gt; new Block(i % 2 == 1 ? -1 : i / 2, ch - &#039;0&#039;)));
     }
 }
 </code></pre></div>

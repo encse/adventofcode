@@ -287,18 +287,18 @@ namespace AdventOfCode.Y2019.Day24;
 
 record Position(int ilevel, int irow, int icol);
 
-[ProblemName("Planet of Discord")]
+[ProblemName(&quot;Planet of Discord&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
         int[] levels = Parse(input);
 
-        var seen = new HashSet<int>();
+        var seen = new HashSet&lt;int&gt;();
         var biodiversity = levels[0];
         while (!seen.Contains(biodiversity)) {
             seen.Add(biodiversity);
             levels = Step(levels, FlatNeighbours);
-            biodiversity = levels[levels.Length >> 1];
+            biodiversity = levels[levels.Length &gt;&gt; 1];
         }
         return biodiversity;
     }
@@ -306,14 +306,14 @@ class Solution : Solver {
     public object PartTwo(string input) {
         int[] levels = Parse(input);
 
-        for (var i = 0; i < 200; i++) {
+        for (var i = 0; i &lt; 200; i++) {
             levels = Step(levels, RecursiveNeighbours);
         }
 
         return (
             from level in levels 
             from pos in Positions() 
-            where pos != (2,2) && HasBug(level, pos.irow, pos.icol) 
+            where pos != (2,2) &amp;&amp; HasBug(level, pos.irow, pos.icol) 
             select 1
         ).Count();
     }
@@ -321,44 +321,44 @@ class Solution : Solver {
     int[] Parse(string input) {
         var biodiversity = 0;
         var m = 1;
-        foreach (var ch in input.Replace("\n", "")) {
-            if (ch == '#') {
+        foreach (var ch in input.Replace(&quot;\n&quot;, &quot;&quot;)) {
+            if (ch == &#039;#&#039;) {
                 biodiversity += m;
             }
-            m <<= 1;
+            m &lt;&lt;= 1;
         }
         return new[] { biodiversity };
     }
 
-    IEnumerable<(int irow, int icol)> Positions() {
-        for (var irow = 0; irow < 5; irow++) {
-            for (var icol = 0; icol < 5; icol++) {
+    IEnumerable&lt;(int irow, int icol)&gt; Positions() {
+        for (var irow = 0; irow &lt; 5; irow++) {
+            for (var icol = 0; icol &lt; 5; icol++) {
                 yield return (irow, icol);
             }
         }
     }
 
     bool HasBug(int biodiversity, int irow, int icol) {
-        return ((biodiversity >> (irow * 5 + icol)) & 1) == 1;
+        return ((biodiversity &gt;&gt; (irow * 5 + icol)) &amp; 1) == 1;
     }
 
     int SetBug(int biodiversity, int irow, int icol) {
-        return biodiversity | (1 << (irow * 5 + icol));
+        return biodiversity | (1 &lt;&lt; (irow * 5 + icol));
     }
 
-    int[] Step(int[] oldLevelsT, Func<Position, IEnumerable<Position>> neighbours) {
+    int[] Step(int[] oldLevelsT, Func&lt;Position, IEnumerable&lt;Position&gt;&gt; neighbours) {
         var oldLevels = oldLevelsT.ToList();
         oldLevels.Insert(0, 0);
         oldLevels.Add(0);
 
-        var newLevels = new List<int>();
-        for (var ilevel = 0; ilevel < oldLevels.Count; ilevel++) {
+        var newLevels = new List&lt;int&gt;();
+        for (var ilevel = 0; ilevel &lt; oldLevels.Count; ilevel++) {
 
             var newLevel = 0;
             foreach (var (irow, icol) in Positions()) {
                 var bugCount = 0;
                 foreach (var (ilevelT, irowT, icolT) in neighbours(new Position(ilevel, irow, icol))) {
-                    if (ilevelT >= 0 && ilevelT < oldLevels.Count) {
+                    if (ilevelT &gt;= 0 &amp;&amp; ilevelT &lt; oldLevels.Count) {
                         bugCount += HasBug(oldLevels[ilevelT], irowT, icolT) ? 1 : 0;
                     }
                 }
@@ -380,16 +380,16 @@ class Solution : Solver {
     }
 
 
-    IEnumerable<Position> FlatNeighbours(Position pos) {
+    IEnumerable&lt;Position&gt; FlatNeighbours(Position pos) {
         foreach (var (drow, dcol) in new[] { (0, 1), (0, -1), (-1, 0), (1, 0) }) {
             var (irowT, icolT) = (pos.irow + drow, pos.icol + dcol);
-            if (icolT >= 0 && icolT <= 4 && irowT >= 0 && irowT <= 4) {
+            if (icolT &gt;= 0 &amp;&amp; icolT &lt;= 4 &amp;&amp; irowT &gt;= 0 &amp;&amp; irowT &lt;= 4) {
                 yield return new Position(pos.ilevel, irowT, icolT);
             }
         }
     }
 
-    IEnumerable<Position> RecursiveNeighbours(Position pos) {
+    IEnumerable&lt;Position&gt; RecursiveNeighbours(Position pos) {
         var (ilevel, irow, icol) = pos;
         foreach (var (drow, dcol) in new[] { (0, 1), (0, -1), (-1, 0), (1, 0) }) {
             var posMin = (irow: irow + drow, icol: icol + dcol);
@@ -419,8 +419,8 @@ class Solution : Solver {
                 }
             }
 
-            for (var irowT = posMin.irow; irowT <= posMax.irow; irowT++) {
-                for (var icolT = posMin.icol; icolT <= posMax.icol; icolT++) {
+            for (var irowT = posMin.irow; irowT &lt;= posMax.irow; irowT++) {
+                for (var icolT = posMin.icol; icolT &lt;= posMax.icol; icolT++) {
                     yield return new Position(ilevelT, irowT, icolT);
                 }
             }

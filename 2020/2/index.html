@@ -286,24 +286,24 @@ namespace AdventOfCode.Y2020.Day02;
 
 record PasswordEntry(int a, int b, char ch, string password);
 
-[ProblemName("Password Philosophy")]
+[ProblemName(&quot;Password Philosophy&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => ValidCount(input, (PasswordEntry pe) => {
-        var count = pe.password.Count(ch => ch == pe.ch);
-        return pe.a <= count && count <= pe.b;
+    public object PartOne(string input) =&gt; ValidCount(input, (PasswordEntry pe) =&gt; {
+        var count = pe.password.Count(ch =&gt; ch == pe.ch);
+        return pe.a &lt;= count &amp;&amp; count &lt;= pe.b;
     });
 
-    public object PartTwo(string input) => ValidCount(input, (PasswordEntry pe) => {
+    public object PartTwo(string input) =&gt; ValidCount(input, (PasswordEntry pe) =&gt; {
         return (pe.password[pe.a - 1] == pe.ch) ^ (pe.password[pe.b - 1] == pe.ch);
     });
 
-    int ValidCount(string input, Func<PasswordEntry, bool> isValid) =>
+    int ValidCount(string input, Func&lt;PasswordEntry, bool&gt; isValid) =&gt;
         input
-            .Split("\n")
-            .Select(line => {
-                var parts = line.Split(' ');
-                var range = parts[0].Split('-').Select(int.Parse).ToArray();
+            .Split(&quot;\n&quot;)
+            .Select(line =&gt; {
+                var parts = line.Split(&#039; &#039;);
+                var range = parts[0].Split(&#039;-&#039;).Select(int.Parse).ToArray();
                 var ch = parts[1][0];
                 return new PasswordEntry(range[0], range[1], ch, parts[2]);
             })

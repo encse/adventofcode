@@ -291,14 +291,14 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Numerics;
 
-using Map = System.Collections.Immutable.ImmutableDictionary<System.Numerics.Complex, char>;
+using Map = System.Collections.Immutable.ImmutableDictionary&lt;System.Numerics.Complex, char&gt;;
 
-[ProblemName("Resonant Collinearity")]
+[ProblemName(&quot;Resonant Collinearity&quot;)]
 class Solution : Solver {
-    public object PartOne(string input) => GetUniquePositions(input, GetAntinodes1).Count();
-    public object PartTwo(string input) => GetUniquePositions(input, GetAntinodes2).Count();
+    public object PartOne(string input) =&gt; GetUniquePositions(input, GetAntinodes1).Count();
+    public object PartTwo(string input) =&gt; GetUniquePositions(input, GetAntinodes2).Count();
 
-    HashSet<Complex> GetUniquePositions(string input, GetAntinodes getAntinodes) {
+    HashSet&lt;Complex&gt; GetUniquePositions(string input, GetAntinodes getAntinodes) {
         var map = GetMap(input);
 
         var antennaLocations = (
@@ -310,17 +310,17 @@ class Solution : Solver {
         return (
              from srcAntenna in antennaLocations
              from dstAntenna in antennaLocations
-             where srcAntenna != dstAntenna && map[srcAntenna] == map[dstAntenna]
+             where srcAntenna != dstAntenna &amp;&amp; map[srcAntenna] == map[dstAntenna]
              from antinode in getAntinodes(srcAntenna, dstAntenna, map)
              select antinode
          ).ToHashSet();
     }
 
     // returns the antinode positions of srcAntenna on the dstAntenna side
-    delegate IEnumerable<Complex> GetAntinodes(Complex srcAntenna, Complex dstAntenna, Map map);
+    delegate IEnumerable&lt;Complex&gt; GetAntinodes(Complex srcAntenna, Complex dstAntenna, Map map);
 
     // in part 1 we just look at the immediate neighbour
-    IEnumerable<Complex> GetAntinodes1(Complex srcAntenna, Complex dstAntenna, Map map) {
+    IEnumerable&lt;Complex&gt; GetAntinodes1(Complex srcAntenna, Complex dstAntenna, Map map) {
         var dir = dstAntenna - srcAntenna;
         var antinote = dstAntenna + dir;
         if (map.Keys.Contains(antinote)) {
@@ -329,7 +329,7 @@ class Solution : Solver {
     }
 
     // in part 2 this becomes a cycle, plus dstAntenna is also a valid position now
-    IEnumerable<Complex> GetAntinodes2(Complex srcAntenna, Complex dstAntenna, Map map) {
+    IEnumerable&lt;Complex&gt; GetAntinodes2(Complex srcAntenna, Complex dstAntenna, Map map) {
         var dir = dstAntenna - srcAntenna;
         var antinote = dstAntenna;
         while (map.Keys.Contains(antinote)) {
@@ -341,11 +341,11 @@ class Solution : Solver {
     // store the points in a dictionary so that we can iterate over them and 
     // to easily deal with points outside the area using GetValueOrDefault
     Map GetMap(string input) {
-        var map = input.Split("\n");
+        var map = input.Split(&quot;\n&quot;);
         return (
             from y in Enumerable.Range(0, map.Length)
             from x in Enumerable.Range(0, map[0].Length)
-            select new KeyValuePair<Complex, char>(x - y * Complex.ImaginaryOne, map[y][x])
+            select new KeyValuePair&lt;Complex, char&gt;(x - y * Complex.ImaginaryOne, map[y][x])
         ).ToImmutableDictionary();
     }
 }</code></pre></div>

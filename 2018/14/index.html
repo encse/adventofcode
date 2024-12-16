@@ -285,20 +285,20 @@ using System.Linq;
 
 namespace AdventOfCode.Y2018.Day14;
 
-[ProblemName("Chocolate Charts")]
+[ProblemName(&quot;Chocolate Charts&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Window(10).ElementAt(int.Parse(input)).st;
+    public object PartOne(string input) =&gt; Window(10).ElementAt(int.Parse(input)).st;
 
-    public object PartTwo(string input) => Window(input.Length).First(item => item.st == input).i;
+    public object PartTwo(string input) =&gt; Window(input.Length).First(item =&gt; item.st == input).i;
 
-    IEnumerable<(int i, string st)> Window(int w) {
-        var st = "";
+    IEnumerable&lt;(int i, string st)&gt; Window(int w) {
+        var st = &quot;&quot;;
         var i = 0;
         foreach (var score in Scores()) {
             i++;
             st += score;
-            if (st.Length > w) {
+            if (st.Length &gt; w) {
                 st = st.Substring(st.Length - w);
             }
             if (st.Length == w) {
@@ -307,9 +307,9 @@ class Solution : Solver {
         }
     }
 
-    IEnumerable<int> Scores() {
-        var scores = new List<int>();
-        Func<int, int> add = (i) => { scores.Add(i); return i; };
+    IEnumerable&lt;int&gt; Scores() {
+        var scores = new List&lt;int&gt;();
+        Func&lt;int, int&gt; add = (i) =&gt; { scores.Add(i); return i; };
 
         var elf1 = 0;
         var elf2 = 1;
@@ -319,7 +319,7 @@ class Solution : Solver {
 
         while (true) {
             var sum = scores[elf1] + scores[elf2];
-            if (sum >= 10) {
+            if (sum &gt;= 10) {
                 yield return add(sum / 10);
             }
             yield return add(sum % 10);

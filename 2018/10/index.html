@@ -285,29 +285,29 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2018.Day10;
 
-[ProblemName("The Stars Align")]
+[ProblemName(&quot;The Stars Align&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Solver(input).st.Ocr();
+    public object PartOne(string input) =&gt; Solver(input).st.Ocr();
 
-    public object PartTwo(string input) => Solver(input).seconds;
+    public object PartTwo(string input) =&gt; Solver(input).seconds;
 
     (string st, int seconds) Solver(string input) {
-        // position=< 21992, -10766> velocity=<-2,  1>
-        var rx = new Regex(@"position=\<\s*(?<x>-?\d+),\s*(?<y>-?\d+)\> velocity=\<\s*(?<vx>-?\d+),\s*(?<vy>-?\d+)\>");
+        // position=&lt; 21992, -10766&gt; velocity=&lt;-2,  1&gt;
+        var rx = new Regex(@&quot;position=\&lt;\s*(?&lt;x&gt;-?\d+),\s*(?&lt;y&gt;-?\d+)\&gt; velocity=\&lt;\s*(?&lt;vx&gt;-?\d+),\s*(?&lt;vy&gt;-?\d+)\&gt;&quot;);
         var points = (
-            from line in input.Split("\n")
+            from line in input.Split(&quot;\n&quot;)
             let m = rx.Match(line)
             select new Point {
-                x = int.Parse(m.Groups["x"].Value),
-                y = int.Parse(m.Groups["y"].Value),
-                vx = int.Parse(m.Groups["vx"].Value),
-                vy = int.Parse(m.Groups["vy"].Value)
+                x = int.Parse(m.Groups[&quot;x&quot;].Value),
+                y = int.Parse(m.Groups[&quot;y&quot;].Value),
+                vx = int.Parse(m.Groups[&quot;vx&quot;].Value),
+                vy = int.Parse(m.Groups[&quot;vy&quot;].Value)
             }
         ).ToArray();
 
         var seconds = 0;
-        Func<bool, (int left, int top, long width, long height)> step = (bool forward) => {
+        Func&lt;bool, (int left, int top, long width, long height)&gt; step = (bool forward) =&gt; {
             foreach (var point in points) {
                 if (forward) {
                     point.x += point.vx;
@@ -319,10 +319,10 @@ class Solution : Solver {
             }
             seconds += forward ? 1 : -1;
 
-            var minX = points.Min(pt => pt.x);
-            var maxX = points.Max(pt => pt.x);
-            var minY = points.Min(pt => pt.y);
-            var maxY = points.Max(pt => pt.y);
+            var minX = points.Min(pt =&gt; pt.x);
+            var maxX = points.Max(pt =&gt; pt.x);
+            var minY = points.Min(pt =&gt; pt.y);
+            var maxY = points.Max(pt =&gt; pt.y);
             return (minX, minY, maxX - minX + 1, maxY - minY + 1);
         };
 
@@ -332,15 +332,15 @@ class Solution : Solver {
             var rect = step(true);
             var areaNew = (rect.width) * (rect.height);
 
-            if (areaNew > area) {
+            if (areaNew &gt; area) {
                 rect = step(false);
-                var st = "";
-                for(var irow=0;irow<rect.height;irow++){
+                var st = &quot;&quot;;
+                for(var irow=0;irow&lt;rect.height;irow++){
 
-                    for(var icol=0;icol<rect.width;icol++){
-                        st += points.Any(p => p.x - rect.left == icol && p.y-rect.top == irow) ? '#': ' ';
+                    for(var icol=0;icol&lt;rect.width;icol++){
+                        st += points.Any(p =&gt; p.x - rect.left == icol &amp;&amp; p.y-rect.top == irow) ? &#039;#&#039;: &#039; &#039;;
                     }
-                    st+= "\n";
+                    st+= &quot;\n&quot;;
                 }
                 return (st, seconds);
             }

@@ -284,18 +284,18 @@ using System.Linq;
 
 namespace AdventOfCode.Y2015.Day03;
 
-[ProblemName("Perfectly Spherical Houses in a Vacuum")]
+[ProblemName(&quot;Perfectly Spherical Houses in a Vacuum&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Run(input, 1);
+    public object PartOne(string input) =&gt; Run(input, 1);
 
-    public object PartTwo(string input) => Run(input, 2);
+    public object PartTwo(string input) =&gt; Run(input, 2);
 
     int Run(string input, int actors) {
 
-        var seen = new HashSet<(int, int)>();
+        var seen = new HashSet&lt;(int, int)&gt;();
         var pos = new(int irow, int icol)[actors];
-        for (var i = 0; i < actors; i++) {
+        for (var i = 0; i &lt; actors; i++) {
             pos[i] = (0, 0);
         }
         seen.Add((0,0));
@@ -303,10 +303,10 @@ class Solution : Solver {
         var actor = 0;
         foreach (var ch in input) {
             switch (ch) {
-                case 'v': pos[actor].irow++; break;
-                case '<': pos[actor].icol--; break;
-                case '>': pos[actor].icol++; break;
-                case '^': pos[actor].irow--; break;
+                case &#039;v&#039;: pos[actor].irow++; break;
+                case &#039;&lt;&#039;: pos[actor].icol--; break;
+                case &#039;&gt;&#039;: pos[actor].icol++; break;
+                case &#039;^&#039;: pos[actor].irow--; break;
             }
             seen.Add(pos[actor]);
             actor = (actor + 1) % actors;

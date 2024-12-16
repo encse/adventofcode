@@ -285,7 +285,7 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2019.Day22;
 
-[ProblemName("Slam Shuffle")]
+[ProblemName(&quot;Slam Shuffle&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
@@ -303,22 +303,22 @@ class Solution : Solver {
         return Mod(ModInv(a, m) * (2020 - b), m);
     }
 
-    BigInteger Mod(BigInteger a, BigInteger m) => ((a % m) + m) % m;
-    BigInteger ModInv(BigInteger a, BigInteger m) => BigInteger.ModPow(a, m - 2, m);
+    BigInteger Mod(BigInteger a, BigInteger m) =&gt; ((a % m) + m) % m;
+    BigInteger ModInv(BigInteger a, BigInteger m) =&gt; BigInteger.ModPow(a, m - 2, m);
 
     (BigInteger a, BigInteger big) Parse(string input, long m, long n) {
         var a = new BigInteger(1);
         var b = new BigInteger(0);
 
-        foreach (var line in input.Split('\n')) {
-            if (line.Contains("into new stack")) {
+        foreach (var line in input.Split(&#039;\n&#039;)) {
+            if (line.Contains(&quot;into new stack&quot;)) {
                 a = -a;
                 b = m - b - 1;
-            } else if (line.Contains("cut")) {
-                var i = long.Parse(Regex.Match(line, @"-?\d+").Value);
+            } else if (line.Contains(&quot;cut&quot;)) {
+                var i = long.Parse(Regex.Match(line, @&quot;-?\d+&quot;).Value);
                 b = m + b - i;
-            } else if (line.Contains("increment")) {
-                var i = long.Parse(Regex.Match(line, @"-?\d+").Value);
+            } else if (line.Contains(&quot;increment&quot;)) {
+                var i = long.Parse(Regex.Match(line, @&quot;-?\d+&quot;).Value);
                 a *= i;
                 b *= i;
             } else {

@@ -284,7 +284,7 @@ using System.Linq;
 
 namespace AdventOfCode.Y2022.Day02;
 
-[ProblemName("Rock Paper Scissors")]
+[ProblemName(&quot;Rock Paper Scissors&quot;)]
 class Solution : Solver {
 
     // There are many obscure ways of solving this challenge. You can use 
@@ -303,41 +303,41 @@ class Solution : Solver {
         Scissors = 3,
     }
 
-    public object PartOne(string input) => Total(input, Elf, Human1);
+    public object PartOne(string input) =&gt; Total(input, Elf, Human1);
     
-    public object PartTwo(string input) => Total(input, Elf, Human2);
+    public object PartTwo(string input) =&gt; Total(input, Elf, Human2);
 
-    Sign Elf(string line) =>
-        line[0] == 'A' ? Sign.Rock :
-        line[0] == 'B' ? Sign.Paper :
-        line[0] == 'C' ? Sign.Scissors :
+    Sign Elf(string line) =&gt;
+        line[0] == &#039;A&#039; ? Sign.Rock :
+        line[0] == &#039;B&#039; ? Sign.Paper :
+        line[0] == &#039;C&#039; ? Sign.Scissors :
                          throw new ArgumentException(line);
 
-    Sign Human1(string line) =>   
-        line[2] == 'X' ? Sign.Rock :
-        line[2] == 'Y' ? Sign.Paper :
-        line[2] == 'Z' ? Sign.Scissors :
+    Sign Human1(string line) =&gt;   
+        line[2] == &#039;X&#039; ? Sign.Rock :
+        line[2] == &#039;Y&#039; ? Sign.Paper :
+        line[2] == &#039;Z&#039; ? Sign.Scissors :
                          throw new ArgumentException(line);
 
-    Sign Human2(string line) =>   
-        line[2] == 'X' ? Next(Next(Elf(line))): // elf wins
-        line[2] == 'Y' ? Elf(line) :            // draw
-        line[2] == 'Z' ? Next(Elf(line)) :      // you win
+    Sign Human2(string line) =&gt;   
+        line[2] == &#039;X&#039; ? Next(Next(Elf(line))): // elf wins
+        line[2] == &#039;Y&#039; ? Elf(line) :            // draw
+        line[2] == &#039;Z&#039; ? Next(Elf(line)) :      // you win
                          throw new ArgumentException(line);
           
-    int Total(string input, Func<string, Sign> elf, Func<string, Sign> human) =>
+    int Total(string input, Func&lt;string, Sign&gt; elf, Func&lt;string, Sign&gt; human) =&gt;
         input
-            .Split("\n")
-            .Select(line => Score(elf(line), human(line)))
+            .Split(&quot;\n&quot;)
+            .Select(line =&gt; Score(elf(line), human(line)))
             .Sum();
 
-    int Score(Sign elfSign, Sign humanSign) =>
+    int Score(Sign elfSign, Sign humanSign) =&gt;
         humanSign == Next(elfSign)       ? 6 + (int)humanSign : // human wins
         humanSign == elfSign             ? 3 + (int)humanSign : // draw
         humanSign == Next(Next(elfSign)) ? 0 + (int)humanSign : // elf wins
                                           throw new ArgumentException();
 
-    Sign Next(Sign sign) => 
+    Sign Next(Sign sign) =&gt; 
         sign == Sign.Rock     ? Sign.Paper : 
         sign == Sign.Paper    ? Sign.Scissors : 
         sign == Sign.Scissors ? Sign.Rock : 

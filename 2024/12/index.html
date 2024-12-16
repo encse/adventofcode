@@ -305,9 +305,9 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Numerics;
 
-using Region = System.Collections.Generic.HashSet<System.Numerics.Complex>;
+using Region = System.Collections.Generic.HashSet&lt;System.Numerics.Complex&gt;;
 
-[ProblemName("Garden Groups")]
+[ProblemName(&quot;Garden Groups&quot;)]
 class Solution : Solver {
 
     Complex Up = Complex.ImaginaryOne;
@@ -315,9 +315,9 @@ class Solution : Solver {
     Complex Left = -1;
     Complex Right = 1;
 
-    public object PartOne(string input) => CalculateFencePrice(input, FindEdges);
+    public object PartOne(string input) =&gt; CalculateFencePrice(input, FindEdges);
 
-    public object PartTwo(string input) => CalculateFencePrice(input, FindCorners);
+    public object PartTwo(string input) =&gt; CalculateFencePrice(input, FindCorners);
 
     int CalculateFencePrice(string input, MeasurePerimeter measure){
         var regions = GetRegions(input);
@@ -332,9 +332,9 @@ class Solution : Solver {
         return res;
     }    
    
-    delegate int MeasurePerimeter(Dictionary<Complex, Region> map, Complex pt);
+    delegate int MeasurePerimeter(Dictionary&lt;Complex, Region&gt; map, Complex pt);
 
-    int FindEdges(Dictionary<Complex, Region> map, Complex pt) {
+    int FindEdges(Dictionary&lt;Complex, Region&gt; map, Complex pt) {
         var res = 0;
         var region = map[pt];
         foreach (var du in new[] { Right, Down, Left, Up}) {
@@ -346,7 +346,7 @@ class Solution : Solver {
         return res;
     }
 
-    int FindCorners(Dictionary<Complex, Region> map, Complex pt) {
+    int FindCorners(Dictionary&lt;Complex, Region&gt; map, Complex pt) {
         var res = 0;
         var region = map[pt];
 
@@ -354,7 +354,7 @@ class Solution : Solver {
         foreach (var (du, dv) in new[] { (Up, Right), (Right, Down), (Down, Left), (Left, Up) }) {
             //  ..
             //  x. convex corner
-            if (map.GetValueOrDefault(pt + du) != region && 
+            if (map.GetValueOrDefault(pt + du) != region &amp;&amp; 
                 map.GetValueOrDefault(pt + dv) != region
             ) {
                 res++; 
@@ -362,8 +362,8 @@ class Solution : Solver {
 
             //  x.
             //  xx concave corner
-            if (map.GetValueOrDefault(pt + du) == region && 
-                map.GetValueOrDefault(pt + dv) == region &&  
+            if (map.GetValueOrDefault(pt + du) == region &amp;&amp; 
+                map.GetValueOrDefault(pt + dv) == region &amp;&amp;  
                 map.GetValueOrDefault(pt + du + dv) != region
             ) {
                 res++;
@@ -374,22 +374,22 @@ class Solution : Solver {
 
     // Maps the positions of plants in a garden to their corresponding regions, grouping plants 
     // of the same type into contiguous regions.
-    Dictionary<Complex, Region> GetRegions(string input) {
-        var lines = input.Split("\n");
+    Dictionary&lt;Complex, Region&gt; GetRegions(string input) {
+        var lines = input.Split(&quot;\n&quot;);
         var garden = (
             from y in Enumerable.Range(0, lines.Length)
             from x in Enumerable.Range(0, lines[0].Length)
-            select new KeyValuePair<Complex, char>(x + y * Down, lines[y][x])
+            select new KeyValuePair&lt;Complex, char&gt;(x + y * Down, lines[y][x])
         ).ToDictionary();
 
         // go over the positions of the garden and use a floodfill to determine the region
-        var res = new Dictionary<Complex, Region>();
+        var res = new Dictionary&lt;Complex, Region&gt;();
         var positions = garden.Keys.ToHashSet();
         while (positions.Any()) {
             var pivot = positions.First();
             var region = new Region { pivot };
 
-            var q = new Queue<Complex>();
+            var q = new Queue&lt;Complex&gt;();
             q.Enqueue(pivot);
 
             var plant = garden[pivot];
@@ -399,7 +399,7 @@ class Solution : Solver {
                 res[point] = region;
                 positions.Remove(point);
                 foreach (var dir in new[] { Up, Down, Left, Right }) {
-                    if (!region.Contains(point + dir) && garden.GetValueOrDefault(point + dir) == plant) {
+                    if (!region.Contains(point + dir) &amp;&amp; garden.GetValueOrDefault(point + dir) == plant) {
                         region.Add(point + dir);
                         q.Enqueue(point + dir);
                     }

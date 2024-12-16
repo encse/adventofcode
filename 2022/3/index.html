@@ -285,34 +285,34 @@ using System.Linq;
 
 namespace AdventOfCode.Y2022.Day03;
 
-[ProblemName("Rucksack Reorganization")]
+[ProblemName(&quot;Rucksack Reorganization&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) =>
-        // A line can be divided into two 'compartments' of equal length. We 
+    public object PartOne(string input) =&gt;
+        // A line can be divided into two &#039;compartments&#039; of equal length. We 
         // need to find the common item (letter) in them, and convert it to a 
-        // number called 'priority'. Do this for each line and sum the 
+        // number called &#039;priority&#039;. Do this for each line and sum the 
         // priorities. 
-        // We use 'chunk' to split a line in half.
-        input.Split("\n")
-            .Select(line => line.Chunk(line.Length/2)) // 🥩 
+        // We use &#039;chunk&#039; to split a line in half.
+        input.Split(&quot;\n&quot;)
+            .Select(line =&gt; line.Chunk(line.Length/2)) // 🥩 
             .Select(GetCommonItemPriority)
             .Sum();
 
-    public object PartTwo(string input) =>
+    public object PartTwo(string input) =&gt;
         // Here we need to find the common item in three consecutive lines, 
         // convert it to priority as before, and sum it up along the whole 
         // input. 
         // This is again conveniently done using the chunk function.
-        input.Split("\n")
+        input.Split(&quot;\n&quot;)
             .Chunk(3)
             .Select(GetCommonItemPriority)
             .Sum();
 
-    private int GetCommonItemPriority(IEnumerable<IEnumerable<char>> texts) => (
+    private int GetCommonItemPriority(IEnumerable&lt;IEnumerable&lt;char&gt;&gt; texts) =&gt; (
         from ch in texts.First()
-        where texts.All(text => text.Contains(ch))
-        select ch < 'a' ? ch - 'A' + 27 : ch - 'a' + 1
+        where texts.All(text =&gt; text.Contains(ch))
+        select ch &lt; &#039;a&#039; ? ch - &#039;A&#039; + 27 : ch - &#039;a&#039; + 1
     ).First();
 
 }

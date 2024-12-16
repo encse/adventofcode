@@ -291,9 +291,9 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Numerics;
 
-using Map = System.Collections.Immutable.IImmutableDictionary<System.Numerics.Complex, char>;
+using Map = System.Collections.Immutable.IImmutableDictionary&lt;System.Numerics.Complex, char&gt;;
 
-[ProblemName("Warehouse Woes")]
+[ProblemName(&quot;Warehouse Woes&quot;)]
 class Solution : Solver {
 
     static Complex Up = -Complex.ImaginaryOne;
@@ -301,13 +301,13 @@ class Solution : Solver {
     static Complex Left = -1;
     static Complex Right = 1;
 
-    public object PartOne(string input) => Solve(input);
-    public object PartTwo(string input) => Solve(ScaleUp(input));
+    public object PartOne(string input) =&gt; Solve(input);
+    public object PartTwo(string input) =&gt; Solve(ScaleUp(input));
 
     public double Solve(string input) {
         var (map, steps) = Parse(input);
 
-        var robot = map.Keys.Single(k => map[k] == '@');
+        var robot = map.Keys.Single(k =&gt; map[k] == &#039;@&#039;);
         foreach (var dir in steps) {
             if (TryToStep(ref map, robot, dir)) {
                 robot += dir;
@@ -315,8 +315,8 @@ class Solution : Solver {
         }
 
         return map.Keys
-            .Where(k => map[k] == '[' || map[k] == 'O')
-            .Sum(box => box.Real + 100 * box.Imaginary);
+            .Where(k =&gt; map[k] == &#039;[&#039; || map[k] == &#039;O&#039;)
+            .Sum(box =&gt; box.Real + 100 * box.Imaginary);
     }
 
     // Attempts to move the robot in the given direction on the map, pushing boxes as necessary.
@@ -325,41 +325,41 @@ class Solution : Solver {
     bool TryToStep(ref Map map, Complex pos, Complex dir) {
         var mapOrig = map;
 
-        if (map[pos] == '.') {
+        if (map[pos] == &#039;.&#039;) {
             return true;
-        } else if (map[pos] == 'O' || map[pos] == '@') {
+        } else if (map[pos] == &#039;O&#039; || map[pos] == &#039;@&#039;) {
             if (TryToStep(ref map, pos + dir, dir)) {
                 map = map
                     .SetItem(pos + dir, map[pos])
-                    .SetItem(pos, '.');
+                    .SetItem(pos, &#039;.&#039;);
                 return true;
             }
-        } else if (map[pos] == ']') {
+        } else if (map[pos] == &#039;]&#039;) {
             return TryToStep(ref map, pos + Left, dir);
-        } else if (map[pos] == '[') {
+        } else if (map[pos] == &#039;[&#039;) {
             if (dir == Left) {
                 if (TryToStep(ref map, pos + Left, dir)) {
                     map = map
-                        .SetItem(pos + Left, '[')
-                        .SetItem(pos, ']')
-                        .SetItem(pos + Right, '.');
+                        .SetItem(pos + Left, &#039;[&#039;)
+                        .SetItem(pos, &#039;]&#039;)
+                        .SetItem(pos + Right, &#039;.&#039;);
                     return true;
                 }
             } else if (dir == Right) {
                 if (TryToStep(ref map, pos + 2 * Right, dir)) {
                     map = map
-                        .SetItem(pos, '.')
-                        .SetItem(pos + Right, '[')
-                        .SetItem(pos + 2 * Right, ']');
+                        .SetItem(pos, &#039;.&#039;)
+                        .SetItem(pos + Right, &#039;[&#039;)
+                        .SetItem(pos + 2 * Right, &#039;]&#039;);
                     return true;
                 }
             } else {
-                if (TryToStep(ref map, pos + dir, dir) && TryToStep(ref map, pos + Right + dir, dir)) {
+                if (TryToStep(ref map, pos + dir, dir) &amp;&amp; TryToStep(ref map, pos + Right + dir, dir)) {
                     map = map
-                        .SetItem(pos, '.')
-                        .SetItem(pos + Right, '.')
-                        .SetItem(pos + dir, '[')
-                        .SetItem(pos + dir + Right, ']');
+                        .SetItem(pos, &#039;.&#039;)
+                        .SetItem(pos + Right, &#039;.&#039;)
+                        .SetItem(pos + dir, &#039;[&#039;)
+                        .SetItem(pos + dir + Right, &#039;]&#039;);
                     return true;
                 }
             }
@@ -369,25 +369,25 @@ class Solution : Solver {
         return false;
     }
 
-    string ScaleUp(string input) =>
-        input.Replace("#", "##").Replace(".", "..").Replace("O", "[]").Replace("@", "@.");
+    string ScaleUp(string input) =&gt;
+        input.Replace(&quot;#&quot;, &quot;##&quot;).Replace(&quot;.&quot;, &quot;..&quot;).Replace(&quot;O&quot;, &quot;[]&quot;).Replace(&quot;@&quot;, &quot;@.&quot;);
 
     (Map, Complex[]) Parse(string input) {
-        var blocks = input.Split("\n\n");
-        var lines = blocks[0].Split("\n");
+        var blocks = input.Split(&quot;\n\n&quot;);
+        var lines = blocks[0].Split(&quot;\n&quot;);
         var map = (
             from y in Enumerable.Range(0, lines.Length)
             from x in Enumerable.Range(0, lines[0].Length)
-            select new KeyValuePair<Complex, char>(x + y * Down, lines[y][x])
+            select new KeyValuePair&lt;Complex, char&gt;(x + y * Down, lines[y][x])
         ).ToImmutableDictionary();
 
-        var steps = blocks[1].ReplaceLineEndings("").Select(ch =>
+        var steps = blocks[1].ReplaceLineEndings(&quot;&quot;).Select(ch =&gt;
             ch switch {
-                '^' => Up,
-                '<' => Left,
-                '>' => Right,
-                'v' => Down,
-                _ => throw new Exception()
+                &#039;^&#039; =&gt; Up,
+                &#039;&lt;&#039; =&gt; Left,
+                &#039;&gt;&#039; =&gt; Right,
+                &#039;v&#039; =&gt; Down,
+                _ =&gt; throw new Exception()
             });
 
         return (map, steps.ToArray());

@@ -284,46 +284,46 @@ using System.Linq;
 
 namespace AdventOfCode.Y2021.Day03;
 
-[ProblemName("Binary Diagnostic")]
+[ProblemName(&quot;Binary Diagnostic&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
-        var diagnosticReport = input.Split("\n");
+        var diagnosticReport = input.Split(&quot;\n&quot;);
         return GammaRate(diagnosticReport) * EpsilonRate(diagnosticReport);
     }
 
     public object PartTwo(string input) {
-        var diagnosticReport = input.Split("\n");
+        var diagnosticReport = input.Split(&quot;\n&quot;);
         return OxygenGeneratorRating(diagnosticReport) * Co2ScruberRating(diagnosticReport);
     }
 
-    int GammaRate(string[] diagnosticReport) => Extract1(diagnosticReport, MostCommonBitAt);
-    int EpsilonRate(string[] diagnosticReport) => Extract1(diagnosticReport, LeastCommonBitAt);
-    int OxygenGeneratorRating(string[] diagnosticReport) => Extract2(diagnosticReport, MostCommonBitAt);
-    int Co2ScruberRating(string[] diagnosticReport) => Extract2(diagnosticReport, LeastCommonBitAt);
+    int GammaRate(string[] diagnosticReport) =&gt; Extract1(diagnosticReport, MostCommonBitAt);
+    int EpsilonRate(string[] diagnosticReport) =&gt; Extract1(diagnosticReport, LeastCommonBitAt);
+    int OxygenGeneratorRating(string[] diagnosticReport) =&gt; Extract2(diagnosticReport, MostCommonBitAt);
+    int Co2ScruberRating(string[] diagnosticReport) =&gt; Extract2(diagnosticReport, LeastCommonBitAt);
 
-    char MostCommonBitAt(string[] lines, int ibit) =>
-        2 * lines.Count(line => line[ibit] == '1') >= lines.Length ? '1' : '0';
+    char MostCommonBitAt(string[] lines, int ibit) =&gt;
+        2 * lines.Count(line =&gt; line[ibit] == &#039;1&#039;) &gt;= lines.Length ? &#039;1&#039; : &#039;0&#039;;
 
-    char LeastCommonBitAt(string[] lines, int ibit) =>
-        MostCommonBitAt(lines, ibit) == '1' ? '0' : '1';
+    char LeastCommonBitAt(string[] lines, int ibit) =&gt;
+        MostCommonBitAt(lines, ibit) == &#039;1&#039; ? &#039;0&#039; : &#039;1&#039;;
 
-    int Extract1(string[] lines, Func<string[], int, char> selectBitAt) {
+    int Extract1(string[] lines, Func&lt;string[], int, char&gt; selectBitAt) {
         var cbit = lines[0].Length;
 
-        var bits = "";
-        for (var ibit = 0; ibit < cbit; ibit++) {
+        var bits = &quot;&quot;;
+        for (var ibit = 0; ibit &lt; cbit; ibit++) {
             bits += selectBitAt(lines, ibit);
         }
         return Convert.ToInt32(bits, 2);
     }
 
-    int Extract2(string[] lines, Func<string[], int, char> selectBitAt) {
+    int Extract2(string[] lines, Func&lt;string[], int, char&gt; selectBitAt) {
         var cbit = lines[0].Length;
 
-        for (var ibit = 0; lines.Length > 1 && ibit < cbit; ibit++) {
+        for (var ibit = 0; lines.Length &gt; 1 &amp;&amp; ibit &lt; cbit; ibit++) {
             var bit = selectBitAt(lines, ibit);
-            lines = lines.Where(line => line[ibit] == bit).ToArray();
+            lines = lines.Where(line =&gt; line[ibit] == bit).ToArray();
         }
 
         return Convert.ToInt32(lines[0], 2);

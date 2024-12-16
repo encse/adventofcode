@@ -284,25 +284,25 @@ using System.Linq;
 
 namespace AdventOfCode.Y2021.Day13;
 
-[ProblemName("Transparent Origami")]
+[ProblemName(&quot;Transparent Origami&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => GetFolds(input).First().Count();
-    public object PartTwo(string input) => ToString(GetFolds(input).Last()).Ocr();
+    public object PartOne(string input) =&gt; GetFolds(input).First().Count();
+    public object PartTwo(string input) =&gt; ToString(GetFolds(input).Last()).Ocr();
 
-    IEnumerable<HashSet<Point>> GetFolds(string input) {
-        var blocks = input.Split("\n\n");
+    IEnumerable&lt;HashSet&lt;Point&gt;&gt; GetFolds(string input) {
+        var blocks = input.Split(&quot;\n\n&quot;);
         // parse points into a hashset
         var points = (
-            from line in blocks[0].Split("\n")
-            let coords = line.Split(",")
+            from line in blocks[0].Split(&quot;\n&quot;)
+            let coords = line.Split(&quot;,&quot;)
             select new Point(int.Parse(coords[0]), int.Parse(coords[1]))
         ).ToHashSet();
 
         // fold line by line, yielding a new hashset
-        foreach (var line in blocks[1].Split("\n")) {
-            var rule = line.Split("=");
-            if (rule[0].EndsWith("x")) {
+        foreach (var line in blocks[1].Split(&quot;\n&quot;)) {
+            var rule = line.Split(&quot;=&quot;);
+            if (rule[0].EndsWith(&quot;x&quot;)) {
                 points = FoldX(int.Parse(rule[1]), points);
             } else {
                 points = FoldY(int.Parse(rule[1]), points);
@@ -311,24 +311,24 @@ class Solution : Solver {
         }
     }
 
-    string ToString(HashSet<Point> d) {
-        var res = "";
-        var height = d.MaxBy(p=>p.y).y;
-        var width = d.MaxBy(p=>p.x).x;
-        for (var y = 0; y <= height; y++) {
-            for (var x = 0; x <= width; x++) {
-                res += d.Contains(new Point(x, y)) ? '#' : ' ';
+    string ToString(HashSet&lt;Point&gt; d) {
+        var res = &quot;&quot;;
+        var height = d.MaxBy(p=&gt;p.y).y;
+        var width = d.MaxBy(p=&gt;p.x).x;
+        for (var y = 0; y &lt;= height; y++) {
+            for (var x = 0; x &lt;= width; x++) {
+                res += d.Contains(new Point(x, y)) ? &#039;#&#039; : &#039; &#039;;
             }
-            res += "\n";
+            res += &quot;\n&quot;;
         }
         return res;
     }
 
-    HashSet<Point> FoldX(int x, HashSet<Point> d) =>
-        d.Select(p => p.x > x ? p with { x = 2 * x - p.x } : p).ToHashSet();
+    HashSet&lt;Point&gt; FoldX(int x, HashSet&lt;Point&gt; d) =&gt;
+        d.Select(p =&gt; p.x &gt; x ? p with { x = 2 * x - p.x } : p).ToHashSet();
 
-    HashSet<Point> FoldY(int y, HashSet<Point> d) =>
-        d.Select(p => p.y > y ? p with { y = 2 * y - p.y } : p).ToHashSet();
+    HashSet&lt;Point&gt; FoldY(int y, HashSet&lt;Point&gt; d) =&gt;
+        d.Select(p =&gt; p.y &gt; y ? p with { y = 2 * y - p.y } : p).ToHashSet();
 
 }
 

@@ -285,25 +285,25 @@ using System.Linq;
 
 namespace AdventOfCode.Y2022.Day09;
 
-[ProblemName("Rope Bridge")]
+[ProblemName(&quot;Rope Bridge&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Tails(input, 2).ToHashSet().Count;
-    public object PartTwo(string input) => Tails(input, 10).ToHashSet().Count;
+    public object PartOne(string input) =&gt; Tails(input, 2).ToHashSet().Count;
+    public object PartTwo(string input) =&gt; Tails(input, 10).ToHashSet().Count;
 
     // simulates a rope with the given length as its head moves
     // according to the input and returns the position of its 
     // tail knot in each step.
-    private IEnumerable<Knot> Tails(string input, int ropeLength) {
+    private IEnumerable&lt;Knot&gt; Tails(string input, int ropeLength) {
         var rope = Enumerable.Repeat(new Knot(0, 0), ropeLength).ToArray();
         yield return rope.Last();
 
-        foreach (var line in input.Split("\n")) {
-            var parts = line.Split(' ');
+        foreach (var line in input.Split(&quot;\n&quot;)) {
+            var parts = line.Split(&#039; &#039;);
             var dir = parts[0];
             var dist = int.Parse(parts[1]);
 
-            for (var i = 0; i < dist; i++) {
+            for (var i = 0; i &lt; dist; i++) {
                 MoveHead(rope, dir);
                 yield return rope.Last();
             }
@@ -316,20 +316,20 @@ class Solution : Solver {
     // of the rope
     void MoveHead(Knot[] rope, string dir) {
         rope[0] = dir switch {
-            "U" => rope[0] with { irow = rope[0].irow - 1 },
-            "D" => rope[0] with { irow = rope[0].irow + 1 },
-            "L" => rope[0] with { icol = rope[0].icol - 1 },
-            "R" => rope[0] with { icol = rope[0].icol + 1 },
-            _ => throw new ArgumentException(dir)
+            &quot;U&quot; =&gt; rope[0] with { irow = rope[0].irow - 1 },
+            &quot;D&quot; =&gt; rope[0] with { irow = rope[0].irow + 1 },
+            &quot;L&quot; =&gt; rope[0] with { icol = rope[0].icol - 1 },
+            &quot;R&quot; =&gt; rope[0] with { icol = rope[0].icol + 1 },
+            _ =&gt; throw new ArgumentException(dir)
         };
 
         // knots move when become disconnected from the previous 
         // sibling in the rope:
-        for (var i = 1; i < rope.Length; i++) {
+        for (var i = 1; i &lt; rope.Length; i++) {
             var drow = rope[i - 1].irow - rope[i].irow; 
             var dcol = rope[i - 1].icol - rope[i].icol;
 
-            if (Math.Abs(drow) > 1 || Math.Abs(dcol) > 1) {
+            if (Math.Abs(drow) &gt; 1 || Math.Abs(dcol) &gt; 1) {
                 rope[i] = new Knot(
                     rope[i].irow + Math.Sign(drow), 
                     rope[i].icol + Math.Sign(dcol)

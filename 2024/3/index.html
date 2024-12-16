@@ -285,27 +285,27 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 
-[ProblemName("Mull It Over")]
+[ProblemName(&quot;Mull It Over&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Solve(input, @"mul\((\d{1,3}),(\d{1,3})\)");
+    public object PartOne(string input) =&gt; Solve(input, @&quot;mul\((\d{1,3}),(\d{1,3})\)&quot;);
 
-    public object PartTwo(string input) => Solve(input, @"mul\((\d{1,3}),(\d{1,3})\)|don't\(\)|do\(\)");
+    public object PartTwo(string input) =&gt; Solve(input, @&quot;mul\((\d{1,3}),(\d{1,3})\)|don&#039;t\(\)|do\(\)&quot;);
 
     long Solve(string input, string rx) {
         // overly functionaly approach...
         var matches = Regex.Matches(input, rx, RegexOptions.Multiline);
         return matches.Aggregate(
             (enabled: true, res: 0L), 
-            (acc, m) => 
+            (acc, m) =&gt; 
                 (m.Value, acc.res, acc.enabled) switch {
-                    ("don't()", _, _)  => (false, acc.res),
-                    ("do()", _, _)     => (true, acc.res),
-                    (_, var res, true) => 
+                    (&quot;don&#039;t()&quot;, _, _)  =&gt; (false, acc.res),
+                    (&quot;do()&quot;, _, _)     =&gt; (true, acc.res),
+                    (_, var res, true) =&gt; 
                         (true, res + int.Parse(m.Groups[1].Value) * int.Parse(m.Groups[2].Value)),
-                    _ => acc
+                    _ =&gt; acc
                 },
-            acc => acc.res
+            acc =&gt; acc.res
         );
     }
 }</code></pre></div>

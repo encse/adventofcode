@@ -285,14 +285,14 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2017.Day25;
 
-[ProblemName("The Halting Problem")]
+[ProblemName(&quot;The Halting Problem&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
         var machine = Parse(input);
-        var tape = new Dictionary<int, int>();
+        var tape = new Dictionary&lt;int, int&gt;();
         var pos = 0;
-        while (machine.iterations > 0) {
+        while (machine.iterations &gt; 0) {
             var read = tape.TryGetValue(pos, out var t) ? t : 0;
             var (write, dir, newState) = machine.prg[(machine.state, read)];
             machine.state = newState;
@@ -300,35 +300,35 @@ class Solution : Solver {
             pos += dir;
             machine.iterations--;
         }
-        return tape.Select(kvp => kvp.Value).Sum();
+        return tape.Select(kvp =&gt; kvp.Value).Sum();
     }
 
     Machine Parse(string input) {
-        var lines = input.Split('\n').Where(line => !string.IsNullOrEmpty(line)).ToArray();
+        var lines = input.Split(&#039;\n&#039;).Where(line =&gt; !string.IsNullOrEmpty(line)).ToArray();
         int iline = 0;
 
         Machine machine = new Machine();
 
-        String(@"Begin in state (\w).", out machine.state);
-        Int(@"Perform a diagnostic checksum after (\d+) steps.", out machine.iterations);
+        String(@&quot;Begin in state (\w).&quot;, out machine.state);
+        Int(@&quot;Perform a diagnostic checksum after (\d+) steps.&quot;, out machine.iterations);
 
-        while (String(@"In state (\w):", out var state)) {
-            while (Int(@"If the current value is (\d):", out var read)) {
-                Int(@"- Write the value (\d).", out var write);
-                String(@"- Move one slot to the (left|right).", out var dir);
-                String(@" - Continue with state (\w).", out string newState);
-                machine.prg[(state, read)] = (write, dir == "left" ? -1 : 1, newState);
+        while (String(@&quot;In state (\w):&quot;, out var state)) {
+            while (Int(@&quot;If the current value is (\d):&quot;, out var read)) {
+                Int(@&quot;- Write the value (\d).&quot;, out var write);
+                String(@&quot;- Move one slot to the (left|right).&quot;, out var dir);
+                String(@&quot; - Continue with state (\w).&quot;, out string newState);
+                machine.prg[(state, read)] = (write, dir == &quot;left&quot; ? -1 : 1, newState);
             }
         }
 
         bool Int(string pattern, out int r) {
             r = 0;
-            return String(pattern, out string st) && int.TryParse(st, out r);
+            return String(pattern, out string st) &amp;&amp; int.TryParse(st, out r);
         }
 
         bool String(string pattern, out string st) {
             st = null;
-            if (iline >= lines.Length) {
+            if (iline &gt;= lines.Length) {
                 return false;
             }
             var m = Regex.Match(lines[iline], pattern);
@@ -346,8 +346,8 @@ class Solution : Solver {
 class Machine {
     public string state;
     public int iterations;
-    public Dictionary<(string state, int read), (int write, int dir, string state)> prg =
-        new Dictionary<(string, int), (int, int, string)>();
+    public Dictionary&lt;(string state, int read), (int write, int dir, string state)&gt; prg =
+        new Dictionary&lt;(string, int), (int, int, string)&gt;();
 }
 </code></pre></div>
             <div id="code-location"> <p>Please ☆ my <a href="https://github.com/encse/adventofcode/">repo</a> if you like it!</p></div>

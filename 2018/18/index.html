@@ -284,18 +284,18 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2018.Day18;
 
-[ProblemName("Settlers of The North Pole")]
+[ProblemName(&quot;Settlers of The North Pole&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Iterate(input, 10);
-    public object PartTwo(string input) => Iterate(input, 1000000000);
+    public object PartOne(string input) =&gt; Iterate(input, 10);
+    public object PartTwo(string input) =&gt; Iterate(input, 1000000000);
 
     int Iterate(string input, int lim) {
-        var seen = new Dictionary<string, int>();
-        var mtx = input.Split("\n");
+        var seen = new Dictionary&lt;string, int&gt;();
+        var mtx = input.Split(&quot;\n&quot;);
         
-        for (var t = 0; t < lim; t++) {
-            var hash = string.Join("", mtx);
+        for (var t = 0; t &lt; lim; t++) {
+            var hash = string.Join(&quot;&quot;, mtx);
             if (seen.ContainsKey(hash)) {
                 var loopLength = t - seen[hash];
                 var remainingSteps = lim - t - 1;
@@ -306,28 +306,28 @@ class Solution : Solver {
             }
             mtx = Step(mtx);
         }
-        var res = string.Join("", mtx);
-        return Regex.Matches(res, @"\#").Count * Regex.Matches(res, @"\|").Count;
+        var res = string.Join(&quot;&quot;, mtx);
+        return Regex.Matches(res, @&quot;\#&quot;).Count * Regex.Matches(res, @&quot;\|&quot;).Count;
     }
 
     string[] Step(string[] mtx) {
-        var res = new List<string>();
+        var res = new List&lt;string&gt;();
         var crow = mtx.Length;
         var ccol = mtx[0].Length;
        
-        for (var irow = 0; irow < crow; irow++) {
-            var line = "";
-            for (var icol = 0; icol < ccol; icol++) {
+        for (var irow = 0; irow &lt; crow; irow++) {
+            var line = &quot;&quot;;
+            for (var icol = 0; icol &lt; ccol; icol++) {
                 var (tree, lumberyard, empty) = (0, 0, 0);
                 foreach (var drow in new[] { -1, 0, 1 }) {
                     foreach (var dcol in new[] { -1, 0, 1 }) {
                         if (drow != 0 || dcol != 0) {
                             var (icolT, irowT) = (icol + dcol, irow + drow);
-                            if (icolT >= 0 && icolT < ccol && irowT >= 0 && irowT < crow) {
+                            if (icolT &gt;= 0 &amp;&amp; icolT &lt; ccol &amp;&amp; irowT &gt;= 0 &amp;&amp; irowT &lt; crow) {
                                 switch (mtx[irowT][icolT]) {
-                                    case '#': lumberyard++; break;
-                                    case '|': tree++; break;
-                                    case '.': empty++; break;
+                                    case &#039;#&#039;: lumberyard++; break;
+                                    case &#039;|&#039;: tree++; break;
+                                    case &#039;.&#039;: empty++; break;
                                 }
                             }
                         }
@@ -335,11 +335,11 @@ class Solution : Solver {
                 }
 
                 line += mtx[irow][icol] switch {
-                    '#' when lumberyard >= 1 && tree >= 1 => '#',
-                    '|' when lumberyard >= 3 => '#',
-                    '.' when tree >= 3 => '|',
-                    '#' => '.',
-                    var c => c
+                    &#039;#&#039; when lumberyard &gt;= 1 &amp;&amp; tree &gt;= 1 =&gt; &#039;#&#039;,
+                    &#039;|&#039; when lumberyard &gt;= 3 =&gt; &#039;#&#039;,
+                    &#039;.&#039; when tree &gt;= 3 =&gt; &#039;|&#039;,
+                    &#039;#&#039; =&gt; &#039;.&#039;,
+                    var c =&gt; c
                 };
             }
             res.Add(line);

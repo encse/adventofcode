@@ -289,48 +289,48 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-[ProblemName("Camel Cards")]
+[ProblemName(&quot;Camel Cards&quot;)]
 class Solution : Solver {
 
-    // Each 'hand' gets points based on the card's individual value and  
+    // Each &#039;hand&#039; gets points based on the card&#039;s individual value and  
     // pattern value.
 
-    public object PartOne(string input) => Solve(input, Part1Points);
-    public object PartTwo(string input) => Solve(input, Part2Points);
+    public object PartOne(string input) =&gt; Solve(input, Part1Points);
+    public object PartTwo(string input) =&gt; Solve(input, Part2Points);
 
-    (long, long) Part1Points(string hand) =>
-        (PatternValue(hand), CardValue(hand, "123456789TJQKA"));
+    (long, long) Part1Points(string hand) =&gt;
+        (PatternValue(hand), CardValue(hand, &quot;123456789TJQKA&quot;));
 
     (long, long) Part2Points(string hand) {
-        var cards = "J123456789TQKA";
+        var cards = &quot;J123456789TQKA&quot;;
         var patternValue = 
-            cards.Select(ch => PatternValue(hand.Replace('J', ch))).Max();
+            cards.Select(ch =&gt; PatternValue(hand.Replace(&#039;J&#039;, ch))).Max();
         return (patternValue, CardValue(hand, cards));
     }
 
     // map cards to their indices in cardOrder. E.g. for 123456789TJQKA
     // A8A8A becomes (13)(7)(13)(7)(13), 9A34Q becomes (8)(13)(2)(3)(11)
-    long CardValue(string hand, string cardOrder) =>
-        Pack(hand.Select(card => cardOrder.IndexOf(card)));
+    long CardValue(string hand, string cardOrder) =&gt;
+        Pack(hand.Select(card =&gt; cardOrder.IndexOf(card)));
 
     // map cards to the number of their occurrences in the hand then order them 
     // such thatA8A8A becomes 33322, 9A34Q becomes 11111 and K99AA becomes 22221
-    long PatternValue(string hand) =>
-        Pack(hand.Select(card => hand.Count(x => x == card)).OrderDescending());
+    long PatternValue(string hand) =&gt;
+        Pack(hand.Select(card =&gt; hand.Count(x =&gt; x == card)).OrderDescending());
 
-    long Pack(IEnumerable<int> numbers) => 
-        numbers.Aggregate(1L, (a, v) => (a * 256) + v);
+    long Pack(IEnumerable&lt;int&gt; numbers) =&gt; 
+        numbers.Aggregate(1L, (a, v) =&gt; (a * 256) + v);
 
-    int Solve(string input, Func<string, (long, long)> getPoints) {
+    int Solve(string input, Func&lt;string, (long, long)&gt; getPoints) {
         var bidsByRanking = (
-            from line in input.Split("\n")
-            let hand = line.Split(" ")[0]
-            let bid = int.Parse(line.Split(" ")[1])
+            from line in input.Split(&quot;\n&quot;)
+            let hand = line.Split(&quot; &quot;)[0]
+            let bid = int.Parse(line.Split(&quot; &quot;)[1])
             orderby getPoints(hand)
             select bid
         );
 
-        return bidsByRanking.Select((bid, rank) => (rank + 1) * bid).Sum();
+        return bidsByRanking.Select((bid, rank) =&gt; (rank + 1) * bid).Sum();
     }
 }
 </code></pre></div>

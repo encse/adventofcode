@@ -285,15 +285,15 @@ using System.Linq;
 
 namespace AdventOfCode.Y2016.Day23;
 
-[ProblemName("Safe Cracking")]
+[ProblemName(&quot;Safe Cracking&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Solve(input, 7);
-    public object PartTwo(string input) => Solve(input, 12);
+    public object PartOne(string input) =&gt; Solve(input, 7);
+    public object PartTwo(string input) =&gt; Solve(input, 12);
     
     int Solve(string input, int a) {
         var prg = Parse(Patch(input));
-        var regs = new Dictionary<string, int>();
+        var regs = new Dictionary&lt;string, int&gt;();
         var ip = 0;
         int getReg(string reg) {
             return int.TryParse(reg, out var n) ? n
@@ -306,63 +306,63 @@ class Solution : Solver {
             }
         }
 
-        setReg("a", a);
+        setReg(&quot;a&quot;, a);
 
-        while(ip < prg.Length){
+        while(ip &lt; prg.Length){
             var stm = prg[ip];
             switch (stm[0]) {
-                case "cpy":
+                case &quot;cpy&quot;:
                     setReg(stm[2], getReg(stm[1]));
                     ip++;
                     break;
-                case "inc":
+                case &quot;inc&quot;:
                     setReg(stm[1], getReg(stm[1]) + 1);
                     ip++;
                     break;
-                case "mul":
+                case &quot;mul&quot;:
                     setReg(stm[2], getReg(stm[1]) * getReg(stm[2]));
                     ip++;
                     break;
-                case "dec":
+                case &quot;dec&quot;:
                     setReg(stm[1], getReg(stm[1]) - 1);
                     ip++;
                     break;
-                case "jnz":
+                case &quot;jnz&quot;:
                     ip += getReg(stm[1]) != 0 ? getReg(stm[2]) : 1;
                     break;
-                case "tgl":
+                case &quot;tgl&quot;:
                     var ipDst = ip + getReg(stm[1]);
-                    if (ipDst >= 0 && ipDst < prg.Length) {
+                    if (ipDst &gt;= 0 &amp;&amp; ipDst &lt; prg.Length) {
                         var stmDst = prg[ipDst];
                         stmDst[0] = stmDst[0] switch {
-                            "cpy" => "jnz",
-                            "inc" => "dec",
-                            "dec" => "inc",
-                            "jnz" => "cpy",
-                            "tgl" => "inc",
-                            _ => stmDst[0]
+                            &quot;cpy&quot; =&gt; &quot;jnz&quot;,
+                            &quot;inc&quot; =&gt; &quot;dec&quot;,
+                            &quot;dec&quot; =&gt; &quot;inc&quot;,
+                            &quot;jnz&quot; =&gt; &quot;cpy&quot;,
+                            &quot;tgl&quot; =&gt; &quot;inc&quot;,
+                            _ =&gt; stmDst[0]
                         };
                     }
                     ip++;
                     break;
                 default: 
-                    throw new Exception("Cannot parse " + string.Join(" ", stm));
+                    throw new Exception(&quot;Cannot parse &quot; + string.Join(&quot; &quot;, stm));
             }
         }
-        return getReg("a");
+        return getReg(&quot;a&quot;);
     }
 
     string Patch(string input) {
-        var lines = input.Split('\n');
-        lines[5] = "cpy c a";
-        lines[6] = "mul d a";
-        lines[7] = "cpy 0 d";
-        lines[8] = "cpy 0 c";
-        return string.Join("\n", lines);
+        var lines = input.Split(&#039;\n&#039;);
+        lines[5] = &quot;cpy c a&quot;;
+        lines[6] = &quot;mul d a&quot;;
+        lines[7] = &quot;cpy 0 d&quot;;
+        lines[8] = &quot;cpy 0 c&quot;;
+        return string.Join(&quot;\n&quot;, lines);
     }
     
-    string[][] Parse(string input) =>
-        input.Split('\n').Select(line => line.Split(' ')).ToArray();
+    string[][] Parse(string input) =&gt;
+        input.Split(&#039;\n&#039;).Select(line =&gt; line.Split(&#039; &#039;)).ToArray();
 }
 </code></pre></div>
             <div id="code-location"> <p>Please ☆ my <a href="https://github.com/encse/adventofcode/">repo</a> if you like it!</p></div>

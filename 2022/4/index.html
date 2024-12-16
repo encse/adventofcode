@@ -284,22 +284,22 @@ using System.Linq;
 
 namespace AdventOfCode.Y2022.Day04;
 
-[ProblemName("Camp Cleanup")]
+[ProblemName(&quot;Camp Cleanup&quot;)]
 class Solution : Solver {
     
     // Each line of the input represents two ranges - job done by two elves.
     // We need to find those lines where the elves did some work twice.
-    // Part 1 and 2 differs in how we define 'duplicated work'.
+    // Part 1 and 2 differs in how we define &#039;duplicated work&#039;.
     record struct Range(int from, int to);
 
-    public object PartOne(string input) => DuplicatedWorkCount(input, Contains);
-    public object PartTwo(string input) => DuplicatedWorkCount(input, Overlaps);
+    public object PartOne(string input) =&gt; DuplicatedWorkCount(input, Contains);
+    public object PartTwo(string input) =&gt; DuplicatedWorkCount(input, Overlaps);
 
     // True if r1 contains r2 [ { } ] 
-    bool Contains(Range r1, Range r2) => r1.from <= r2.from && r2.to <= r1.to; 
+    bool Contains(Range r1, Range r2) =&gt; r1.from &lt;= r2.from &amp;&amp; r2.to &lt;= r1.to; 
     
     // True if r1 overlaps r2 { [ } ], the other direction is not checked.
-    bool Overlaps(Range r1, Range r2) => r1.to >= r2.from && r1.from <= r2.to; 
+    bool Overlaps(Range r1, Range r2) =&gt; r1.to &gt;= r2.from &amp;&amp; r1.from &lt;= r2.to; 
 
     // DuplicatedWorkCount parses each input line into ranges and applies 
     // rangeCheck on them to find duplicated work. RangeCheck doesnt have to be 
@@ -307,18 +307,18 @@ class Solution : Solver {
     // it twice with the arguments swapped.
     private int DuplicatedWorkCount(
         string input, 
-        Func<Range, Range, bool> rangeCheck
+        Func&lt;Range, Range, bool&gt; rangeCheck
     ) {
-        // E.g. '36-41,35-40' becomes [Range(36, 41), Range(35, 40)]
-        var parseRanges = (string line) => 
-            from range in line.Split(',') 
-            let fromTo = range.Split('-').Select(int.Parse)
+        // E.g. &#039;36-41,35-40&#039; becomes [Range(36, 41), Range(35, 40)]
+        var parseRanges = (string line) =&gt; 
+            from range in line.Split(&#039;,&#039;) 
+            let fromTo = range.Split(&#039;-&#039;).Select(int.Parse)
             select new Range(fromTo.First(), fromTo.Last());
 
         return input
-            .Split("\n")
+            .Split(&quot;\n&quot;)
             .Select(parseRanges)
-            .Count(ranges => 
+            .Count(ranges =&gt; 
                 rangeCheck(ranges.First(), ranges.Last()) || 
                 rangeCheck(ranges.Last(), ranges.First())
             );

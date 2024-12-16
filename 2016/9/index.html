@@ -283,7 +283,7 @@
 
 namespace AdventOfCode.Y2016.Day09;
 
-[ProblemName("Explosives in Cyberspace")]
+[ProblemName(&quot;Explosives in Cyberspace&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
@@ -296,10 +296,10 @@ class Solution : Solver {
 
     long Expand(string input, int i, int lim, bool recursive) {
         var res = 0L;
-        while (i < lim) {
-            if (input[i] == '(') {
-                var j = input.IndexOf(')', i + 1);
-                var m = Regex.Match(input.Substring(i + 1, j - i - 1), @"(\d+)x(\d+)");
+        while (i &lt; lim) {
+            if (input[i] == &#039;(&#039;) {
+                var j = input.IndexOf(&#039;)&#039;, i + 1);
+                var m = Regex.Match(input.Substring(i + 1, j - i - 1), @&quot;(\d+)x(\d+)&quot;);
                 var length = int.Parse(m.Groups[1].Value);
                 var mul = int.Parse(m.Groups[2].Value);
                 res += recursive ? Expand(input, j + 1, j + length + 1, recursive) * mul : length * mul;

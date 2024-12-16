@@ -290,17 +290,17 @@ namespace AdventOfCode.Y2019.Day18;
 class Maze {
     string[] maze;
     public Maze(string st) {
-        this.maze = st.Split("\n");
+        this.maze = st.Split(&quot;\n&quot;);
     }
-    int ccol => maze[0].Length;
-    int crow => maze.Length;
-    Dictionary<char, (int, int)> positionCache = new Dictionary<char, (int, int)>();
-    Dictionary<(char, char), int> distanceCache = new Dictionary<(char, char), int>();
+    int ccol =&gt; maze[0].Length;
+    int crow =&gt; maze.Length;
+    Dictionary&lt;char, (int, int)&gt; positionCache = new Dictionary&lt;char, (int, int)&gt;();
+    Dictionary&lt;(char, char), int&gt; distanceCache = new Dictionary&lt;(char, char), int&gt;();
 
     public char Look((int irow, int icol) pos) {
         var (irow, icol) = pos;
-        if (irow < 0 || irow >= crow || icol < 0 || icol >= ccol) {
-            return '#';
+        if (irow &lt; 0 || irow &gt;= crow || icol &lt; 0 || icol &gt;= ccol) {
+            return &#039;#&#039;;
         }
         return maze[irow][icol];
 
@@ -308,8 +308,8 @@ class Maze {
 
     public (int irow, int icol) Find(char ch) {
         if (!positionCache.ContainsKey(ch)) {
-            for (var irow = 0; irow < crow; irow++) {
-                for (var icol = 0; icol < ccol; icol++) {
+            for (var irow = 0; irow &lt; crow; irow++) {
+                for (var icol = 0; icol &lt; ccol; icol++) {
                     if (maze[irow][icol] == ch) {
                         positionCache[ch] = (irow, icol);
                         return positionCache[ch];
@@ -336,11 +336,11 @@ class Maze {
         if (chA == chB) {
             return 0;
         }
-        var q = new Queue<((int irow, int icol) pos, int dist)>();
+        var q = new Queue&lt;((int irow, int icol) pos, int dist)&gt;();
         int dist = 0;
         q.Enqueue((pos, dist));
 
-        var seen = new HashSet<(int irow, int icol)>();
+        var seen = new HashSet&lt;(int irow, int icol)&gt;();
         seen.Add(pos);
         while (q.Any()) {
             (pos, dist) = q.Dequeue();
@@ -349,7 +349,7 @@ class Maze {
                 var posT = (pos.irow + drow, pos.icol + dcol);
                 var ch = Look(posT);
 
-                if (seen.Contains(posT) || ch == '#') {
+                if (seen.Contains(posT) || ch == &#039;#&#039;) {
                     continue;
                 }
 
@@ -367,7 +367,7 @@ class Maze {
     }
 }
 
-[ProblemName("Many-Worlds Interpretation")]
+[ProblemName(&quot;Many-Worlds Interpretation&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
@@ -390,13 +390,13 @@ class Solution : Solver {
         return d;
     }
 
-    IEnumerable<string> GenerateSubMazes(string input) {
-        var mx = input.Split("\n").Select(x => x.ToCharArray()).ToArray();
+    IEnumerable&lt;string&gt; GenerateSubMazes(string input) {
+        var mx = input.Split(&quot;\n&quot;).Select(x =&gt; x.ToCharArray()).ToArray();
         var crow = mx.Length;
         var ccol = mx[0].Length;
         var hrow = crow / 2;
         var hcol = ccol / 2;
-        var pattern = "@#@\n###\n@#@".Split();
+        var pattern = &quot;@#@\n###\n@#@&quot;.Split();
         foreach (var drow in new[] { -1, 0, 1 }) {
             foreach (var dcol in new[] { -1, 0, 1 }) {
                 mx[hrow + drow][hcol + dcol] = pattern[1 + drow][1 + dcol];
@@ -404,14 +404,14 @@ class Solution : Solver {
         }
 
         foreach (var (drow, dcol) in new[] { (0, 0), (0, hcol + 1), (hrow + 1, 0), (hrow + 1, hcol + 1) }) {
-            var res = "";
-            for (var irow = 0; irow < hrow; irow++) {
-                res += string.Join("", mx[irow + drow].Skip(dcol).Take(hcol)) + "\n";
+            var res = &quot;&quot;;
+            for (var irow = 0; irow &lt; hrow; irow++) {
+                res += string.Join(&quot;&quot;, mx[irow + drow].Skip(dcol).Take(hcol)) + &quot;\n&quot;;
             }
 
-            for (var ch = 'A'; ch <= 'Z'; ch++) {
+            for (var ch = &#039;A&#039;; ch &lt;= &#039;Z&#039;; ch++) {
                 if (!res.Contains(char.ToLower(ch))) {
-                    res = res.Replace(ch, '.');
+                    res = res.Replace(ch, &#039;.&#039;);
                 }
             }
             res = res.Substring(0, res.Length - 1);
@@ -422,14 +422,14 @@ class Solution : Solver {
 
     int Solve(Maze maze) {
         var dependencies = GenerateDependencies(maze);
-        var cache = new Dictionary<string, int>();
+        var cache = new Dictionary&lt;string, int&gt;();
 
-        int SolveRecursive(char currentItem, ImmutableHashSet<char> keys
+        int SolveRecursive(char currentItem, ImmutableHashSet&lt;char&gt; keys
         ) {
             if (keys.Count == 0) {
                 return 0;
             }
-            var cacheKey = currentItem + string.Join("", keys);
+            var cacheKey = currentItem + string.Join(&quot;&quot;, keys);
 
             if (!cache.ContainsKey(cacheKey)) {
                 var result = int.MaxValue;
@@ -444,17 +444,17 @@ class Solution : Solver {
             return cache[cacheKey];
         }
 
-        return SolveRecursive('@', dependencies.Keys.ToImmutableHashSet());
+        return SolveRecursive(&#039;@&#039;, dependencies.Keys.ToImmutableHashSet());
     }
 
-    Dictionary<char, ImmutableHashSet<char>> GenerateDependencies(Maze maze) {
-        var q = new Queue<((int irow, int icol) pos, string dependsOn)>();
-        var pos = maze.Find('@');
-        var dependsOn = "";
+    Dictionary&lt;char, ImmutableHashSet&lt;char&gt;&gt; GenerateDependencies(Maze maze) {
+        var q = new Queue&lt;((int irow, int icol) pos, string dependsOn)&gt;();
+        var pos = maze.Find(&#039;@&#039;);
+        var dependsOn = &quot;&quot;;
         q.Enqueue((pos, dependsOn));
 
-        var res = new Dictionary<char, ImmutableHashSet<char>>();
-        var seen = new HashSet<(int irow, int icol)>();
+        var res = new Dictionary&lt;char, ImmutableHashSet&lt;char&gt;&gt;();
+        var seen = new HashSet&lt;(int irow, int icol)&gt;();
         seen.Add(pos);
         while (q.Any()) {
             (pos, dependsOn) = q.Dequeue();
@@ -463,7 +463,7 @@ class Solution : Solver {
                 var posT = (pos.irow + drow, pos.icol + dcol);
                 var ch = maze.Look(posT);
 
-                if (seen.Contains(posT) || ch == '#') {
+                if (seen.Contains(posT) || ch == &#039;#&#039;) {
                     continue;
                 }
 

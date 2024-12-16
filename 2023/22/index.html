@@ -298,31 +298,31 @@ using System.Linq;
 
 record Range(int begin, int end);
 record Block(Range x, Range y, Range z) {
-    public int Top => z.end;
-    public int Bottom => z.begin;
+    public int Top =&gt; z.end;
+    public int Bottom =&gt; z.begin;
 }
 record Supports(
-    Dictionary<Block, HashSet<Block>> blocksAbove,
-    Dictionary<Block, HashSet<Block>> blocksBelow
+    Dictionary&lt;Block, HashSet&lt;Block&gt;&gt; blocksAbove,
+    Dictionary&lt;Block, HashSet&lt;Block&gt;&gt; blocksBelow
 );
 
-[ProblemName("Sand Slabs")]
+[ProblemName(&quot;Sand Slabs&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Kaboom(input).Count(x => x == 0);
-    public object PartTwo(string input) => Kaboom(input).Sum();
+    public object PartOne(string input) =&gt; Kaboom(input).Count(x =&gt; x == 0);
+    public object PartTwo(string input) =&gt; Kaboom(input).Sum();
 
     // desintegrates the blocks one by one and returns how many blocks would
     // start falling because of that.
-    IEnumerable<int> Kaboom(string input) {
+    IEnumerable&lt;int&gt; Kaboom(string input) {
         var blocks = Fall(ParseBlocks(input));
         var supports = GetSupports(blocks);
 
         foreach (var desintegratedBlock in blocks) {
-            var q = new Queue<Block>();
+            var q = new Queue&lt;Block&gt;();
             q.Enqueue(desintegratedBlock);
 
-            var falling = new HashSet<Block>();
+            var falling = new HashSet&lt;Block&gt;();
             while (q.TryDequeue(out var block)) {
                 falling.Add(block);
 
@@ -335,19 +335,19 @@ class Solution : Solver {
                     q.Enqueue(blockT);
                 }
             }
-            yield return falling.Count - 1; // -1: desintegratedBlock doesn't count 
+            yield return falling.Count - 1; // -1: desintegratedBlock doesn&#039;t count 
         }
     }
 
-    // applies 'gravity' to the blocks.
+    // applies &#039;gravity&#039; to the blocks.
     Block[] Fall(Block[] blocks) {
 
         // sort them in Z first so that we can work in bottom to top order
-        blocks = blocks.OrderBy(block => block.Bottom).ToArray();
+        blocks = blocks.OrderBy(block =&gt; block.Bottom).ToArray();
 
-        for (var i = 0; i < blocks.Length; i++) {
+        for (var i = 0; i &lt; blocks.Length; i++) {
             var newBottom = 1;
-            for (var j = 0; j < i; j++) {
+            for (var j = 0; j &lt; i; j++) {
                 if (IntersectsXY(blocks[i], blocks[j])) {
                     newBottom = Math.Max(newBottom, blocks[j].Top + 1);
                 }
@@ -362,12 +362,12 @@ class Solution : Solver {
 
     // calculate upper and lower neighbours for each block
     Supports GetSupports(Block[] blocks) {
-        var blocksAbove = blocks.ToDictionary(b => b, _ => new HashSet<Block>());
-        var blocksBelow = blocks.ToDictionary(b => b, _ => new HashSet<Block>());
-        for (var i = 0; i < blocks.Length; i++) {
-            for (var j = i + 1; j < blocks.Length; j++) {
+        var blocksAbove = blocks.ToDictionary(b =&gt; b, _ =&gt; new HashSet&lt;Block&gt;());
+        var blocksBelow = blocks.ToDictionary(b =&gt; b, _ =&gt; new HashSet&lt;Block&gt;());
+        for (var i = 0; i &lt; blocks.Length; i++) {
+            for (var j = i + 1; j &lt; blocks.Length; j++) {
                 var zNeighbours = blocks[j].Bottom == 1 + blocks[i].Top;
-                if (zNeighbours && IntersectsXY(blocks[i], blocks[j])) {
+                if (zNeighbours &amp;&amp; IntersectsXY(blocks[i], blocks[j])) {
                     blocksBelow[blocks[j]].Add(blocks[i]);
                     blocksAbove[blocks[i]].Add(blocks[j]);
                 }
@@ -376,15 +376,15 @@ class Solution : Solver {
         return new Supports(blocksAbove, blocksBelow);
     }
 
-    bool IntersectsXY(Block blockA, Block blockB) =>
-        Intersects(blockA.x, blockB.x) && Intersects(blockA.y, blockB.y);
+    bool IntersectsXY(Block blockA, Block blockB) =&gt;
+        Intersects(blockA.x, blockB.x) &amp;&amp; Intersects(blockA.y, blockB.y);
 
     // see https://stackoverflow.com/a/3269471
-    bool Intersects(Range r1, Range r2) => r1.begin <= r2.end && r2.begin <= r1.end;
+    bool Intersects(Range r1, Range r2) =&gt; r1.begin &lt;= r2.end &amp;&amp; r2.begin &lt;= r1.end;
 
-    Block[] ParseBlocks(string input) => (
-        from line in input.Split('\n')
-        let numbers = line.Split(',','~').Select(int.Parse).ToArray()
+    Block[] ParseBlocks(string input) =&gt; (
+        from line in input.Split(&#039;\n&#039;)
+        let numbers = line.Split(&#039;,&#039;,&#039;~&#039;).Select(int.Parse).ToArray()
         select new Block(
             x: new Range(numbers[0], numbers[3]), 
             y: new Range(numbers[1], numbers[4]), 

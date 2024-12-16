@@ -283,27 +283,27 @@
 
 namespace AdventOfCode.Y2021.Day06;
 
-[ProblemName("Lanternfish")]
+[ProblemName(&quot;Lanternfish&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => FishCountAfterNDays(input, 80);
-    public object PartTwo(string input) => FishCountAfterNDays(input, 256);
+    public object PartOne(string input) =&gt; FishCountAfterNDays(input, 80);
+    public object PartTwo(string input) =&gt; FishCountAfterNDays(input, 256);
 
     long FishCountAfterNDays(string input, int days) {
 
         // group the fish by their timer, no need to deal with them one by one:
         var fishCountByInternalTimer = new long[9];
-        foreach (var ch in input.Split(',')) {
+        foreach (var ch in input.Split(&#039;,&#039;)) {
             fishCountByInternalTimer[int.Parse(ch)]++;
         }
         
         // we will model a circular shift register, with an additional feedback:
         //       0123456           78 
-        //   ┌──[.......]─<─(+)───[..]──┐
-        //   └──────>────────┴─────>────┘
+        //   ┌──[.......]─&lt;─(+)───[..]──┐
+        //   └──────&gt;────────┴─────&gt;────┘
         //     reproduction     newborn
 
-        for (var t = 0; t < days; t++) {
+        for (var t = 0; t &lt; days; t++) {
             fishCountByInternalTimer[(t + 7) % 9] += fishCountByInternalTimer[t % 9];
         }
 

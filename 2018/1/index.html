@@ -285,15 +285,15 @@ using System.Linq;
 
 namespace AdventOfCode.Y2018.Day01;
 
-[ProblemName("Chronal Calibration")]
+[ProblemName(&quot;Chronal Calibration&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
-        return Frequencies(input).ElementAt(input.Split("\n").Count() - 1);
+        return Frequencies(input).ElementAt(input.Split(&quot;\n&quot;).Count() - 1);
     }
 
     public object PartTwo(string input) {
-        var seen = new HashSet<int>();
+        var seen = new HashSet&lt;int&gt;();
         foreach (var f in Frequencies(input)) {
             if (seen.Contains(f)) {
                 return f;
@@ -303,10 +303,10 @@ class Solution : Solver {
         throw new Exception();
     }
 
-    IEnumerable<int> Frequencies(string input) {
+    IEnumerable&lt;int&gt; Frequencies(string input) {
         var f = 0;
         while (true) {
-            foreach (var d in input.Split("\n").Select(int.Parse)) {
+            foreach (var d in input.Split(&quot;\n&quot;).Select(int.Parse)) {
                 f += d;
                 yield return f;
             }

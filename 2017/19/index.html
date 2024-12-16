@@ -283,20 +283,20 @@
 
 namespace AdventOfCode.Y2017.Day19;
 
-[ProblemName("A Series of Tubes")]
+[ProblemName(&quot;A Series of Tubes&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => FollowPath(input).msg;
+    public object PartOne(string input) =&gt; FollowPath(input).msg;
 
-    public object PartTwo(string input) => FollowPath(input).steps;
+    public object PartTwo(string input) =&gt; FollowPath(input).steps;
 
     (string msg, int steps) FollowPath(string input){
-        var map = input.Split('\n');
+        var map = input.Split(&#039;\n&#039;);
         var (ccol, crow) = (map[0].Length, map.Length);
-        var (icol, irow) = (map[0].IndexOf('|'), 0);
+        var (icol, irow) = (map[0].IndexOf(&#039;|&#039;), 0);
         var (dcol, drow) = (0, 1);
 
-        var msg = "";
+        var msg = &quot;&quot;;
         var steps = 0;
 
         while (true) {
@@ -304,21 +304,21 @@ class Solution : Solver {
             icol += dcol;
             steps++;
 
-            if (icol < 0 || icol >= ccol || irow < 0 || irow >= crow || map[irow][icol] == ' ') {
+            if (icol &lt; 0 || icol &gt;= ccol || irow &lt; 0 || irow &gt;= crow || map[irow][icol] == &#039; &#039;) {
                 break;
             }
 
             switch (map[irow][icol]) {
-                case '+':
+                case &#039;+&#039;:
                     (dcol, drow) = (
                             from q in new[] { (drow: dcol, dcol: -drow), (drow: -dcol, dcol: drow)}
                             let icolT = icol + q.dcol
                             let irowT = irow + q.drow
-                            where icolT >= 0 && icolT < ccol && irowT >= 0 && irowT < crow && map[irowT][icolT] != ' '
+                            where icolT &gt;= 0 &amp;&amp; icolT &lt; ccol &amp;&amp; irowT &gt;= 0 &amp;&amp; irowT &lt; crow &amp;&amp; map[irowT][icolT] != &#039; &#039;
                             select (q.dcol, q.drow)
                         ).Single();
                     break;
-                case char ch when (ch >= 'A' && ch <= 'Z'):
+                case char ch when (ch &gt;= &#039;A&#039; &amp;&amp; ch &lt;= &#039;Z&#039;):
                     msg += ch;
                     break;
             }

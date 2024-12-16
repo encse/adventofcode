@@ -283,15 +283,15 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Packets = System.Collections.Generic.List<(long address, long x, long y)>;
+using Packets = System.Collections.Generic.List&lt;(long address, long x, long y)&gt;;
 
 namespace AdventOfCode.Y2019.Day23;
 
-[ProblemName("Category Six")]
+[ProblemName(&quot;Category Six&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Solve(input, false);
-    public object PartTwo(string input) => Solve(input, true);
+    public object PartOne(string input) =&gt; Solve(input, false);
+    public object PartTwo(string input) =&gt; Solve(input, true);
 
     long Solve(string input, bool hasNat) {
         var machines = (
@@ -306,17 +306,17 @@ class Solution : Solver {
         }
 
         var packets = new Packets();
-        while (!packets.Any(packet => packet.address == natAddress)) {
+        while (!packets.Any(packet =&gt; packet.address == natAddress)) {
             foreach (var machine in machines) {
                 packets = machine(packets);
             }
         }
-        return packets.Single(packet => packet.address == natAddress).y;
+        return packets.Single(packet =&gt; packet.address == natAddress).y;
     }
 
-    (List<long> data, Packets packets) Receive(Packets packets, int address) {
+    (List&lt;long&gt; data, Packets packets) Receive(Packets packets, int address) {
         var filteredPackets = new Packets();
-        var data = new List<long>();
+        var data = new List&lt;long&gt;();
         foreach (var packet in packets) {
             if (packet.address == address) {
                 data.Add(packet.x);
@@ -328,35 +328,35 @@ class Solution : Solver {
         return (data, filteredPackets);
     }
 
-    Func<Packets, Packets> Nic(string program, int address) {
+    Func&lt;Packets, Packets&gt; Nic(string program, int address) {
         var icm = new IntCodeMachine(program);
         var output = icm.Run(address);
         Debug.Assert(output.Count == 0);
 
-        return (input) => {
+        return (input) =&gt; {
             var (data, packets) = Receive(input, address);
             if (!data.Any()) {
                 data.Add(-1);
             }
             var output = icm.Run(data.ToArray());
-            for (var d = 0; d < output.Count; d += 3) {
+            for (var d = 0; d &lt; output.Count; d += 3) {
                 packets.Add((output[d], output[d + 1], output[d + 2]));
             }
             return packets;
         };
     }
 
-    Func<Packets, Packets> Nat(int address) {
+    Func&lt;Packets, Packets&gt; Nat(int address) {
         long? yLastSent = null;
         long? x = null;
         long? y = null;
-        return (input) => {
+        return (input) =&gt; {
             var (data, packets) = Receive(input, address);
             if (data.Any()) {
                 (x, y) = (data[^2], data[^1]);
             }
             if (packets.Count == 0) {
-                Debug.Assert(x.HasValue && y.HasValue);
+                Debug.Assert(x.HasValue &amp;&amp; y.HasValue);
                 packets.Add((y == yLastSent ? 255 : 0, x.Value, y.Value));
                 yLastSent = y;
             }

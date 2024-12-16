@@ -284,22 +284,22 @@ using System.Text.Json;
 
 namespace AdventOfCode.Y2015.Day12;
 
-[ProblemName("JSAbacusFramework.io")]
+[ProblemName(&quot;JSAbacusFramework.io&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Solve(input, false);
-    public object PartTwo(string input) => Solve(input, true);
+    public object PartOne(string input) =&gt; Solve(input, false);
+    public object PartTwo(string input) =&gt; Solve(input, true);
 
     int Solve(string input, bool skipRed) {
         int Traverse(JsonElement t) {
             return t.ValueKind switch
             {
-                JsonValueKind.Object when skipRed && t.EnumerateObject().Any(
-                    p => p.Value.ValueKind == JsonValueKind.String && p.Value.GetString() == "red") => 0,
-                JsonValueKind.Object => t.EnumerateObject().Select(p => Traverse(p.Value)).Sum(),
-                JsonValueKind.Array => t.EnumerateArray().Select(Traverse).Sum(),
-                JsonValueKind.Number => t.GetInt32(),
-                _ => 0
+                JsonValueKind.Object when skipRed &amp;&amp; t.EnumerateObject().Any(
+                    p =&gt; p.Value.ValueKind == JsonValueKind.String &amp;&amp; p.Value.GetString() == &quot;red&quot;) =&gt; 0,
+                JsonValueKind.Object =&gt; t.EnumerateObject().Select(p =&gt; Traverse(p.Value)).Sum(),
+                JsonValueKind.Array =&gt; t.EnumerateArray().Select(Traverse).Sum(),
+                JsonValueKind.Number =&gt; t.GetInt32(),
+                _ =&gt; 0
             };
         }
 

@@ -287,28 +287,28 @@ can be implemented using the other, just like I did it below.</p>
 using System;
 using System.Linq;
 
-[ProblemName("Mirage Maintenance")]
+[ProblemName(&quot;Mirage Maintenance&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Solve(input, ExtrapolateRight);
-    public object PartTwo(string input) => Solve(input, ExtrapolateLeft);
+    public object PartOne(string input) =&gt; Solve(input, ExtrapolateRight);
+    public object PartTwo(string input) =&gt; Solve(input, ExtrapolateLeft);
 
-    long Solve(string input, Func<long[], long> extrapolate) =>
-        input.Split("\n").Select(ParseNumbers).Select(extrapolate).Sum();
+    long Solve(string input, Func&lt;long[], long&gt; extrapolate) =&gt;
+        input.Split(&quot;\n&quot;).Select(ParseNumbers).Select(extrapolate).Sum();
 
-    long[] ParseNumbers(string line) =>
-        line.Split(" ").Select(long.Parse).ToArray();
+    long[] ParseNumbers(string line) =&gt;
+        line.Split(&quot; &quot;).Select(long.Parse).ToArray();
 
-    // It's a common trick to zip a sequence with the skipped version of itself
-    long[] Diff(long[] numbers) =>
-        numbers.Zip(numbers.Skip(1)).Select(p => p.Second - p.First).ToArray();
+    // It&#039;s a common trick to zip a sequence with the skipped version of itself
+    long[] Diff(long[] numbers) =&gt;
+        numbers.Zip(numbers.Skip(1)).Select(p =&gt; p.Second - p.First).ToArray();
 
-    // I went a bit further and recurse until there are no numbers left. It's
-    // more compact this way and doesn't affect the runtime much.
-    long ExtrapolateRight(long[] numbers) =>
+    // I went a bit further and recurse until there are no numbers left. It&#039;s
+    // more compact this way and doesn&#039;t affect the runtime much.
+    long ExtrapolateRight(long[] numbers) =&gt;
         !numbers.Any() ? 0 : ExtrapolateRight(Diff(numbers)) + numbers.Last();
 
-    long ExtrapolateLeft(long[] numbers) =>
+    long ExtrapolateLeft(long[] numbers) =&gt;
        ExtrapolateRight(numbers.Reverse().ToArray());
 }
 </code></pre></div>

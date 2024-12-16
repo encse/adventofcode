@@ -283,7 +283,7 @@
 
 namespace AdventOfCode.Y2015.Day25;
 
-[ProblemName("Let It Snow")]
+[ProblemName(&quot;Let It Snow&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
@@ -303,7 +303,7 @@ class Solution : Solver {
     }
 
     (int irowDst, int icolDst) Parse(string  input){
-        var m = Regex.Match(input, @"To continue, please consult the code grid in the manual.  Enter the code at row (\d+), column (\d+).");
+        var m = Regex.Match(input, @&quot;To continue, please consult the code grid in the manual.  Enter the code at row (\d+), column (\d+).&quot;);
         return (int.Parse(m.Groups[1].Value), int.Parse(m.Groups[2].Value));
     }
 }

@@ -284,14 +284,14 @@ using System.Linq;
 
 namespace AdventOfCode.Y2019.Day13;
 
-[ProblemName("Care Package")]
+[ProblemName(&quot;Care Package&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
         var icm = new IntCodeMachine(input);
         var output = icm.Run();
         var chunks = Chunk(output, 3);
-        return chunks.Count(x => x[2] == 2);
+        return chunks.Count(x =&gt; x[2] == 2);
     }
 
     public object PartTwo(string input) {
@@ -320,16 +320,16 @@ class Solution : Solver {
             }
 
             dir = 
-                icolBall < icolPaddle ? -1 :
-                icolBall > icolPaddle ? 1 :
+                icolBall &lt; icolPaddle ? -1 :
+                icolBall &gt; icolPaddle ? 1 :
                 0;
            
         }
         return score;
     }
 
-    public T[][] Chunk<T>(IEnumerable<T> source, int chunksize) {
-        var res = new List<T[]>();
+    public T[][] Chunk&lt;T&gt;(IEnumerable&lt;T&gt; source, int chunksize) {
+        var res = new List&lt;T[]&gt;();
         while (source.Any()) {
             res.Add(source.Take(chunksize).ToArray());
             source = source.Skip(chunksize);

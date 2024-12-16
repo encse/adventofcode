@@ -284,32 +284,32 @@ using System.Linq;
 
 namespace AdventOfCode.Y2017.Day15;
 
-[ProblemName("Dueling Generators")]
+[ProblemName(&quot;Dueling Generators&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) =>
+    public object PartOne(string input) =&gt;
         MatchCount(Combine(ParseGenerators(input)).Take(40000000));
 
     public object PartTwo(string input) {
         var generators = ParseGenerators(input);
-        return MatchCount(Combine((generators.a.Where(a => (a & 3) == 0), generators.b.Where(a => (a & 7) == 0))).Take(5000000));
+        return MatchCount(Combine((generators.a.Where(a =&gt; (a &amp; 3) == 0), generators.b.Where(a =&gt; (a &amp; 7) == 0))).Take(5000000));
     }
 
-    IEnumerable<(long, long)> Combine((IEnumerable<long> a, IEnumerable<long> b) items) =>
-        Enumerable.Zip(items.a, items.b, (a, b) => (a, b));
+    IEnumerable&lt;(long, long)&gt; Combine((IEnumerable&lt;long&gt; a, IEnumerable&lt;long&gt; b) items) =&gt;
+        Enumerable.Zip(items.a, items.b, (a, b) =&gt; (a, b));
 
-    int MatchCount(IEnumerable<(long a, long b)> items) =>
-        items.Count(item => (item.a & 0xffff) == (item.b & 0xffff));
+    int MatchCount(IEnumerable&lt;(long a, long b)&gt; items) =&gt;
+        items.Count(item =&gt; (item.a &amp; 0xffff) == (item.b &amp; 0xffff));
 
-    (IEnumerable<long> a, IEnumerable<long> b) ParseGenerators(string input) {
-        var lines = input.Split('\n');
-        var startA = int.Parse(lines[0].Substring("Generator A starts with ".Length));
-        var startB = int.Parse(lines[1].Substring("Generator B starts with ".Length));
+    (IEnumerable&lt;long&gt; a, IEnumerable&lt;long&gt; b) ParseGenerators(string input) {
+        var lines = input.Split(&#039;\n&#039;);
+        var startA = int.Parse(lines[0].Substring(&quot;Generator A starts with &quot;.Length));
+        var startB = int.Parse(lines[1].Substring(&quot;Generator B starts with &quot;.Length));
 
         return (Generator(startA, 16807), Generator(startB, 48271));
     }
 
-    IEnumerable<long> Generator(int start, int mul) {
+    IEnumerable&lt;long&gt; Generator(int start, int mul) {
         var mod = 2147483647;
 
         long state = start;

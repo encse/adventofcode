@@ -286,7 +286,7 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2020.Day20;
 
-[ProblemName("Jurassic Jigsaw")]
+[ProblemName(&quot;Jurassic Jigsaw&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
@@ -302,16 +302,16 @@ class Solution : Solver {
         var image = MergeTiles(AssemblePuzzle(input));
 
         var monster = new string[]{
-            "                  # ",
-            "#    ##    ##    ###",
-            " #  #  #  #  #  #   "
+            &quot;                  # &quot;,
+            &quot;#    ##    ##    ###&quot;,
+            &quot; #  #  #  #  #  #   &quot;
         };
 
         while (true) {
             var monsterCount = MatchCount(image, monster);
-            if (monsterCount > 0) {
-                var hashCountInImage = image.ToString().Count(ch => ch == '#');
-                var hashCountInMonster = string.Join("\n", monster).Count(ch => ch == '#');
+            if (monsterCount &gt; 0) {
+                var hashCountInImage = image.ToString().Count(ch =&gt; ch == &#039;#&#039;);
+                var hashCountInMonster = string.Join(&quot;\n&quot;, monster).Count(ch =&gt; ch == &#039;#&#039;);
                 return hashCountInImage - monsterCount * hashCountInMonster;
             }
             image.ChangeOrientation();
@@ -320,10 +320,10 @@ class Solution : Solver {
 
     private Tile[] ParseTiles(string input) {
         return (
-            from block in input.Split("\n\n")
-            let lines = block.Split("\n")
-            let id = Regex.Match(lines[0], "\\d+").Value
-            let image = lines.Skip(1).Where(x => x != "").ToArray()
+            from block in input.Split(&quot;\n\n&quot;)
+            let lines = block.Split(&quot;\n&quot;)
+            let id = Regex.Match(lines[0], &quot;\\d+&quot;).Value
+            let image = lines.Skip(1).Where(x =&gt; x != &quot;&quot;).ToArray()
             select new Tile(int.Parse(id), image)
         ).ToArray();
     }
@@ -335,27 +335,27 @@ class Solution : Solver {
         // Due to the way the input is created, the list contains
         // - one item for tiles on the edge or 
         // - two for inner pieces.
-        var pairs = new Dictionary<string, List<Tile>>();
+        var pairs = new Dictionary&lt;string, List&lt;Tile&gt;&gt;();
         foreach (var tile in tiles) {
-            for (var i = 0; i < 8; i++) {
+            for (var i = 0; i &lt; 8; i++) {
                 var pattern = tile.Top();
                 if (!pairs.ContainsKey(pattern)) {
-                    pairs[pattern] = new List<Tile>();
+                    pairs[pattern] = new List&lt;Tile&gt;();
                 }
                 pairs[pattern].Add(tile);
                 tile.ChangeOrientation();
             }
         }
 
-        bool isEdge(string pattern) => pairs[pattern].Count == 1;
-        Tile getNeighbour(Tile tile, string pattern) => pairs[pattern].SingleOrDefault(other => other != tile);
+        bool isEdge(string pattern) =&gt; pairs[pattern].Count == 1;
+        Tile getNeighbour(Tile tile, string pattern) =&gt; pairs[pattern].SingleOrDefault(other =&gt; other != tile);
 
         Tile putTileInPlace(Tile above, Tile left) {
-            if (above == null && left == null) {
+            if (above == null &amp;&amp; left == null) {
                 // find top-left corner
                 foreach (var tile in tiles) {
-                    for (var i = 0; i < 8; i++) {
-                        if (isEdge(tile.Top()) && isEdge(tile.Left())) {
+                    for (var i = 0; i &lt; 8; i++) {
+                        if (isEdge(tile.Top()) &amp;&amp; isEdge(tile.Left())) {
                             return tile;
                         }
                         tile.ChangeOrientation();
@@ -368,7 +368,7 @@ class Solution : Solver {
                     var topMatch = above == null ? isEdge(tile.Top())  : tile.Top() == above.Bottom();
                     var leftMatch = left == null ? isEdge(tile.Left()) : tile.Left() == left.Right();
 
-                    if (topMatch && leftMatch) {
+                    if (topMatch &amp;&amp; leftMatch) {
                         return tile;
                     }
                     tile.ChangeOrientation();
@@ -378,13 +378,13 @@ class Solution : Solver {
             throw new Exception();
         }
 
-        // once the corner is fixed we can always find a unique tile that matches the one to the left & above
+        // once the corner is fixed we can always find a unique tile that matches the one to the left &amp; above
         // just fill up the tileset one by one
         var size = (int)Math.Sqrt(tiles.Length);
         var puzzle = new Tile[size][];
-        for (var irow = 0; irow < size; irow++) {
+        for (var irow = 0; irow &lt; size; irow++) {
             puzzle[irow] = new Tile[size];
-            for (var icol = 0; icol < size; icol++) {
+            for (var icol = 0; icol &lt; size; icol++) {
                 var above = irow == 0 ? null : puzzle[irow - 1][icol];
                 var left  = icol == 0 ? null : puzzle[irow][icol - 1];
                 puzzle[irow][icol] = putTileInPlace(above, left);
@@ -395,13 +395,13 @@ class Solution : Solver {
 
     private Tile MergeTiles(Tile[][] tiles) {
         // create a big tile leaving out the borders
-        var image = new List<string>();
+        var image = new List&lt;string&gt;();
         var tileSize = tiles[0][0].size;
         var tileCount = tiles.Length;
-        for (var irow = 0; irow < tileCount; irow++) {
-            for (var i = 1; i < tileSize - 1; i++) {
-                var st = "";
-                for (var icol = 0; icol < tileCount; icol++) {
+        for (var irow = 0; irow &lt; tileCount; irow++) {
+            for (var i = 1; i &lt; tileSize - 1; i++) {
+                var st = &quot;&quot;;
+                for (var icol = 0; icol &lt; tileCount; icol++) {
                     st += tiles[irow][icol].Row(i).Substring(1, tileSize - 2);
                 }
                 image.Add(st);
@@ -413,12 +413,12 @@ class Solution : Solver {
     int MatchCount(Tile image, params string[] pattern) {
         var res = 0;
         var (ccolP, crowP) = (pattern[0].Length, pattern.Length);
-        for (var irow = 0; irow < image.size - crowP; irow++) 
-        for (var icol = 0; icol < image.size - ccolP ; icol++) {
+        for (var irow = 0; irow &lt; image.size - crowP; irow++) 
+        for (var icol = 0; icol &lt; image.size - ccolP ; icol++) {
             bool match() {
-                for (var icolP = 0; icolP < ccolP; icolP++)
-                for (var irowP = 0; irowP < crowP; irowP++) {
-                    if (pattern[irowP][icolP] == '#' && image[irow + irowP, icol + icolP] != '#') {
+                for (var icolP = 0; icolP &lt; ccolP; icolP++)
+                for (var irowP = 0; irowP &lt; crowP; irowP++) {
+                    if (pattern[irowP][icolP] == &#039;#&#039; &amp;&amp; image[irow + irowP, icol + icolP] != &#039;#&#039;) {
                         return false;
                     }
                 }
@@ -440,7 +440,7 @@ class Tile {
     // This is a bit tricky, but makes operations fast and easy to implement.
     //
     // - orentation % 4 specifies the rotation of the tile
-    // - orientation % 8 >= 4 means the tile is flipped.
+    // - orientation % 8 &gt;= 4 means the tile is flipped.
     //
     // The actual rotation and flipping happens in the indexer, 
     // where the input coordinates are adjusted accordingly.
@@ -460,11 +460,11 @@ class Tile {
 
     public char this[int irow, int icol] {
         get {
-            for (var i = 0; i < orentation % 4; i++) {
+            for (var i = 0; i &lt; orentation % 4; i++) {
                 (irow, icol) = (icol, size - 1 - irow); // rotate
             }
 
-            if (orentation % 8 >= 4) {
+            if (orentation % 8 &gt;= 4) {
                 icol = size - 1 - icol; // flip vertical axis
             }
 
@@ -472,20 +472,20 @@ class Tile {
         }
     }
 
-    public string Row(int irow) => GetSlice(irow, 0, 0, 1);
-    public string Col(int icol) => GetSlice(0, icol, 1, 0);
-    public string Top() => Row(0);
-    public string Bottom() => Row(size - 1);
-    public string Left() => Col(0);
-    public string Right() => Col(size - 1);
+    public string Row(int irow) =&gt; GetSlice(irow, 0, 0, 1);
+    public string Col(int icol) =&gt; GetSlice(0, icol, 1, 0);
+    public string Top() =&gt; Row(0);
+    public string Bottom() =&gt; Row(size - 1);
+    public string Left() =&gt; Col(0);
+    public string Right() =&gt; Col(size - 1);
 
     public override string ToString() {
-        return $"Tile {id}:\n" + string.Join("\n", Enumerable.Range(0, size).Select(i => Row(i)));
+        return $&quot;Tile {id}:\n&quot; + string.Join(&quot;\n&quot;, Enumerable.Range(0, size).Select(i =&gt; Row(i)));
     }
 
     string GetSlice(int irow, int icol, int drow, int dcol) {
-        var st = "";
-        for (var i = 0; i < size; i++) {
+        var st = &quot;&quot;;
+        for (var i = 0; i &lt; size; i++) {
             st += this[irow, icol];
             irow += drow;
             icol += dcol;

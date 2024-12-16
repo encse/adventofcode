@@ -286,7 +286,7 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2022.Day16;
 
-[ProblemName("Proboscidea Volcanium")]
+[ProblemName(&quot;Proboscidea Volcanium&quot;)]
 class Solution : Solver {
 
     record Map(int[,] distances, Valve[] valves);
@@ -301,14 +301,14 @@ class Solution : Solver {
 
     int Solve(string input, bool humanOnly, int time) {
         var map = Parse(input);
-        var start = map.valves.Single(x => x.name == "AA");
-        var valvesToOpen = map.valves.Where(valve => valve.flowRate > 0).ToArray();
+        var start = map.valves.Single(x =&gt; x.name == &quot;AA&quot;);
+        var valvesToOpen = map.valves.Where(valve =&gt; valve.flowRate &gt; 0).ToArray();
 
-        var cache = new Dictionary<string, int>();
+        var cache = new Dictionary&lt;string, int&gt;();
         if (humanOnly) {
             return MaxFlow(cache, map, start, valvesToOpen.ToHashSet(), time);
         } else {
-            return Pairings(valvesToOpen).Select(pairing =>
+            return Pairings(valvesToOpen).Select(pairing =&gt;
                  MaxFlow(cache, map, start, pairing.human, time) +
                  MaxFlow(cache, map, start, pairing.elephant, time)
             ).Max();
@@ -316,17 +316,17 @@ class Solution : Solver {
     }
 
     // Divide the valves between human and elephant in all possible ways
-    IEnumerable<(HashSet<Valve> human, HashSet<Valve> elephant)> Pairings(Valve[] valves) {
-        var maxMask = 1 << (valves.Length - 1);
+    IEnumerable&lt;(HashSet&lt;Valve&gt; human, HashSet&lt;Valve&gt; elephant)&gt; Pairings(Valve[] valves) {
+        var maxMask = 1 &lt;&lt; (valves.Length - 1);
 
-        for (var mask = 0; mask < maxMask; mask++) {
-            var elephant = new HashSet<Valve>();
-            var human = new HashSet<Valve>();
+        for (var mask = 0; mask &lt; maxMask; mask++) {
+            var elephant = new HashSet&lt;Valve&gt;();
+            var human = new HashSet&lt;Valve&gt;();
 
             elephant.Add(valves[0]);
 
-            for (var ivalve = 1; ivalve < valves.Length; ivalve++) {
-                if ((mask & (1 << ivalve)) == 0) {
+            for (var ivalve = 1; ivalve &lt; valves.Length; ivalve++) {
+                if ((mask &amp; (1 &lt;&lt; ivalve)) == 0) {
                     human.Add(valves[ivalve]);
                 } else {
                     elephant.Add(valves[ivalve]);
@@ -337,16 +337,16 @@ class Solution : Solver {
     }
 
     int MaxFlow(
-        Dictionary<string, int> cache,
+        Dictionary&lt;string, int&gt; cache,
         Map map,
         Valve currentValve,
-        HashSet<Valve> valves,
+        HashSet&lt;Valve&gt; valves,
         int remainingTime
     ) {
         string key =
-            remainingTime + "-" +
-            currentValve.id + "-" +
-            string.Join("-", valves.OrderBy(x => x.id).Select(x => x.id));
+            remainingTime + &quot;-&quot; +
+            currentValve.id + &quot;-&quot; +
+            string.Join(&quot;-&quot;, valves.OrderBy(x =&gt; x.id).Select(x =&gt; x.id));
 
         if (!cache.ContainsKey(key)) {
             // current valve gives us this much flow:
@@ -357,7 +357,7 @@ class Solution : Solver {
             foreach (var valve in valves.ToArray()) {
                 var distance = map.distances[currentValve.id, valve.id];
 
-                if (remainingTime >= distance + 1) {
+                if (remainingTime &gt;= distance + 1) {
                     valves.Remove(valve);
                     remainingTime -= distance + 1;
 
@@ -377,16 +377,16 @@ class Solution : Solver {
     Map Parse(string input) {
         // Valve BB has flow rate=0; tunnels lead to valve CC
         // Valve CC has flow rate=10; tunnels lead to valves DD, EE
-        var valveList = new List<Valve>();
-        foreach (var line in input.Split("\n")) {
-            var name = Regex.Match(line, "Valve (.*) has").Groups[1].Value;
-            var flow = int.Parse(Regex.Match(line, @"\d+").Groups[0].Value);
-            var tunnels = Regex.Match(line, "to valves? (.*)").Groups[1].Value.Split(", ");
+        var valveList = new List&lt;Valve&gt;();
+        foreach (var line in input.Split(&quot;\n&quot;)) {
+            var name = Regex.Match(line, &quot;Valve (.*) has&quot;).Groups[1].Value;
+            var flow = int.Parse(Regex.Match(line, @&quot;\d+&quot;).Groups[0].Value);
+            var tunnels = Regex.Match(line, &quot;to valves? (.*)&quot;).Groups[1].Value.Split(&quot;, &quot;);
             valveList.Add(new Valve(0, name, flow, tunnels));
         }
         var valves = valveList
-            .OrderByDescending(valve => valve.flowRate)
-            .Select((v, i) => v with { id = i })
+            .OrderByDescending(valve =&gt; valve.flowRate)
+            .Select((v, i) =&gt; v with { id = i })
             .ToArray();
 
         return new Map(ComputeDistances(valves), valves);
@@ -400,20 +400,20 @@ class Solution : Solver {
         // This is an O(n^3) algorithm, but we are dealing with a low n.
         var n = valves.Length;
 
-        // Just "big enough" so that infinity + infinity still fits in an int.
+        // Just &quot;big enough&quot; so that infinity + infinity still fits in an int.
         var infinity = int.MaxValue / 2; 
 
         var dist = new int[valves.Length, valves.Length];
-        for (var i = 0; i < n; i++) {
-            for (var j = 0; j < n; j++) {
+        for (var i = 0; i &lt; n; i++) {
+            for (var j = 0; j &lt; n; j++) {
                 var neighbours = valves[i].tunnels.Contains(valves[j].name);
                 dist[i, j] = neighbours ? 1 : infinity;
             }
         }
 
-        for (var k = 0; k < n; k++) {
-            for (var i = 0; i < n; i++) {
-                for (var j = 0; j < n; j++) {
+        for (var k = 0; k &lt; n; k++) {
+            for (var i = 0; i &lt; n; i++) {
+                for (var j = 0; j &lt; n; j++) {
                     dist[i, j] = Math.Min(dist[i,j], dist[i, k] + dist[k, j]);
                 }
             }

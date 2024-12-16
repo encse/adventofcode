@@ -285,15 +285,15 @@ using System.Linq;
 
 namespace AdventOfCode.Y2018.Day21;
 
-[ProblemName("Chronal Conversion")]
+[ProblemName(&quot;Chronal Conversion&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Run(input).First();
-    public object PartTwo(string input) => Run(input).Last();
+    public object PartOne(string input) =&gt; Run(input).First();
+    public object PartTwo(string input) =&gt; Run(input).Last();
 
-    public IEnumerable<long> Run(string input) {
+    public IEnumerable&lt;long&gt; Run(string input) {
         var breakpoint = 28;
-        var seen = new List<long>();
+        var seen = new List&lt;long&gt;();
 
         foreach (var regs in Trace(input, breakpoint)) {
             if (seen.Contains(regs[3])) {
@@ -304,9 +304,9 @@ class Solution : Solver {
         }
     }
 
-    public IEnumerable<long[]> Trace(string input, int breakpoint) {
-        var lines = input.Split("\n");
-        var ipReg = int.Parse(lines.First().Split(" ")[1]);
+    public IEnumerable&lt;long[]&gt; Trace(string input, int breakpoint) {
+        var lines = input.Split(&quot;\n&quot;);
+        var ipReg = int.Parse(lines.First().Split(&quot; &quot;)[1]);
         var program = lines.Skip(1).Select(Compile).ToArray();
         var regs = new long[] { 0, 0, 0, 0, 0, 0 };
 
@@ -319,28 +319,28 @@ class Solution : Solver {
         }
     }
 
-    Action<long[]> Compile(string line) {
-        var parts = line.Split(" ");
+    Action&lt;long[]&gt; Compile(string line) {
+        var parts = line.Split(&quot; &quot;);
         var op = parts[0];
         var args = parts.Skip(1).Select(long.Parse).ToArray();
         return op switch {
-            "addr" => regs => regs[args[2]] = regs[args[0]] + regs[args[1]],
-            "addi" => regs => regs[args[2]] = regs[args[0]] + args[1],
-            "mulr" => regs => regs[args[2]] = regs[args[0]] * regs[args[1]],
-            "muli" => regs => regs[args[2]] = regs[args[0]] * args[1],
-            "banr" => regs => regs[args[2]] = regs[args[0]] & regs[args[1]],
-            "bani" => regs => regs[args[2]] = regs[args[0]] & args[1],
-            "borr" => regs => regs[args[2]] = regs[args[0]] | regs[args[1]],
-            "bori" => regs => regs[args[2]] = regs[args[0]] | args[1],
-            "setr" => regs => regs[args[2]] = regs[args[0]],
-            "seti" => regs => regs[args[2]] = args[0],
-            "gtir" => regs => regs[args[2]] = args[0] > regs[args[1]] ? 1 : 0,
-            "gtri" => regs => regs[args[2]] = regs[args[0]] > args[1] ? 1 : 0,
-            "gtrr" => regs => regs[args[2]] = regs[args[0]] > regs[args[1]] ? 1 : 0,
-            "eqir" => regs => regs[args[2]] = args[0] == regs[args[1]] ? 1 : 0,
-            "eqri" => regs => regs[args[2]] = regs[args[0]] == args[1] ? 1 : 0,
-            "eqrr" => regs => regs[args[2]] = regs[args[0]] == regs[args[1]] ? 1 : 0,
-            _ => throw new ArgumentException()
+            &quot;addr&quot; =&gt; regs =&gt; regs[args[2]] = regs[args[0]] + regs[args[1]],
+            &quot;addi&quot; =&gt; regs =&gt; regs[args[2]] = regs[args[0]] + args[1],
+            &quot;mulr&quot; =&gt; regs =&gt; regs[args[2]] = regs[args[0]] * regs[args[1]],
+            &quot;muli&quot; =&gt; regs =&gt; regs[args[2]] = regs[args[0]] * args[1],
+            &quot;banr&quot; =&gt; regs =&gt; regs[args[2]] = regs[args[0]] &amp; regs[args[1]],
+            &quot;bani&quot; =&gt; regs =&gt; regs[args[2]] = regs[args[0]] &amp; args[1],
+            &quot;borr&quot; =&gt; regs =&gt; regs[args[2]] = regs[args[0]] | regs[args[1]],
+            &quot;bori&quot; =&gt; regs =&gt; regs[args[2]] = regs[args[0]] | args[1],
+            &quot;setr&quot; =&gt; regs =&gt; regs[args[2]] = regs[args[0]],
+            &quot;seti&quot; =&gt; regs =&gt; regs[args[2]] = args[0],
+            &quot;gtir&quot; =&gt; regs =&gt; regs[args[2]] = args[0] &gt; regs[args[1]] ? 1 : 0,
+            &quot;gtri&quot; =&gt; regs =&gt; regs[args[2]] = regs[args[0]] &gt; args[1] ? 1 : 0,
+            &quot;gtrr&quot; =&gt; regs =&gt; regs[args[2]] = regs[args[0]] &gt; regs[args[1]] ? 1 : 0,
+            &quot;eqir&quot; =&gt; regs =&gt; regs[args[2]] = args[0] == regs[args[1]] ? 1 : 0,
+            &quot;eqri&quot; =&gt; regs =&gt; regs[args[2]] = regs[args[0]] == args[1] ? 1 : 0,
+            &quot;eqrr&quot; =&gt; regs =&gt; regs[args[2]] = regs[args[0]] == regs[args[1]] ? 1 : 0,
+            _ =&gt; throw new ArgumentException()
         };
     }
 }

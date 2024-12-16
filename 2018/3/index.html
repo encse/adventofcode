@@ -285,33 +285,33 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2018.Day03;
 
-[ProblemName("No Matter How You Slice It")]
+[ProblemName(&quot;No Matter How You Slice It&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Decorate(input).overlapArea;
+    public object PartOne(string input) =&gt; Decorate(input).overlapArea;
 
-    public object PartTwo(string input) => Decorate(input).intactId;
+    public object PartTwo(string input) =&gt; Decorate(input).intactId;
 
     (int overlapArea, int intactId) Decorate(string input) {
         // #1 @ 55,885: 22x10
-        var rx = new Regex(@"(?<id>\d+) @ (?<x>\d+),(?<y>\d+): (?<width>\d+)x(?<height>\d+)");
+        var rx = new Regex(@&quot;(?&lt;id&gt;\d+) @ (?&lt;x&gt;\d+),(?&lt;y&gt;\d+): (?&lt;width&gt;\d+)x(?&lt;height&gt;\d+)&quot;);
         var mtx = new int[1000, 1000];
 
         var overlapArea = 0;
 
-        var ids = new HashSet<int>();
-        foreach (var line in input.Split("\n")) {
+        var ids = new HashSet&lt;int&gt;();
+        foreach (var line in input.Split(&quot;\n&quot;)) {
             var parts = rx.Match(line);
-            var id = int.Parse(parts.Groups["id"].Value);
-            var x = int.Parse(parts.Groups["x"].Value);
-            var y = int.Parse(parts.Groups["y"].Value);
-            var width = int.Parse(parts.Groups["width"].Value);
-            var height = int.Parse(parts.Groups["height"].Value);
+            var id = int.Parse(parts.Groups[&quot;id&quot;].Value);
+            var x = int.Parse(parts.Groups[&quot;x&quot;].Value);
+            var y = int.Parse(parts.Groups[&quot;y&quot;].Value);
+            var width = int.Parse(parts.Groups[&quot;width&quot;].Value);
+            var height = int.Parse(parts.Groups[&quot;height&quot;].Value);
 
             ids.Add(id);
 
-            for (var i = 0; i < width; i++) {
-                for (var j = 0; j < height; j++) {
+            for (var i = 0; i &lt; width; i++) {
+                for (var j = 0; j &lt; height; j++) {
                     if (mtx[x + i, y + j] == 0) {
                         mtx[x + i, y + j] = id;
                     } else if (mtx[x + i, y + j] == -1) {

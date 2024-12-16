@@ -285,28 +285,28 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2016.Day04;
 
-[ProblemName("Security Through Obscurity")]
+[ProblemName(&quot;Security Through Obscurity&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => (
+    public object PartOne(string input) =&gt; (
         from i in Parse(input)
-        let name = i.name.Replace("-", "")
-        let computedChecksum = string.Join("", (from ch in name group ch by ch into g orderby -g.Count(), g.Key select g.Key).Take(5))
+        let name = i.name.Replace(&quot;-&quot;, &quot;&quot;)
+        let computedChecksum = string.Join(&quot;&quot;, (from ch in name group ch by ch into g orderby -g.Count(), g.Key select g.Key).Take(5))
         where computedChecksum == i.checksum
         select i.sectorid
     ).Sum();
 
-    public object PartTwo(string input) => (
+    public object PartTwo(string input) =&gt; (
         from i in Parse(input)
-        let name = string.Join("", from ch in i.name select ch == '-' ? ' ' : (char)('a' + (ch - 'a' + i.sectorid) % 26))
-        where name.Contains("northpole")
+        let name = string.Join(&quot;&quot;, from ch in i.name select ch == &#039;-&#039; ? &#039; &#039; : (char)(&#039;a&#039; + (ch - &#039;a&#039; + i.sectorid) % 26))
+        where name.Contains(&quot;northpole&quot;)
         select i.sectorid
     ).Single();
 
-    IEnumerable<(string name, int sectorid, string checksum)> Parse(string input){
-        var rx = new Regex(@"([^\d]+)\-(\d+)\[(.*)\]");
+    IEnumerable&lt;(string name, int sectorid, string checksum)&gt; Parse(string input){
+        var rx = new Regex(@&quot;([^\d]+)\-(\d+)\[(.*)\]&quot;);
         
-        return from line in input.Split('\n')
+        return from line in input.Split(&#039;\n&#039;)
             let m = rx.Match(line)
             select (m.Groups[1].Value, int.Parse(m.Groups[2].Value), m.Groups[3].Value);
          

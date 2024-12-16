@@ -288,10 +288,10 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Numerics;
-using Map = System.Collections.Generic.Dictionary<System.Numerics.Complex, char>;
+using Map = System.Collections.Generic.Dictionary&lt;System.Numerics.Complex, char&gt;;
 using State = (System.Numerics.Complex pos, System.Numerics.Complex dir);
 
-[ProblemName("Reindeer Maze")]
+[ProblemName(&quot;Reindeer Maze&quot;)]
 class Solution : Solver {
 
     static readonly Complex North = -Complex.ImaginaryOne;
@@ -300,8 +300,8 @@ class Solution : Solver {
     static readonly Complex East = 1;
     static readonly Complex[] Dirs = { North, East, West, South };
 
-    public object PartOne(string input) => FindDistance(GetMap(input));
-    public object PartTwo(string input) => FindBestSpots(GetMap(input));
+    public object PartOne(string input) =&gt; FindDistance(GetMap(input));
+    public object PartTwo(string input) =&gt; FindBestSpots(GetMap(input));
 
     int FindDistance(Map map) {
         var dist = DistancesTo(map, Goal(map));
@@ -316,9 +316,9 @@ class Solution : Solver {
         // flood fill algorithm determines the best spots by following the shortest paths 
         // using the distance map as guideline.
 
-        var q = new PriorityQueue<State, int>();
+        var q = new PriorityQueue&lt;State, int&gt;();
         q.Enqueue(start, dist[start]);
-        var bestSpots = new HashSet<State> { start };
+        var bestSpots = new HashSet&lt;State&gt; { start };
 
         while (q.TryDequeue(out var state, out var remainingScore)) {
             foreach (var (next, score) in Steps(map, state, forward: true)) {
@@ -332,15 +332,15 @@ class Solution : Solver {
                 }
             }
         }
-        return bestSpots.DistinctBy(state => state.pos).Count();
+        return bestSpots.DistinctBy(state =&gt; state.pos).Count();
     }
 
-    Dictionary<State, int> DistancesTo(Map map, Complex goal) {
-        var res = new Dictionary<State, int>();
+    Dictionary&lt;State, int&gt; DistancesTo(Map map, Complex goal) {
+        var res = new Dictionary&lt;State, int&gt;();
 
         // a flood fill algorithm, works backwards from the goal, and 
         // computes the distances between any location in the map and the goal
-        var q = new PriorityQueue<State, int>();
+        var q = new PriorityQueue&lt;State, int&gt;();
         foreach (var dir in Dirs) {
             q.Enqueue((goal, dir), 0);
             res[(goal, dir)] = 0;
@@ -352,7 +352,7 @@ class Solution : Solver {
             }
             foreach (var (next, score) in Steps(map, state, forward: false)) {
                 var nextCost = totalScore + score;
-                if (res.ContainsKey(next) && res[next] < nextCost) {
+                if (res.ContainsKey(next) &amp;&amp; res[next] &lt; nextCost) {
                     continue;
                 }
 
@@ -367,11 +367,11 @@ class Solution : Solver {
     // returns the possible next or previous states and the associated costs for a given state.
     // in forward mode we scan the possible states from the start state towards the goal.
     // in backward mode we are working backwards from the goal to the start.
-    IEnumerable<(State, int cost)> Steps(Map map, State state, bool forward) {
+    IEnumerable&lt;(State, int cost)&gt; Steps(Map map, State state, bool forward) {
         foreach (var dir in Dirs) {
             if (dir == state.dir) {
                 var pos = forward ? state.pos + dir : state.pos - dir;
-                if (map.GetValueOrDefault(pos) != '#') {
+                if (map.GetValueOrDefault(pos) != &#039;#&#039;) {
                     yield return ((pos, dir), 1);
                 }
             } else if (dir != -state.dir) {
@@ -383,15 +383,15 @@ class Solution : Solver {
     // store the points in a dictionary so that we can iterate over them and 
     // to easily deal with points outside the area using GetValueOrDefault
     Map GetMap(string input) {
-        var map = input.Split("\n");
+        var map = input.Split(&quot;\n&quot;);
         return (
             from y in Enumerable.Range(0, map.Length)
             from x in Enumerable.Range(0, map[0].Length)
-            select new KeyValuePair<Complex, char>(Complex.ImaginaryOne * y + x, map[y][x])
+            select new KeyValuePair&lt;Complex, char&gt;(Complex.ImaginaryOne * y + x, map[y][x])
         ).ToDictionary();
     }
-    Complex Goal(Map map) => map.Keys.Single(k => map[k] == 'E');
-    State Start(Map map) => (map.Keys.Single(k => map[k] == 'S'), East);
+    Complex Goal(Map map) =&gt; map.Keys.Single(k =&gt; map[k] == &#039;E&#039;);
+    State Start(Map map) =&gt; (map.Keys.Single(k =&gt; map[k] == &#039;S&#039;), East);
 }</code></pre></div>
             <div id="code-location"> <p>Please ☆ my <a href="https://github.com/encse/adventofcode/">repo</a> if you like it!</p></div>
         </div>

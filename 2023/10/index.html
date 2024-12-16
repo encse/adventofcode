@@ -288,9 +288,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using Map = System.Collections.Generic.Dictionary<System.Numerics.Complex, char>;
+using Map = System.Collections.Generic.Dictionary&lt;System.Numerics.Complex, char&gt;;
 
-[ProblemName("Pipe Maze")]
+[ProblemName(&quot;Pipe Maze&quot;)]
 class Solution : Solver {
     static readonly Complex Up = -Complex.ImaginaryOne;
     static readonly Complex Down = Complex.ImaginaryOne;
@@ -298,15 +298,15 @@ class Solution : Solver {
     static readonly Complex Right = Complex.One;
     static readonly Complex[] Dirs = [Up, Right, Down, Left];
 
-    static readonly Dictionary<char, Complex[]> Exits = new Dictionary<char, Complex[]>{
-        {'7', [Left, Down] },
-        {'F', [Right, Down]},
-        {'L', [Up, Right]},
-        {'J', [Up, Left]},
-        {'|', [Up, Down]},
-        {'-', [Left, Right]},
-        {'S', [Up, Down, Left, Right]},
-        {'.', []},
+    static readonly Dictionary&lt;char, Complex[]&gt; Exits = new Dictionary&lt;char, Complex[]&gt;{
+        {&#039;7&#039;, [Left, Down] },
+        {&#039;F&#039;, [Right, Down]},
+        {&#039;L&#039;, [Up, Right]},
+        {&#039;J&#039;, [Up, Left]},
+        {&#039;|&#039;, [Up, Down]},
+        {&#039;-&#039;, [Left, Right]},
+        {&#039;S&#039;, [Up, Down, Left, Right]},
+        {&#039;.&#039;, []},
     };
 
     public object PartOne(string input) {
@@ -318,34 +318,34 @@ class Solution : Solver {
     public object PartTwo(string input) {
         var map = ParseMap(input);
         var loop = LoopPositions(map);
-        return map.Keys.Count(position => Inside(position, map, loop));
+        return map.Keys.Count(position =&gt; Inside(position, map, loop));
     }
 
-    // Returns the positions that make up the loop containing 'S'
-    HashSet<Complex> LoopPositions(Map map) {
-        var position = map.Keys.Single(k => map[k] == 'S');
-        var positions = new HashSet<Complex>();
+    // Returns the positions that make up the loop containing &#039;S&#039;
+    HashSet&lt;Complex&gt; LoopPositions(Map map) {
+        var position = map.Keys.Single(k =&gt; map[k] == &#039;S&#039;);
+        var positions = new HashSet&lt;Complex&gt;();
 
         // pick a direction connected to a neighbour
-        var dir = Dirs.First(dir => Exits[map[position + dir]].Contains(-dir));
+        var dir = Dirs.First(dir =&gt; Exits[map[position + dir]].Contains(-dir));
 
         for (; ; ) {
             positions.Add(position);
             position += dir;
-            if (map[position] == 'S') {
+            if (map[position] == &#039;S&#039;) {
                 break;
             }
-            dir = Exits[map[position]].Single(exit => exit != -dir);
+            dir = Exits[map[position]].Single(exit =&gt; exit != -dir);
         }
         return positions;
     }
 
     // Check if position is inside the loop using ray casting algorithm
-    bool Inside(Complex position, Map map, HashSet<Complex> loop) {
+    bool Inside(Complex position, Map map, HashSet&lt;Complex&gt; loop) {
         // Imagine a small elf starting from the top half of a cell and moving 
         // to the left jumping over the pipes it encounters. It needs to jump 
-        // over only 'vertically' oriented pipes leading upwards, since it runs 
-        // in the top of the row. Each jump flips the "inside" variable.
+        // over only &#039;vertically&#039; oriented pipes leading upwards, since it runs 
+        // in the top of the row. Each jump flips the &quot;inside&quot; variable.
 
         if (loop.Contains(position)) {
             return false;
@@ -354,7 +354,7 @@ class Solution : Solver {
         var inside = false;
         position += Left;
         while (map.ContainsKey(position)) {
-            if (loop.Contains(position) && Exits[map[position]].Contains(Up)) {
+            if (loop.Contains(position) &amp;&amp; Exits[map[position]].Contains(Up)) {
                 inside = !inside;
             }
             position += Left;
@@ -363,13 +363,13 @@ class Solution : Solver {
     }
 
     Map ParseMap(string input) {
-        var rows = input.Split("\n");
+        var rows = input.Split(&quot;\n&quot;);
         return (
             from irow in Enumerable.Range(0, rows.Length)
             from icol in Enumerable.Range(0, rows[0].Length)
             let pos = new Complex(icol, irow)
             let cell = rows[irow][icol]
-            select new KeyValuePair<Complex, char>(pos, cell)
+            select new KeyValuePair&lt;Complex, char&gt;(pos, cell)
         ).ToDictionary();
     }
 }

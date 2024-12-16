@@ -284,23 +284,23 @@ using System.Linq;
 
 namespace AdventOfCode.Y2018.Day05;
 
-[ProblemName("Alchemical Reduction")]
+[ProblemName(&quot;Alchemical Reduction&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => React(input);
+    public object PartOne(string input) =&gt; React(input);
 
-    public object PartTwo(string input) => (from ch in "abcdefghijklmnopqrstuvwxyz" select React(input, ch)).Min();
+    public object PartTwo(string input) =&gt; (from ch in &quot;abcdefghijklmnopqrstuvwxyz&quot; select React(input, ch)).Min();
 
-    char ToLower(char ch) => ch <= 'Z' ? (char)(ch - 'A' + 'a') : ch;
+    char ToLower(char ch) =&gt; ch &lt;= &#039;Z&#039; ? (char)(ch - &#039;A&#039; + &#039;a&#039;) : ch;
 
     int React(string input, char? skip = null) {
-        var stack = new Stack<char>("⊥");
+        var stack = new Stack&lt;char&gt;(&quot;⊥&quot;);
         
         foreach (var ch in input) {
             var top = stack.Peek();
             if (ToLower(ch) == skip) {
                 continue;
-            } else if (top != ch && ToLower(ch) == ToLower(top)) {
+            } else if (top != ch &amp;&amp; ToLower(ch) == ToLower(top)) {
                 stack.Pop();
             } else {
                 stack.Push(ch);

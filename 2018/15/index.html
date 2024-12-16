@@ -285,7 +285,7 @@ using System.Linq;
 
 namespace AdventOfCode.Y2018.Day15;
 
-[ProblemName("Beverage Bandits")]
+[ProblemName(&quot;Beverage Bandits&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
@@ -305,7 +305,7 @@ class Solution : Solver {
 
     (bool noElfDied, int score) Outcome(string input, int goblinAp, int elfAp, bool tsto) {
         var game = Parse(input, goblinAp, elfAp);
-        var elfCount = game.players.Count(player => player.elf);
+        var elfCount = game.players.Count(player =&gt; player.elf);
 
         if (tsto) {
             Console.WriteLine(game.Tsto());
@@ -318,30 +318,30 @@ class Solution : Solver {
             }
         }
 
-        return (game.players.Count(p => p.elf) == elfCount, game.rounds * game.players.Select(player => player.hp).Sum());
+        return (game.players.Count(p =&gt; p.elf) == elfCount, game.rounds * game.players.Select(player =&gt; player.hp).Sum());
     }
 
 
     Game Parse(string input, int goblinAp, int elfAp) {
-        var players = new List<Player>();
-        var lines = input.Split("\n");
+        var players = new List&lt;Player&gt;();
+        var lines = input.Split(&quot;\n&quot;);
         var mtx = new Block[lines.Length, lines[0].Length];
 
         var game = new Game { mtx = mtx, players = players };
 
-        for (var irow = 0; irow < lines.Length; irow++) {
-            for (var icol = 0; icol < lines[0].Length; icol++) {
+        for (var irow = 0; irow &lt; lines.Length; irow++) {
+            for (var icol = 0; icol &lt; lines[0].Length; icol++) {
                 switch (lines[irow][icol]) {
-                    case '#':
+                    case &#039;#&#039;:
                         mtx[irow, icol] = Wall.Block;
                         break;
-                    case '.':
+                    case &#039;.&#039;:
                         mtx[irow, icol] = Empty.Block;
                         break;
-                    case var ch when ch == 'G' || ch == 'E':
+                    case var ch when ch == &#039;G&#039; || ch == &#039;E&#039;:
                         var player = new Player {
-                            elf = ch == 'E',
-                            ap = ch == 'E' ? elfAp : goblinAp,
+                            elf = ch == &#039;E&#039;,
+                            ap = ch == &#039;E&#039; ? elfAp : goblinAp,
                             pos = (irow, icol),
                             game = game
                         };
@@ -359,19 +359,19 @@ class Solution : Solver {
 
 class Game {
     public Block[,] mtx;
-    public List<Player> players;
+    public List&lt;Player&gt; players;
     public int rounds;
 
-    private bool ValidPos((int irow, int icol) pos) =>
-        pos.irow >= 0 && pos.irow < this.mtx.GetLength(0) && pos.icol >= 0 && pos.icol < this.mtx.GetLength(1);
+    private bool ValidPos((int irow, int icol) pos) =&gt;
+        pos.irow &gt;= 0 &amp;&amp; pos.irow &lt; this.mtx.GetLength(0) &amp;&amp; pos.icol &gt;= 0 &amp;&amp; pos.icol &lt; this.mtx.GetLength(1);
 
-    public Block GetBlock((int irow, int icol) pos) =>
+    public Block GetBlock((int irow, int icol) pos) =&gt;
         ValidPos(pos) ? mtx[pos.irow, pos.icol] : Wall.Block;
 
     public void Step() {
         var finishedBeforeEndOfRound = false;
-        foreach (var player in players.OrderBy(player => player.pos).ToArray()) {
-            if (player.hp > 0) {
+        foreach (var player in players.OrderBy(player =&gt; player.pos).ToArray()) {
+            if (player.hp &gt; 0) {
                 finishedBeforeEndOfRound |= Finished();
                 player.Step();
             }
@@ -382,32 +382,32 @@ class Game {
         }
     }
 
-    public bool Finished() =>
-        players.Where(p => p.elf).All(p => p.hp == 0) ||
-        players.Where(p => !p.elf).All(p => p.hp == 0);
+    public bool Finished() =&gt;
+        players.Where(p =&gt; p.elf).All(p =&gt; p.hp == 0) ||
+        players.Where(p =&gt; !p.elf).All(p =&gt; p.hp == 0);
 
     public string Tsto() {
 
-        var res = "";
-        res += rounds == 0 ? "Initial:\n" : $"After round {rounds}:\n";
-        for (var irow = 0; irow < mtx.GetLength(0); irow++) {
-            for (var icol = 0; icol < mtx.GetLength(1); icol++) {
+        var res = &quot;&quot;;
+        res += rounds == 0 ? &quot;Initial:\n&quot; : $&quot;After round {rounds}:\n&quot;;
+        for (var irow = 0; irow &lt; mtx.GetLength(0); irow++) {
+            for (var icol = 0; icol &lt; mtx.GetLength(1); icol++) {
                 res += GetBlock((irow, icol)) switch {
-                    Player p when p.elf => "E",
-                    Player p when !p.elf => "G",
-                    Empty _ => ".",
-                    Wall _ => "#",
-                    _ => throw new ArgumentException()
+                    Player p when p.elf =&gt; &quot;E&quot;,
+                    Player p when !p.elf =&gt; &quot;G&quot;,
+                    Empty _ =&gt; &quot;.&quot;,
+                    Wall _ =&gt; &quot;#&quot;,
+                    _ =&gt; throw new ArgumentException()
                 };
             }
 
-            foreach (var player in players.Where(player => player.pos.irow == irow).OrderBy(player => player.pos)) {
-                var ch = player.elf ? 'E' : 'G';
-                res += $" {ch}{{{player.pos.irow}, {player.pos.icol}}}({player.hp})";
+            foreach (var player in players.Where(player =&gt; player.pos.irow == irow).OrderBy(player =&gt; player.pos)) {
+                var ch = player.elf ? &#039;E&#039; : &#039;G&#039;;
+                res += $&quot; {ch}{{{player.pos.irow}, {player.pos.icol}}}({player.hp})&quot;;
             }
-            res += "\n";
+            res += &quot;\n&quot;;
         }
-        res += "\n";
+        res += &quot;\n&quot;;
         return res;
     }
 }
@@ -432,7 +432,7 @@ class Player : Block {
     public Game game;
 
     public bool Step() {
-        if (hp <= 0) {
+        if (hp &lt;= 0) {
             return false;
         } else if (Attack()) {
             return true;
@@ -449,19 +449,19 @@ class Player : Block {
         if (!targets.Any()) {
             return false;
         }
-        var opponent = targets.OrderBy(a => a.target).First();
-        var nextPos = targets.Where(a => a.player == opponent.player).Select(a => a.firstStep).OrderBy(_ => _).First();
+        var opponent = targets.OrderBy(a =&gt; a.target).First();
+        var nextPos = targets.Where(a =&gt; a.player == opponent.player).Select(a =&gt; a.firstStep).OrderBy(_ =&gt; _).First();
         (game.mtx[nextPos.irow, nextPos.icol], game.mtx[pos.irow, pos.icol]) =
             (game.mtx[pos.irow, pos.icol], game.mtx[nextPos.irow, nextPos.icol]);
         pos = nextPos;
         return true;
     }
 
-    private IEnumerable<(Player player, (int irow, int icol) firstStep, (int irow, int icol) target)> FindTargets() {
+    private IEnumerable&lt;(Player player, (int irow, int icol) firstStep, (int irow, int icol) target)&gt; FindTargets() {
 
         var minDist = int.MaxValue;
         foreach (var (otherPlayer, firstStep, target, dist) in BlocksNextToOpponentsByDistance()) {
-            if (dist > minDist) {
+            if (dist &gt; minDist) {
                 break;
             } else {
                 minDist = dist;
@@ -470,10 +470,10 @@ class Player : Block {
         }
     }
 
-    private IEnumerable<(Player player, (int irow, int icol) firstStep, (int irow, int icol) target, int dist)> BlocksNextToOpponentsByDistance() {
-        var seen = new HashSet<(int irow, int icol)>();
+    private IEnumerable&lt;(Player player, (int irow, int icol) firstStep, (int irow, int icol) target, int dist)&gt; BlocksNextToOpponentsByDistance() {
+        var seen = new HashSet&lt;(int irow, int icol)&gt;();
         seen.Add(pos);
-        var q = new Queue<((int irow, int icol) pos, (int drow, int dcol) origDir, int dist)>();
+        var q = new Queue&lt;((int irow, int icol) pos, (int drow, int dcol) origDir, int dist)&gt;();
 
         foreach (var (drow, dcol) in new[] { (-1, 0), (0, -1), (0, 1), (1, 0) }) {
             var posT = (pos.irow + drow, pos.icol + dcol);
@@ -504,7 +504,7 @@ class Player : Block {
     }
 
     private bool Attack() {
-        var opponents = new List<Player>();
+        var opponents = new List&lt;Player&gt;();
 
         foreach (var (drow, dcol) in new[] { (-1, 0), (0, -1), (0, 1), (1, 0) }) {
             var posT = (this.pos.irow + drow, this.pos.icol + dcol);
@@ -519,10 +519,10 @@ class Player : Block {
         if (!opponents.Any()) {
             return false;
         }
-        var minHp = opponents.Select(a => a.hp).Min();
-        var opponent = opponents.First(a => a.hp == minHp);
+        var minHp = opponents.Select(a =&gt; a.hp).Min();
+        var opponent = opponents.First(a =&gt; a.hp == minHp);
         opponent.hp -= this.ap;
-        if (opponent.hp <= 0) {
+        if (opponent.hp &lt;= 0) {
             game.players.Remove(opponent);
             game.mtx[opponent.pos.irow, opponent.pos.icol] = Empty.Block;
         }

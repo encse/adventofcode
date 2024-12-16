@@ -285,21 +285,21 @@ using System.Linq;
 
 namespace AdventOfCode.Y2021.Day05;
 
-[ProblemName("Hydrothermal Venture")]
+[ProblemName(&quot;Hydrothermal Venture&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => GetIntersections(ParseLines(input, skipDiagonals: true)).Count();
-    public object PartTwo(string input) => GetIntersections(ParseLines(input, skipDiagonals: false)).Count();
+    public object PartOne(string input) =&gt; GetIntersections(ParseLines(input, skipDiagonals: true)).Count();
+    public object PartTwo(string input) =&gt; GetIntersections(ParseLines(input, skipDiagonals: false)).Count();
 
-    IEnumerable<Vec2> GetIntersections(IEnumerable<IEnumerable<Vec2>> lines) => 
+    IEnumerable&lt;Vec2&gt; GetIntersections(IEnumerable&lt;IEnumerable&lt;Vec2&gt;&gt; lines) =&gt; 
         // group all the points and return the intersections:
-        lines.SelectMany(pt => pt).GroupBy(pt => pt).Where(g => g.Count() > 1).Select(g => g.Key);
+        lines.SelectMany(pt =&gt; pt).GroupBy(pt =&gt; pt).Where(g =&gt; g.Count() &gt; 1).Select(g =&gt; g.Key);
     
-    IEnumerable<IEnumerable<Vec2>> ParseLines(string input, bool skipDiagonals) =>
-        from line in input.Split("\n")
+    IEnumerable&lt;IEnumerable&lt;Vec2&gt;&gt; ParseLines(string input, bool skipDiagonals) =&gt;
+        from line in input.Split(&quot;\n&quot;)
         // parse out numbers first:
         let ns = (
-            from st in line.Split(", ->".ToArray(), StringSplitOptions.RemoveEmptyEntries)
+            from st in line.Split(&quot;, -&gt;&quot;.ToArray(), StringSplitOptions.RemoveEmptyEntries)
             select int.Parse(st)
         ).ToArray()
 

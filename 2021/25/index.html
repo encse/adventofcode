@@ -283,35 +283,35 @@
 
 namespace AdventOfCode.Y2021.Day25;
 
-[ProblemName("Sea Cucumber")]
+[ProblemName(&quot;Sea Cucumber&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
 
-        var map = input.Split('\n');
+        var map = input.Split(&#039;\n&#039;);
         var (ccol, crow) = (map[0].Length, map.Length);
 
-        int right(int icol) => (icol + 1) % ccol;
-        int left(int icol) => (icol - 1 + ccol) % ccol;
-        int up(int irow) => (irow - 1 + crow) % crow;
-        int down(int irow) => (irow + 1) % crow;
+        int right(int icol) =&gt; (icol + 1) % ccol;
+        int left(int icol) =&gt; (icol - 1 + ccol) % ccol;
+        int up(int irow) =&gt; (irow - 1 + crow) % crow;
+        int down(int irow) =&gt; (irow + 1) % crow;
 
-        bool movesRight(int irow, int icol) =>
-            map[irow][icol] == '>' && map[irow][right(icol)] == '.';
-        bool movesDown(int irow, int icol) =>
-            map[irow][icol] == 'v' && map[down(irow)][icol] == '.';
+        bool movesRight(int irow, int icol) =&gt;
+            map[irow][icol] == &#039;&gt;&#039; &amp;&amp; map[irow][right(icol)] == &#039;.&#039;;
+        bool movesDown(int irow, int icol) =&gt;
+            map[irow][icol] == &#039;v&#039; &amp;&amp; map[down(irow)][icol] == &#039;.&#039;;
 
         for(var steps = 1;; steps++) {
             var anyMoves = false;
 
-            var newMap = new List<string>();
-            for (var irow = 0; irow < crow; irow++) {
-                var st = "";
-                for (var icol = 0; icol < ccol; icol++) {
+            var newMap = new List&lt;string&gt;();
+            for (var irow = 0; irow &lt; crow; irow++) {
+                var st = &quot;&quot;;
+                for (var icol = 0; icol &lt; ccol; icol++) {
                     anyMoves |= movesRight(irow, icol);
                     st +=
-                        movesRight(irow, icol) ? '.' :
-                        movesRight(irow, left(icol)) ? '>' :
+                        movesRight(irow, icol) ? &#039;.&#039; :
+                        movesRight(irow, left(icol)) ? &#039;&gt;&#039; :
                         map[irow][icol];
                     
                 }
@@ -321,13 +321,13 @@ class Solution : Solver {
             map = newMap.ToArray();
             newMap.Clear();
 
-            for (var irow = 0; irow < crow; irow++) {
-                var st = "";
-                for (var icol = 0; icol < ccol; icol++) {
+            for (var irow = 0; irow &lt; crow; irow++) {
+                var st = &quot;&quot;;
+                for (var icol = 0; icol &lt; ccol; icol++) {
                     anyMoves |= movesDown(irow, icol);
                     st +=
-                        movesDown(irow, icol) ? '.' :
-                        movesDown(up(irow), icol) ? 'v' :
+                        movesDown(irow, icol) ? &#039;.&#039; :
+                        movesDown(up(irow), icol) ? &#039;v&#039; :
                         map[irow][icol];
                 }
                 newMap.Add(st);

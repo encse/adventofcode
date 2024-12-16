@@ -284,18 +284,18 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2018.Day09;
 
-[ProblemName("Marble Mania")]
+[ProblemName(&quot;Marble Mania&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Solve(input, 1);
+    public object PartOne(string input) =&gt; Solve(input, 1);
 
-    public object PartTwo(string input) => Solve(input, 100);
+    public object PartTwo(string input) =&gt; Solve(input, 100);
 
     long Solve(string input, int mul) {
 
-        var match = Regex.Match(input, @"(?<players>\d+) players; last marble is worth (?<points>\d+) points");
-        var players = new long[int.Parse(match.Groups["players"].Value)];
-        var targetPoints = int.Parse(match.Groups["points"].Value) * mul;
+        var match = Regex.Match(input, @&quot;(?&lt;players&gt;\d+) players; last marble is worth (?&lt;points&gt;\d+) points&quot;);
+        var players = new long[int.Parse(match.Groups[&quot;players&quot;].Value)];
+        var targetPoints = int.Parse(match.Groups[&quot;points&quot;].Value) * mul;
 
         var current = new Node { value = 0 };
         current.left = current;
@@ -303,10 +303,10 @@ class Solution : Solver {
 
         var points = 1;
         var iplayer = 1;
-        while (points <= targetPoints) {
+        while (points &lt;= targetPoints) {
 
             if (points % 23 == 0) {
-                for (var i = 0; i < 7; i++) {
+                for (var i = 0; i &lt; 7; i++) {
                     current = current.left;
                 }
 

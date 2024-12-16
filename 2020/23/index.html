@@ -284,36 +284,36 @@ using System.Linq;
 
 namespace AdventOfCode.Y2020.Day23;
 
-[ProblemName("Crab Cups")]
+[ProblemName(&quot;Crab Cups&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) =>
-        string.Join("", Solve(input, 9, 100).Take(8));
+    public object PartOne(string input) =&gt;
+        string.Join(&quot;&quot;, Solve(input, 9, 100).Take(8));
 
     public object PartTwo(string input) {
         var labels = Solve(input, 1000000, 10000000).Take(2).ToArray();
         return labels[0] * labels[1];
     }
 
-    private IEnumerable<long> Solve(string input, int maxLabel, int rotate) {
-        var digits = input.Select(d => int.Parse(d.ToString())).ToArray();
+    private IEnumerable&lt;long&gt; Solve(string input, int maxLabel, int rotate) {
+        var digits = input.Select(d =&gt; int.Parse(d.ToString())).ToArray();
 
-        // A compact linked list representation. The cup's label can be used as the index into the array. 
+        // A compact linked list representation. The cup&#039;s label can be used as the index into the array. 
         int[] next = Enumerable.Range(1, maxLabel + 1).ToArray();
         next[0] = -1; // not used
 
-        for (var i = 0; i < digits.Length; i++) {
+        for (var i = 0; i &lt; digits.Length; i++) {
             next[digits[i]] = digits[(i + 1) % digits.Length];
         }
 
-        if (maxLabel > input.Length) {
+        if (maxLabel &gt; input.Length) {
             next[maxLabel] = next[digits.Last()];
             next[digits.Last()] = input.Length + 1;
         }
 
         var current = digits.First();
 
-        for (var i = 0; i < rotate; i++) {
+        for (var i = 0; i &lt; rotate; i++) {
             var removed1 = next[current];
             var removed2 = next[removed1];
             var removed3 = next[removed2];

@@ -284,7 +284,7 @@ using System.Linq;
 
 namespace AdventOfCode.Y2022.Day08;
 
-[ProblemName("Treetop Tree House")]
+[ProblemName(&quot;Treetop Tree House&quot;)]
 class Solution : Solver {
 
     static Direction Left = new Direction(0, -1);
@@ -295,7 +295,7 @@ class Solution : Solver {
     public object PartOne(string input) {
         var forest = Parse(input);
 
-        return forest.Trees().Count(tree =>
+        return forest.Trees().Count(tree =&gt;
             forest.IsTallest(tree, Left) || forest.IsTallest(tree, Right) ||
             forest.IsTallest(tree, Up) || forest.IsTallest(tree, Down)
         );
@@ -304,14 +304,14 @@ class Solution : Solver {
     public object PartTwo(string input) {
         var forest = Parse(input);
 
-        return forest.Trees().Select(tree =>
+        return forest.Trees().Select(tree =&gt;
             forest.ViewDistance(tree, Left) * forest.ViewDistance(tree, Right) *
             forest.ViewDistance(tree, Up) * forest.ViewDistance(tree, Down)
         ).Max();
     }
 
     Forest Parse(string input) {
-        var items = input.Split("\n");
+        var items = input.Split(&quot;\n&quot;);
         var (ccol, crow) = (items[0].Length, items.Length);
         return new Forest(items, crow, ccol);
     }
@@ -321,24 +321,24 @@ record Direction(int drow, int dcol);
 record Tree(int height, int irow, int icol);
 record Forest(string[] items, int crow, int ccol) {
 
-    public IEnumerable<Tree> Trees() =>
+    public IEnumerable&lt;Tree&gt; Trees() =&gt;
         from irow in Enumerable.Range(0, crow)
         from icol in Enumerable.Range(0, ccol)
         select new Tree(items[irow][icol], irow, icol);
 
-    public int ViewDistance(Tree tree, Direction dir) =>
+    public int ViewDistance(Tree tree, Direction dir) =&gt;
         IsTallest(tree, dir) ? TreesInDirection(tree, dir).Count() 
                              : SmallerTrees(tree, dir).Count() + 1;
 
-    public bool IsTallest(Tree tree, Direction dir) =>
-        TreesInDirection(tree, dir).All(treeT => treeT.height < tree.height);
+    public bool IsTallest(Tree tree, Direction dir) =&gt;
+        TreesInDirection(tree, dir).All(treeT =&gt; treeT.height &lt; tree.height);
 
-    IEnumerable<Tree> SmallerTrees(Tree tree, Direction dir) =>
-        TreesInDirection(tree, dir).TakeWhile(treeT => treeT.height < tree.height);
+    IEnumerable&lt;Tree&gt; SmallerTrees(Tree tree, Direction dir) =&gt;
+        TreesInDirection(tree, dir).TakeWhile(treeT =&gt; treeT.height &lt; tree.height);
 
-    IEnumerable<Tree> TreesInDirection(Tree tree, Direction dir) {
+    IEnumerable&lt;Tree&gt; TreesInDirection(Tree tree, Direction dir) {
         var (first, irow, icol) = (true, tree.irow, tree.icol);
-        while (irow >= 0 && irow < crow && icol >= 0 && icol < ccol) {
+        while (irow &gt;= 0 &amp;&amp; irow &lt; crow &amp;&amp; icol &gt;= 0 &amp;&amp; icol &lt; ccol) {
             if (!first) {
                 yield return new Tree(height: items[irow][icol], irow: irow, icol: icol);
             }

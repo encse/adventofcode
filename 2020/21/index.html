@@ -285,18 +285,18 @@ using System.Linq;
 namespace AdventOfCode.Y2020.Day21;
 
 record Problem(
-    HashSet<string> allergens, 
-    HashSet<string> ingredients, 
-    (HashSet<string> ingredients, HashSet<string> allergens)[] mapping);
+    HashSet&lt;string&gt; allergens, 
+    HashSet&lt;string&gt; ingredients, 
+    (HashSet&lt;string&gt; ingredients, HashSet&lt;string&gt; allergens)[] mapping);
 
-[ProblemName("Allergen Assessment")]
+[ProblemName(&quot;Allergen Assessment&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
         var problem = Parse(input);
-        var suspiciousIngredients = GetIngredientsByAllergene(problem).SelectMany(kvp => kvp.Value).ToHashSet();
+        var suspiciousIngredients = GetIngredientsByAllergene(problem).SelectMany(kvp =&gt; kvp.Value).ToHashSet();
         return problem.mapping
-            .Select(entry => entry.ingredients.Count(ingredient => !suspiciousIngredients.Contains(ingredient)))
+            .Select(entry =&gt; entry.ingredients.Count(ingredient =&gt; !suspiciousIngredients.Contains(ingredient)))
             .Sum();
     }
 
@@ -305,7 +305,7 @@ class Solution : Solver {
         var ingredientsByAllergene = GetIngredientsByAllergene(problem);
         
         // The problem is set up in a way that we can identify the allergene - ingredient pairs one by one. 
-        while (ingredientsByAllergene.Values.Any(ingredients => ingredients.Count > 1)) {
+        while (ingredientsByAllergene.Values.Any(ingredients =&gt; ingredients.Count &gt; 1)) {
             foreach (var allergen in problem.allergens) {
                 var candidates = ingredientsByAllergene[allergen];
                 if (candidates.Count == 1) {
@@ -318,33 +318,33 @@ class Solution : Solver {
             }
         }
 
-        return string.Join(",", problem.allergens.OrderBy(a => a).Select(a => ingredientsByAllergene[a].Single()));
+        return string.Join(&quot;,&quot;, problem.allergens.OrderBy(a =&gt; a).Select(a =&gt; ingredientsByAllergene[a].Single()));
     }
 
     private Problem Parse(string input) {
         var mapping = (
-            from line in input.Split("\n")
-                let parts = line.Trim(')').Split(" (contains ")
-                let ingredients = parts[0].Split(" ").ToHashSet()
-                let allergens = parts[1].Split(", ").ToHashSet()
+            from line in input.Split(&quot;\n&quot;)
+                let parts = line.Trim(&#039;)&#039;).Split(&quot; (contains &quot;)
+                let ingredients = parts[0].Split(&quot; &quot;).ToHashSet()
+                let allergens = parts[1].Split(&quot;, &quot;).ToHashSet()
             select (ingredients, allergens)
         ).ToArray();
 
         return new Problem(
-            mapping.SelectMany(entry => entry.allergens).ToHashSet(),
-            mapping.SelectMany(entry => entry.ingredients).ToHashSet(),
+            mapping.SelectMany(entry =&gt; entry.allergens).ToHashSet(),
+            mapping.SelectMany(entry =&gt; entry.ingredients).ToHashSet(),
             mapping
         );
     }
 
-    private Dictionary<string, HashSet<string>> GetIngredientsByAllergene(Problem problem) =>
+    private Dictionary&lt;string, HashSet&lt;string&gt;&gt; GetIngredientsByAllergene(Problem problem) =&gt;
         problem.allergens.ToDictionary(
-            allergene => allergene, 
-            allergene => problem.mapping
-                .Where(entry => entry.allergens.Contains(allergene))
+            allergene =&gt; allergene, 
+            allergene =&gt; problem.mapping
+                .Where(entry =&gt; entry.allergens.Contains(allergene))
                 .Aggregate(
-                    problem.ingredients as IEnumerable<string>,
-                    (res, entry) => res.Intersect(entry.ingredients))
+                    problem.ingredients as IEnumerable&lt;string&gt;,
+                    (res, entry) =&gt; res.Intersect(entry.ingredients))
                 .ToHashSet());
 }
 </code></pre></div>

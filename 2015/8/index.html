@@ -284,18 +284,18 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2015.Day08;
 
-[ProblemName("Matchsticks")]
+[ProblemName(&quot;Matchsticks&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) =>
-        (from line in input.Split('\n')
+    public object PartOne(string input) =&gt;
+        (from line in input.Split(&#039;\n&#039;)
          let u = Regex.Unescape(line.Substring(1, line.Length - 2))
          select line.Length - u.Length).Sum();
 
 
-    public object PartTwo(string input) =>
-        (from line in input.Split('\n')
-        let u = "\"" + line.Replace("\\", "\\\\").Replace("\"", "\\\"") + "\""
+    public object PartTwo(string input) =&gt;
+        (from line in input.Split(&#039;\n&#039;)
+        let u = &quot;\&quot;&quot; + line.Replace(&quot;\\&quot;, &quot;\\\\&quot;).Replace(&quot;\&quot;&quot;, &quot;\\\&quot;&quot;) + &quot;\&quot;&quot;
         select u.Length - line.Length).Sum();
 
 }

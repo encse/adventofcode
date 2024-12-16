@@ -301,9 +301,9 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Signal = (string sender, string receiver, bool value);
 
-record Gate(string[] inputs, Func<Signal, IEnumerable<Signal>> handle);
+record Gate(string[] inputs, Func&lt;Signal, IEnumerable&lt;Signal&gt;&gt; handle);
 
-[ProblemName("Pulse Propagation")]
+[ProblemName(&quot;Pulse Propagation&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
@@ -313,7 +313,7 @@ class Solution : Solver {
             from signal in Trigger(gates)
             select signal.value
         ).ToArray();
-        return values.Count(v => v) * values.Count(v => !v);
+        return values.Count(v =&gt; v) * values.Count(v =&gt; !v);
     }
 
     public object PartTwo(string input) {
@@ -322,16 +322,16 @@ class Solution : Solver {
         // The nand gate is connected into rx. I checked that the substructures 
         // work in a loop, that has prime length. Just need to multiply them all.
         var gates = ParseGates(input);
-        var nand = gates["rx"].inputs.Single();
+        var nand = gates[&quot;rx&quot;].inputs.Single();
         var branches = gates[nand].inputs;
-        return branches.Aggregate(1L, (m, branch) => m * LoopLength(input, branch));
+        return branches.Aggregate(1L, (m, branch) =&gt; m * LoopLength(input, branch));
     }
 
     int LoopLength(string input, string output) {
         var gates = ParseGates(input);
         for (var i = 1; ; i++) {
             var signals = Trigger(gates);
-            if (signals.Any(s => s.sender == output && s.value)) {
+            if (signals.Any(s =&gt; s.sender == output &amp;&amp; s.value)) {
                 return i;
             }
         }
@@ -339,9 +339,9 @@ class Solution : Solver {
 
     // emits a button press, executes until things settle down and returns 
     // all signals for investigation.
-    IEnumerable<Signal> Trigger(Dictionary<string, Gate> gates) {
-        var q = new Queue<Signal>();
-        q.Enqueue(new Signal("button", "broadcaster", false));
+    IEnumerable&lt;Signal&gt; Trigger(Dictionary&lt;string, Gate&gt; gates) {
+        var q = new Queue&lt;Signal&gt;();
+        q.Enqueue(new Signal(&quot;button&quot;, &quot;broadcaster&quot;, false));
 
         while (q.TryDequeue(out var signal)) {
             yield return signal;
@@ -353,46 +353,46 @@ class Solution : Solver {
         }
     }
 
-    Dictionary<string, Gate> ParseGates(string input) {
-        input += "\nrx ->"; // an extra rule for rx with no output
+    Dictionary&lt;string, Gate&gt; ParseGates(string input) {
+        input += &quot;\nrx -&gt;&quot;; // an extra rule for rx with no output
 
         var descriptions =
-            from line in input.Split('\n')
-            let words = Regex.Matches(line, "\\w+").Select(m => m.Value).ToArray()
+            from line in input.Split(&#039;\n&#039;)
+            let words = Regex.Matches(line, &quot;\\w+&quot;).Select(m =&gt; m.Value).ToArray()
             select (kind: line[0], name: words.First(), outputs: words[1..]);
 
-        var inputs = (string name) => (
+        var inputs = (string name) =&gt; (
             from d in descriptions where d.outputs.Contains(name) select d.name
         ).ToArray();
         
         return descriptions.ToDictionary(
-            d => d.name,
-            d => d.kind switch {
-                '&' => NandGate(d.name, inputs(d.name), d.outputs),
-                '%' => FlipFlop(d.name, inputs(d.name), d.outputs),
-                _ => Repeater(d.name, inputs(d.name), d.outputs)
+            d =&gt; d.name,
+            d =&gt; d.kind switch {
+                &#039;&amp;&#039; =&gt; NandGate(d.name, inputs(d.name), d.outputs),
+                &#039;%&#039; =&gt; FlipFlop(d.name, inputs(d.name), d.outputs),
+                _ =&gt; Repeater(d.name, inputs(d.name), d.outputs)
             }
         );
     }
 
     Gate NandGate(string name, string[] inputs, string[] outputs) {
         // initially assign low value for each input:
-        var state = inputs.ToDictionary(input => input, _ => false);
+        var state = inputs.ToDictionary(input =&gt; input, _ =&gt; false);
 
-        return new Gate(inputs, (Signal signal) => {
+        return new Gate(inputs, (Signal signal) =&gt; {
             state[signal.sender] = signal.value;
-            var value = !state.Values.All(b => b);
-            return outputs.Select(o => new Signal(name, o, value));
+            var value = !state.Values.All(b =&gt; b);
+            return outputs.Select(o =&gt; new Signal(name, o, value));
         });
     }
 
     Gate FlipFlop(string name, string[] inputs, string[] outputs) {
         var state = false;
 
-        return new Gate(inputs, (Signal signal) => {
+        return new Gate(inputs, (Signal signal) =&gt; {
             if (!signal.value) {
                 state = !state;
-                return outputs.Select(o => new Signal(name, o, state));
+                return outputs.Select(o =&gt; new Signal(name, o, state));
             } else {
                 return [];
             }
@@ -400,7 +400,7 @@ class Solution : Solver {
     }
 
     Gate Repeater(string name, string[] inputs, string[] outputs) {
-        return new Gate(inputs, (Signal s) =>
+        return new Gate(inputs, (Signal s) =&gt;
             from o in outputs select new Signal(name, o, s.value)
         );
     }

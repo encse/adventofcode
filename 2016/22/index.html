@@ -286,16 +286,16 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2016.Day22;
 
-[ProblemName("Grid Computing")]
+[ProblemName(&quot;Grid Computing&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
         var nodes = Parse(input);
         var r = 0;
         foreach (var nodeA in nodes) {
-            if (nodeA.used > 0) {
+            if (nodeA.used &gt; 0) {
                 foreach (var nodeB in nodes) {
-                    if ((nodeA.irow != nodeB.irow || nodeA.icol != nodeB.icol) && nodeB.avail > nodeA.used) {
+                    if ((nodeA.irow != nodeB.irow || nodeA.icol != nodeB.icol) &amp;&amp; nodeB.avail &gt; nodeA.used) {
                         r++;
                     }
                 }
@@ -330,12 +330,12 @@ class Solution : Solver {
 
     Node[,] Parse(string input) {
         var nodes = (
-            from line in input.Split('\n').Skip(2)
-            let parts = Regex.Matches(line, @"(\d+)").Select(m => int.Parse(m.Groups[1].Value)).ToArray()
+            from line in input.Split(&#039;\n&#039;).Skip(2)
+            let parts = Regex.Matches(line, @&quot;(\d+)&quot;).Select(m =&gt; int.Parse(m.Groups[1].Value)).ToArray()
             select new Node { irow = parts[1], icol = parts[0], size = parts[2], used = parts[3] }
         ).ToArray();
 
-        var (crow, ccol) = (nodes.Select(x => x.irow).Max() + 1, nodes.Select(x => x.icol).Max() + 1);
+        var (crow, ccol) = (nodes.Select(x =&gt; x.irow).Max() + 1, nodes.Select(x =&gt; x.icol).Max() + 1);
         var res = new Node[crow, ccol];
         foreach (var file in nodes) {
             res[file.irow, file.icol] = file;
@@ -367,18 +367,18 @@ class Solution : Solver {
         public void Tsto() {
             var sb = new StringBuilder();
             sb.AppendLine();
-            for (var irowT = 0; irowT < crow; irowT++) {
-                for (var icolT = 0; icolT < ccol; icolT++) {
+            for (var irowT = 0; irowT &lt; crow; irowT++) {
+                for (var icolT = 0; icolT &lt; ccol; icolT++) {
                     if (nodes[irowT, icolT].goal) {
-                        sb.Append("G");
-                    } else if (irowT == 0 && icolT == 0) {
-                        sb.Append("x");
+                        sb.Append(&quot;G&quot;);
+                    } else if (irowT == 0 &amp;&amp; icolT == 0) {
+                        sb.Append(&quot;x&quot;);
                     } else if (nodes[irowT, icolT].used == 0) {
-                        sb.Append("E");
+                        sb.Append(&quot;E&quot;);
                     } else if (Wall(irowT, icolT)) {
-                        sb.Append("#");
+                        sb.Append(&quot;#&quot;);
                     } else {
-                        sb.Append(".");
+                        sb.Append(&quot;.&quot;);
                     }
                 }
                 sb.AppendLine();
@@ -386,8 +386,8 @@ class Solution : Solver {
             Console.WriteLine(sb.ToString());
         }
 
-        public bool Wall(int irow, int icol) =>
-            nodes[irow, icol].used > nodes[irowEmpty, icolEmpty].size;
+        public bool Wall(int irow, int icol) =&gt;
+            nodes[irow, icol].used &gt; nodes[irowEmpty, icolEmpty].size;
 
         public void Move(int drow, int dcol) {
             if (Math.Abs(drow) + Math.Abs(dcol) != 1) throw new Exception();
@@ -395,9 +395,9 @@ class Solution : Solver {
             var irowT = irowEmpty + drow;
             var icolT = icolEmpty + dcol;
 
-            if (irowT < 0 || irowT >= crow) throw new Exception();
-            if (icolT < 0 || icolT >= ccol) throw new Exception();
-            if (nodes[irowT, icolT].used > nodes[irowEmpty, icolEmpty].avail) throw new Exception();
+            if (irowT &lt; 0 || irowT &gt;= crow) throw new Exception();
+            if (icolT &lt; 0 || icolT &gt;= ccol) throw new Exception();
+            if (nodes[irowT, icolT].used &gt; nodes[irowEmpty, icolEmpty].avail) throw new Exception();
 
             nodes[irowEmpty, icolEmpty].used = nodes[irowT, icolT].used;
             nodes[irowEmpty, icolEmpty].goal = nodes[irowT, icolT].goal;

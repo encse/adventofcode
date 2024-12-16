@@ -282,28 +282,28 @@
             <div id="code-container"><pre class="hljs language-csharp"><code>using System;
 using System.Collections.Generic;
 using System.Linq;
-using AsteroidsByDir = System.Collections.Generic.Dictionary<
-(int drow, int dcol), System.Collections.Generic.List<(int irow, int icol)>
->;
+using AsteroidsByDir = System.Collections.Generic.Dictionary&lt;
+(int drow, int dcol), System.Collections.Generic.List&lt;(int irow, int icol)&gt;
+&gt;;
 
 namespace AdventOfCode.Y2019.Day10;
 
-[ProblemName("Monitoring Station")]
+[ProblemName(&quot;Monitoring Station&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => SelectStationPosition(input).asteroidsByDir.Count;
+    public object PartOne(string input) =&gt; SelectStationPosition(input).asteroidsByDir.Count;
 
     public object PartTwo(string input) {
         var asteroid = Destroy(input).ElementAt(199);
         return (asteroid.icol * 100 + asteroid.irow);
     }
 
-    IEnumerable<(int irow, int icol)> Destroy(string input) {
+    IEnumerable&lt;(int irow, int icol)&gt; Destroy(string input) {
         var (station, asteroidsByDir) = SelectStationPosition(input);
 
         foreach (var dir in asteroidsByDir.Keys.ToArray()) {
             asteroidsByDir[dir] = asteroidsByDir[dir]
-                .OrderBy(a => Math.Abs(a.irow - station.irow) + Math.Abs(a.icol - station.icol))
+                .OrderBy(a =&gt; Math.Abs(a.irow - station.irow) + Math.Abs(a.icol - station.icol))
                 .ToList();
         }
 
@@ -321,8 +321,8 @@ class Solution : Solver {
         }
     }
 
-    IEnumerable<(int drow, int dcol)> Rotate(IEnumerable<(int drow, int dcol)> dirs) {
-        var ordered = dirs.OrderBy(dir => -Math.Atan2(dir.dcol, dir.drow)).ToList();
+    IEnumerable&lt;(int drow, int dcol)&gt; Rotate(IEnumerable&lt;(int drow, int dcol)&gt; dirs) {
+        var ordered = dirs.OrderBy(dir =&gt; -Math.Atan2(dir.dcol, dir.drow)).ToList();
         for (var i = 0; ; i++) {
             yield return ordered[i % ordered.Count];
         }
@@ -342,12 +342,12 @@ class Solution : Solver {
                     var dir = (rowDir / gcd, colDir / gcd);
 
                     if (!asteroidsByDir.ContainsKey(dir)) {
-                        asteroidsByDir[dir] = new List<(int irow, int icol)>();
+                        asteroidsByDir[dir] = new List&lt;(int irow, int icol)&gt;();
                     }
                     asteroidsByDir[dir].Add(asteroid);
                 }
             }
-            if (asteroidsByDir.Count > res.asteroidsByDir.Count) {
+            if (asteroidsByDir.Count &gt; res.asteroidsByDir.Count) {
                 res = (station, asteroidsByDir);
             }
         }
@@ -355,19 +355,19 @@ class Solution : Solver {
         return res;
     }
 
-    List<(int irow, int icol)> Asteroids(string input) {
-        var map = input.Split("\n");
+    List&lt;(int irow, int icol)&gt; Asteroids(string input) {
+        var map = input.Split(&quot;\n&quot;);
         var (crow, ccol) = (map.Length, map[0].Length);
 
         return (
             from irow in Enumerable.Range(0, crow)
             from icol in Enumerable.Range(0, ccol)
-            where map[irow][icol] == '#'
+            where map[irow][icol] == &#039;#&#039;
             select (irow, icol)
         ).ToList();
     }
 
-   int Gcd(int a, int b) => b == 0 ? a : Gcd(b, a % b);
+   int Gcd(int a, int b) =&gt; b == 0 ? a : Gcd(b, a % b);
 }
 </code></pre></div>
             <div id="code-location"> <p>Please ☆ my <a href="https://github.com/encse/adventofcode/">repo</a> if you like it!</p></div>

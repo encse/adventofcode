@@ -284,22 +284,22 @@ using System.Linq;
 
 namespace AdventOfCode.Y2020.Day11;
 
-[ProblemName("Seating System")]
+[ProblemName(&quot;Seating System&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Solve(input, 4, _ => true);
-    public object PartTwo(string input) => Solve(input, 5, place => place != '.');
+    public object PartOne(string input) =&gt; Solve(input, 4, _ =&gt; true);
+    public object PartTwo(string input) =&gt; Solve(input, 5, place =&gt; place != &#039;.&#039;);
 
-    int Solve(string input, int occupiedLimit, Func<char, bool> placeToCheck) {
-        var (crow, ccol) = (input.Split("\n").Length, input.IndexOf('\n'));
+    int Solve(string input, int occupiedLimit, Func&lt;char, bool&gt; placeToCheck) {
+        var (crow, ccol) = (input.Split(&quot;\n&quot;).Length, input.IndexOf(&#039;\n&#039;));
 
         char PlaceInDirection(char[] st, int idx, int drow, int dcol) {
             var (irow, icol) = (idx / ccol, idx % ccol);
             while (true) {
                 (irow, icol) = (irow + drow, icol + dcol);
                 var place =
-                    irow < 0 || irow >= crow ? 'L' :
-                    icol < 0 || icol >= ccol ? 'L' :
+                    irow &lt; 0 || irow &gt;= crow ? &#039;L&#039; :
+                    icol &lt; 0 || icol &gt;= ccol ? &#039;L&#039; :
                     st[irow * ccol + icol];
                 if (placeToCheck(place)) {
                     return place;
@@ -311,7 +311,7 @@ class Solution : Solver {
             var directions = new[] { (0, -1), (0, 1), (-1, 0), (1, 0), (-1, -1), (-1, 1), (1, -1), (1, 1) };
             var occupied = 0;
             foreach (var (drow, dcol) in directions) {
-                if (PlaceInDirection(st, idx, drow, dcol) == '#') {
+                if (PlaceInDirection(st, idx, drow, dcol) == &#039;#&#039;) {
                     occupied++;
                 }
             }
@@ -319,16 +319,16 @@ class Solution : Solver {
         }
 
         var prevState = new char[0];
-        var state = input.Replace("\n", "").Replace("L", "#").ToArray();
+        var state = input.Replace(&quot;\n&quot;, &quot;&quot;).Replace(&quot;L&quot;, &quot;#&quot;).ToArray();
         while (!prevState.SequenceEqual(state)) {
             prevState = state;
-            state = state.Select((place, i) =>
-                place == '#' && OccupiedPlacesAround(state, i) >= occupiedLimit ? 'L' :
-                place == 'L' && OccupiedPlacesAround(state, i) == 0             ? '#' :
+            state = state.Select((place, i) =&gt;
+                place == &#039;#&#039; &amp;&amp; OccupiedPlacesAround(state, i) &gt;= occupiedLimit ? &#039;L&#039; :
+                place == &#039;L&#039; &amp;&amp; OccupiedPlacesAround(state, i) == 0             ? &#039;#&#039; :
                 place /*otherwise*/
             ).ToArray();
         }
-        return state.Count(place => place == '#');
+        return state.Count(place =&gt; place == &#039;#&#039;);
     }
 }
 </code></pre></div>

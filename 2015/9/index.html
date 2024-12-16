@@ -285,36 +285,36 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2015.Day09;
 
-[ProblemName("All in a Single Night")]
+[ProblemName(&quot;All in a Single Night&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Routes(input).Min();
-    public object PartTwo(string input) => Routes(input).Max();
+    public object PartOne(string input) =&gt; Routes(input).Min();
+    public object PartTwo(string input) =&gt; Routes(input).Max();
 
-    IEnumerable<int> Routes(string input) {
-        var distances = input.Split('\n').SelectMany(line => {
-            var m = Regex.Match(line, @"(.*) to (.*) = (.*)");
+    IEnumerable&lt;int&gt; Routes(string input) {
+        var distances = input.Split(&#039;\n&#039;).SelectMany(line =&gt; {
+            var m = Regex.Match(line, @&quot;(.*) to (.*) = (.*)&quot;);
             var (a, b) = (m.Groups[1].Value, m.Groups[2].Value);
             var d = int.Parse(m.Groups[3].Value);
             return new[] {
                 (k: (a, b), d),
                 (k: (b, a), d)
             };
-        }).ToDictionary(p => p.k, p => p.d);
+        }).ToDictionary(p =&gt; p.k, p =&gt; p.d);
 
-        var cities = distances.Keys.Select(k => k.Item1).Distinct().ToArray();
-        return Permutations(cities).Select(route =>
-            route.Zip(route.Skip(1), (a, b) => distances[(a, b)]).Sum()
+        var cities = distances.Keys.Select(k =&gt; k.Item1).Distinct().ToArray();
+        return Permutations(cities).Select(route =&gt;
+            route.Zip(route.Skip(1), (a, b) =&gt; distances[(a, b)]).Sum()
         );
     }
 
-    IEnumerable<T[]> Permutations<T>(T[] rgt) {
-        IEnumerable<T[]> PermutationsRec(int i) {
+    IEnumerable&lt;T[]&gt; Permutations&lt;T&gt;(T[] rgt) {
+        IEnumerable&lt;T[]&gt; PermutationsRec(int i) {
             if (i == rgt.Length) {
                 yield return rgt.ToArray();
             }
 
-            for (var j = i; j < rgt.Length; j++) {
+            for (var j = i; j &lt; rgt.Length; j++) {
                 (rgt[i], rgt[j]) = (rgt[j], rgt[i]);
                 foreach (var perm in PermutationsRec(i + 1)) {
                     yield return perm;

@@ -286,11 +286,11 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2021.Day22;
 
-[ProblemName("Reactor Reboot")]
+[ProblemName(&quot;Reactor Reboot&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => ActiveCubesInRange(input, 50);
-    public object PartTwo(string input) => ActiveCubesInRange(input, int.MaxValue);
+    public object PartOne(string input) =&gt; ActiveCubesInRange(input, 50);
+    public object PartTwo(string input) =&gt; ActiveCubesInRange(input, int.MaxValue);
 
     public long ActiveCubesInRange(string input, int range) {
         var cmds = Parse(input);
@@ -301,7 +301,7 @@ class Solution : Solver {
         // we can compute the effect of the i-th cmd as well:
         long activeCubesAfterIcmd(int icmd, Region region) {
 
-            if (region.IsEmpty || icmd < 0) {
+            if (region.IsEmpty || icmd &lt; 0) {
                 return 0; // empty is empty
             } else {
                 var intersection = region.Intersect(cmds[icmd].region);
@@ -323,11 +323,11 @@ class Solution : Solver {
     }
 
     Cmd[] Parse(string input) {
-        var res = new List<Cmd>();
-        foreach (var line in input.Split("\n")) {
-            var turnOff = line.StartsWith("off");
+        var res = new List&lt;Cmd&gt;();
+        foreach (var line in input.Split(&quot;\n&quot;)) {
+            var turnOff = line.StartsWith(&quot;off&quot;);
             // get all the numbers with a regexp:
-            var m = Regex.Matches(line, "-?[0-9]+").Select(m => int.Parse(m.Value)).ToArray();
+            var m = Regex.Matches(line, &quot;-?[0-9]+&quot;).Select(m =&gt; int.Parse(m.Value)).ToArray();
             res.Add(new Cmd(turnOff, new Region(new Segment(m[0], m[1]), new Segment(m[2], m[3]), new Segment(m[4], m[5]))));
         }
         return res.ToArray();
@@ -337,18 +337,18 @@ class Solution : Solver {
 record Cmd(bool turnOff, Region region);
 
 record Segment(int from, int to) {
-    public bool IsEmpty => from > to;
-    public long Length => IsEmpty ? 0 : to - from + 1;
+    public bool IsEmpty =&gt; from &gt; to;
+    public long Length =&gt; IsEmpty ? 0 : to - from + 1;
 
-    public Segment Intersect(Segment that) =>
+    public Segment Intersect(Segment that) =&gt;
         new Segment(Math.Max(this.from, that.from), Math.Min(this.to, that.to));
 }
 
 record Region(Segment x, Segment y, Segment z) {
-    public bool IsEmpty => x.IsEmpty || y.IsEmpty || z.IsEmpty;
-    public long Volume => x.Length * y.Length * z.Length;
+    public bool IsEmpty =&gt; x.IsEmpty || y.IsEmpty || z.IsEmpty;
+    public long Volume =&gt; x.Length * y.Length * z.Length;
 
-    public Region Intersect(Region that) =>
+    public Region Intersect(Region that) =&gt;
         new Region(this.x.Intersect(that.x), this.y.Intersect(that.y), this.z.Intersect(that.z));
 }
 </code></pre></div>

@@ -287,30 +287,30 @@ namespace AdventOfCode.Y2020.Day24;
 
 record Tile(int x, int y);
 
-[ProblemName("Lobby Layout")]
+[ProblemName(&quot;Lobby Layout&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => ParseBlackTiles(input).Count();
+    public object PartOne(string input) =&gt; ParseBlackTiles(input).Count();
 
-    public object PartTwo(string input) =>
+    public object PartTwo(string input) =&gt;
         Enumerable.Range(0, 100)
-            .Aggregate(ParseBlackTiles(input), (blackTiles, _) => Flip(blackTiles))
+            .Aggregate(ParseBlackTiles(input), (blackTiles, _) =&gt; Flip(blackTiles))
             .Count();
 
-    Dictionary<string, (int x, int y)> HexDirections = new Dictionary<string, (int x, int y)> {
-        {"o",  ( 0,  0)},
-        {"ne", ( 1,  1)},
-        {"nw", (-1,  1)},
-        {"e",  ( 2,  0)},
-        {"w",  (-2,  0)},
-        {"se", ( 1, -1)},
-        {"sw", (-1, -1)},
+    Dictionary&lt;string, (int x, int y)&gt; HexDirections = new Dictionary&lt;string, (int x, int y)&gt; {
+        {&quot;o&quot;,  ( 0,  0)},
+        {&quot;ne&quot;, ( 1,  1)},
+        {&quot;nw&quot;, (-1,  1)},
+        {&quot;e&quot;,  ( 2,  0)},
+        {&quot;w&quot;,  (-2,  0)},
+        {&quot;se&quot;, ( 1, -1)},
+        {&quot;sw&quot;, (-1, -1)},
     };
 
-    IEnumerable<Tile> Neighbourhood(Tile tile) =>
+    IEnumerable&lt;Tile&gt; Neighbourhood(Tile tile) =&gt;
         from dir in HexDirections.Values select new Tile(tile.x + dir.x, tile.y + dir.y);
 
-    HashSet<Tile> Flip(HashSet<Tile> blackTiles) {
+    HashSet&lt;Tile&gt; Flip(HashSet&lt;Tile&gt; blackTiles) {
         var tiles = (
             from black in blackTiles
             from tile in Neighbourhood(black)
@@ -319,16 +319,16 @@ class Solution : Solver {
 
         return (
             from tile in tiles
-            let blacks = Neighbourhood(tile).Count(n => blackTiles.Contains(n))
-            where blacks == 2 || blacks == 3 && blackTiles.Contains(tile)
+            let blacks = Neighbourhood(tile).Count(n =&gt; blackTiles.Contains(n))
+            where blacks == 2 || blacks == 3 &amp;&amp; blackTiles.Contains(tile)
             select tile
         ).ToHashSet();
     }
 
-    HashSet<Tile> ParseBlackTiles(string input) {
-        var tiles = new Dictionary<Tile, bool>();
+    HashSet&lt;Tile&gt; ParseBlackTiles(string input) {
+        var tiles = new Dictionary&lt;Tile, bool&gt;();
 
-        foreach (var line in input.Split("\n")) {
+        foreach (var line in input.Split(&quot;\n&quot;)) {
             var tile = Walk(line);
             tiles[tile] = !tiles.GetValueOrDefault(tile);
         }
@@ -338,7 +338,7 @@ class Solution : Solver {
 
     Tile Walk(string line) {
         var (x, y) = (0, 0);
-        while (line != "") {
+        while (line != &quot;&quot;) {
             foreach (var kvp in HexDirections) {
                 if (line.StartsWith(kvp.Key)) {
                     line = line.Substring(kvp.Key.Length);

@@ -284,11 +284,11 @@ using System.Collections.Generic;
 
 namespace AdventOfCode.Y2022.Day24;
 
-[ProblemName("Blizzard Basin")]
+[ProblemName(&quot;Blizzard Basin&quot;)]
 class Solution : Solver {
 
     // We do a standard A* algorithm, the only trick is that
-    // the 'map' always changes as blizzards move, so our position
+    // the &#039;map&#039; always changes as blizzards move, so our position
     // is now a space time coordinate. 
     // I used an efficent Maps class that can be queried with these.
 
@@ -310,7 +310,7 @@ class Solution : Solver {
     // Standard A* algorithm
     Pos WalkTo(Pos start, Pos goal, Maps maps) {
 
-        var q = new PriorityQueue<Pos, int>();
+        var q = new PriorityQueue&lt;Pos, int&gt;();
 
         int f(Pos pos) {
             // estimate the remaining step count with Manhattan distance
@@ -321,11 +321,11 @@ class Solution : Solver {
         }
 
         q.Enqueue(start, f(start));
-        HashSet<Pos> seen = new HashSet<Pos>();
+        HashSet&lt;Pos&gt; seen = new HashSet&lt;Pos&gt;();
 
-        while (q.Count > 0) {
+        while (q.Count &gt; 0) {
             var pos = q.Dequeue();
-            if (pos.irow == goal.irow && pos.icol == goal.icol) {
+            if (pos.irow == goal.irow &amp;&amp; pos.icol == goal.icol) {
                 return pos;
             }
 
@@ -341,7 +341,7 @@ class Solution : Solver {
     }
 
     // Increase time, look for free neighbours
-    IEnumerable<Pos> NextPositions(Pos pos, Maps maps) {
+    IEnumerable&lt;Pos&gt; NextPositions(Pos pos, Maps maps) {
         pos = pos with {time = pos.time + 1};
         foreach (var nextPos in new Pos[]{
             pos,
@@ -350,7 +350,7 @@ class Solution : Solver {
             pos with {icol=pos.icol -1},
             pos with {icol=pos.icol +1},
         }) {
-            if (maps.Get(nextPos) == '.') {
+            if (maps.Get(nextPos) == &#039;.&#039;) {
                 yield return nextPos;
             }
         }
@@ -370,27 +370,27 @@ class Solution : Solver {
         public readonly int ccol;
 
         public Maps(string input) {
-            map = input.Split("\n");
+            map = input.Split(&quot;\n&quot;);
             this.crow = map.Length;
             this.ccol = map[0].Length;
         }
 
         public char Get(Pos pos) {
-            if (pos.irow == 0 && pos.icol == 1) {
-                return '.';
+            if (pos.irow == 0 &amp;&amp; pos.icol == 1) {
+                return &#039;.&#039;;
             }
-            if (pos.irow == crow - 1 && pos.icol == ccol - 2) {
-                return '.';
+            if (pos.irow == crow - 1 &amp;&amp; pos.icol == ccol - 2) {
+                return &#039;.&#039;;
             }
 
-            if (pos.irow <= 0 || pos.irow >= crow - 1 || 
-                pos.icol <= 0 || pos.icol >= ccol - 1
+            if (pos.irow &lt;= 0 || pos.irow &gt;= crow - 1 || 
+                pos.icol &lt;= 0 || pos.icol &gt;= ccol - 1
             ) {
-                return '#';
+                return &#039;#&#039;;
             }
 
             // blizzards have a horizontal and a vertical loop
-            // it's easy to check the original postions with going back in time
+            // it&#039;s easy to check the original postions with going back in time
             // using modular arithmetic
             var hmod = ccol - 2;
             var vmod = crow - 2;
@@ -401,11 +401,11 @@ class Solution : Solver {
             var icolS = (pos.irow - 1 + vmod + (pos.time % vmod)) % vmod + 1;
 
             return 
-                map[pos.irow][icolW] == '>' ? '>':
-                map[pos.irow][icolE] == '<' ? '<':
-                map[icolN][pos.icol] == 'v' ? 'v':
-                map[icolS][pos.icol] == '^' ? '^':
-                                              '.';
+                map[pos.irow][icolW] == &#039;&gt;&#039; ? &#039;&gt;&#039;:
+                map[pos.irow][icolE] == &#039;&lt;&#039; ? &#039;&lt;&#039;:
+                map[icolN][pos.icol] == &#039;v&#039; ? &#039;v&#039;:
+                map[icolS][pos.icol] == &#039;^&#039; ? &#039;^&#039;:
+                                              &#039;.&#039;;
         }
     }
 }

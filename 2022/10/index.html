@@ -285,38 +285,38 @@ using System.Linq;
 
 namespace AdventOfCode.Y2022.Day10;
 
-[ProblemName("Cathode-Ray Tube")]
+[ProblemName(&quot;Cathode-Ray Tube&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
         var sample = new[] { 20, 60, 100, 140, 180, 220 };
         return Signal(input)
-            .Where(signal => sample.Contains(signal.cycle))
-            .Select(signal => signal.x * signal.cycle)
+            .Where(signal =&gt; sample.Contains(signal.cycle))
+            .Select(signal =&gt; signal.x * signal.cycle)
             .Sum();
     }
 
-    public object PartTwo(string input) => 
+    public object PartTwo(string input) =&gt; 
         Signal(input)
-            .Select(signal => {
+            .Select(signal =&gt; {
                 var spriteMiddle = signal.x;
                 var screenColumn = (signal.cycle - 1) % 40;
-                return Math.Abs(spriteMiddle - screenColumn) < 2 ? '#' : ' ';
+                return Math.Abs(spriteMiddle - screenColumn) &lt; 2 ? &#039;#&#039; : &#039; &#039;;
             })
             .Chunk(40)
-            .Select(line => new string(line))
-            .Aggregate("", (screen, line) => screen + line + "\n")
+            .Select(line =&gt; new string(line))
+            .Aggregate(&quot;&quot;, (screen, line) =&gt; screen + line + &quot;\n&quot;)
             .Ocr();
 
-    IEnumerable<(int cycle, int x)> Signal(string input) {
+    IEnumerable&lt;(int cycle, int x)&gt; Signal(string input) {
         var (cycle, x) = (1, 1);
-        foreach (var line in input.Split("\n")) {
-            var parts = line.Split(" ");
+        foreach (var line in input.Split(&quot;\n&quot;)) {
+            var parts = line.Split(&quot; &quot;);
             switch (parts[0]) {
-                case "noop":
+                case &quot;noop&quot;:
                     yield return (cycle++, x);
                     break;
-                case "addx":
+                case &quot;addx&quot;:
                     yield return (cycle++, x);
                     yield return (cycle++, x);
                     x += int.Parse(parts[1]);

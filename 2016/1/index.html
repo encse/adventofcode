@@ -286,7 +286,7 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2016.Day01;
 
-[ProblemName("No Time for a Taxicab")]
+[ProblemName(&quot;No Time for a Taxicab&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
@@ -295,7 +295,7 @@ class Solution : Solver {
     }
 
     public object PartTwo(string input) {
-        var seen = new HashSet<(int, int)>();
+        var seen = new HashSet&lt;(int, int)&gt;();
         foreach (var pos in Travel(input)) {
             if (seen.Contains(pos)) {
                 return (pos.icol + pos.irow);
@@ -305,21 +305,21 @@ class Solution : Solver {
         throw new Exception();
     }
 
-    IEnumerable<(int irow, int icol)> Travel(string input) {
+    IEnumerable&lt;(int irow, int icol)&gt; Travel(string input) {
         var (irow, icol) = (0, 0);
         var (drow, dcol) = (-1, 0);
         yield return (irow, icol);
 
-        foreach (var stm in Regex.Split(input, ", ")) {
+        foreach (var stm in Regex.Split(input, &quot;, &quot;)) {
             var d = int.Parse(stm.Substring(1));
 
             (drow, dcol) = stm[0] switch {
-                'R' => (dcol, -drow),
-                'L' => (-dcol, drow),
-                _ => throw new ArgumentException()
+                &#039;R&#039; =&gt; (dcol, -drow),
+                &#039;L&#039; =&gt; (-dcol, drow),
+                _ =&gt; throw new ArgumentException()
             };
            
-            for (int i = 0; i < d; i++) {
+            for (int i = 0; i &lt; d; i++) {
                 (irow, icol) = (irow + drow, icol + dcol);
                 yield return (irow, icol);
             }

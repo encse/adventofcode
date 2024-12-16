@@ -290,19 +290,19 @@ using System.Linq;
 
 record Position(int irow, int icol);
 
-[ProblemName("Cosmic Expansion")]
+[ProblemName(&quot;Cosmic Expansion&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Solve(input, 1);
-    public object PartTwo(string input) => Solve(input, 999999);
+    public object PartOne(string input) =&gt; Solve(input, 1);
+    public object PartTwo(string input) =&gt; Solve(input, 999999);
 
     long Solve(string input, int expansion) {
-        var map = input.Split("\n");
+        var map = input.Split(&quot;\n&quot;);
 
-        Func<int, bool> isRowEmpty = EmptyRows(map).ToHashSet().Contains;
-        Func<int, bool> isColEmpty = EmptyCols(map).ToHashSet().Contains;
+        Func&lt;int, bool&gt; isRowEmpty = EmptyRows(map).ToHashSet().Contains;
+        Func&lt;int, bool&gt; isColEmpty = EmptyCols(map).ToHashSet().Contains;
 
-        var galaxies = FindAll(map, '#');
+        var galaxies = FindAll(map, &#039;#&#039;);
         return (
             from g1 in galaxies
             from g2 in galaxies
@@ -312,23 +312,23 @@ class Solution : Solver {
         ).Sum() / 2;
     }
 
-    long Distance(int i1, int i2, int expansion, Func<int, bool> isEmpty) {
+    long Distance(int i1, int i2, int expansion, Func&lt;int, bool&gt; isEmpty) {
         var a = Math.Min(i1, i2);
         var d = Math.Abs(i1 - i2);
         return d + expansion * Enumerable.Range(a, d).Count(isEmpty);
     }
 
-    IEnumerable<int> EmptyRows(string[] map) =>
+    IEnumerable&lt;int&gt; EmptyRows(string[] map) =&gt;
         from irow in Enumerable.Range(0, map.Length)
-        where map[irow].All(ch => ch == '.')
+        where map[irow].All(ch =&gt; ch == &#039;.&#039;)
         select irow;
 
-    IEnumerable<int> EmptyCols(string[] map) =>
+    IEnumerable&lt;int&gt; EmptyCols(string[] map) =&gt;
         from icol in Enumerable.Range(0, map[0].Length)
-        where map.All(row => row[icol] == '.')
+        where map.All(row =&gt; row[icol] == &#039;.&#039;)
         select icol;
 
-    IEnumerable<Position> FindAll(string[] map, char ch) =>
+    IEnumerable&lt;Position&gt; FindAll(string[] map, char ch) =&gt;
         from irow in Enumerable.Range(0, map.Length)
         from icol in Enumerable.Range(0, map[0].Length)
         where map[irow][icol] == ch

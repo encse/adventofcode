@@ -284,20 +284,20 @@ using System.Linq;
 
 namespace AdventOfCode.Y2021.Day07;
 
-[ProblemName("The Treachery of Whales")]
+[ProblemName(&quot;The Treachery of Whales&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => 
-        FuelMin(input, fuelConsumption: distance => distance);
+    public object PartOne(string input) =&gt; 
+        FuelMin(input, fuelConsumption: distance =&gt; distance);
 
-    public object PartTwo(string input) => 
-        FuelMin(input, fuelConsumption: distance => (1 + distance) * distance / 2);
+    public object PartTwo(string input) =&gt; 
+        FuelMin(input, fuelConsumption: distance =&gt; (1 + distance) * distance / 2);
         
-    int FuelMin(string input, Func<int, int> fuelConsumption) {
-        var positions = input.Split(",").Select(int.Parse).ToArray();
+    int FuelMin(string input, Func&lt;int, int&gt; fuelConsumption) {
+        var positions = input.Split(&quot;,&quot;).Select(int.Parse).ToArray();
 
-        var totalFuelToReachTarget = (int target) => 
-            positions.Select(position => fuelConsumption(Math.Abs(target - position))).Sum();
+        var totalFuelToReachTarget = (int target) =&gt; 
+            positions.Select(position =&gt; fuelConsumption(Math.Abs(target - position))).Sum();
 
         // Minimize the total fuel consumption checking each possible target position.
         // We have just about 1000 of these, so an O(n^2) algorithm will suffice.

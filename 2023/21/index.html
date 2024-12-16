@@ -319,10 +319,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 
-[ProblemName("Step Counter")]
+[ProblemName(&quot;Step Counter&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Steps(ParseMap(input)).ElementAt(64);
+    public object PartOne(string input) =&gt; Steps(ParseMap(input)).ElementAt(64);
     public object PartTwo(string input) {
         // Exploiting some nice properties of the input it reduces to quadratic 
         // interpolation over 3 points: k * 131 + 65 for k = 0, 1, 2
@@ -342,18 +342,18 @@ class Solution : Solver {
     }
 
     // walks around and returns the number of available positions at each step
-    IEnumerable<long> Steps(HashSet<Complex> map) {
-        var positions = new HashSet<Complex> { new Complex(65, 65) };
+    IEnumerable&lt;long&gt; Steps(HashSet&lt;Complex&gt; map) {
+        var positions = new HashSet&lt;Complex&gt; { new Complex(65, 65) };
         while(true) {
             yield return positions.Count;
             positions = Step(map, positions);
         }
     }
     
-    HashSet<Complex> Step(HashSet<Complex> map, HashSet<Complex> positions) {
+    HashSet&lt;Complex&gt; Step(HashSet&lt;Complex&gt; map, HashSet&lt;Complex&gt; positions) {
         Complex[] dirs = [1, -1, Complex.ImaginaryOne, -Complex.ImaginaryOne];
 
-        var res = new HashSet<Complex>();
+        var res = new HashSet&lt;Complex&gt;();
         foreach (var pos in positions) {
             foreach (var dir in dirs) {
                 var posT = pos + dir;
@@ -368,14 +368,14 @@ class Solution : Solver {
     }
 
     // the double % takes care of negative numbers
-    double Mod(double n, int m) => ((n % m) + m) % m;
+    double Mod(double n, int m) =&gt; ((n % m) + m) % m;
 
-    HashSet<Complex> ParseMap(string input) {
-        var lines = input.Split("\n");
+    HashSet&lt;Complex&gt; ParseMap(string input) {
+        var lines = input.Split(&quot;\n&quot;);
         return (
             from irow in Enumerable.Range(0, lines.Length)
             from icol in Enumerable.Range(0, lines[0].Length)
-            where lines[irow][icol] != '#'
+            where lines[irow][icol] != &#039;#&#039;
             select new Complex(icol, irow)
         ).ToHashSet();
     }

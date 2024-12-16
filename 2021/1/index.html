@@ -284,27 +284,27 @@ using System.Linq;
 
 namespace AdventOfCode.Y2021.Day01;
 
-[ProblemName("Sonar Sweep")]
+[ProblemName(&quot;Sonar Sweep&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => DepthIncrease(Numbers(input));
+    public object PartOne(string input) =&gt; DepthIncrease(Numbers(input));
 
-    public object PartTwo(string input) => DepthIncrease(ThreeMeasurements(Numbers(input)));
+    public object PartTwo(string input) =&gt; DepthIncrease(ThreeMeasurements(Numbers(input)));
 
-    int DepthIncrease(IEnumerable<int> ns) => (
+    int DepthIncrease(IEnumerable&lt;int&gt; ns) =&gt; (
         from p in Enumerable.Zip(ns, ns.Skip(1)) 
-        where p.First < p.Second 
+        where p.First &lt; p.Second 
         select 1
     ).Count();
 
     // the sum of elements in a sliding window of 3
-    IEnumerable<int> ThreeMeasurements(IEnumerable<int> ns) => 
+    IEnumerable&lt;int&gt; ThreeMeasurements(IEnumerable&lt;int&gt; ns) =&gt; 
         from t in Enumerable.Zip(ns, ns.Skip(1), ns.Skip(2)) // ⭐ .Net 6 comes with three way zip
         select t.First + t.Second + t.Third;
 
     // parse input to array of numbers
-    IEnumerable<int> Numbers(string input) => 
-        from n in input.Split('\n') 
+    IEnumerable&lt;int&gt; Numbers(string input) =&gt; 
+        from n in input.Split(&#039;\n&#039;) 
         select int.Parse(n);
 }
 </code></pre></div>

@@ -288,16 +288,16 @@ and continue <em>wandering around</em> in parallel until we reach Z nodes simult
 
 using System.Linq;
 using System.Text.RegularExpressions;
-using Map = System.Collections.Generic.Dictionary<string, (string Left, string Right)>;
+using Map = System.Collections.Generic.Dictionary&lt;string, (string Left, string Right)&gt;;
 
-[ProblemName("Haunted Wasteland")]
+[ProblemName(&quot;Haunted Wasteland&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Solve(input, "AAA", "ZZZ");
-    public object PartTwo(string input) => Solve(input, "A", "Z");
+    public object PartOne(string input) =&gt; Solve(input, &quot;AAA&quot;, &quot;ZZZ&quot;);
+    public object PartTwo(string input) =&gt; Solve(input, &quot;A&quot;, &quot;Z&quot;);
 
     long Solve(string input, string aMarker, string zMarker) {
-        var blocks = input.Split("\n\n");
+        var blocks = input.Split(&quot;\n\n&quot;);
         var dirs = blocks[0];
         var map = ParseMap(blocks[1]);
 
@@ -307,28 +307,28 @@ class Solution : Solver {
         // The input was set up this way, which justifies the use of LCM in 
         // computing the final result.
         return map.Keys
-            .Where(w => w.EndsWith(aMarker))
-            .Select(w => StepsToZ(w, zMarker, dirs, map))
+            .Where(w =&gt; w.EndsWith(aMarker))
+            .Select(w =&gt; StepsToZ(w, zMarker, dirs, map))
             .Aggregate(1L, Lcm);
     }
 
-    long Lcm(long a, long b) => a * b / Gcd(a, b);
-    long Gcd(long a, long b) => b == 0 ? a : Gcd(b, a % b);
+    long Lcm(long a, long b) =&gt; a * b / Gcd(a, b);
+    long Gcd(long a, long b) =&gt; b == 0 ? a : Gcd(b, a % b);
 
     long StepsToZ(string current, string zMarker, string dirs, Map map) {
         var i = 0;
         while (!current.EndsWith(zMarker)) {
             var dir = dirs[i % dirs.Length];
-            current =  dir == 'L' ? map[current].Left : map[current].Right;
+            current =  dir == &#039;L&#039; ? map[current].Left : map[current].Right;
             i++;
         }
         return i;
     }
 
-    Map ParseMap(string input) =>
-        input.Split("\n")
-            .Select(line => Regex.Matches(line, "[A-Z]+"))
-            .ToDictionary(m => m[0].Value, m => (m[1].Value, m[2].Value));
+    Map ParseMap(string input) =&gt;
+        input.Split(&quot;\n&quot;)
+            .Select(line =&gt; Regex.Matches(line, &quot;[A-Z]+&quot;))
+            .ToDictionary(m =&gt; m[0].Value, m =&gt; (m[1].Value, m[2].Value));
 }
 </code></pre></div>
             <div id="code-location"> <p>Please ☆ my <a href="https://github.com/encse/adventofcode/">repo</a> if you like it!</p></div>

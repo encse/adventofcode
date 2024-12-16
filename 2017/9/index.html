@@ -284,25 +284,25 @@ using System.Linq;
 
 namespace AdventOfCode.Y2017.Day09;
 
-[ProblemName("Stream Processing")]
+[ProblemName(&quot;Stream Processing&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => BlockScores(input).Sum();
-    public object PartTwo(string input) => Classify(input).Where((x) => x.garbage).Count();
+    public object PartOne(string input) =&gt; BlockScores(input).Sum();
+    public object PartTwo(string input) =&gt; Classify(input).Where((x) =&gt; x.garbage).Count();
 
-    IEnumerable<int> BlockScores(string input) {
+    IEnumerable&lt;int&gt; BlockScores(string input) {
         var score = 0;
-        foreach (var ch in Classify(input).Where((x) => !x.garbage).Select(x => x.ch)) {
-            if (ch == '}') {
+        foreach (var ch in Classify(input).Where((x) =&gt; !x.garbage).Select(x =&gt; x.ch)) {
+            if (ch == &#039;}&#039;) {
                 score--;
-            } else if (ch == '{') {
+            } else if (ch == &#039;{&#039;) {
                 score++;
                 yield return score;
             }
         }
     }
 
-    IEnumerable<(char ch, bool garbage)> Classify(string input) {
+    IEnumerable&lt;(char ch, bool garbage)&gt; Classify(string input) {
         var skip = false;
         var garbage = false;
         foreach (var ch in input) {
@@ -310,16 +310,16 @@ class Solution : Solver {
                 if (skip) {
                     skip = false;
                 } else {
-                    if (ch == '>') {
+                    if (ch == &#039;&gt;&#039;) {
                         garbage = false;
-                    } else if (ch == '!') {
+                    } else if (ch == &#039;!&#039;) {
                         skip = true;
                     } else {
                         yield return (ch, garbage);
                     }
                 }
             } else {
-                if (ch == '<') {
+                if (ch == &#039;&lt;&#039;) {
                     garbage = true;
                 } else {
                     yield return (ch, garbage);

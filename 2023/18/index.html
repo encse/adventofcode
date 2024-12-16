@@ -300,40 +300,40 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 
-[ProblemName("Lavaduct Lagoon")]
+[ProblemName(&quot;Lavaduct Lagoon&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Area(Steps1(input));
-    public object PartTwo(string input) => Area(Steps2(input));
+    public object PartOne(string input) =&gt; Area(Steps1(input));
+    public object PartTwo(string input) =&gt; Area(Steps2(input));
 
-    IEnumerable<Complex> Steps1(string input) =>
-        from line in input.Split('\n')
-        let parts = line.Split(' ')
+    IEnumerable&lt;Complex&gt; Steps1(string input) =&gt;
+        from line in input.Split(&#039;\n&#039;)
+        let parts = line.Split(&#039; &#039;)
         let dir = parts[0] switch {
-            "R" => Complex.One,
-            "U" => -Complex.ImaginaryOne,
-            "L" => -Complex.One,
-            "D" => Complex.ImaginaryOne,
-            _ => throw new Exception()
+            &quot;R&quot; =&gt; Complex.One,
+            &quot;U&quot; =&gt; -Complex.ImaginaryOne,
+            &quot;L&quot; =&gt; -Complex.One,
+            &quot;D&quot; =&gt; Complex.ImaginaryOne,
+            _ =&gt; throw new Exception()
         }
         let dist = int.Parse(parts[1])
         select dir * dist;
 
-    IEnumerable<Complex> Steps2(string input) =>
-        from line in input.Split('\n')
-        let hex = line.Split(' ')[2]
+    IEnumerable&lt;Complex&gt; Steps2(string input) =&gt;
+        from line in input.Split(&#039;\n&#039;)
+        let hex = line.Split(&#039; &#039;)[2]
         let dir = hex[7] switch {
-            '0' => Complex.One,
-            '1' => -Complex.ImaginaryOne,
-            '2' => -Complex.One,
-            '3' => Complex.ImaginaryOne,
-            _ => throw new Exception()
+            &#039;0&#039; =&gt; Complex.One,
+            &#039;1&#039; =&gt; -Complex.ImaginaryOne,
+            &#039;2&#039; =&gt; -Complex.One,
+            &#039;3&#039; =&gt; Complex.ImaginaryOne,
+            _ =&gt; throw new Exception()
         }
         let dist = Convert.ToInt32(hex[2..7], 16)
         select dir * dist;
 
-    // We are using a combination of the shoelace formula with Pick's theorem
-    double Area(IEnumerable<Complex> steps) {
+    // We are using a combination of the shoelace formula with Pick&#039;s theorem
+    double Area(IEnumerable&lt;Complex&gt; steps) {
         var vertices = Vertices(steps).ToList();
 
         // Shoelace formula https://en.wikipedia.org/wiki/Shoelace_formula
@@ -345,15 +345,15 @@ class Solution : Solver {
             select p1.Real * p2.Imaginary - p1.Imaginary * p2.Real;
         var area = Math.Abs(shoelaces.Sum()) / 2;
 
-        // Pick's theorem  https://en.wikipedia.org/wiki/Pick%27s_theorem
-        var boundary = steps.Select(x => x.Magnitude).Sum();
+        // Pick&#039;s theorem  https://en.wikipedia.org/wiki/Pick%27s_theorem
+        var boundary = steps.Select(x =&gt; x.Magnitude).Sum();
         var interior = area - boundary / 2 + 1;
 
         // Integer area
         return boundary + interior;
     }
 
-    IEnumerable<Complex> Vertices(IEnumerable<Complex> steps) {
+    IEnumerable&lt;Complex&gt; Vertices(IEnumerable&lt;Complex&gt; steps) {
         var pos = Complex.Zero;
         foreach (var step in steps) {
             pos += step;

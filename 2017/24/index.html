@@ -285,15 +285,15 @@ using System.Linq;
 
 namespace AdventOfCode.Y2017.Day24;
 
-[ProblemName("Electromagnetic Moat")]
+[ProblemName(&quot;Electromagnetic Moat&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => StrongestBridge(input, (a, b) => a.strength - b.strength);
-    public object PartTwo(string input) => StrongestBridge(input, (a, b) => a.CompareTo(b));
+    public object PartOne(string input) =&gt; StrongestBridge(input, (a, b) =&gt; a.strength - b.strength);
+    public object PartTwo(string input) =&gt; StrongestBridge(input, (a, b) =&gt; a.CompareTo(b));
 
-    int StrongestBridge(string input, Func<(int length, int strength), (int length, int strength), int> compare) {
+    int StrongestBridge(string input, Func&lt;(int length, int strength), (int length, int strength), int&gt; compare) {
 
-        (int length, int strength) fold(int pinIn, HashSet<Component> components) {
+        (int length, int strength) fold(int pinIn, HashSet&lt;Component&gt; components) {
             var strongest = (0, 0);
             foreach (var component in components.ToList()) {
                 var pinOut =
@@ -305,7 +305,7 @@ class Solution : Solver {
                     components.Remove(component);
                     var curr = fold(pinOut, components);
                     (curr.length, curr.strength) = (curr.length + 1, curr.strength + component.pinA + component.pinB);
-                    strongest = compare(curr, strongest) > 0 ? curr : strongest;
+                    strongest = compare(curr, strongest) &gt; 0 ? curr : strongest;
                     components.Add(component);
                 }
             }
@@ -314,10 +314,10 @@ class Solution : Solver {
         return fold(0, Parse(input)).strength;
     }
 
-    HashSet<Component> Parse(string input) {
-        var components = new HashSet<Component>();
-        foreach (var line in input.Split('\n')) {
-            var parts = line.Split('/');
+    HashSet&lt;Component&gt; Parse(string input) {
+        var components = new HashSet&lt;Component&gt;();
+        foreach (var line in input.Split(&#039;\n&#039;)) {
+            var parts = line.Split(&#039;/&#039;);
             components.Add(new Component { pinA = int.Parse(parts[0]), pinB = int.Parse(parts[1]) });
         }
         return components;

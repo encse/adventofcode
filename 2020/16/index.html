@@ -286,14 +286,14 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2020.Day16;
 
-record Field(string name, Func<int, bool> isValid);
+record Field(string name, Func&lt;int, bool&gt; isValid);
 record Problem(Field[] fields, int[][] tickets);
 
-[ProblemName("Ticket Translation")]
+[ProblemName(&quot;Ticket Translation&quot;)]
 class Solution : Solver {
 
-    Field[] FieldCandidates(IEnumerable<Field> fields, params int[] values) =>
-        fields.Where(field => values.All(field.isValid)).ToArray();
+    Field[] FieldCandidates(IEnumerable&lt;Field&gt; fields, params int[] values) =&gt;
+        fields.Where(field =&gt; values.All(field.isValid)).ToArray();
 
     public object PartOne(string input) {
         var problem = Parse(input);
@@ -312,7 +312,7 @@ class Solution : Solver {
         // keep valid tickets only
         var tickets = (
             from ticket in problem.tickets 
-            where ticket.All(value => FieldCandidates(problem.fields, value).Any()) 
+            where ticket.All(value =&gt; FieldCandidates(problem.fields, value).Any()) 
             select ticket
         ).ToArray();
 
@@ -331,7 +331,7 @@ class Solution : Solver {
                     var field = candidates.Single();
                     fields.Remove(field);
                     columns.Remove(column);
-                    if (field.name.StartsWith("departure")) {
+                    if (field.name.StartsWith(&quot;departure&quot;)) {
                         res *= valuesInColumn.First();
                     }
                     break;
@@ -342,32 +342,32 @@ class Solution : Solver {
     }
 
     Problem Parse(string input) {
-        int[] parseNumbers(string line) => (      
-            from m in Regex.Matches(line, "\\d+") // take the consecutive ranges of digits
+        int[] parseNumbers(string line) =&gt; (      
+            from m in Regex.Matches(line, &quot;\\d+&quot;) // take the consecutive ranges of digits
             select int.Parse(m.Value)             // convert them to numbers
         ).ToArray();
 
         var blocks = (
-            from block in input.Split("\n\n")     // blocks are delimited by empty lines
-            select block.Split("\n")              // convert them to lines
+            from block in input.Split(&quot;\n\n&quot;)     // blocks are delimited by empty lines
+            select block.Split(&quot;\n&quot;)              // convert them to lines
         ).ToArray();
         
         var fields = (                          
-            from line in blocks.First()           // line <- ["departure location: 49-920 or 932-950", ...]
+            from line in blocks.First()           // line &lt;- [&quot;departure location: 49-920 or 932-950&quot;, ...]
             let bounds = parseNumbers(line)       // bounds = [49, 920, 932, 950]
             select 
                 new Field(
-                    line.Split(":")[0],           // "departure location"
-                    n => 
-                        n >= bounds[0] && n <= bounds[1] || 
-                        n >= bounds[2] && n <= bounds[3]
+                    line.Split(&quot;:&quot;)[0],           // &quot;departure location&quot;
+                    n =&gt; 
+                        n &gt;= bounds[0] &amp;&amp; n &lt;= bounds[1] || 
+                        n &gt;= bounds[2] &amp;&amp; n &lt;= bounds[3]
                 )
         ).ToArray();
 
         var tickets = (                         
             from block in blocks.Skip(1)          // ticket information is in the second and third blocks 
-            let numbers = block.Skip(1)           // skip "your ticket:" / "nearby tickets:"
-            from line in numbers                  // line <- ["337,687,...", "223,323,...", ...]
+            let numbers = block.Skip(1)           // skip &quot;your ticket:&quot; / &quot;nearby tickets:&quot;
+            from line in numbers                  // line &lt;- [&quot;337,687,...&quot;, &quot;223,323,...&quot;, ...]
             select parseNumbers(line)             // [337, 687, 607]
         ).ToArray();
 

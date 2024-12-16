@@ -284,12 +284,12 @@ using System.Linq;
 
 namespace AdventOfCode.Y2019.Day19;
 
-[ProblemName("Tractor Beam")]
+[ProblemName(&quot;Tractor Beam&quot;)]
 class Solution : Solver {
 
-    Func<int, int, bool> Detector(string input) {
+    Func&lt;int, int, bool&gt; Detector(string input) {
         var icm = new ImmutableIntCodeMachine(input);
-        return (int x, int y) => {
+        return (int x, int y) =&gt; {
             var (_, output) = icm.Run(x, y);
             return output[0] == 1;
         };
@@ -314,7 +314,7 @@ class Solution : Solver {
             }
             var x = xStart;
             while (detector(x + 99, y)) {
-                if (detector(x, y + 99) && detector(x + 99, y + 99)) {
+                if (detector(x, y + 99) &amp;&amp; detector(x + 99, y + 99)) {
                     return (x * 10000 + y);
                 }
                 x++;

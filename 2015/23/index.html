@@ -284,14 +284,14 @@ using System.Collections.Generic;
 
 namespace AdventOfCode.Y2015.Day23;
 
-[ProblemName("Opening the Turing Lock")]
+[ProblemName(&quot;Opening the Turing Lock&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Solve(input, 0);
-    public object PartTwo(string input) => Solve(input, 1);
+    public object PartOne(string input) =&gt; Solve(input, 0);
+    public object PartTwo(string input) =&gt; Solve(input, 1);
 
     long Solve(string input, long a) {
-        var regs = new Dictionary<string, long>();
+        var regs = new Dictionary&lt;string, long&gt;();
         var ip = 0L;
         long getReg(string reg) {
             return long.TryParse(reg, out var n) ? n
@@ -302,37 +302,37 @@ class Solution : Solver {
             regs[reg] = value;
         }
 
-        setReg("a", a);
-        var prog = input.Split('\n');
-        while (ip >= 0 && ip < prog.Length) {
+        setReg(&quot;a&quot;, a);
+        var prog = input.Split(&#039;\n&#039;);
+        while (ip &gt;= 0 &amp;&amp; ip &lt; prog.Length) {
             var line = prog[ip];
-            var parts = line.Replace(",", "").Split(" ");
+            var parts = line.Replace(&quot;,&quot;, &quot;&quot;).Split(&quot; &quot;);
             switch (parts[0]) {
-                case "hlf":
+                case &quot;hlf&quot;:
                     setReg(parts[1], getReg(parts[1]) / 2);
                     ip++;
                     break;
-                case "tpl":
+                case &quot;tpl&quot;:
                     setReg(parts[1], getReg(parts[1]) * 3);
                     ip++;
                     break;
-                case "inc":
+                case &quot;inc&quot;:
                     setReg(parts[1], getReg(parts[1]) + 1);
                     ip++;
                     break;
-                case "jmp":
+                case &quot;jmp&quot;:
                     ip += getReg(parts[1]);
                     break;
-                case "jie":
+                case &quot;jie&quot;:
                     ip += getReg(parts[1]) % 2 == 0 ? getReg(parts[2]) : 1;
                     break;
-                case "jio":
+                case &quot;jio&quot;:
                     ip += getReg(parts[1]) == 1 ? getReg(parts[2]) : 1;
                     break;
-                default: throw new Exception("Cannot parse " + line);
+                default: throw new Exception(&quot;Cannot parse &quot; + line);
             }
         }
-        return getReg("b");
+        return getReg(&quot;b&quot;);
     }
 }
 </code></pre></div>

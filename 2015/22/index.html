@@ -284,29 +284,29 @@ using System.Collections.Generic;
 
 namespace AdventOfCode.Y2015.Day22;
 
-[ProblemName("Wizard Simulator 20XX")]
+[ProblemName(&quot;Wizard Simulator 20XX&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
         var state0 = Parse(input);
-        return BinarySearch(mana => TrySolve(state0.WithManaLimit(mana), false));
+        return BinarySearch(mana =&gt; TrySolve(state0.WithManaLimit(mana), false));
     }
 
     public object PartTwo(string input) {
         var state0 = Parse(input);
-        return BinarySearch(mana => TrySolve(state0.WithManaLimit(mana), true));
+        return BinarySearch(mana =&gt; TrySolve(state0.WithManaLimit(mana), true));
     }
 
-    int BinarySearch(Func<int, bool> f) {
+    int BinarySearch(Func&lt;int, bool&gt; f) {
         var hi = 1;
         while (!f(hi)) {
             hi *= 2;
         }
         var lo = hi / 2;
         var first = false;
-        while (hi - lo > 1) {
+        while (hi - lo &gt; 1) {
             var m = (hi + lo) / 2;
-            if (!first && f(m)) {
+            if (!first &amp;&amp; f(m)) {
                 hi = m;
             } else {
                 lo = m;
@@ -324,7 +324,7 @@ class Solution : Solver {
         foreach (var stateT in state.PlayerSteps()) {
             state = stateT.ApplyEffects();
             state = state.BossStep();
-            if (state.bossHp <= 0 || state.playerHp > 0 && TrySolve(state, hard)) {
+            if (state.bossHp &lt;= 0 || state.playerHp &gt; 0 &amp;&amp; TrySolve(state, hard)) {
                 return true;
             }
         }
@@ -332,12 +332,12 @@ class Solution : Solver {
     }
 
     State Parse(string input){
-        var lines = input.Split("\n");
+        var lines = input.Split(&quot;\n&quot;);
         return new State {
             playerHp = 50,
             playerMana = 500,
-            bossHp = int.Parse(lines[0].Split(": ")[1]),
-            bossDamage = int.Parse(lines[1].Split(": ")[1])
+            bossHp = int.Parse(lines[0].Split(&quot;: &quot;)[1]),
+            bossDamage = int.Parse(lines[1].Split(&quot;: &quot;)[1])
         };
     }
 }
@@ -372,22 +372,22 @@ class State {
     }
 
     public State ApplyEffects() {
-        if (playerHp <= 0 || bossHp <= 0) {
+        if (playerHp &lt;= 0 || bossHp &lt;= 0) {
             return this;
         }
 
         var newState = Dup();
-        if (newState.poison > 0) {
+        if (newState.poison &gt; 0) {
             newState.bossHp -= 3;
             newState.poison--;
         }
 
-        if (newState.recharge > 0) {
+        if (newState.recharge &gt; 0) {
             newState.playerMana += 101;
             newState.recharge--;
         }
 
-        if (newState.shield > 0) {
+        if (newState.shield &gt; 0) {
             newState.shield--;
             newState.playerArmor = 7;
         } else {
@@ -397,7 +397,7 @@ class State {
     }
 
     public State Damage(int damage) {
-        if (playerHp <= 0 || bossHp <= 0) {
+        if (playerHp &lt;= 0 || bossHp &lt;= 0) {
             return this;
         }
 
@@ -407,7 +407,7 @@ class State {
     }
 
     public State BossStep(){
-        if (playerHp <= 0 || bossHp <= 0) {
+        if (playerHp &lt;= 0 || bossHp &lt;= 0) {
             return this;
         }
 
@@ -416,14 +416,14 @@ class State {
         return step;
     }
 
-    public IEnumerable<State> PlayerSteps() {
+    public IEnumerable&lt;State&gt; PlayerSteps() {
 
-        if (playerHp <= 0 || bossHp <= 0) {
+        if (playerHp &lt;= 0 || bossHp &lt;= 0) {
             yield return this;
             yield break;
         }
    
-        if (playerMana >= missileMana && missileMana + usedMana <= manaLimit) {
+        if (playerMana &gt;= missileMana &amp;&amp; missileMana + usedMana &lt;= manaLimit) {
             var c = Dup();
             c.playerMana -= missileMana;
             c.usedMana += missileMana;
@@ -431,7 +431,7 @@ class State {
             yield return c;
         }
 
-        if (playerMana >= drainMana && drainMana + usedMana <= manaLimit) {
+        if (playerMana &gt;= drainMana &amp;&amp; drainMana + usedMana &lt;= manaLimit) {
             var c = Dup();
             c.playerMana -= drainMana;
             c.usedMana += drainMana;
@@ -440,7 +440,7 @@ class State {
             yield return c;
         }
 
-        if (playerMana >= shieldMana && shield == 0 && shieldMana + usedMana <= manaLimit) {
+        if (playerMana &gt;= shieldMana &amp;&amp; shield == 0 &amp;&amp; shieldMana + usedMana &lt;= manaLimit) {
             var c = Dup();
             c.playerMana -= shieldMana;
             c.usedMana += shieldMana;
@@ -448,7 +448,7 @@ class State {
             yield return c;
         }
 
-        if (playerMana >= poisonMana && poison == 0 && poisonMana + usedMana <= manaLimit) {
+        if (playerMana &gt;= poisonMana &amp;&amp; poison == 0 &amp;&amp; poisonMana + usedMana &lt;= manaLimit) {
             var c = Dup();
             c.playerMana -= poisonMana;
             c.usedMana += poisonMana;
@@ -456,7 +456,7 @@ class State {
             yield return c;
         }
 
-        if (playerMana >= rechargeMana && recharge == 0 && rechargeMana + usedMana <= manaLimit) {
+        if (playerMana &gt;= rechargeMana &amp;&amp; recharge == 0 &amp;&amp; rechargeMana + usedMana &lt;= manaLimit) {
             var c = Dup();
             c.playerMana -= rechargeMana;
             c.usedMana += rechargeMana;

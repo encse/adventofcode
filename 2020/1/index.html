@@ -284,7 +284,7 @@ using System.Linq;
 
 namespace AdventOfCode.Y2020.Day01;
 
-[ProblemName("Report Repair")]
+[ProblemName(&quot;Report Repair&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
@@ -308,8 +308,8 @@ class Solution : Solver {
         ).First();
     }
 
-    HashSet<int> Numbers(string input) {
-        return input.Split('\n').Select(int.Parse).ToHashSet<int>();
+    HashSet&lt;int&gt; Numbers(string input) {
+        return input.Split(&#039;\n&#039;).Select(int.Parse).ToHashSet&lt;int&gt;();
     }
 }
 </code></pre></div>

@@ -284,32 +284,32 @@ using System.Linq;
 
 namespace AdventOfCode.Y2021.Day18;
 
-[ProblemName("Snailfish")]
+[ProblemName(&quot;Snailfish&quot;)]
 class Solution : Solver {
 
     // WARNING: What follows is obscure nonsense.
     //
-    //     .-""-.
+    //     .-&quot;&quot;-.
     //    /,..___\
     //   () {_____}
     //     (/-@-@-\)
-    //     {`-=^=-'}
-    //     {  `-'  } Max
+    //     {`-=^=-&#039;}
+    //     {  `-&#039;  } Max
     //      {     }
-    //       `---'
+    //       `---&#039;
 
     public object PartOne(string input) {
-        // sum up all the 'numbers' in the input
-        return input.Split("\n").Select(ParseNumber).Aggregate(
+        // sum up all the &#039;numbers&#039; in the input
+        return input.Split(&quot;\n&quot;).Select(ParseNumber).Aggregate(
             new Number(),
-            (acc, number) => !acc.Any() ? number : Sum(acc, number),
+            (acc, number) =&gt; !acc.Any() ? number : Sum(acc, number),
             Magnitude
         );
     }
 
     public object PartTwo(string input) {
-        // get the highest magnitude resulted from adding any two 'numbers' in the input:
-        var numbers = input.Split("\n").Select(ParseNumber).ToArray();
+        // get the highest magnitude resulted from adding any two &#039;numbers&#039; in the input:
+        var numbers = input.Split(&quot;\n&quot;).Select(ParseNumber).ToArray();
         return (
             from i in Enumerable.Range(0, numbers.Length)
             from j in Enumerable.Range(0, numbers.Length)
@@ -330,7 +330,7 @@ class Solution : Solver {
                 // take left and right side of the pair
                 var left = computeRecursive();
                 var right = computeRecursive();
-                itoken++; // don't forget to eat the closing parenthesis
+                itoken++; // don&#039;t forget to eat the closing parenthesis
                 return 3 * left + 2 * right;
             }
         }
@@ -339,8 +339,8 @@ class Solution : Solver {
     }
 
 
-    // just wrap A and B in a new 'number' and reduce:
-    Number Sum(Number numberA, Number numberB) => Reduce(Number.Pair(numberA, numberB));
+    // just wrap A and B in a new &#039;number&#039; and reduce:
+    Number Sum(Number numberA, Number numberB) =&gt; Reduce(Number.Pair(numberA, numberB));
 
     Number Reduce(Number number) {
         while (Explode(number) || Split(number)) {
@@ -353,14 +353,14 @@ class Solution : Solver {
         // exploding means we need to find the first pair in the number 
         // that is embedded in 4 other pairs and get rid of it:
         var depth = 0;
-        for (var i = 0; i < number.Count; i++) {
+        for (var i = 0; i &lt; number.Count; i++) {
             if (number[i].kind == TokenKind.Open) {
                 depth++;
                 if (depth == 5) {
-                    // we are deep enough, let's to the reduce part
+                    // we are deep enough, let&#039;s to the reduce part
 
                     // find the digit to the left (if any) and increase:
-                    for (var j = i - 1; j >= 0; j--) {
+                    for (var j = i - 1; j &gt;= 0; j--) {
                         if (number[j].kind == TokenKind.Digit) {
                             number[j] = number[j] with { value = number[j].value + number[i + 1].value };
                             break;
@@ -368,7 +368,7 @@ class Solution : Solver {
                     }
 
                     // find the digit to the right (if any) and increase:
-                    for (var j = i + 3; j < number.Count; j++) {
+                    for (var j = i + 3; j &lt; number.Count; j++) {
                         if (number[j].kind == TokenKind.Digit) {
                             number[j] = number[j] with { value = number[j].value + number[i + 2].value };
                             break;
@@ -387,15 +387,15 @@ class Solution : Solver {
             }
         }
 
-        // couldn't reduce:
+        // couldn&#039;t reduce:
         return false;
     }
 
     bool Split(Number number) {
 
         // spliting means we neeed to find a token with a high value and make a pair out of it:
-        for (var i = 0; i < number.Count; i++) {
-            if (number[i].value >= 10) {
+        for (var i = 0; i &lt; number.Count; i++) {
+            if (number[i].value &gt;= 10) {
 
                 var v = number[i].value;
                 number.RemoveRange(i, 1);
@@ -405,32 +405,32 @@ class Solution : Solver {
                 return true;
             }
         }
-        // couldn't split:
+        // couldn&#039;t split:
         return false;
     }
 
-    // tokenize the input to a list of '[' ']' and digit tokens
+    // tokenize the input to a list of &#039;[&#039; &#039;]&#039; and digit tokens
     Number ParseNumber(string st) {
         var res = new Number();
-        var n = "";
+        var n = &quot;&quot;;
         foreach (var ch in st) {
-            if (ch >= '0' && ch <= '9') {
+            if (ch &gt;= &#039;0&#039; &amp;&amp; ch &lt;= &#039;9&#039;) {
                 n += ch;
             } else {
-                if (n != "") {
+                if (n != &quot;&quot;) {
                     res.Add(new Token(TokenKind.Digit, int.Parse(n)));
-                    n = "";
+                    n = &quot;&quot;;
                 }
-                if (ch == '[') {
+                if (ch == &#039;[&#039;) {
                     res.Add(new Token(TokenKind.Open));
-                } else if (ch == ']') {
+                } else if (ch == &#039;]&#039;) {
                     res.Add(new Token(TokenKind.Close));
                 }
             }
         }
-        if (n != "") {
+        if (n != &quot;&quot;) {
             res.Add(new Token(TokenKind.Digit, int.Parse(n)));
-            n = "";
+            n = &quot;&quot;;
         }
         return res;
     }
@@ -445,8 +445,8 @@ enum TokenKind {
 }
 record Token(TokenKind kind, int value = 0);
 
-class Number : List<Token> {
-    public static Number Digit(int value) =>
+class Number : List&lt;Token&gt; {
+    public static Number Digit(int value) =&gt;
         new Number(){
             new Token(TokenKind.Digit, value)
         };

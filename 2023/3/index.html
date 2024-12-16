@@ -290,29 +290,29 @@ using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-[ProblemName("Gear Ratios")]
+[ProblemName(&quot;Gear Ratios&quot;)]
 class Solution : Solver {
 
-    // Introduce a Parse function that returns the interesting 'blocks' of texts 
+    // Introduce a Parse function that returns the interesting &#039;blocks&#039; of texts 
     // and positions using a regex. Then just filter and match these according
     // to the problem spec.
 
     public object PartOne(string input) {
-        var rows = input.Split("\n");
-        var symbols = Parse(rows, new Regex(@"[^.0-9]"));
-        var nums = Parse(rows, new Regex(@"\d+"));
+        var rows = input.Split(&quot;\n&quot;);
+        var symbols = Parse(rows, new Regex(@&quot;[^.0-9]&quot;));
+        var nums = Parse(rows, new Regex(@&quot;\d+&quot;));
 
         return (
             from n in nums
-            where symbols.Any(s => Adjacent(s, n))
+            where symbols.Any(s =&gt; Adjacent(s, n))
             select n.Int
         ).Sum();
     }
 
     public object PartTwo(string input) {
-        var rows = input.Split("\n");
-        var gears = Parse(rows, new Regex(@"\*"));
-        var numbers = Parse(rows, new Regex(@"\d+"));
+        var rows = input.Split(&quot;\n&quot;);
+        var gears = Parse(rows, new Regex(@&quot;\*&quot;));
+        var numbers = Parse(rows, new Regex(@&quot;\d+&quot;));
 
         return (
             from g in gears
@@ -324,13 +324,13 @@ class Solution : Solver {
 
     // checks that the parts are touching each other, i.e. rows are within 1 
     // step and also the columns (using https://stackoverflow.com/a/3269471).
-    bool Adjacent(Part p1, Part p2) =>
-        Math.Abs(p2.Irow - p1.Irow) <= 1 &&
-        p1.Icol <= p2.Icol + p2.Text.Length &&
-        p2.Icol <= p1.Icol + p1.Text.Length;
+    bool Adjacent(Part p1, Part p2) =&gt;
+        Math.Abs(p2.Irow - p1.Irow) &lt;= 1 &amp;&amp;
+        p1.Icol &lt;= p2.Icol + p2.Text.Length &amp;&amp;
+        p2.Icol &lt;= p1.Icol + p1.Text.Length;
 
     // returns the matches of rx with its coordinates
-    Part[] Parse(string[] rows, Regex rx) => (
+    Part[] Parse(string[] rows, Regex rx) =&gt; (
         from irow in Enumerable.Range(0, rows.Length)
         from match in rx.Matches(rows[irow])
         select new Part(match.Value, irow, match.Index)
@@ -338,7 +338,7 @@ class Solution : Solver {
 }
 
 record Part(string Text, int Irow, int Icol) {
-    public int Int => int.Parse(Text);
+    public int Int =&gt; int.Parse(Text);
 }
 </code></pre></div>
             <div id="code-location"> <p>Please ☆ my <a href="https://github.com/encse/adventofcode/">repo</a> if you like it!</p></div>

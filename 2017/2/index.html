@@ -283,24 +283,24 @@
 
 namespace AdventOfCode.Y2017.Day02;
 
-[ProblemName("Corruption Checksum")]
+[ProblemName(&quot;Corruption Checksum&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
         return (
-            from line in input.Split('\n')
-            let numbers = line.Split('\t').Select(int.Parse)
+            from line in input.Split(&#039;\n&#039;)
+            let numbers = line.Split(&#039;\t&#039;).Select(int.Parse)
             select numbers.Max() - numbers.Min()
         ).Sum();
     }
 
     public object PartTwo(string input) {
         return (
-            from line in input.Split('\n')
-            let numbers = line.Split('\t').Select(int.Parse)
+            from line in input.Split(&#039;\n&#039;)
+            let numbers = line.Split(&#039;\t&#039;).Select(int.Parse)
             from a in numbers
             from b in numbers
-            where a > b && a % b == 0
+            where a &gt; b &amp;&amp; a % b == 0
             select a / b
         ).Sum();
     }

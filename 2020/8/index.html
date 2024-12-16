@@ -287,39 +287,39 @@ namespace AdventOfCode.Y2020.Day08;
 
 record Stm(string op, int arg);
 
-[ProblemName("Handheld Halting")]
+[ProblemName(&quot;Handheld Halting&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Run(Parse(input)).acc;
+    public object PartOne(string input) =&gt; Run(Parse(input)).acc;
 
-    public object PartTwo(string input) =>
+    public object PartTwo(string input) =&gt;
         Patches(Parse(input))
             .Select(Run)
-            .First(res => res.terminated).acc;
+            .First(res =&gt; res.terminated).acc;
 
-    Stm[] Parse(string input) =>
-        input.Split("\n")
-            .Select(line => line.Split(" "))
-            .Select(parts => new Stm(parts[0], int.Parse(parts[1])))
+    Stm[] Parse(string input) =&gt;
+        input.Split(&quot;\n&quot;)
+            .Select(line =&gt; line.Split(&quot; &quot;))
+            .Select(parts =&gt; new Stm(parts[0], int.Parse(parts[1])))
             .ToArray();
 
-    IEnumerable<Stm[]> Patches(Stm[] program) =>
+    IEnumerable&lt;Stm[]&gt; Patches(Stm[] program) =&gt;
         Enumerable.Range(0, program.Length)
-            .Where(line => program[line].op != "acc")
-            .Select(lineToPatch =>
-                program.Select((stm, line) =>
+            .Where(line =&gt; program[line].op != &quot;acc&quot;)
+            .Select(lineToPatch =&gt;
+                program.Select((stm, line) =&gt;
                     line != lineToPatch ? stm :
-                    stm.op == "jmp" ? stm with { op = "nop" } :
-                    stm.op == "nop" ? stm with { op = "jmp" } :
+                    stm.op == &quot;jmp&quot; ? stm with { op = &quot;nop&quot; } :
+                    stm.op == &quot;nop&quot; ? stm with { op = &quot;jmp&quot; } :
                     throw new Exception()
                 ).ToArray()
             );
 
     (int acc, bool terminated) Run(Stm[] program) {
-        var (ip, acc, seen) = (0, 0, new HashSet<int>());
+        var (ip, acc, seen) = (0, 0, new HashSet&lt;int&gt;());
 
         while (true) {
-            if (ip >= program.Length) {
+            if (ip &gt;= program.Length) {
                 return (acc, true);
             } else if (seen.Contains(ip)) {
                 return (acc, false);
@@ -327,9 +327,9 @@ class Solution : Solver {
                 seen.Add(ip);
                 var stm = program[ip];
                 switch (stm.op) {
-                    case "nop": ip++; break;
-                    case "acc": ip++; acc += stm.arg; break;
-                    case "jmp": ip += stm.arg; break;
+                    case &quot;nop&quot;: ip++; break;
+                    case &quot;acc&quot;: ip++; acc += stm.arg; break;
+                    case &quot;jmp&quot;: ip += stm.arg; break;
                 };
             }
         }

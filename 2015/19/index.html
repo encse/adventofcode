@@ -285,7 +285,7 @@ using System.Linq;
 
 namespace AdventOfCode.Y2015.Day19;
 
-[ProblemName("Medicine for Rudolph")]
+[ProblemName(&quot;Medicine for Rudolph&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
@@ -299,7 +299,7 @@ class Solution : Solver {
         var st = m;
         var depth = 0;
         var i = 0;
-        while (st != "e") {
+        while (st != &quot;e&quot;) {
             i++;
             var replacements = Replacements(rules, st, false).ToArray();
             if (replacements.Length == 0) {
@@ -314,22 +314,22 @@ class Solution : Solver {
         return depth;
     }
 
-    IEnumerable<string> ReplaceAll((string from, string to)[] rules, string m) {
+    IEnumerable&lt;string&gt; ReplaceAll((string from, string to)[] rules, string m) {
         foreach (var (from, length, to) in Replacements(rules, m, true)) {
             yield return Replace(m, from, to, length);
         }
     }
 
-    string Replace(string m, int from, string to, int length) => m.Substring(0, from) + to + m.Substring(from + length);
+    string Replace(string m, int from, string to, int length) =&gt; m.Substring(0, from) + to + m.Substring(from + length);
 
-    IEnumerable<(int from, int length, string to)> Replacements((string from, string to)[] rules, string m, bool forward) {
+    IEnumerable&lt;(int from, int length, string to)&gt; Replacements((string from, string to)[] rules, string m, bool forward) {
         var ich = 0;
-        while (ich < m.Length) {
+        while (ich &lt; m.Length) {
             foreach (var (a, b) in rules) {
                 var (from, to) = forward ? (a, b) : (b, a);
-                if (ich + from.Length <= m.Length) {
+                if (ich + from.Length &lt;= m.Length) {
                     var i = 0;
-                    while (i < from.Length) {
+                    while (i &lt; from.Length) {
                         if (m[ich + i] != from[i]) {
                             break;
                         }
@@ -346,11 +346,11 @@ class Solution : Solver {
 
     ((string from, string to)[] rules, string m) Parse(string input) {
         var rules =
-            (from line in input.Split('\n').TakeWhile(line => line.Contains("=>"))
-             let parts = line.Split(" => ")
+            (from line in input.Split(&#039;\n&#039;).TakeWhile(line =&gt; line.Contains(&quot;=&gt;&quot;))
+             let parts = line.Split(&quot; =&gt; &quot;)
              select (parts[0], parts[1]))
             .ToArray();
-        var m = input.Split('\n').Last();
+        var m = input.Split(&#039;\n&#039;).Last();
         return (rules, m);
     }
 }

@@ -284,17 +284,17 @@ using System.Linq;
 
 namespace AdventOfCode.Y2015.Day01;
 
-[ProblemName("Not Quite Lisp")]
+[ProblemName(&quot;Not Quite Lisp&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Levels(input).Last().level;
+    public object PartOne(string input) =&gt; Levels(input).Last().level;
 
-    public object PartTwo(string input) => Levels(input).First(p => p.level == -1).idx;
+    public object PartTwo(string input) =&gt; Levels(input).First(p =&gt; p.level == -1).idx;
 
-    IEnumerable<(int idx, int level)> Levels(string input){
+    IEnumerable&lt;(int idx, int level)&gt; Levels(string input){
         var level = 0;
-        for (var i = 0; i < input.Length; i++) {
-            level += input[i] == '(' ? 1 : -1;
+        for (var i = 0; i &lt; input.Length; i++) {
+            level += input[i] == &#039;(&#039; ? 1 : -1;
             yield return (i+1, level);
         }
     }

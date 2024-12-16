@@ -284,7 +284,7 @@ using System.Linq;
 
 namespace AdventOfCode.Y2021.Day08;
 
-[ProblemName("Seven Segment Search")]
+[ProblemName(&quot;Seven Segment Search&quot;)]
 class Solution : Solver {
 
    /*
@@ -301,12 +301,12 @@ class Solution : Solver {
     public object PartOne(string input) {
 
         // we can identify digits 1, 7, 4 and 8 by their active segments count:
-        var segmentCounts = new[] { "cd", "acf", "bcdf", "abcdefg" }.Select(x => x.Length).ToHashSet();
+        var segmentCounts = new[] { &quot;cd&quot;, &quot;acf&quot;, &quot;bcdf&quot;, &quot;abcdefg&quot; }.Select(x =&gt; x.Length).ToHashSet();
 
         return (
-            from line in input.Split("\n")
-            let parts = line.Split(" | ")
-            from segment in parts[1].Split(" ")
+            from line in input.Split(&quot;\n&quot;)
+            let parts = line.Split(&quot; | &quot;)
+            from segment in parts[1].Split(&quot; &quot;)
             where segmentCounts.Contains(segment.Length)
             select 1
         ).Count();
@@ -314,22 +314,22 @@ class Solution : Solver {
 
     public object PartTwo(string input) {
         var res = 0;
-        foreach(var line in input.Split("\n")) {
-            var parts = line.Split(" | ");
-            var patterns = parts[0].Split(" ").Select(x => x.ToHashSet()).ToArray();
+        foreach(var line in input.Split(&quot;\n&quot;)) {
+            var parts = line.Split(&quot; | &quot;);
+            var patterns = parts[0].Split(&quot; &quot;).Select(x =&gt; x.ToHashSet()).ToArray();
 
-            // let's figure out what segments belong to each digit
-            var digits = new HashSet<char>[10];
+            // let&#039;s figure out what segments belong to each digit
+            var digits = new HashSet&lt;char&gt;[10];
 
             // we can do these by length:
-            digits[1] = patterns.Single(pattern => pattern.Count() == "cf".Length);
-            digits[4] = patterns.Single(pattern => pattern.Count() == "bcdf".Length);
+            digits[1] = patterns.Single(pattern =&gt; pattern.Count() == &quot;cf&quot;.Length);
+            digits[4] = patterns.Single(pattern =&gt; pattern.Count() == &quot;bcdf&quot;.Length);
 
             // it turns out that the following tripplet uniquely identifies the rest:
-            var lookup = (int segmentCount, int commonWithOne, int commonWithFour) =>
-                patterns.Single(pattern => 
-                    pattern.Count() == segmentCount && 
-                    pattern.Intersect(digits[1]).Count() == commonWithOne && 
+            var lookup = (int segmentCount, int commonWithOne, int commonWithFour) =&gt;
+                patterns.Single(pattern =&gt; 
+                    pattern.Count() == segmentCount &amp;&amp; 
+                    pattern.Intersect(digits[1]).Count() == commonWithOne &amp;&amp; 
                     pattern.Intersect(digits[4]).Count() == commonWithFour
                 );
             
@@ -342,11 +342,11 @@ class Solution : Solver {
             digits[8] = lookup(7, 2, 4);
             digits[9] = lookup(6, 2, 4);
                     
-            var decode = (string v) => 
-                Enumerable.Range(0, 10).Single(i => digits[i].SetEquals(v));
+            var decode = (string v) =&gt; 
+                Enumerable.Range(0, 10).Single(i =&gt; digits[i].SetEquals(v));
 
             // Decode the number, Horner would like this.
-            res += parts[1].Split(" ").Aggregate(0, (n, digit) => n * 10 + decode(digit));
+            res += parts[1].Split(&quot; &quot;).Aggregate(0, (n, digit) =&gt; n * 10 + decode(digit));
         }
         return res;
     }

@@ -284,16 +284,16 @@ using System.Linq;
 
 namespace AdventOfCode.Y2020.Day10;
 
-[ProblemName("Adapter Array")]
+[ProblemName(&quot;Adapter Array&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
         var jolts = Parse(input);
-        var window = jolts.Skip(1).Zip(jolts).Select(p => (current: p.First, prev: p.Second));
+        var window = jolts.Skip(1).Zip(jolts).Select(p =&gt; (current: p.First, prev: p.Second));
 
         return
-             window.Count(pair => pair.current - pair.prev == 1) *
-             window.Count(pair => pair.current - pair.prev == 3);
+             window.Count(pair =&gt; pair.current - pair.prev == 1) *
+             window.Count(pair =&gt; pair.current - pair.prev == 3);
     }
 
     public object PartTwo(string input) {
@@ -301,18 +301,18 @@ class Solution : Solver {
 
         // dynamic programming with rolling variables a, b, c for the function values at i + 1, i + 2 and i + 3.
         var (a, b, c) = (1L, 0L, 0L); 
-        for (var i = jolts.Count - 2; i >= 0; i--) {
+        for (var i = jolts.Count - 2; i &gt;= 0; i--) {
             var s =  
-                (i + 1 < jolts.Count && jolts[i + 1] - jolts[i] <= 3 ? a : 0) +
-                (i + 2 < jolts.Count && jolts[i + 2] - jolts[i] <= 3 ? b : 0) +
-                (i + 3 < jolts.Count && jolts[i + 3] - jolts[i] <= 3 ? c : 0);
+                (i + 1 &lt; jolts.Count &amp;&amp; jolts[i + 1] - jolts[i] &lt;= 3 ? a : 0) +
+                (i + 2 &lt; jolts.Count &amp;&amp; jolts[i + 2] - jolts[i] &lt;= 3 ? b : 0) +
+                (i + 3 &lt; jolts.Count &amp;&amp; jolts[i + 3] - jolts[i] &lt;= 3 ? c : 0);
             (a, b, c) = (s, a, b);
         }
         return a;
     }
 
-    ImmutableList<int> Parse(string input) {
-        var num = input.Split("\n").Select(int.Parse).OrderBy(x => x);
+    ImmutableList&lt;int&gt; Parse(string input) {
+        var num = input.Split(&quot;\n&quot;).Select(int.Parse).OrderBy(x =&gt; x);
         return ImmutableList
             .Create(0)
             .AddRange(num)

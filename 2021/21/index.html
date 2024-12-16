@@ -285,12 +285,12 @@ using System.Linq;
 
 namespace AdventOfCode.Y2021.Day21;
 
-[ProblemName("Dirac Dice")]
+[ProblemName(&quot;Dirac Dice&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
         // ⭐ we can convert 3 consecutive throws to a 3-throw with the new .Net 6 Chunk function:
-        var threeRoll = DeterministicThrows().Chunk(3).Select(x => x.Sum());
+        var threeRoll = DeterministicThrows().Chunk(3).Select(x =&gt; x.Sum());
 
         // take turns until the active player wins:
         var round = 0;
@@ -298,7 +298,7 @@ class Solution : Solver {
         foreach (var steps in threeRoll) {
             round++;
             active = active.Move(steps);
-            if (active.score >= 1000) {
+            if (active.score &gt;= 1000) {
                 break;
             }
             (active, other) = (other, active);
@@ -311,11 +311,11 @@ class Solution : Solver {
         // win counts tells us how many times the active and the other player wins
         // if they are starting from the given positions and scores.
 
-        // this function needs to be cached, because we don't have time till eternity.
-        var cache = new Dictionary<(Player, Player), (long, long)>();
+        // this function needs to be cached, because we don&#039;t have time till eternity.
+        var cache = new Dictionary&lt;(Player, Player), (long, long)&gt;();
     
         (long activeWins, long otherWins) winCounts((Player active, Player other) players) {
-            if (players.other.score >= 21) {
+            if (players.other.score &gt;= 21) {
                 return (0, 1);
             }
 
@@ -339,11 +339,11 @@ class Solution : Solver {
         return Math.Max(wins.activeWins, wins.otherWins);
     }
 
-    IEnumerable<int> DeterministicThrows() =>
+    IEnumerable&lt;int&gt; DeterministicThrows() =&gt;
         from i in Enumerable.Range(1, int.MaxValue)
         select (i - 1) % 100 + 1;
 
-    IEnumerable<int> DiracThrows() =>
+    IEnumerable&lt;int&gt; DiracThrows() =&gt;
         from i in new[] { 1, 2, 3 }
         from j in new[] { 1, 2, 3 }
         from k in new[] { 1, 2, 3 }
@@ -351,8 +351,8 @@ class Solution : Solver {
 
     (Player active, Player other) Parse(string input) {
         var players = (
-            from line in input.Split("\n")
-            let parts = line.Split(": ")
+            from line in input.Split(&quot;\n&quot;)
+            let parts = line.Split(&quot;: &quot;)
             select new Player(0, int.Parse(parts[1]))
         ).ToArray();
         return (players[0], players[1]);

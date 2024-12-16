@@ -284,17 +284,17 @@ using System.Linq;
 
 namespace AdventOfCode.Y2022.Day06;
 
-[ProblemName("Tuning Trouble")]
+[ProblemName(&quot;Tuning Trouble&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => StartOfBlock(input, 4);
-    public object PartTwo(string input) => StartOfBlock(input, 14);
+    public object PartOne(string input) =&gt; StartOfBlock(input, 4);
+    public object PartTwo(string input) =&gt; StartOfBlock(input, 14);
 
     // Slides a window of length l over the input and finds the first position
     // where each character is different. Returns the right end of the window.
-    int StartOfBlock(string input, int l) =>
+    int StartOfBlock(string input, int l) =&gt;
          Enumerable.Range(l, input.Length)
-            .First(i => input.Substring(i - l, l).ToHashSet().Count == l);
+            .First(i =&gt; input.Substring(i - l, l).ToHashSet().Count == l);
 }
 </code></pre></div>
             <div id="code-location"> <p>Please ☆ my <a href="https://github.com/encse/adventofcode/">repo</a> if you like it!</p></div>

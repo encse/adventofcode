@@ -285,15 +285,15 @@ using System.Linq;
 
 namespace AdventOfCode.Y2016.Day12;
 
-[ProblemName("Leonardo's Monorail")]
+[ProblemName(&quot;Leonardo&#039;s Monorail&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Solve(input, 0);
+    public object PartOne(string input) =&gt; Solve(input, 0);
 
-    public object PartTwo(string input) => Solve(input, 1);
+    public object PartTwo(string input) =&gt; Solve(input, 1);
 
     int Solve(string input, int c) {
-        var regs = new Dictionary<string, int>();
+        var regs = new Dictionary&lt;string, int&gt;();
         int ip = 0;
         int getReg(string reg) {
             return int.TryParse(reg, out var n) ? n
@@ -304,32 +304,32 @@ class Solution : Solver {
             regs[reg] = value;
         }
 
-        setReg("c", c);
+        setReg(&quot;c&quot;, c);
 
-        var prog = input.Split('\n').ToArray();
-        while (ip >= 0 && ip < prog.Length) {
+        var prog = input.Split(&#039;\n&#039;).ToArray();
+        while (ip &gt;= 0 &amp;&amp; ip &lt; prog.Length) {
             var line = prog[ip];
-            var stm = line.Split(' ');
+            var stm = line.Split(&#039; &#039;);
             switch (stm[0]) {
-                case "cpy":
+                case &quot;cpy&quot;:
                     setReg(stm[2], getReg(stm[1]));
                     ip++;
                     break;
-                case "inc":
+                case &quot;inc&quot;:
                     setReg(stm[1], getReg(stm[1]) + 1);
                     ip++;
                     break;
-                case "dec":
+                case &quot;dec&quot;:
                     setReg(stm[1], getReg(stm[1]) - 1);
                     ip++;
                     break;
-                case "jnz":
+                case &quot;jnz&quot;:
                     ip += getReg(stm[1]) != 0 ? getReg(stm[2]) : 1;
                     break;
-                default: throw new Exception("Cannot parse " + line);
+                default: throw new Exception(&quot;Cannot parse &quot; + line);
             }
         }
-        return getReg("a");
+        return getReg(&quot;a&quot;);
     }
 }
 </code></pre></div>

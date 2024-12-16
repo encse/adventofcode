@@ -297,19 +297,19 @@ enum Element {
     Dilithium  = 0b1000000
 }
 
-[ProblemName("Radioisotope Thermoelectric Generators")]
+[ProblemName(&quot;Radioisotope Thermoelectric Generators&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Solve(Parse(input));
-    public object PartTwo(string input) => Solve(Parse(input)
+    public object PartOne(string input) =&gt; Solve(Parse(input));
+    public object PartTwo(string input) =&gt; Solve(Parse(input)
         .AddGenerator(0, Element.Elerium).AddChip(0, Element.Elerium)
         .AddGenerator(0, Element.Dilithium).AddChip(0, Element.Dilithium)
         );
 
     int Solve(ulong state){
         var steps = 0;
-        var seen = new HashSet<ulong>();
-        var q = new Queue<(int steps, ulong state)>();
+        var seen = new HashSet&lt;ulong&gt;();
+        var q = new Queue&lt;(int steps, ulong state)&gt;();
         q.Enqueue((0, state));
         while (q.Any()) {
             (steps, state) = q.Dequeue();
@@ -330,26 +330,26 @@ class Solution : Solver {
     ulong Parse(string input) {
 
         var nextMask = 1;
-        var elementToMask = new Dictionary<string, int>();
+        var elementToMask = new Dictionary&lt;string, int&gt;();
         int mask(string element) {
             if (!elementToMask.ContainsKey(element)) {
                 if (elementToMask.Count() == 5) {
                     throw new NotImplementedException();
                 }
                 elementToMask[element] = nextMask;
-                nextMask <<= 1;
+                nextMask &lt;&lt;= 1;
             }
             return elementToMask[element];
         }
 
         ulong state = 0;
         var floor = 0;
-        foreach(var line in input.Split('\n')){
-            var chips = (from m in Regex.Matches(line, @"(\w+)-compatible")
+        foreach(var line in input.Split(&#039;\n&#039;)){
+            var chips = (from m in Regex.Matches(line, @&quot;(\w+)-compatible&quot;)
                          let element = m.Groups[1].Value
                          select mask(element)).Sum();
 
-            var generators = (from m in Regex.Matches(line, @"(\w+) generator")
+            var generators = (from m in Regex.Matches(line, @&quot;(\w+) generator&quot;)
                          let element = m.Groups[1].Value
                          select mask(element)).Sum();
             state = state.SetFloor((ulong)floor, (ulong)chips, (ulong)generators);
@@ -377,62 +377,62 @@ static class StateExtensions {
         0b1100000000000000111111111111111111111111111111111111111111
     };
     
-    public static ulong SetFloor(this ulong state, ulong floor, ulong chips, ulong generators) =>
-         (state & floorMask[floor]) | 
-         (((chips << elementCount) | (generators << generatorShift)) << floorShift[floor]);
+    public static ulong SetFloor(this ulong state, ulong floor, ulong chips, ulong generators) =&gt;
+         (state &amp; floorMask[floor]) | 
+         (((chips &lt;&lt; elementCount) | (generators &lt;&lt; generatorShift)) &lt;&lt; floorShift[floor]);
 
-    public static ulong GetElevator(this ulong state) => 
-        (ulong)(state >> elevatorShift);
+    public static ulong GetElevator(this ulong state) =&gt; 
+        (ulong)(state &gt;&gt; elevatorShift);
 
-    public static ulong SetElevator(this ulong state, ulong elevator) => 
-        (state & elevatorMask) | ((ulong)elevator << elevatorShift);
+    public static ulong SetElevator(this ulong state, ulong elevator) =&gt; 
+        (state &amp; elevatorMask) | ((ulong)elevator &lt;&lt; elevatorShift);
 
-    public static ulong GetChips(this ulong state, ulong floor) =>
-        (ulong)(((state & ~floorMask[floor]) >> floorShift[floor]) & ~chipMask) >> elementCount;
+    public static ulong GetChips(this ulong state, ulong floor) =&gt;
+        (ulong)(((state &amp; ~floorMask[floor]) &gt;&gt; floorShift[floor]) &amp; ~chipMask) &gt;&gt; elementCount;
     
-    public static ulong GetGenerators(this ulong state, ulong floor) =>
-        (ulong)(((state & ~floorMask[floor]) >> floorShift[floor]) & ~generatorMask) >> generatorShift;
+    public static ulong GetGenerators(this ulong state, ulong floor) =&gt;
+        (ulong)(((state &amp; ~floorMask[floor]) &gt;&gt; floorShift[floor]) &amp; ~generatorMask) &gt;&gt; generatorShift;
 
-    public static ulong AddChip(this ulong state, ulong floor, Element chip) =>
-        state | (((ulong)chip << elementCount) << floorShift[floor]);
+    public static ulong AddChip(this ulong state, ulong floor, Element chip) =&gt;
+        state | (((ulong)chip &lt;&lt; elementCount) &lt;&lt; floorShift[floor]);
 
-    public static ulong AddGenerator(this ulong state, ulong floor, Element genetator) =>
-        state | (((ulong)genetator << generatorShift) << floorShift[floor]);
+    public static ulong AddGenerator(this ulong state, ulong floor, Element genetator) =&gt;
+        state | (((ulong)genetator &lt;&lt; generatorShift) &lt;&lt; floorShift[floor]);
 
     public static bool Valid(this ulong state) {
-        for (int floor = 3; floor >= 0; floor--) {
+        for (int floor = 3; floor &gt;= 0; floor--) {
             var chips = state.GetChips((ulong)floor);
             var generators = state.GetGenerators((ulong)floor);
-            var pairs = chips & generators;
-            var unpairedChips = chips & ~pairs;
-            if (unpairedChips != 0 && generators != 0) {
+            var pairs = chips &amp; generators;
+            var unpairedChips = chips &amp; ~pairs;
+            if (unpairedChips != 0 &amp;&amp; generators != 0) {
                 return false;
             }
         }
         return true;
     }
 
-    public static IEnumerable<ulong> NextStates(this ulong state) {
+    public static IEnumerable&lt;ulong&gt; NextStates(this ulong state) {
         var floor = state.GetElevator();
-        for (ulong i = 1; i < 0b100000000000000; i <<= 1) {
-            for (ulong j = 1; j < 0b100000000000000; j <<= 1) {
-                var iOnFloor = i << floorShift[floor];
-                var jOnFloor = j << floorShift[floor];
-                if ((state & iOnFloor) != 0 && (state & jOnFloor) != 0) {
-                    if (floor > 0) {
-                        var iOnPrevFloor = i << floorShift[floor - 1];
-                        var jOnPrevFloor = j << floorShift[floor - 1];
-                        var elevatorOnPrevFloor = (floor - 1) << elevatorShift;
-                        var stateNext = (state & ~iOnFloor & ~jOnFloor & elevatorMask) | iOnPrevFloor | jOnPrevFloor | elevatorOnPrevFloor;
+        for (ulong i = 1; i &lt; 0b100000000000000; i &lt;&lt;= 1) {
+            for (ulong j = 1; j &lt; 0b100000000000000; j &lt;&lt;= 1) {
+                var iOnFloor = i &lt;&lt; floorShift[floor];
+                var jOnFloor = j &lt;&lt; floorShift[floor];
+                if ((state &amp; iOnFloor) != 0 &amp;&amp; (state &amp; jOnFloor) != 0) {
+                    if (floor &gt; 0) {
+                        var iOnPrevFloor = i &lt;&lt; floorShift[floor - 1];
+                        var jOnPrevFloor = j &lt;&lt; floorShift[floor - 1];
+                        var elevatorOnPrevFloor = (floor - 1) &lt;&lt; elevatorShift;
+                        var stateNext = (state &amp; ~iOnFloor &amp; ~jOnFloor &amp; elevatorMask) | iOnPrevFloor | jOnPrevFloor | elevatorOnPrevFloor;
                         if (stateNext.Valid())
                             yield return stateNext;
                     }
 
-                    if (floor < 3) {
-                        var iOnNextFloor = i << floorShift[floor + 1];
-                        var jOnNextFloor = j << floorShift[floor + 1];
-                        var elevatorOnNextFloor = (floor + 1) << elevatorShift;
-                        var stateNext = (state & ~iOnFloor & ~jOnFloor & elevatorMask) | iOnNextFloor | jOnNextFloor | elevatorOnNextFloor;
+                    if (floor &lt; 3) {
+                        var iOnNextFloor = i &lt;&lt; floorShift[floor + 1];
+                        var jOnNextFloor = j &lt;&lt; floorShift[floor + 1];
+                        var elevatorOnNextFloor = (floor + 1) &lt;&lt; elevatorShift;
+                        var stateNext = (state &amp; ~iOnFloor &amp; ~jOnFloor &amp; elevatorMask) | iOnNextFloor | jOnNextFloor | elevatorOnNextFloor;
                         if (stateNext.Valid())
                             yield return stateNext;
                     }
@@ -441,23 +441,23 @@ static class StateExtensions {
         }
     }
 
-    public static bool Final(this ulong state) =>
-        (state & 0b0000000000000000111111111111111111111111111111111111111111) == 0;
+    public static bool Final(this ulong state) =&gt;
+        (state &amp; 0b0000000000000000111111111111111111111111111111111111111111) == 0;
 
     public static string Tsto(this ulong state){
         var sb = new StringBuilder();
-        for (int floor = 3; floor >= 0; floor --){
-            var e = state.GetElevator() == (ulong)floor ? "E" : " ";
+        for (int floor = 3; floor &gt;= 0; floor --){
+            var e = state.GetElevator() == (ulong)floor ? &quot;E&quot; : &quot; &quot;;
             var chips = state.GetChips((ulong)floor);
             var generators =state.GetGenerators((ulong)floor);
 
-            sb.Append($"F{(floor + 1)} {e} |");
-            for (int i = 0; i < elementCount;i++){
-                sb.Append((generators & 1) == 1 ? " #" : " .");
-                sb.Append((chips & 1) == 1 ? " #" : " .");
-                sb.Append(" |");
-                chips >>= 1;
-                generators >>= 1;
+            sb.Append($&quot;F{(floor + 1)} {e} |&quot;);
+            for (int i = 0; i &lt; elementCount;i++){
+                sb.Append((generators &amp; 1) == 1 ? &quot; #&quot; : &quot; .&quot;);
+                sb.Append((chips &amp; 1) == 1 ? &quot; #&quot; : &quot; .&quot;);
+                sb.Append(&quot; |&quot;);
+                chips &gt;&gt;= 1;
+                generators &gt;&gt;= 1;
             }
             sb.AppendLine();
         }

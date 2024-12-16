@@ -286,7 +286,7 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2018.Day16;
 
-[ProblemName("Chronal Classification")]
+[ProblemName(&quot;Chronal Classification&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
@@ -294,14 +294,14 @@ class Solution : Solver {
         var (testCases, prg) = Parse(input);
         foreach (var testCase in testCases) {
             var match = 0;
-            for (var i = 0; i < 16; i++) {
+            for (var i = 0; i &lt; 16; i++) {
                 testCase.stm[0] = i;
                 var regsActual = Step(testCase.regsBefore, testCase.stm);
-                if (Enumerable.Range(0, 4).All(ireg => regsActual[ireg] == testCase.regsAfter[ireg])) {
+                if (Enumerable.Range(0, 4).All(ireg =&gt; regsActual[ireg] == testCase.regsAfter[ireg])) {
                     match++;
                 }
             }
-            if (match >= 3) {
+            if (match &gt;= 3) {
                 res++;
             }
         }
@@ -310,23 +310,23 @@ class Solution : Solver {
 
     public object PartTwo(string input) {
 
-        var constraints = Enumerable.Range(0, 16).ToDictionary(i => i, i => Enumerable.Range(0, 16).ToList());
+        var constraints = Enumerable.Range(0, 16).ToDictionary(i =&gt; i, i =&gt; Enumerable.Range(0, 16).ToList());
         var (testCases, prg) = Parse(input);
         foreach (var testCase in testCases) {
             var op = testCase.stm[0];
             var oldMapping = constraints[op];
-            var newMapping = new List<int>();
+            var newMapping = new List&lt;int&gt;();
             foreach (var i in oldMapping) {
                 testCase.stm[0] = i;
                 var regsActual = Step(testCase.regsBefore, testCase.stm);
-                if (Enumerable.Range(0, 4).All(ireg => regsActual[ireg] == testCase.regsAfter[ireg])) {
+                if (Enumerable.Range(0, 4).All(ireg =&gt; regsActual[ireg] == testCase.regsAfter[ireg])) {
                     newMapping.Add(i);
                 }
             }
             constraints[op] = newMapping;
         }
 
-        var mapping = WorkOutMapping(constraints, new bool[16], new Dictionary<int, int>());
+        var mapping = WorkOutMapping(constraints, new bool[16], new Dictionary&lt;int, int&gt;());
         var regs = new int[4];
         foreach (var stm in prg) {
             stm[0] = mapping[stm[0]];
@@ -335,7 +335,7 @@ class Solution : Solver {
         return regs[0];
     }
 
-    Dictionary<int, int> WorkOutMapping(Dictionary<int, List<int>> constaints, bool[] used, Dictionary<int, int> res) {
+    Dictionary&lt;int, int&gt; WorkOutMapping(Dictionary&lt;int, List&lt;int&gt;&gt; constaints, bool[] used, Dictionary&lt;int, int&gt; res) {
         var op = res.Count;
         if (op == 16) {
             return res;
@@ -355,33 +355,33 @@ class Solution : Solver {
         return null;
     }
 
-    (List<TestCase> testCases, List<int[]> prg) Parse(string input) {
-        var lines = input.Split("\n").ToList();
+    (List&lt;TestCase&gt; testCases, List&lt;int[]&gt; prg) Parse(string input) {
+        var lines = input.Split(&quot;\n&quot;).ToList();
         var iline = 0;
 
-        var testCases = new List<TestCase>();
-        while (Ints(@"Before: \[(\d+), (\d+), (\d+), (\d+)\]", out var regsBefore)) {
-            Ints(@"(\d+) (\d+) (\d+) (\d+)", out var stm);
-            Ints(@"After:  \[(\d+), (\d+), (\d+), (\d+)\]", out var regsAfter);
+        var testCases = new List&lt;TestCase&gt;();
+        while (Ints(@&quot;Before: \[(\d+), (\d+), (\d+), (\d+)\]&quot;, out var regsBefore)) {
+            Ints(@&quot;(\d+) (\d+) (\d+) (\d+)&quot;, out var stm);
+            Ints(@&quot;After:  \[(\d+), (\d+), (\d+), (\d+)\]&quot;, out var regsAfter);
             iline++;
             testCases.Add(new TestCase() { regsBefore = regsBefore, regsAfter = regsAfter, stm = stm });
         }
         iline++;
         iline++;
-        var prg = new List<int[]>();
-        while (Ints(@"(\d+) (\d+) (\d+) (\d+)", out var stm)) {
+        var prg = new List&lt;int[]&gt;();
+        while (Ints(@&quot;(\d+) (\d+) (\d+) (\d+)&quot;, out var stm)) {
             prg.Add(stm);
         }
 
         bool Ints(string pattern, out int[] r) {
             r = null;
-            if (iline >= lines.Count) {
+            if (iline &gt;= lines.Count) {
                 return false;
             }
             var m = Regex.Match(lines[iline], pattern);
             if (m.Success) {
                 iline++;
-                r = m.Groups.Values.Skip(1).Select(x => int.Parse(x.Value)).ToArray();
+                r = m.Groups.Values.Skip(1).Select(x =&gt; int.Parse(x.Value)).ToArray();
             }
             return m.Success;
         }
@@ -391,23 +391,23 @@ class Solution : Solver {
     int[] Step(int[] regs, int[] stm) {
         regs = regs.ToArray();
         regs[stm[3]] = stm[0] switch {
-            0 => regs[stm[1]] + regs[stm[2]],
-            1 => regs[stm[1]] + stm[2],
-            2 => regs[stm[1]] * regs[stm[2]],
-            3 => regs[stm[1]] * stm[2],
-            4 => regs[stm[1]] & regs[stm[2]],
-            5 => regs[stm[1]] & stm[2],
-            6 => regs[stm[1]] | regs[stm[2]],
-            7 => regs[stm[1]] | stm[2],
-            8 => regs[stm[1]],
-            9 => stm[1],
-            10 => stm[1] > regs[stm[2]] ? 1 : 0,
-            11 => regs[stm[1]] > stm[2] ? 1 : 0,
-            12 => regs[stm[1]] > regs[stm[2]] ? 1 : 0,
-            13 => stm[1] == regs[stm[2]] ? 1 : 0,
-            14 => regs[stm[1]] == stm[2] ? 1 : 0,
-            15 => regs[stm[1]] == regs[stm[2]] ? 1 : 0,
-            _ => throw new ArgumentException()
+            0 =&gt; regs[stm[1]] + regs[stm[2]],
+            1 =&gt; regs[stm[1]] + stm[2],
+            2 =&gt; regs[stm[1]] * regs[stm[2]],
+            3 =&gt; regs[stm[1]] * stm[2],
+            4 =&gt; regs[stm[1]] &amp; regs[stm[2]],
+            5 =&gt; regs[stm[1]] &amp; stm[2],
+            6 =&gt; regs[stm[1]] | regs[stm[2]],
+            7 =&gt; regs[stm[1]] | stm[2],
+            8 =&gt; regs[stm[1]],
+            9 =&gt; stm[1],
+            10 =&gt; stm[1] &gt; regs[stm[2]] ? 1 : 0,
+            11 =&gt; regs[stm[1]] &gt; stm[2] ? 1 : 0,
+            12 =&gt; regs[stm[1]] &gt; regs[stm[2]] ? 1 : 0,
+            13 =&gt; stm[1] == regs[stm[2]] ? 1 : 0,
+            14 =&gt; regs[stm[1]] == stm[2] ? 1 : 0,
+            15 =&gt; regs[stm[1]] == regs[stm[2]] ? 1 : 0,
+            _ =&gt; throw new ArgumentException()
         };
         return regs;
     }

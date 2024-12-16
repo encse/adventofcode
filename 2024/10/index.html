@@ -291,9 +291,9 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Numerics;
 
-using Map = System.Collections.Immutable.ImmutableDictionary<System.Numerics.Complex, char>;
+using Map = System.Collections.Immutable.ImmutableDictionary&lt;System.Numerics.Complex, char&gt;;
 
-[ProblemName("Hoof It")]
+[ProblemName(&quot;Hoof It&quot;)]
 class Solution : Solver {
 
     Complex Up = Complex.ImaginaryOne;
@@ -301,24 +301,24 @@ class Solution : Solver {
     Complex Left = -1;
     Complex Right = 1;
 
-    public object PartOne(string input) => GetAllTrails(input).Sum(t => t.Value.Distinct().Count());
-    public object PartTwo(string input) => GetAllTrails(input).Sum(t => t.Value.Count());
+    public object PartOne(string input) =&gt; GetAllTrails(input).Sum(t =&gt; t.Value.Distinct().Count());
+    public object PartTwo(string input) =&gt; GetAllTrails(input).Sum(t =&gt; t.Value.Count());
 
-    Dictionary<Complex, List<Complex>> GetAllTrails(string input) {
+    Dictionary&lt;Complex, List&lt;Complex&gt;&gt; GetAllTrails(string input) {
         var map = GetMap(input);
-        return GetTrailHeads(map).ToDictionary(t => t, t => GetTrailsFrom(map, t));
+        return GetTrailHeads(map).ToDictionary(t =&gt; t, t =&gt; GetTrailsFrom(map, t));
     }
 
-    IEnumerable<Complex> GetTrailHeads(Map map) => map.Keys.Where(pos => map[pos] == '0');
+    IEnumerable&lt;Complex&gt; GetTrailHeads(Map map) =&gt; map.Keys.Where(pos =&gt; map[pos] == &#039;0&#039;);
 
-    List<Complex> GetTrailsFrom(Map map, Complex trailHead) {
+    List&lt;Complex&gt; GetTrailsFrom(Map map, Complex trailHead) {
         // standard floodfill algorithm using a queue
-        var positions = new Queue<Complex>();
+        var positions = new Queue&lt;Complex&gt;();
         positions.Enqueue(trailHead);
-        var trails = new List<Complex>();
+        var trails = new List&lt;Complex&gt;();
         while (positions.Any()) {
             var point = positions.Dequeue();
-            if (map[point] == '9') {
+            if (map[point] == &#039;9&#039;) {
                 trails.Add(point);
             } else {
                 foreach (var dir in new[] { Up, Down, Left, Right }) {
@@ -334,11 +334,11 @@ class Solution : Solver {
     // store the points in a dictionary so that we can iterate over them and 
     // to easily deal with points outside the area using GetValueOrDefault
     Map GetMap(string input) {
-        var map = input.Split("\n");
+        var map = input.Split(&quot;\n&quot;);
         return (
             from y in Enumerable.Range(0, map.Length)
             from x in Enumerable.Range(0, map[0].Length)
-            select new KeyValuePair<Complex, char>(x + y * Down, map[y][x])
+            select new KeyValuePair&lt;Complex, char&gt;(x + y * Down, map[y][x])
         ).ToImmutableDictionary();
     }
 }

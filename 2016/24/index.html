@@ -284,14 +284,14 @@ using System.Linq;
 
 namespace AdventOfCode.Y2016.Day24;
 
-[ProblemName("Air Duct Spelunking")]
+[ProblemName(&quot;Air Duct Spelunking&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Routes(input, false).Min();
+    public object PartOne(string input) =&gt; Routes(input, false).Min();
 
-    public object PartTwo(string input) => Routes(input, true).Min();
+    public object PartTwo(string input) =&gt; Routes(input, true).Min();
 
-    IEnumerable<int> Routes(string input, bool loop) {
+    IEnumerable&lt;int&gt; Routes(string input, bool loop) {
         var map = new Map(input);
 
         foreach (var perm in Permutations(Enumerable.Range(1, map.poi.Length - 1).ToArray())) {
@@ -301,21 +301,21 @@ class Solution : Solver {
                 perm.Add(0);
             }
             var l = 0;
-            for (int i = 0; i < perm.Count - 1; i++) {
+            for (int i = 0; i &lt; perm.Count - 1; i++) {
                 l += map.ShortestPathLength(map.poi[perm[i]], map.poi[perm[i + 1]]);
             }
             yield return l;
         }
     }
 
-    IEnumerable<List<T>> Permutations<T>(T[] rgt) {
+    IEnumerable&lt;List&lt;T&gt;&gt; Permutations&lt;T&gt;(T[] rgt) {
        
-        IEnumerable<List<T>> PermutationsRec(int i) {
+        IEnumerable&lt;List&lt;T&gt;&gt; PermutationsRec(int i) {
             if (i == rgt.Length) {
                 yield return rgt.ToList();
             }
 
-            for (var j = i; j < rgt.Length; j++) {
+            for (var j = i; j &lt; rgt.Length; j++) {
                 (rgt[i], rgt[j]) = (rgt[j], rgt[i]);
                 foreach (var perm in PermutationsRec(i + 1)) {
                     yield return perm;
@@ -333,18 +333,18 @@ class Solution : Solver {
         public int crow;
         public int ccol;
         public (int irow, int icol)[] poi;
-        private Dictionary<(int, int, int, int), int> cache = new Dictionary<(int, int, int, int), int>();
+        private Dictionary&lt;(int, int, int, int), int&gt; cache = new Dictionary&lt;(int, int, int, int), int&gt;();
 
         public Map(string input) {
-            this.map = input.Split('\n');
+            this.map = input.Split(&#039;\n&#039;);
             this.crow = map.Length;
             this.ccol = map[0].Length;
 
             poi = new(int irow, int icol)[10];
             var poiCount = 0;
-            for (var irow = 0; irow < crow; irow++) {
-                for (var icol = 0; icol < ccol; icol++) {
-                    if (int.TryParse($"{map[irow][icol]}", out var i)) {
+            for (var irow = 0; irow &lt; crow; irow++) {
+                for (var icol = 0; icol &lt; ccol; icol++) {
+                    if (int.TryParse($&quot;{map[irow][icol]}&quot;, out var i)) {
                         poi[i] = (irow, icol);
                         poiCount++;
                     }
@@ -356,21 +356,21 @@ class Solution : Solver {
         public int ShortestPathLength((int irow, int icol) from, (int irow, int icol) to) {
             var key = (from.irow, from.icol, to.irow, to.icol);
             if (!cache.ContainsKey(key)) {
-                var q = new Queue<(int steps, int irow, int icol)>();
+                var q = new Queue&lt;(int steps, int irow, int icol)&gt;();
                 q.Enqueue((0, from.irow, from.icol));
-                var seen = new HashSet<(int, int)>();
+                var seen = new HashSet&lt;(int, int)&gt;();
                 seen.Add(from);
                 while (q.Any()) {
                     var p = q.Dequeue();
-                    if (p.irow == to.irow && p.icol == to.icol) {
+                    if (p.irow == to.irow &amp;&amp; p.icol == to.icol) {
                         cache[key] = p.steps;
                         break;
                     }
                     foreach (var (drow, dcol) in new[] { (-1, 0), (1, 0), (0, 1), (0, -1) }) {
                         var (irowT, icolT) = (p.irow + drow, p.icol + dcol);
-                        if (irowT >= 0 && irowT < crow &&
-                            icolT >= 0 && icolT < ccol &&
-                            map[irowT][icolT] != '#' &&
+                        if (irowT &gt;= 0 &amp;&amp; irowT &lt; crow &amp;&amp;
+                            icolT &gt;= 0 &amp;&amp; icolT &lt; ccol &amp;&amp;
+                            map[irowT][icolT] != &#039;#&#039; &amp;&amp;
                             !seen.Contains((irowT, icolT))
                         ) {
                             q.Enqueue((p.steps + 1, irowT, icolT));

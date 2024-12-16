@@ -285,11 +285,11 @@ using System.Collections.Generic;
 
 namespace AdventOfCode.Y2021.Day24;
 
-[ProblemName("Arithmetic Logic Unit")]
+[ProblemName(&quot;Arithmetic Logic Unit&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => GetSerials(input).max;
-    public object PartTwo(string input) => GetSerials(input).min;
+    public object PartOne(string input) =&gt; GetSerials(input).max;
+    public object PartTwo(string input) =&gt; GetSerials(input).min;
 
     (string min, string max) GetSerials(string input) {
 
@@ -298,21 +298,21 @@ class Solution : Solver {
         // The input has 14 code blocks, each dealing with one digit.
         // The blocks define 7 pairs of `a`, `b` digits and a `shift` between them.
         // The input is valid if for each pair the condition `a + shift = b` holds.
-        var stmBlocks = input.Split("inp w\n")[1..]; 
+        var stmBlocks = input.Split(&quot;inp w\n&quot;)[1..]; 
 
         // Extracts the numeric argument of a statement:
-        var getArgFromLine = (int iblock, Index iline) =>   
-            int.Parse(stmBlocks[iblock].Split('\n')[iline].Split(' ')[^1]);
+        var getArgFromLine = (int iblock, Index iline) =&gt;   
+            int.Parse(stmBlocks[iblock].Split(&#039;\n&#039;)[iline].Split(&#039; &#039;)[^1]);
 
         // A stack will contain the index of an `a` digit when we find its corresponding `b`.
-        var stack = new Stack<int>();
+        var stack = new Stack&lt;int&gt;();
        
         // We will fill up the result when `b` is found.
         var max = Enumerable.Repeat(int.MinValue, 14).ToArray();
         var min = Enumerable.Repeat(int.MaxValue, 14).ToArray();
         
-        for (var j = 0; j < 14; j++) {
-            if (stmBlocks[j].Contains("div z 1")) { 
+        for (var j = 0; j &lt; 14; j++) {
+            if (stmBlocks[j].Contains(&quot;div z 1&quot;)) { 
                 // j points to an `a` digit.
                 stack.Push(j);
             } else { 
@@ -330,10 +330,10 @@ class Solution : Solver {
                     var b = a + shift;
 
                     if (digits.Contains(b)) {
-                        if (a > max[i]) {
+                        if (a &gt; max[i]) {
                             (max[i], max[j]) = (a, b);
                         }
-                        if (a < min[i]) {
+                        if (a &lt; min[i]) {
                             (min[i], min[j]) = (a, b);
                         }
                     }
@@ -341,8 +341,8 @@ class Solution : Solver {
             }
         }
 
-        // That's all folks
-        return (string.Join("", min), string.Join("", max));
+        // That&#039;s all folks
+        return (string.Join(&quot;&quot;, min), string.Join(&quot;&quot;, max));
     }
 }
 </code></pre></div>

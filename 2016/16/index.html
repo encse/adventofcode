@@ -284,27 +284,27 @@ using System.Text;
 
 namespace AdventOfCode.Y2016.Day16;
 
-[ProblemName("Dragon Checksum")]
+[ProblemName(&quot;Dragon Checksum&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Checksum(input, 272);
+    public object PartOne(string input) =&gt; Checksum(input, 272);
 
-    public object PartTwo(string input) => Checksum(input, 35651584);
+    public object PartTwo(string input) =&gt; Checksum(input, 35651584);
 
     string Checksum(string st, int length) {
 
-        while (st.Length < length) {
+        while (st.Length &lt; length) {
             var a = st;
-            var b = string.Join("", from ch in a.Reverse() select ch == '0' ? '1' : '0');
-            st = a + "0" + b;
+            var b = string.Join(&quot;&quot;, from ch in a.Reverse() select ch == &#039;0&#039; ? &#039;1&#039; : &#039;0&#039;);
+            st = a + &quot;0&quot; + b;
         }
         st = st.Substring(0, length);
         var sb = new StringBuilder();
 
         while (sb.Length % 2 == 0) {
             sb.Clear();
-            for (int i = 0; i < st.Length; i += 2) {
-                sb.Append(st[i] == st[i + 1] ? "1" : "0");
+            for (int i = 0; i &lt; st.Length; i += 2) {
+                sb.Append(st[i] == st[i + 1] ? &quot;1&quot; : &quot;0&quot;);
             }
             st = sb.ToString();
         }

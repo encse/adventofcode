@@ -284,21 +284,21 @@ using System.Linq;
 
 namespace AdventOfCode.Y2021.Day11;
 
-[ProblemName("Dumbo Octopus")]
+[ProblemName(&quot;Dumbo Octopus&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Simulate(input).Take(100).Sum();
-    public object PartTwo(string input) => Simulate(input).TakeWhile(flash => flash != 100).Count() + 1;
+    public object PartOne(string input) =&gt; Simulate(input).Take(100).Sum();
+    public object PartTwo(string input) =&gt; Simulate(input).TakeWhile(flash =&gt; flash != 100).Count() + 1;
 
     // run the simulation in an endless loop, yield flash counts in each step
-    IEnumerable<int> Simulate(string input) {
+    IEnumerable&lt;int&gt; Simulate(string input) {
 
         var map = GetMap(input);
 
         while (true) {
 
-            var queue = new Queue<Pos>();
-            var flashed = new HashSet<Pos>();
+            var queue = new Queue&lt;Pos&gt;();
+            var flashed = new HashSet&lt;Pos&gt;();
 
             // increase the energy level of each octopus:
             foreach (var key in map.Keys) {
@@ -312,7 +312,7 @@ class Solution : Solver {
             while (queue.Any()) {
                 var pos = queue.Dequeue();
                 flashed.Add(pos);
-                foreach (var n in Neighbours(pos).Where(x => map.ContainsKey(x))) {
+                foreach (var n in Neighbours(pos).Where(x =&gt; map.ContainsKey(x))) {
                     map[n]++;
                     if (map[n] == 10) {
                         queue.Enqueue(n);
@@ -331,16 +331,16 @@ class Solution : Solver {
 
     // store the points in a dictionary so that we can iterate over them and 
     // to easily deal with points outside the area using ContainsKey
-    Dictionary<Pos, int> GetMap(string input) {
-        var map = input.Split("\n");
-        return new Dictionary<Pos, int>(
+    Dictionary&lt;Pos, int&gt; GetMap(string input) {
+        var map = input.Split(&quot;\n&quot;);
+        return new Dictionary&lt;Pos, int&gt;(
             from y in Enumerable.Range(0, map.Length)
             from x in Enumerable.Range(0, map[0].Length)
-            select new KeyValuePair<Pos, int>(new Pos(x, y), map[y][x] - '0')
+            select new KeyValuePair&lt;Pos, int&gt;(new Pos(x, y), map[y][x] - &#039;0&#039;)
         );
     }
 
-    IEnumerable<Pos> Neighbours(Pos pos) =>
+    IEnumerable&lt;Pos&gt; Neighbours(Pos pos) =&gt;
         from dx in new int[] { -1, 0, 1 }
         from dy in new int[] { -1, 0, 1 }
         where dx != 0 || dy != 0

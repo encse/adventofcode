@@ -287,34 +287,34 @@ using System.Text.RegularExpressions;
 
 record Game(int id, int red, int green, int blue);
 
-[ProblemName("Cube Conundrum")]
+[ProblemName(&quot;Cube Conundrum&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => (
-        from line in input.Split("\n")
+    public object PartOne(string input) =&gt; (
+        from line in input.Split(&quot;\n&quot;)
         let game = ParseGame(line)
-        where game.red <= 12 && game.green <= 13 && game.blue <= 14
+        where game.red &lt;= 12 &amp;&amp; game.green &lt;= 13 &amp;&amp; game.blue &lt;= 14
         select game.id
     ).Sum();
 
-    public object PartTwo(string input) => (
-        from line in input.Split("\n")
+    public object PartTwo(string input) =&gt; (
+        from line in input.Split(&quot;\n&quot;)
         let game = ParseGame(line)
         select game.red * game.green * game.blue
     ).Sum();
 
     // no need to keep track of the individual rounds in a game, just return 
     // the maximum of the red, green, blue boxes
-    Game ParseGame(string line) =>
+    Game ParseGame(string line) =&gt;
         new Game(
-            ParseInts(line, @"Game (\d+)").First(),
-            ParseInts(line, @"(\d+) red").Max(),
-            ParseInts(line, @"(\d+) green").Max(),
-            ParseInts(line, @"(\d+) blue").Max()
+            ParseInts(line, @&quot;Game (\d+)&quot;).First(),
+            ParseInts(line, @&quot;(\d+) red&quot;).Max(),
+            ParseInts(line, @&quot;(\d+) green&quot;).Max(),
+            ParseInts(line, @&quot;(\d+) blue&quot;).Max()
         );
 
     // extracts integers from a string identified by a single regex group.
-    IEnumerable<int> ParseInts(string st, string rx) =>
+    IEnumerable&lt;int&gt; ParseInts(string st, string rx) =&gt;
         from m in Regex.Matches(st, rx)
         select int.Parse(m.Groups[1].Value);
 }

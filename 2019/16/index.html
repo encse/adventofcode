@@ -286,17 +286,17 @@ using System.Numerics;
 
 namespace AdventOfCode.Y2019.Day16;
 
-[ProblemName("Flawed Frequency Transmission")]
+[ProblemName(&quot;Flawed Frequency Transmission&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
 
         int[] Fft(int[] digits) {
-            IEnumerable<int> Pattern(int digit) {
+            IEnumerable&lt;int&gt; Pattern(int digit) {
                 var repeat = digit + 1;
                 while (true) {
                     foreach (var item in new[] { 0, 1, 0, -1 }) {
-                        for (var i = 0; i < repeat; i++) {
+                        for (var i = 0; i &lt; repeat; i++) {
                             yield return item;
                         }
                     }
@@ -311,18 +311,18 @@ class Solution : Solver {
             ).ToArray();
         }
 
-        var digits = input.Select(ch => int.Parse(ch.ToString())).ToArray();
+        var digits = input.Select(ch =&gt; int.Parse(ch.ToString())).ToArray();
 
-        for (var i = 0; i < 100; i++) {
+        for (var i = 0; i &lt; 100; i++) {
             digits = Fft(digits);
         }
 
-        return string.Join("", digits.Take(8));
+        return string.Join(&quot;&quot;, digits.Take(8));
     }
 
     public object PartTwo(string input) {
         /* 
-            Let's introduce the following matrix:
+            Let&#039;s introduce the following matrix:
                     FFT = [
                         1,  0, -1,  0,  1,  0, -1,  0, ...
                         0,  1,  1,  0,  0, -1, -1,  0, ...
@@ -348,7 +348,7 @@ class Solution : Solver {
                     ]
             The problem asks for output components that correspond to multiplication with rows in this area.
 
-            Examining A's powers reveal that the the first row can be:
+            Examining A&#039;s powers reveal that the the first row can be:
                 the numbers from 1-n, 
                     A^2 = [
                         1, 2, 3, 4, ...
@@ -398,8 +398,8 @@ class Solution : Solver {
             we need to compute [B]_{1..7} * xs % 10, where xs is the digits of input repeated 10000 times shifted with t
          */
 
-        var xs = input.Select(ch => int.Parse(ch.ToString())).ToArray();
-        var res = "";
+        var xs = input.Select(ch =&gt; int.Parse(ch.ToString())).ToArray();
+        var res = &quot;&quot;;
 
         var t = int.Parse(input.Substring(0, 7));
         var crow = 8;
@@ -407,14 +407,14 @@ class Solution : Solver {
 
         var bijMods = new int[ccol + 1];
         var bij = new BigInteger(1);
-        for (var j = 1; j <= ccol; j++) {
+        for (var j = 1; j &lt;= ccol; j++) {
             bijMods[j] = (int)(bij % 10);
             bij = bij * (j + 99) / j;
         }
 
-        for (var i = 1; i <= crow; i++) {
+        for (var i = 1; i &lt;= crow; i++) {
             var s = 0;
-            for (var j = i; j <= ccol; j++) {
+            for (var j = i; j &lt;= ccol; j++) {
                 var x = xs[(t + j - 1) % input.Length];
                 s += x * bijMods[j - i + 1];
             }

@@ -288,19 +288,19 @@ using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-[ProblemName("Wait For It")]
+[ProblemName(&quot;Wait For It&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Solve(input);
-    public object PartTwo(string input) => Solve(input.Replace(" ", ""));
+    public object PartOne(string input) =&gt; Solve(input);
+    public object PartTwo(string input) =&gt; Solve(input.Replace(&quot; &quot;, &quot;&quot;));
 
     long Solve(string input) {
-        var rows = input.Split("\n");
+        var rows = input.Split(&quot;\n&quot;);
         var times = Parse(rows[0]);
         var records = Parse(rows[1]);
 
         var res = 1L;
-        for (var i = 0; i < times.Length; i++) {
+        for (var i = 0; i &lt; times.Length; i++) {
             res *= WinningMoves(times[i], records[i]);
         }
         return res;
@@ -308,8 +308,8 @@ class Solution : Solver {
 
     long WinningMoves(long time, long record) {
         // If we wait x ms, our boat moves `(time - x) * x` millimeters.
-        // This breaks the record when `(time - x) * x > record`
-        // or `-x^2  + time * x - record > 0`.
+        // This breaks the record when `(time - x) * x &gt; record`
+        // or `-x^2  + time * x - record &gt; 0`.
 
         // get the roots first
         var (x1, x2) = SolveEq(-1, time, -record);
@@ -328,8 +328,8 @@ class Solution : Solver {
         return (Math.Min(x1, x2), Math.Max(x1, x2));
     }
 
-    long[] Parse(string input) => (
-        from m in Regex.Matches(input, @"\d+")
+    long[] Parse(string input) =&gt; (
+        from m in Regex.Matches(input, @&quot;\d+&quot;)
         select long.Parse(m.Value)
     ).ToArray();
 }

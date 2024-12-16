@@ -284,23 +284,23 @@ using System.Linq;
 
 namespace AdventOfCode.Y2015.Day02;
 
-[ProblemName("I Was Told There Would Be No Math")]
+[ProblemName(&quot;I Was Told There Would Be No Math&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => (
+    public object PartOne(string input) =&gt; (
             from nums in Parse(input) 
             select 2 * (nums[0] * nums[1] + nums[1] * nums[2] + nums[0] * nums[2]) + nums[0] * nums[1]
         ).Sum();
 
-    public object PartTwo(string input) => (
+    public object PartTwo(string input) =&gt; (
             from nums in Parse(input) 
             select nums[0] * nums[1] * nums[2] + 2 * (nums[0] + nums[1])
         ).Sum();
 
-    IEnumerable<int[]> Parse(string input) {
-        return (from line in input.Split('\n')
-                let parts = line.Split('x')
-                let nums = parts.Select(int.Parse).OrderBy(x => x).ToArray()
+    IEnumerable&lt;int[]&gt; Parse(string input) {
+        return (from line in input.Split(&#039;\n&#039;)
+                let parts = line.Split(&#039;x&#039;)
+                let nums = parts.Select(int.Parse).OrderBy(x =&gt; x).ToArray()
                 select nums);
     }
 }

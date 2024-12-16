@@ -287,18 +287,18 @@ namespace AdventOfCode.Y2017.Day12;
 
 class Node {
     public string Id;
-    public List<string> Neighbours;
+    public List&lt;string&gt; Neighbours;
 }
 
-[ProblemName("Digital Plumber")]
+[ProblemName(&quot;Digital Plumber&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => GetPartitions(input).Single(x => x.Contains("0")).Count();
-    public object PartTwo(string input) => GetPartitions(input).Count();
+    public object PartOne(string input) =&gt; GetPartitions(input).Single(x =&gt; x.Contains(&quot;0&quot;)).Count();
+    public object PartTwo(string input) =&gt; GetPartitions(input).Count();
 
-    IEnumerable<HashSet<string>> GetPartitions(string input) {
+    IEnumerable&lt;HashSet&lt;string&gt;&gt; GetPartitions(string input) {
         var nodes = Parse(input);
-        var parent = new Dictionary<string, string>();
+        var parent = new Dictionary&lt;string, string&gt;();
 
         string getRoot(string id) {
             var root = id;
@@ -322,17 +322,17 @@ class Solution : Solver {
             from node in nodes
             let root = getRoot(node.Id)
             group node.Id by root into partitions
-            select new HashSet<string>(partitions.ToArray());
+            select new HashSet&lt;string&gt;(partitions.ToArray());
         
     }
 
-    List<Node> Parse(string input) {
+    List&lt;Node&gt; Parse(string input) {
         return (
-            from line in input.Split('\n')
-            let parts = Regex.Split(line, " <-> ")
+            from line in input.Split(&#039;\n&#039;)
+            let parts = Regex.Split(line, &quot; &lt;-&gt; &quot;)
             select new Node() {
                     Id = parts[0],
-                    Neighbours = new List<string>(Regex.Split(parts[1], ", "))
+                    Neighbours = new List&lt;string&gt;(Regex.Split(parts[1], &quot;, &quot;))
                 }
         ).ToList();
     }

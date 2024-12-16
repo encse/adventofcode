@@ -288,21 +288,21 @@ using System.Threading.Tasks;
 
 namespace AdventOfCode.Y2015.Day04;
 
-[ProblemName("The Ideal Stocking Stuffer")]
+[ProblemName(&quot;The Ideal Stocking Stuffer&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => ParallelFind(input, "00000");
-    public object PartTwo(string input) => ParallelFind(input, "000000");
+    public object PartOne(string input) =&gt; ParallelFind(input, &quot;00000&quot;);
+    public object PartTwo(string input) =&gt; ParallelFind(input, &quot;000000&quot;);
 
     int ParallelFind(string input, string prefix) {
-        var q = new ConcurrentQueue<int>();
+        var q = new ConcurrentQueue&lt;int&gt;();
 
         Parallel.ForEach(
             Numbers(), 
-            () => MD5.Create(), 
-            (i, state, md5) => {
+            () =&gt; MD5.Create(), 
+            (i, state, md5) =&gt; {
                 var hashBytes = md5.ComputeHash(Encoding.ASCII.GetBytes(input + i));
-                var hash = string.Join("", hashBytes.Select(b => b.ToString("x2")));
+                var hash = string.Join(&quot;&quot;, hashBytes.Select(b =&gt; b.ToString(&quot;x2&quot;)));
 
                 if (hash.StartsWith(prefix)) {
                     q.Enqueue(i);
@@ -310,12 +310,12 @@ class Solution : Solver {
                 }
                 return md5;
              }, 
-             (_) => {}
+             (_) =&gt; {}
         );
         return q.Min();
     }
 
-    IEnumerable<int> Numbers() {
+    IEnumerable&lt;int&gt; Numbers() {
         for (int i=0; ;i++) {
             yield return i;
         }

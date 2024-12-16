@@ -291,34 +291,34 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using Map = System.Collections.Generic.Dictionary<System.Numerics.Complex, int>;
+using Map = System.Collections.Generic.Dictionary&lt;System.Numerics.Complex, int&gt;;
 
 record Crucible(Complex pos, Complex dir, int straight);
 
-[ProblemName("Clumsy Crucible")]
+[ProblemName(&quot;Clumsy Crucible&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Heatloss(input, 0, 3);
-    public object PartTwo(string input) => Heatloss(input, 4, 10);
+    public object PartOne(string input) =&gt; Heatloss(input, 0, 3);
+    public object PartTwo(string input) =&gt; Heatloss(input, 4, 10);
 
     // Graph search using a priority queue. We can simply store the heatloss in 
     // the priority.
     int Heatloss(string input, int minStraight, int maxStraight) {
         var map = ParseMap(input);
-        var goal = map.Keys.MaxBy(pos => pos.Imaginary + pos.Real);
-        var q = new PriorityQueue<Crucible, int>();
+        var goal = map.Keys.MaxBy(pos =&gt; pos.Imaginary + pos.Real);
+        var q = new PriorityQueue&lt;Crucible, int&gt;();
 
         // initial direction: right or down
         q.Enqueue(new Crucible(pos: 0, dir: 1, straight: 0), 0);
         q.Enqueue(new Crucible(pos: 0, dir: Complex.ImaginaryOne, straight: 0), 0);
 
-        var seen = new HashSet<Crucible>();
+        var seen = new HashSet&lt;Crucible&gt;();
         while (q.TryDequeue(out var crucible, out var heatloss)) {
-            if (crucible.pos == goal && crucible.straight >= minStraight) {
+            if (crucible.pos == goal &amp;&amp; crucible.straight &gt;= minStraight) {
                 return heatloss;
             }
             foreach (var next in Moves(crucible, minStraight, maxStraight)) {
-                if (map.ContainsKey(next.pos) && !seen.Contains(next)) {
+                if (map.ContainsKey(next.pos) &amp;&amp; !seen.Contains(next)) {
                     seen.Add(next);
                     q.Enqueue(next, heatloss + map[next.pos]);
                 }
@@ -328,15 +328,15 @@ class Solution : Solver {
     }
 
     // returns possible next states based on the rules
-    IEnumerable<Crucible> Moves(Crucible c, int minStraight, int maxStraight) {
-        if (c.straight < maxStraight) {
+    IEnumerable&lt;Crucible&gt; Moves(Crucible c, int minStraight, int maxStraight) {
+        if (c.straight &lt; maxStraight) {
             yield return c with { 
                 pos = c.pos + c.dir, 
                 straight = c.straight + 1 
             };
         }
 
-        if (c.straight >= minStraight) {
+        if (c.straight &gt;= minStraight) {
             var dir = c.dir * Complex.ImaginaryOne;
             yield return new Crucible(c.pos + dir, dir, 1);
             yield return new Crucible(c.pos - dir, -dir, 1);
@@ -345,13 +345,13 @@ class Solution : Solver {
 
     // using a dictionary helps with bounds check (simply containskey):
     Map ParseMap(string input) {
-        var lines = input.Split('\n');
+        var lines = input.Split(&#039;\n&#039;);
         return (
             from irow in Enumerable.Range(0, lines.Length)
             from icol in Enumerable.Range(0, lines[0].Length)
             let cell = int.Parse(lines[irow].Substring(icol, 1))
             let pos = new Complex(icol, irow)
-            select new KeyValuePair<Complex, int>(pos, cell)
+            select new KeyValuePair&lt;Complex, int&gt;(pos, cell)
         ).ToDictionary();
     }
 }</code></pre></div>

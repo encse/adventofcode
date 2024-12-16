@@ -281,11 +281,11 @@
 </div>
             <div id="code-container"><pre class="hljs language-csharp"><code>using System.Collections.Generic;
 using System.Linq;
-using ChildToParent = System.Collections.Generic.Dictionary<string, string>;
+using ChildToParent = System.Collections.Generic.Dictionary&lt;string, string&gt;;
 
 namespace AdventOfCode.Y2019.Day06;
 
-[ProblemName("Universal Orbit Map")]
+[ProblemName(&quot;Universal Orbit Map&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
@@ -298,8 +298,8 @@ class Solution : Solver {
 
     public object PartTwo(string input) {
         var childToParent = ParseTree(input);
-        var ancestors1 = new Stack<string>(GetAncestors(childToParent, "YOU"));
-        var ancestors2 = new Stack<string>(GetAncestors(childToParent, "SAN"));
+        var ancestors1 = new Stack&lt;string&gt;(GetAncestors(childToParent, &quot;YOU&quot;));
+        var ancestors2 = new Stack&lt;string&gt;(GetAncestors(childToParent, &quot;SAN&quot;));
         while (ancestors1.Peek() == ancestors2.Peek()) {
             ancestors1.Pop();
             ancestors2.Pop();
@@ -307,16 +307,16 @@ class Solution : Solver {
         return ancestors1.Count + ancestors2.Count;
     }
 
-    ChildToParent ParseTree(string input) =>
+    ChildToParent ParseTree(string input) =&gt;
         input
-            .Split("\n")
-            .Select(line => line.Split(")"))
+            .Split(&quot;\n&quot;)
+            .Select(line =&gt; line.Split(&quot;)&quot;))
             .ToDictionary(
-                parent_child => parent_child[1],
-                parent_child => parent_child[0]
+                parent_child =&gt; parent_child[1],
+                parent_child =&gt; parent_child[0]
             );
 
-    IEnumerable<string> GetAncestors(ChildToParent childToParent, string node) {
+    IEnumerable&lt;string&gt; GetAncestors(ChildToParent childToParent, string node) {
         for (
             var parent = childToParent[node];
             parent != null;

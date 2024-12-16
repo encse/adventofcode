@@ -285,27 +285,27 @@ using System.Linq;
 
 namespace AdventOfCode.Y2015.Day17;
 
-[ProblemName("No Such Thing as Too Much")]
+[ProblemName(&quot;No Such Thing as Too Much&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Fill(Parse(input)).Count();
+    public object PartOne(string input) =&gt; Fill(Parse(input)).Count();
     public object PartTwo(string input) {
         var combinations = Fill(Parse(input)).ToArray();
-        var shortest = combinations.Select(combination => combination.Count()).Min();
-        return combinations.Count(combination => combination.Count() == shortest);
+        var shortest = combinations.Select(combination =&gt; combination.Count()).Min();
+        return combinations.Count(combination =&gt; combination.Count() == shortest);
     }
 
-    int[] Parse(string input) => input.Split('\n').Select(int.Parse).ToArray();
+    int[] Parse(string input) =&gt; input.Split(&#039;\n&#039;).Select(int.Parse).ToArray();
 
-    IEnumerable<ImmutableList<int>> Fill(int[] containers) {
-        IEnumerable<ImmutableList<int>> FillRecursive(int i, int amount) {
+    IEnumerable&lt;ImmutableList&lt;int&gt;&gt; Fill(int[] containers) {
+        IEnumerable&lt;ImmutableList&lt;int&gt;&gt; FillRecursive(int i, int amount) {
             if (i == containers.Length) {
                 yield break;
             } else {
                 if (amount == containers[i]) {
-                    yield return ImmutableList.Create<int>(i);
+                    yield return ImmutableList.Create&lt;int&gt;(i);
                 }
-                if (amount >= containers[i]) {
+                if (amount &gt;= containers[i]) {
                     foreach (var v in FillRecursive(i + 1, amount - containers[i])) {
                         yield return v.Add(i);
                     }

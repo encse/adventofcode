@@ -286,24 +286,24 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2016.Day21;
 
-[ProblemName("Scrambled Letters and Hash")]
+[ProblemName(&quot;Scrambled Letters and Hash&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => string.Join("", Parse(input)("abcdefgh"));
+    public object PartOne(string input) =&gt; string.Join(&quot;&quot;, Parse(input)(&quot;abcdefgh&quot;));
 
     public object PartTwo(string input) {
         var scramble = Parse(input);
-        return string.Join("", Permutations("abcdefgh".ToArray()).First(p => scramble(p).SequenceEqual("fbgdceah")));
+        return string.Join(&quot;&quot;, Permutations(&quot;abcdefgh&quot;.ToArray()).First(p =&gt; scramble(p).SequenceEqual(&quot;fbgdceah&quot;)));
     }
 
-   IEnumerable<T[]> Permutations<T>(T[] rgt) {
+   IEnumerable&lt;T[]&gt; Permutations&lt;T&gt;(T[] rgt) {
        
-        IEnumerable<T[]> PermutationsRec(int i) {
+        IEnumerable&lt;T[]&gt; PermutationsRec(int i) {
             if (i == rgt.Length) {
                 yield return rgt.ToArray();
             }
 
-            for (var j = i; j < rgt.Length; j++) {
+            for (var j = i; j &lt; rgt.Length; j++) {
                 (rgt[i], rgt[j]) = (rgt[j], rgt[i]);
                 foreach (var perm in PermutationsRec(i + 1)) {
                     yield return perm;
@@ -315,46 +315,46 @@ class Solution : Solver {
         return PermutationsRec(0);
     }
     
-    Func<IEnumerable<char>, IEnumerable<char>> Parse(string input) {
+    Func&lt;IEnumerable&lt;char&gt;, IEnumerable&lt;char&gt;&gt; Parse(string input) {
         var steps = (
-            from line in input.Split('\n')
+            from line in input.Split(&#039;\n&#039;)
             select
-                Match(line, @"swap position (\d+) with position (\d+)", m => {
+                Match(line, @&quot;swap position (\d+) with position (\d+)&quot;, m =&gt; {
                     var x = int.Parse(m[0]);
                     var y = int.Parse(m[1]);
-                    return chars => SwapPosition(chars, x, y);
+                    return chars =&gt; SwapPosition(chars, x, y);
                 }) ??
-                Match(line, @"swap letter (\w) with letter (\w)", m => {
+                Match(line, @&quot;swap letter (\w) with letter (\w)&quot;, m =&gt; {
                     var chX = m[0][0];
                     var chY = m[1][0];
-                    return (chars) => SwapLetter(chars, chX, chY);
+                    return (chars) =&gt; SwapLetter(chars, chX, chY);
                 }) ??
-                Match(line, @"rotate left (\d+) step", m => {
+                Match(line, @&quot;rotate left (\d+) step&quot;, m =&gt; {
                     var x = int.Parse(m[0]);
-                    return chars => RotateLeft(chars, x);
+                    return chars =&gt; RotateLeft(chars, x);
                 }) ??
-                Match(line, @"rotate right (\d+) step", m => {
+                Match(line, @&quot;rotate right (\d+) step&quot;, m =&gt; {
                     var x = int.Parse(m[0]);
-                    return chars => RotateRight(chars, x);
+                    return chars =&gt; RotateRight(chars, x);
                 }) ??
-                Match(line, @"rotate based on position of letter (\w)", m => {
+                Match(line, @&quot;rotate based on position of letter (\w)&quot;, m =&gt; {
                     var chX = m[0][0];
-                    return chars => RotateBasedOnPosition(chars, chX);
+                    return chars =&gt; RotateBasedOnPosition(chars, chX);
                 }) ??
-                Match(line, @"reverse positions (\d+) through (\d+)", m => {
+                Match(line, @&quot;reverse positions (\d+) through (\d+)&quot;, m =&gt; {
                     var x = int.Parse(m[0]);
                     var y = int.Parse(m[1]);
-                    return chars => Reverse(chars, x, y);
+                    return chars =&gt; Reverse(chars, x, y);
                 }) ??
-                Match(line, @"move position (\d+) to position (\d+)", m => {
+                Match(line, @&quot;move position (\d+) to position (\d+)&quot;, m =&gt; {
                     var x = int.Parse(m[0]);
                     var y = int.Parse(m[1]);
-                    return chars => MovePosition(chars, x, y);
+                    return chars =&gt; MovePosition(chars, x, y);
                 }) ??
-                throw new Exception("Cannot parse " + line)
+                throw new Exception(&quot;Cannot parse &quot; + line)
             ).ToArray();
 
-        return chars => {
+        return chars =&gt; {
             var charsArray = chars.ToArray();
             foreach (var step in steps) {
                 step(charsArray);
@@ -363,10 +363,10 @@ class Solution : Solver {
         };
     }
 
-    Action<char[]> Match(string stm, string pattern, Func<string[], Action<char[]>> a) {
+    Action&lt;char[]&gt; Match(string stm, string pattern, Func&lt;string[], Action&lt;char[]&gt;&gt; a) {
         var match = Regex.Match(stm, pattern);
         if (match.Success) {
-            return a(match.Groups.Cast<Group>().Skip(1).Select(g => g.Value).ToArray());
+            return a(match.Groups.Cast&lt;Group&gt;().Skip(1).Select(g =&gt; g.Value).ToArray());
         } else {
             return null;
         }
@@ -377,14 +377,14 @@ class Solution : Solver {
     }
 
     void SwapLetter(char[] chars, char chX, char chY) {
-        for (var i = 0; i < chars.Length; i++) {
+        for (var i = 0; i &lt; chars.Length; i++) {
             chars[i] = chars[i] == chX ? chY : chars[i] == chY ? chX : chars[i];
         }
     }
 
     void RotateBasedOnPosition(char[] chars, char chX) {
         var i = Array.IndexOf(chars, chX);
-        RotateRight(chars, i >= 4 ? i + 2 : i + 1);
+        RotateRight(chars, i &gt;= 4 ? i + 2 : i + 1);
     }
 
     void RotateLeft(char[] chars, int t) {
@@ -402,7 +402,7 @@ class Solution : Solver {
     }
 
     void Reverse(char[] chars, int x, int y) {
-        while (x < y) {
+        while (x &lt; y) {
             (chars[x], chars[y]) = (chars[y], chars[x]);
             x++;
             y--;
@@ -410,7 +410,7 @@ class Solution : Solver {
     }
 
     void MovePosition(char[] chars, int x, int y) {
-        var d = x < y ? 1 : -1;
+        var d = x &lt; y ? 1 : -1;
 
         var ch = chars[x];
         for (int i = x + d; i != y + d; i += d) {

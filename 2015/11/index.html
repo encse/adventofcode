@@ -285,27 +285,27 @@ using System.Text;
 
 namespace AdventOfCode.Y2015.Day11;
 
-[ProblemName("Corporate Policy")]
+[ProblemName(&quot;Corporate Policy&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Passwords(input).First();
-    public object PartTwo(string input) => Passwords(input).Skip(1).First();
+    public object PartOne(string input) =&gt; Passwords(input).First();
+    public object PartTwo(string input) =&gt; Passwords(input).Skip(1).First();
 
-    IEnumerable<string> Passwords(string pwd) =>
+    IEnumerable&lt;string&gt; Passwords(string pwd) =&gt;
         from word in Words(pwd) 
-        let straigth = Enumerable.Range(0, word.Length - 2).Any(i => word[i] == word[i + 1] - 1 && word[i] == word[i + 2] - 2)
-        let reserved = "iol".Any(ch => word.Contains(ch))
-        let pairs = Enumerable.Range(0, word.Length - 1).Select(i => word.Substring(i, 2)).Where(sword => sword[0] == sword[1]).Distinct()
-        where straigth && !reserved && pairs.Count() > 1
+        let straigth = Enumerable.Range(0, word.Length - 2).Any(i =&gt; word[i] == word[i + 1] - 1 &amp;&amp; word[i] == word[i + 2] - 2)
+        let reserved = &quot;iol&quot;.Any(ch =&gt; word.Contains(ch))
+        let pairs = Enumerable.Range(0, word.Length - 1).Select(i =&gt; word.Substring(i, 2)).Where(sword =&gt; sword[0] == sword[1]).Distinct()
+        where straigth &amp;&amp; !reserved &amp;&amp; pairs.Count() &gt; 1
         select word;
     
-    IEnumerable<string> Words(string word) {
+    IEnumerable&lt;string&gt; Words(string word) {
         while (true) {
             var sb = new StringBuilder();
-            for (var i = word.Length - 1; i >= 0; i--) {
+            for (var i = word.Length - 1; i &gt;= 0; i--) {
                 var ch = word[i] + 1;
-                if (ch > 'z') {
-                    ch = 'a';
+                if (ch &gt; &#039;z&#039;) {
+                    ch = &#039;a&#039;;
                     sb.Insert(0, (char)ch);
                 } else {
                     sb.Insert(0, (char)ch);

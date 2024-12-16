@@ -286,29 +286,29 @@ using System.Linq;
 
 namespace AdventOfCode.Y2021.Day23;
 
-[ProblemName("Amphipod")]
+[ProblemName(&quot;Amphipod&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Solve(input);
-    public object PartTwo(string input) => Solve(Upscale(input));
+    public object PartOne(string input) =&gt; Solve(input);
+    public object PartTwo(string input) =&gt; Solve(Upscale(input));
 
     string Upscale(string input) {
-        var lines = input.Split("\n").ToList();
-        lines.Insert(3, "  #D#C#B#A#");
-        lines.Insert(4, "  #D#B#A#C#");
-        return string.Join("\n", lines);
+        var lines = input.Split(&quot;\n&quot;).ToList();
+        lines.Insert(3, &quot;  #D#C#B#A#&quot;);
+        lines.Insert(4, &quot;  #D#B#A#C#&quot;);
+        return string.Join(&quot;\n&quot;, lines);
     }
 
     int Solve(string input) {
         var maze = Maze.Parse(input);
 
-        var q = new PriorityQueue<Maze, int>();
-        var cost = new Dictionary<Maze, int>();
+        var q = new PriorityQueue&lt;Maze, int&gt;();
+        var cost = new Dictionary&lt;Maze, int&gt;();
 
         q.Enqueue(maze, 0);
         cost.Add(maze, 0);
 
-        while (q.Count > 0) {
+        while (q.Count &gt; 0) {
             maze = q.Dequeue();
 
             if (maze.Finished()) {
@@ -316,7 +316,7 @@ class Solution : Solver {
             }
 
             foreach (var n in Neighbours(maze)) {
-                if (cost[maze] + n.cost < cost.GetValueOrDefault(n.maze, int.MaxValue)) {
+                if (cost[maze] + n.cost &lt; cost.GetValueOrDefault(n.maze, int.MaxValue)) {
                     cost[n.maze] = cost[maze] + n.cost;
                     q.Enqueue(n.maze, cost[n.maze]);
                 }
@@ -327,33 +327,33 @@ class Solution : Solver {
     }
 
     int stepCost(char actor) {
-        return actor == 'A' ? 1 : actor == 'B' ? 10 : actor == 'C' ? 100 : 1000;
+        return actor == &#039;A&#039; ? 1 : actor == &#039;B&#039; ? 10 : actor == &#039;C&#039; ? 100 : 1000;
     }
 
     int getIcolDst(char ch) {
         return
-            ch == 'A' ? 3 :
-            ch == 'B' ? 5 :
-            ch == 'C' ? 7 :
-            ch == 'D' ? 9 :
+            ch == &#039;A&#039; ? 3 :
+            ch == &#039;B&#039; ? 5 :
+            ch == &#039;C&#039; ? 7 :
+            ch == &#039;D&#039; ? 9 :
             throw new Exception();
     }
 
     (Maze maze, int cost) HallwayToRoom(Maze maze) {
-        for (var icol = 1; icol < 12; icol++) {
+        for (var icol = 1; icol &lt; 12; icol++) {
             var ch = maze.ItemAt(new Point(1, icol));
 
-            if (ch == '.') {
+            if (ch == &#039;.&#039;) {
                 continue;
             }
 
             var icolDst = getIcolDst(ch);
 
-            if (maze.CanMoveToDoor(icol, icolDst) && maze.CanEnterRoom(ch)) {
+            if (maze.CanMoveToDoor(icol, icolDst) &amp;&amp; maze.CanEnterRoom(ch)) {
                 var steps = Math.Abs(icolDst - icol);
                 var pt = new Point(1, icolDst);
 
-                while (maze.ItemAt(pt.Below) == '.') {
+                while (maze.ItemAt(pt.Below) == &#039;.&#039;) {
                     pt = pt.Below;
                     steps++;
                 }
@@ -365,7 +365,7 @@ class Solution : Solver {
         return (maze, 0);
     }
 
-    IEnumerable<(Maze maze, int cost)> RoomToHallway(Maze maze) {
+    IEnumerable&lt;(Maze maze, int cost)&gt; RoomToHallway(Maze maze) {
         var hallwayColumns = new int[] { 1, 2, 4, 6, 8, 10, 11 };
 
         foreach (var roomColumn in new[] { 3, 5, 7, 9 }) {
@@ -376,20 +376,20 @@ class Solution : Solver {
 
             var stepsV = 0;
             var ptSrc = new Point(1, roomColumn);
-            while (maze.ItemAt(ptSrc) == '.') {
+            while (maze.ItemAt(ptSrc) == &#039;.&#039;) {
                 ptSrc = ptSrc.Below;
                 stepsV++;
             }
 
             var ch = maze.ItemAt(ptSrc);
-            if (ch == '#') {
+            if (ch == &#039;#&#039;) {
                 continue;
             }
 
             foreach (var dj in new[] { -1, 1 }) {
                 var stepsH = 0;
                 var ptDst = new Point(1, roomColumn);
-                while (maze.ItemAt(ptDst) == '.') {
+                while (maze.ItemAt(ptDst) == &#039;.&#039;) {
 
                     if (hallwayColumns.Contains(ptDst.icol)) {
                         yield return (maze.Move(ptSrc, ptDst), (stepsV + stepsH) * stepCost(ch));
@@ -406,7 +406,7 @@ class Solution : Solver {
         }
     }
 
-    IEnumerable<(Maze maze, int cost)> Neighbours(Maze maze) {
+    IEnumerable&lt;(Maze maze, int cost)&gt; Neighbours(Maze maze) {
         var hallwayToRoom = HallwayToRoom(maze);
         return hallwayToRoom.cost != 0 ? new[] { hallwayToRoom } : RoomToHallway(maze);
     }
@@ -414,26 +414,26 @@ class Solution : Solver {
 }
 
 record Point(int irow, int icol) {
-    public Point Below => new Point(irow + 1, icol);
-    public Point Above => new Point(irow - 1, icol);
-    public Point Left => new Point(irow, icol - 1);
-    public Point Right => new Point(irow, icol + 1);
+    public Point Below =&gt; new Point(irow + 1, icol);
+    public Point Above =&gt; new Point(irow - 1, icol);
+    public Point Left =&gt; new Point(irow, icol - 1);
+    public Point Right =&gt; new Point(irow, icol + 1);
 }
 
 record Maze {
 
-    const int columnMaskA = (1 << 11) | (1 << 15) | (1 << 19) | (1 << 23);
-    const int columnMaskB = (1 << 12) | (1 << 16) | (1 << 20) | (1 << 24);
-    const int columnMaskC = (1 << 13) | (1 << 17) | (1 << 21) | (1 << 25);
-    const int columnMaskD = (1 << 14) | (1 << 18) | (1 << 22) | (1 << 26);
+    const int columnMaskA = (1 &lt;&lt; 11) | (1 &lt;&lt; 15) | (1 &lt;&lt; 19) | (1 &lt;&lt; 23);
+    const int columnMaskB = (1 &lt;&lt; 12) | (1 &lt;&lt; 16) | (1 &lt;&lt; 20) | (1 &lt;&lt; 24);
+    const int columnMaskC = (1 &lt;&lt; 13) | (1 &lt;&lt; 17) | (1 &lt;&lt; 21) | (1 &lt;&lt; 25);
+    const int columnMaskD = (1 &lt;&lt; 14) | (1 &lt;&lt; 18) | (1 &lt;&lt; 22) | (1 &lt;&lt; 26);
 
     public static Maze Parse(string input) {
         var maze = new Maze(columnMaskA, columnMaskB, columnMaskC, columnMaskD);
-        var map = input.Split("\n");
+        var map = input.Split(&quot;\n&quot;);
         foreach (var irow in Enumerable.Range(0, map.Length)) {
             foreach (var icol in Enumerable.Range(0, map[0].Length)) {
                 maze = maze.SetItem(
-                    new Point(irow, icol), irow < map.Length && icol < map[irow].Length ? map[irow][icol] : '#');
+                    new Point(irow, icol), irow &lt; map.Length &amp;&amp; icol &lt; map[irow].Length ? map[irow][icol] : &#039;#&#039;);
             }
         }
         return maze;
@@ -448,59 +448,59 @@ record Maze {
         this.d = d;
     }
 
-    int BitFromPoint(Point pt) =>
+    int BitFromPoint(Point pt) =&gt;
         (pt.irow, pt.icol) switch {
-            (1, 1) => 1 << 0,
-            (1, 2) => 1 << 1,
-            (1, 3) => 1 << 2,
-            (1, 4) => 1 << 3,
-            (1, 5) => 1 << 4,
-            (1, 6) => 1 << 5,
-            (1, 7) => 1 << 6,
-            (1, 8) => 1 << 7,
-            (1, 9) => 1 << 8,
-            (1, 10) => 1 << 9,
-            (1, 11) => 1 << 10,
+            (1, 1) =&gt; 1 &lt;&lt; 0,
+            (1, 2) =&gt; 1 &lt;&lt; 1,
+            (1, 3) =&gt; 1 &lt;&lt; 2,
+            (1, 4) =&gt; 1 &lt;&lt; 3,
+            (1, 5) =&gt; 1 &lt;&lt; 4,
+            (1, 6) =&gt; 1 &lt;&lt; 5,
+            (1, 7) =&gt; 1 &lt;&lt; 6,
+            (1, 8) =&gt; 1 &lt;&lt; 7,
+            (1, 9) =&gt; 1 &lt;&lt; 8,
+            (1, 10) =&gt; 1 &lt;&lt; 9,
+            (1, 11) =&gt; 1 &lt;&lt; 10,
 
-            (2, 3) => 1 << 11,
-            (2, 5) => 1 << 12,
-            (2, 7) => 1 << 13,
-            (2, 9) => 1 << 14,
+            (2, 3) =&gt; 1 &lt;&lt; 11,
+            (2, 5) =&gt; 1 &lt;&lt; 12,
+            (2, 7) =&gt; 1 &lt;&lt; 13,
+            (2, 9) =&gt; 1 &lt;&lt; 14,
 
-            (3, 3) => 1 << 15,
-            (3, 5) => 1 << 16,
-            (3, 7) => 1 << 17,
-            (3, 9) => 1 << 18,
+            (3, 3) =&gt; 1 &lt;&lt; 15,
+            (3, 5) =&gt; 1 &lt;&lt; 16,
+            (3, 7) =&gt; 1 &lt;&lt; 17,
+            (3, 9) =&gt; 1 &lt;&lt; 18,
 
-            (4, 3) => 1 << 19,
-            (4, 5) => 1 << 20,
-            (4, 7) => 1 << 21,
-            (4, 9) => 1 << 22,
+            (4, 3) =&gt; 1 &lt;&lt; 19,
+            (4, 5) =&gt; 1 &lt;&lt; 20,
+            (4, 7) =&gt; 1 &lt;&lt; 21,
+            (4, 9) =&gt; 1 &lt;&lt; 22,
 
-            (5, 3) => 1 << 23,
-            (5, 5) => 1 << 24,
-            (5, 7) => 1 << 25,
-            (5, 9) => 1 << 26,
+            (5, 3) =&gt; 1 &lt;&lt; 23,
+            (5, 5) =&gt; 1 &lt;&lt; 24,
+            (5, 7) =&gt; 1 &lt;&lt; 25,
+            (5, 9) =&gt; 1 &lt;&lt; 26,
 
-            _ => 1 << 31,
+            _ =&gt; 1 &lt;&lt; 31,
         };
 
-    public bool CanEnterRoom(char ch) =>
+    public bool CanEnterRoom(char ch) =&gt;
         ch switch {
-            'A' => (b & columnMaskA) == 0 && (c & columnMaskA) == 0 && (d & columnMaskA) == 0,
-            'B' => (a & columnMaskB) == 0 && (c & columnMaskB) == 0 && (d & columnMaskB) == 0,
-            'C' => (a & columnMaskC) == 0 && (b & columnMaskC) == 0 && (d & columnMaskC) == 0,
-            'D' => (a & columnMaskD) == 0 && (b & columnMaskD) == 0 && (c & columnMaskD) == 0,
-            _ => throw new Exception()
+            &#039;A&#039; =&gt; (b &amp; columnMaskA) == 0 &amp;&amp; (c &amp; columnMaskA) == 0 &amp;&amp; (d &amp; columnMaskA) == 0,
+            &#039;B&#039; =&gt; (a &amp; columnMaskB) == 0 &amp;&amp; (c &amp; columnMaskB) == 0 &amp;&amp; (d &amp; columnMaskB) == 0,
+            &#039;C&#039; =&gt; (a &amp; columnMaskC) == 0 &amp;&amp; (b &amp; columnMaskC) == 0 &amp;&amp; (d &amp; columnMaskC) == 0,
+            &#039;D&#039; =&gt; (a &amp; columnMaskD) == 0 &amp;&amp; (b &amp; columnMaskD) == 0 &amp;&amp; (c &amp; columnMaskD) == 0,
+            _ =&gt; throw new Exception()
         };
 
     public bool CanMoveToDoor(int icolFrom, int icolTo) {
         Point step(Point pt) {
-            return icolFrom < icolTo ? pt.Right : pt.Left;
+            return icolFrom &lt; icolTo ? pt.Right : pt.Left;
         }
         var pt = step(new Point(1, icolFrom));
         while (pt.icol != icolTo) {
-            if (this.ItemAt(pt) != '.') {
+            if (this.ItemAt(pt) != &#039;.&#039;) {
                 return false;
             }
             pt = step(pt);
@@ -508,53 +508,53 @@ record Maze {
         return true;
     }
 
-    public bool FinishedColumn(int icol) =>
+    public bool FinishedColumn(int icol) =&gt;
         icol switch {
-            3 => a == columnMaskA,
-            5 => b == columnMaskB,
-            7 => c == columnMaskC,
-            9 => d == columnMaskD,
-            _ => throw new Exception()
+            3 =&gt; a == columnMaskA,
+            5 =&gt; b == columnMaskB,
+            7 =&gt; c == columnMaskC,
+            9 =&gt; d == columnMaskD,
+            _ =&gt; throw new Exception()
         };
 
-    public bool Finished() =>
-        FinishedColumn(3) && FinishedColumn(5) && FinishedColumn(7) && FinishedColumn(9);
+    public bool Finished() =&gt;
+        FinishedColumn(3) &amp;&amp; FinishedColumn(5) &amp;&amp; FinishedColumn(7) &amp;&amp; FinishedColumn(9);
 
     public char ItemAt(Point pt) {
         var bit = BitFromPoint(pt);
         return
-            bit == 1 << 31 ? '#' :
-            (a & bit) != 0 ? 'A' :
-            (b & bit) != 0 ? 'B' :
-            (c & bit) != 0 ? 'C' :
-            (d & bit) != 0 ? 'D' :
-            '.';
+            bit == 1 &lt;&lt; 31 ? &#039;#&#039; :
+            (a &amp; bit) != 0 ? &#039;A&#039; :
+            (b &amp; bit) != 0 ? &#039;B&#039; :
+            (c &amp; bit) != 0 ? &#039;C&#039; :
+            (d &amp; bit) != 0 ? &#039;D&#039; :
+            &#039;.&#039;;
     }
 
-    public Maze Move(Point from, Point to) =>
-        SetItem(to, ItemAt(from)).SetItem(from, '.');
+    public Maze Move(Point from, Point to) =&gt;
+        SetItem(to, ItemAt(from)).SetItem(from, &#039;.&#039;);
 
     private Maze SetItem(Point pt, char ch) {
-        if (ch == '#') {
+        if (ch == &#039;#&#039;) {
             return this;
         }
         var bit = BitFromPoint(pt);
-        if (bit == 1 << 31) {
+        if (bit == 1 &lt;&lt; 31) {
             return this;
         }
 
         return ch switch {
-            '.' => new Maze(
-                a & ~bit,
-                b & ~bit,
-                c & ~bit,
-                d & ~bit
+            &#039;.&#039; =&gt; new Maze(
+                a &amp; ~bit,
+                b &amp; ~bit,
+                c &amp; ~bit,
+                d &amp; ~bit
             ),
-            'A' => new Maze(a | bit, b & ~bit, c & ~bit, d & ~bit),
-            'B' => new Maze(a & ~bit, b | bit, c & ~bit, d & ~bit),
-            'C' => new Maze(a & ~bit, b & ~bit, c | bit, d & ~bit),
-            'D' => new Maze(a & ~bit, b & ~bit, c & ~bit, d | bit),
-            _ => throw new Exception()
+            &#039;A&#039; =&gt; new Maze(a | bit, b &amp; ~bit, c &amp; ~bit, d &amp; ~bit),
+            &#039;B&#039; =&gt; new Maze(a &amp; ~bit, b | bit, c &amp; ~bit, d &amp; ~bit),
+            &#039;C&#039; =&gt; new Maze(a &amp; ~bit, b &amp; ~bit, c | bit, d &amp; ~bit),
+            &#039;D&#039; =&gt; new Maze(a &amp; ~bit, b &amp; ~bit, c &amp; ~bit, d | bit),
+            _ =&gt; throw new Exception()
         };
     }
 }</code></pre></div>

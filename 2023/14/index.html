@@ -290,33 +290,33 @@ using System.Collections.Generic;
 using System.Linq;
 using Map = char[][];
 
-[ProblemName("Parabolic Reflector Dish")]
+[ProblemName(&quot;Parabolic Reflector Dish&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => 
+    public object PartOne(string input) =&gt; 
         Measure(Tilt(Parse(input)));
 
-    public object PartTwo(string input) => 
+    public object PartTwo(string input) =&gt; 
         Measure(Iterate(Parse(input), Cycle, 1_000_000_000));
 
-    Map Parse(string input) => (
-        from l in input.Split('\n') select l.ToCharArray()
+    Map Parse(string input) =&gt; (
+        from l in input.Split(&#039;\n&#039;) select l.ToCharArray()
     ).ToArray();
 
-    int Crow(char[][] map) => map.Length;
-    int Ccol(char[][] map) => map[0].Length;
+    int Crow(char[][] map) =&gt; map.Length;
+    int Ccol(char[][] map) =&gt; map[0].Length;
 
-    Map Iterate(Map map, Func<Map, Map> cycle, int count) {
+    Map Iterate(Map map, Func&lt;Map, Map&gt; cycle, int count) {
         // The usual trick: keep iterating until we find a loop, make a shortcut
         // and read the result from the accumulated history.
-        var history = new List<string>();
-        while (count > 0) {
+        var history = new List&lt;string&gt;();
+        while (count &gt; 0) {
             map = cycle(map);
             count--;
 
-            var mapString = string.Join("\n", map.Select(l=> new string(l)));
+            var mapString = string.Join(&quot;\n&quot;, map.Select(l=&gt; new string(l)));
             var idx = history.IndexOf(mapString);
-            if (idx < 0) {
+            if (idx &lt; 0) {
                 history.Add(mapString);
             } else {
                 var loopLength = history.Count - idx;
@@ -328,22 +328,22 @@ class Solution : Solver {
     }
 
     Map Cycle(Map map) {
-        for (var i = 0; i < 4; i++) {
+        for (var i = 0; i &lt; 4; i++) {
             map = Rotate(Tilt(map));
         }
         return map;
     }
 
-    // Tilt the map to the North, so that the 'O' tiles roll to the top.
+    // Tilt the map to the North, so that the &#039;O&#039; tiles roll to the top.
     Map Tilt(Map map) {
-        for (var icol = 0; icol < Ccol(map); icol++) {
-            var irowT = 0; // tells where to roll up the next 'O' tile
-            for (var irowS = 0; irowS < Crow(map); irowS++) {
-                if (map[irowS][icol] == '#') {
+        for (var icol = 0; icol &lt; Ccol(map); icol++) {
+            var irowT = 0; // tells where to roll up the next &#039;O&#039; tile
+            for (var irowS = 0; irowS &lt; Crow(map); irowS++) {
+                if (map[irowS][icol] == &#039;#&#039;) {
                     irowT = irowS + 1;
-                } else if (map[irowS][icol] == 'O') {
-                    map[irowS][icol] = '.'; 
-                    map[irowT][icol] = 'O'; 
+                } else if (map[irowS][icol] == &#039;O&#039;) {
+                    map[irowS][icol] = &#039;.&#039;; 
+                    map[irowT][icol] = &#039;O&#039;; 
                     irowT++;
                 }
             }
@@ -354,19 +354,19 @@ class Solution : Solver {
     // Ugly coordinate magic, turns the map 90º clockwise
     Map Rotate(Map src) {
         var dst = new char[Crow(src)][];
-        for (var irow = 0; irow < Ccol(src); irow++) {
+        for (var irow = 0; irow &lt; Ccol(src); irow++) {
             dst[irow] = new char[Ccol(src)];
-            for (var icol = 0; icol < Crow(src); icol++) {
+            for (var icol = 0; icol &lt; Crow(src); icol++) {
                 dst[irow][icol] = src[Crow(src) - icol - 1][irow];
             }
         }
         return dst;
     }
 
-    // returns the cummulated distances of 'O' tiles from the bottom of the map
-    int Measure(Map map) =>  
-        map.Select((row, irow) => 
-            (Crow(map) - irow) * row.Count(ch => ch == 'O')
+    // returns the cummulated distances of &#039;O&#039; tiles from the bottom of the map
+    int Measure(Map map) =&gt;  
+        map.Select((row, irow) =&gt; 
+            (Crow(map) - irow) * row.Count(ch =&gt; ch == &#039;O&#039;)
         ).Sum();
 }</code></pre></div>
             <div id="code-location"> <p>Please ☆ my <a href="https://github.com/encse/adventofcode/">repo</a> if you like it!</p></div>

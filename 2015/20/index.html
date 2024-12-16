@@ -281,7 +281,7 @@
 </div>
             <div id="code-container"><pre class="hljs language-csharp"><code>namespace AdventOfCode.Y2015.Day20;
 
-[ProblemName("Infinite Elves and Infinite Houses")]
+[ProblemName(&quot;Infinite Elves and Infinite Houses&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
@@ -296,18 +296,18 @@ class Solution : Solver {
 
     int PresentsByHouse(int steps, int mul, int l) {
         var presents = new int[1000000];
-        for (var i = 1; i < presents.Length; i++) {
+        for (var i = 1; i &lt; presents.Length; i++) {
             var j = i;
             var step = 0;
-            while (j < presents.Length && step < steps) {
+            while (j &lt; presents.Length &amp;&amp; step &lt; steps) {
                 presents[j] += mul * i;
                 j += i;
                 step++;
             }
         }
 
-        for (var i = 0; i < presents.Length; i++) {
-            if (presents[i] >= l) {
+        for (var i = 0; i &lt; presents.Length; i++) {
+            if (presents[i] &gt;= l) {
                 return i;
             }
         }

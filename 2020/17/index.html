@@ -285,7 +285,7 @@ using System.Linq;
 
 namespace AdventOfCode.Y2020.Day17;
 
-[ProblemName("Conway Cubes")]
+[ProblemName(&quot;Conway Cubes&quot;)]
 class Solution : Solver {
     public object PartOne(string input) {
         var ds = (from dx in new[] { -1, 0, 1 }
@@ -295,8 +295,8 @@ class Solution : Solver {
                   select (dx, dy, dz)).ToArray();
         return Solve(
             input,
-            (x, y) => (x: x, y: y, z: 0),
-            (p) => ds.Select(d => (p.x + d.dx, p.y + d.dy, p.z + d.dz)));
+            (x, y) =&gt; (x: x, y: y, z: 0),
+            (p) =&gt; ds.Select(d =&gt; (p.x + d.dx, p.y + d.dy, p.z + d.dz)));
     }
 
     public object PartTwo(string input) {
@@ -309,23 +309,23 @@ class Solution : Solver {
 
         return Solve(
             input,
-            (x, y) => (x: x, y: y, z: 0, w: 0),
-            (p) => ds.Select(d => (p.x + d.dx, p.y + d.dy, p.z + d.dz, p.w + d.dw)));
+            (x, y) =&gt; (x: x, y: y, z: 0, w: 0),
+            (p) =&gt; ds.Select(d =&gt; (p.x + d.dx, p.y + d.dy, p.z + d.dz, p.w + d.dw)));
     }
 
-    private int Solve<T>(string input, Func<int, int, T> create, Func<T, IEnumerable<T>> neighbours) {
-        var lines = input.Split("\n");
+    private int Solve&lt;T&gt;(string input, Func&lt;int, int, T&gt; create, Func&lt;T, IEnumerable&lt;T&gt;&gt; neighbours) {
+        var lines = input.Split(&quot;\n&quot;);
         var (width, height) = (lines[0].Length, lines.Length);
-        var activePoints = new HashSet<T>(
+        var activePoints = new HashSet&lt;T&gt;(
             from x in Enumerable.Range(0, width) 
             from y in Enumerable.Range(0, height) 
-            where lines[y][x] == '#' 
+            where lines[y][x] == &#039;#&#039; 
             select create(x,y)
         );
         
-        for (var i = 0; i < 6; i++) {
-            var newActivePoints = new HashSet<T>();
-            var inactivePoints = new Dictionary<T, int>();
+        for (var i = 0; i &lt; 6; i++) {
+            var newActivePoints = new HashSet&lt;T&gt;();
+            var inactivePoints = new Dictionary&lt;T, int&gt;();
 
             foreach (var point in activePoints) {
                 var activeNeighbours = 0;

@@ -285,10 +285,10 @@ using System.Linq;
 
 namespace AdventOfCode.Y2019.Day14;
 
-[ProblemName("Space Stoichiometry")]
+[ProblemName(&quot;Space Stoichiometry&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Parse(input)(1);
+    public object PartOne(string input) =&gt; Parse(input)(1);
     public object PartTwo(string input) {
         var oreForFuel = Parse(input);
 
@@ -296,8 +296,8 @@ class Solution : Solver {
 
         var fuel = 1L;
         while (true) {
-            // newFuel <= the amount we can produce with the given ore
-            // since (double)ore / oreForFuel(fuel) >= 1, fuel becomes
+            // newFuel &lt;= the amount we can produce with the given ore
+            // since (double)ore / oreForFuel(fuel) &gt;= 1, fuel becomes
             // a better estimation in each iteration until it reaches 
             // the maximum
 
@@ -310,30 +310,30 @@ class Solution : Solver {
         }
     }
 
-    Func<long, long> Parse(string productionRules) {
+    Func&lt;long, long&gt; Parse(string productionRules) {
         (string chemical, long amount) ParseReagent(string st) {
-            var parts = st.Split(" ");
+            var parts = st.Split(&quot; &quot;);
             return (parts[1], long.Parse(parts[0]));
         }
 
         var reactions = (
-            from rule in productionRules.Split("\n")
-            let inout = rule.Split(" => ")
-            let input = inout[0].Split(", ").Select(ParseReagent).ToArray()
+            from rule in productionRules.Split(&quot;\n&quot;)
+            let inout = rule.Split(&quot; =&gt; &quot;)
+            let input = inout[0].Split(&quot;, &quot;).Select(ParseReagent).ToArray()
             let output = ParseReagent(inout[1])
             select (output, input)
-        ).ToDictionary(inout => inout.output.chemical, inout => inout);
+        ).ToDictionary(inout =&gt; inout.output.chemical, inout =&gt; inout);
 
-        return (fuel) => {
+        return (fuel) =&gt; {
 
             var ore = 0L;
-            var inventory = reactions.Keys.ToDictionary(chemical => chemical, _ => 0L);
-            var productionList = new Queue<(string chemical, long amount)>();
-            productionList.Enqueue(("FUEL", fuel));
+            var inventory = reactions.Keys.ToDictionary(chemical =&gt; chemical, _ =&gt; 0L);
+            var productionList = new Queue&lt;(string chemical, long amount)&gt;();
+            productionList.Enqueue((&quot;FUEL&quot;, fuel));
 
             while (productionList.Any()) {
                 var (chemical, amount) = productionList.Dequeue();
-                if (chemical == "ORE") {
+                if (chemical == &quot;ORE&quot;) {
                     ore += amount;
                 } else {
                     var reaction = reactions[chemical];
@@ -342,7 +342,7 @@ class Solution : Solver {
                     amount -= useFromInventory;
                     inventory[chemical] -= useFromInventory;
 
-                    if (amount > 0) {
+                    if (amount &gt; 0) {
                         var multiplier = (long)Math.Ceiling((decimal)amount / reaction.output.amount);
                         inventory[chemical] = Math.Max(0, multiplier * reaction.output.amount - amount);
 

@@ -285,19 +285,19 @@ using System.Linq;
 
 namespace AdventOfCode.Y2021.Day12;
 
-[ProblemName("Passage Pathing")]
+[ProblemName(&quot;Passage Pathing&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => Explore(input, false);
-    public object PartTwo(string input) => Explore(input, true);
+    public object PartOne(string input) =&gt; Explore(input, false);
+    public object PartTwo(string input) =&gt; Explore(input, true);
 
     int Explore(string input, bool part2) {
         var map = GetMap(input);
 
         // Recursive approach this time.
-        int pathCount(string currentCave, ImmutableHashSet<string> visitedCaves, bool anySmallCaveWasVisitedTwice) {
+        int pathCount(string currentCave, ImmutableHashSet&lt;string&gt; visitedCaves, bool anySmallCaveWasVisitedTwice) {
 
-            if (currentCave == "end") {
+            if (currentCave == &quot;end&quot;) {
                 return 1;
             }
 
@@ -309,7 +309,7 @@ class Solution : Solver {
                 if (!seen || isBigCave) {
                     // we can visit big caves any number of times, small caves only once
                     res += pathCount(cave, visitedCaves.Add(cave), anySmallCaveWasVisitedTwice);
-                } else if (part2 && !isBigCave && cave != "start" && !anySmallCaveWasVisitedTwice) {
+                } else if (part2 &amp;&amp; !isBigCave &amp;&amp; cave != &quot;start&quot; &amp;&amp; !anySmallCaveWasVisitedTwice) {
                     // part 2 also lets us to visit a single small cave twice (except for start and end)
                     res += pathCount(cave, visitedCaves, true);
                 }
@@ -317,25 +317,25 @@ class Solution : Solver {
             return res;
         }
 
-        return pathCount("start", ImmutableHashSet.Create<string>("start"), false);
+        return pathCount(&quot;start&quot;, ImmutableHashSet.Create&lt;string&gt;(&quot;start&quot;), false);
     }
 
-    Dictionary<string, string[]> GetMap(string input) {
-        // taking all connections 'there and back':
+    Dictionary&lt;string, string[]&gt; GetMap(string input) {
+        // taking all connections &#039;there and back&#039;:
         var connections =
-            from line in input.Split("\n")
-            let parts = line.Split("-")
+            from line in input.Split(&quot;\n&quot;)
+            let parts = line.Split(&quot;-&quot;)
             let caveA = parts[0]
             let caveB = parts[1]
             from connection in new[] { (From: caveA, To: caveB), (From: caveB, To: caveA) }
             select connection;
 
-        // grouped by "from":
+        // grouped by &quot;from&quot;:
         return (
             from p in connections
             group p by p.From into g
             select g
-        ).ToDictionary(g => g.Key, g => g.Select(connnection => connnection.To).ToArray());
+        ).ToDictionary(g =&gt; g.Key, g =&gt; g.Select(connnection =&gt; connnection.To).ToArray());
     }
 }
 </code></pre></div>

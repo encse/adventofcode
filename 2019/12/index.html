@@ -286,10 +286,10 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2019.Day12;
 
-[ProblemName("The N-Body Problem")]
+[ProblemName(&quot;The N-Body Problem&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) => (
+    public object PartOne(string input) =&gt; (
             from planet in Simulate(input).ElementAt(999)
             let pot = planet.pos.Select(Math.Abs).Sum()
             let kin = planet.vel.Select(Math.Abs).Sum()
@@ -298,8 +298,8 @@ class Solution : Solver {
 
     public object PartTwo(string input) {
         var statesByDim = new long[3];
-        for (var dim = 0; dim < 3; dim++) {
-            var states = new HashSet<(int,int,int,int,int,int,int,int)>();
+        for (var dim = 0; dim &lt; 3; dim++) {
+            var states = new HashSet&lt;(int,int,int,int,int,int,int,int)&gt;();
             foreach (var planets in Simulate(input)) {
                 var state = (planets[0].pos[dim], planets[1].pos[dim], planets[2].pos[dim], planets[3].pos[dim],
                              planets[0].vel[dim], planets[1].vel[dim], planets[2].vel[dim], planets[3].vel[dim]);
@@ -314,13 +314,13 @@ class Solution : Solver {
         return Lcm(statesByDim[0], Lcm(statesByDim[1], statesByDim[2]));
     }
 
-    long Lcm(long a, long b) => a * b / Gcd(a, b);
-    long Gcd(long a, long b) => b == 0 ? a : Gcd(b, a % b);
+    long Lcm(long a, long b) =&gt; a * b / Gcd(a, b);
+    long Gcd(long a, long b) =&gt; b == 0 ? a : Gcd(b, a % b);
 
-    IEnumerable<(int[] pos, int[] vel)[]> Simulate(string input) {
+    IEnumerable&lt;(int[] pos, int[] vel)[]&gt; Simulate(string input) {
         var planets = (
-            from line in input.Split("\n")
-            let m = Regex.Matches(line, @"-?\d+")
+            from line in input.Split(&quot;\n&quot;)
+            let m = Regex.Matches(line, @&quot;-?\d+&quot;)
             let pos = (from v in m select int.Parse(v.Value)).ToArray()
             let vel = new int[3]
             select (pos, vel)
@@ -329,14 +329,14 @@ class Solution : Solver {
         while (true) {
             foreach (var planetA in planets) {
                 foreach (var planetB in planets) {
-                    for (var dim = 0; dim < 3; dim++) {
+                    for (var dim = 0; dim &lt; 3; dim++) {
                         planetA.vel[dim] += Math.Sign(planetB.pos[dim] - planetA.pos[dim]);
                     }
                 }
             }
 
             foreach (var planet in planets) {
-                for (var dim = 0; dim < 3; dim++) {
+                for (var dim = 0; dim &lt; 3; dim++) {
                     planet.pos[dim] += planet.vel[dim];
                 }
             }

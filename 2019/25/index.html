@@ -286,21 +286,21 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2019.Day25;
 
-[ProblemName("Cryostasis")]
+[ProblemName(&quot;Cryostasis&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
-        var securityRoom = "== Security Checkpoint ==";
+        var securityRoom = &quot;== Security Checkpoint ==&quot;;
         var icm = new IntCodeMachine(input);
         var description = icm.Run().ToAscii();
 
-        VisitRooms(securityRoom, icm, description, args => {
+        VisitRooms(securityRoom, icm, description, args =&gt; {
             foreach (var item in args.items) {
-                if (item != "infinite loop") {
-                    var takeCmd = "take " + item;
+                if (item != &quot;infinite loop&quot;) {
+                    var takeCmd = &quot;take &quot; + item;
                     var clone = icm.Clone();
                     clone.Run(takeCmd);
-                    if (!clone.Halted() && Inventory(clone).Contains(item)) {
+                    if (!clone.Halted() &amp;&amp; Inventory(clone).Contains(item)) {
                         icm.Run(takeCmd);
                     }
                 }
@@ -308,45 +308,45 @@ class Solution : Solver {
             return null;
         });
 
-        var door = VisitRooms(securityRoom, icm, description, args =>
-           args.room == securityRoom ? args.doors.Single(door => door != ReverseDir(args.doorTaken)) : null);
+        var door = VisitRooms(securityRoom, icm, description, args =&gt;
+           args.room == securityRoom ? args.doors.Single(door =&gt; door != ReverseDir(args.doorTaken)) : null);
         
         Random r = new Random();
-        void TakeOrDrop(string cmd, List<string> from, List<string> to) {
+        void TakeOrDrop(string cmd, List&lt;string&gt; from, List&lt;string&gt; to) {
             var i = r.Next(from.Count);
             var item = from[i];
             from.RemoveAt(i);
             to.Add(item);
-            icm.Run(cmd + " " + item);
+            icm.Run(cmd + &quot; &quot; + item);
         }
 
         var inventory = Inventory(icm).ToList();
-        var floor = new List<string>();
+        var floor = new List&lt;string&gt;();
         while (true) {
             var output = icm.Run(door).ToAscii();
-            if (output.Contains("heavier")) {
-                TakeOrDrop("take", floor, inventory);
-            } else if (output.Contains("lighter")) {
-                TakeOrDrop("drop", inventory, floor);
+            if (output.Contains(&quot;heavier&quot;)) {
+                TakeOrDrop(&quot;take&quot;, floor, inventory);
+            } else if (output.Contains(&quot;lighter&quot;)) {
+                TakeOrDrop(&quot;drop&quot;, inventory, floor);
             } else {
-                return long.Parse(Regex.Match(output, @"\d+").Value);
+                return long.Parse(Regex.Match(output, @&quot;\d+&quot;).Value);
             }
         }
     }
 
-    List<string> directions = new List<string>() { "south", "east", "west", "north" };
-    string ReverseDir(string direction) => directions[3 - directions.IndexOf(direction)];
+    List&lt;string&gt; directions = new List&lt;string&gt;() { &quot;south&quot;, &quot;east&quot;, &quot;west&quot;, &quot;north&quot; };
+    string ReverseDir(string direction) =&gt; directions[3 - directions.IndexOf(direction)];
 
     string VisitRooms(
         string securityRoom,
         IntCodeMachine icm, 
         string description, 
-        Func<(IEnumerable<string> items, string room, string doorTaken, IEnumerable<string> doors), string> callback
+        Func&lt;(IEnumerable&lt;string&gt; items, string room, string doorTaken, IEnumerable&lt;string&gt; doors), string&gt; callback
     ) {
 
-        var roomsSeen = new HashSet<string>();
+        var roomsSeen = new HashSet&lt;string&gt;();
         string DFS(string description, string doorTaken) {
-            var room = description.Split("\n").Single(x => x.Contains("=="));
+            var room = description.Split(&quot;\n&quot;).Single(x =&gt; x.Contains(&quot;==&quot;));
             var listing = GetListItems(description).ToHashSet();
             var doors = listing.Intersect(directions);
             var items = listing.Except(doors);
@@ -374,11 +374,11 @@ class Solution : Solver {
         return DFS(description, null);
     }
 
-    IEnumerable<string> Inventory(IntCodeMachine icm) => GetListItems(icm.Run("inv").ToAscii());
+    IEnumerable&lt;string&gt; Inventory(IntCodeMachine icm) =&gt; GetListItems(icm.Run(&quot;inv&quot;).ToAscii());
 
-    IEnumerable<string> GetListItems(string description) =>
-        from line in description.Split("\n")
-        where line.StartsWith("- ")
+    IEnumerable&lt;string&gt; GetListItems(string description) =&gt;
+        from line in description.Split(&quot;\n&quot;)
+        where line.StartsWith(&quot;- &quot;)
         select line.Substring(2);
 }
 </code></pre></div>

@@ -286,7 +286,7 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Y2018.Day04;
 
-[ProblemName("Repose Record")]
+[ProblemName(&quot;Repose Record&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
@@ -294,13 +294,13 @@ class Solution : Solver {
                 group day by day.guard into g
                 select new { 
                     guard = g.Key, 
-                    totalSleeps = g.Select(day => day.totalSleep).Sum(), 
-                    sleepByMin = Enumerable.Range(0, 60).Select(minT => g.Sum(day => day.sleep[minT])).ToArray()
+                    totalSleeps = g.Select(day =&gt; day.totalSleep).Sum(), 
+                    sleepByMin = Enumerable.Range(0, 60).Select(minT =&gt; g.Sum(day =&gt; day.sleep[minT])).ToArray()
                 };
-        var maxSleep = foo.Max(x => x.totalSleeps);
-        var fooT = foo.Single(g => g.totalSleeps == maxSleep);
-        var maxSleepByMin = Enumerable.Range(0, 60).Max(minT => fooT.sleepByMin[minT]);
-        var min = Enumerable.Range(0, 60).Single(minT => fooT.sleepByMin[minT] == maxSleepByMin);
+        var maxSleep = foo.Max(x =&gt; x.totalSleeps);
+        var fooT = foo.Single(g =&gt; g.totalSleeps == maxSleep);
+        var maxSleepByMin = Enumerable.Range(0, 60).Max(minT =&gt; fooT.sleepByMin[minT]);
+        var min = Enumerable.Range(0, 60).Single(minT =&gt; fooT.sleepByMin[minT] == maxSleepByMin);
         return fooT.guard * min;
     }
 
@@ -309,32 +309,32 @@ class Solution : Solver {
                 group day by day.guard into g
                 select new { 
                     guard = g.Key, 
-                    totalSleeps = g.Select(day => day.totalSleep).Sum(), 
-                    sleepByMin = Enumerable.Range(0, 60).Select(minT => g.Sum(day => day.sleep[minT])).ToArray()
+                    totalSleeps = g.Select(day =&gt; day.totalSleep).Sum(), 
+                    sleepByMin = Enumerable.Range(0, 60).Select(minT =&gt; g.Sum(day =&gt; day.sleep[minT])).ToArray()
                 };
 
-        var maxMaxSleep = foo.Max(x => x.sleepByMin.Max());
-        var fooT = foo.Single(x => x.sleepByMin.Max() == maxMaxSleep);
-        var min = Enumerable.Range(0, 60).Single(minT => fooT.sleepByMin[minT] == maxMaxSleep);
+        var maxMaxSleep = foo.Max(x =&gt; x.sleepByMin.Max());
+        var fooT = foo.Single(x =&gt; x.sleepByMin.Max() == maxMaxSleep);
+        var min = Enumerable.Range(0, 60).Single(minT =&gt; fooT.sleepByMin[minT] == maxMaxSleep);
 
         return fooT.guard * min;
     }
 
-    IEnumerable<Day> Parse(string input) {
-        var lines = input.Split("\n").ToList();
-        lines.Sort((x, y) => DateTime.Parse(x.Substring(1, "1518-03-25 00:01".Length)).CompareTo(DateTime.Parse(y.Substring(1, "1518-03-25 00:01".Length))));
+    IEnumerable&lt;Day&gt; Parse(string input) {
+        var lines = input.Split(&quot;\n&quot;).ToList();
+        lines.Sort((x, y) =&gt; DateTime.Parse(x.Substring(1, &quot;1518-03-25 00:01&quot;.Length)).CompareTo(DateTime.Parse(y.Substring(1, &quot;1518-03-25 00:01&quot;.Length))));
         var iline = 0;
 
-        while (Int(@"Guard #(\d+) begins shift", out var guard)) {
+        while (Int(@&quot;Guard #(\d+) begins shift&quot;, out var guard)) {
 
             var sleep = new int[60];
-            while (Date(@"\[(.*)\] falls asleep", out var fallsAsleap)) {
-                Date(@"\[(.*)\] wakes up", out var wakesUp);
+            while (Date(@&quot;\[(.*)\] falls asleep&quot;, out var fallsAsleap)) {
+                Date(@&quot;\[(.*)\] wakes up&quot;, out var wakesUp);
 
                 var from = fallsAsleap.Hour != 0 ? 0 : fallsAsleap.Minute;
                 var to = wakesUp.Hour != 0 ? 0 : wakesUp.Minute;
 
-                for (var min = from; min < to; min++) {
+                for (var min = from; min &lt; to; min++) {
                     sleep[min] = 1;
                 }
             }
@@ -347,17 +347,17 @@ class Solution : Solver {
         }
         bool Int(string pattern, out int r) {
             r = 0;
-            return String(pattern, out string st) && int.TryParse(st, out r);
+            return String(pattern, out string st) &amp;&amp; int.TryParse(st, out r);
         }
 
         bool Date(string pattern, out DateTime r) {
             r = DateTime.MinValue;
-            return String(pattern, out string st) && DateTime.TryParse(st, out r);
+            return String(pattern, out string st) &amp;&amp; DateTime.TryParse(st, out r);
         }
 
         bool String(string pattern, out string st) {
             st = null;
-            if (iline >= lines.Count) {
+            if (iline &gt;= lines.Count) {
                 return false;
             }
             var m = Regex.Match(lines[iline], pattern);
@@ -374,7 +374,7 @@ class Solution : Solver {
 class Day {
     public int guard;
     public int[] sleep;
-    public int totalSleep => sleep.Sum();
+    public int totalSleep =&gt; sleep.Sum();
 }
 </code></pre></div>
             <div id="code-location"> <p>Please ☆ my <a href="https://github.com/encse/adventofcode/">repo</a> if you like it!</p></div>

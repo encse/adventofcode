@@ -285,32 +285,32 @@ using System.Linq;
 
 namespace AdventOfCode.Y2020.Day09;
 
-[ProblemName("Encoding Error")]
+[ProblemName(&quot;Encoding Error&quot;)]
 class Solution : Solver {
 
-    IEnumerable<int> Range(int min, int lim) => Enumerable.Range(min, lim - min);
+    IEnumerable&lt;int&gt; Range(int min, int lim) =&gt; Enumerable.Range(min, lim - min);
 
     public object PartOne(string input) {
-        var numbers = input.Split("\n").Select(long.Parse).ToArray();
+        var numbers = input.Split(&quot;\n&quot;).Select(long.Parse).ToArray();
 
-        bool Mismatch(int i) => (
+        bool Mismatch(int i) =&gt; (
             from j in Range(i - 25, i)
             from k in Range(j + 1, i)
             select numbers[j] + numbers[k]
-        ).All(sum => sum != numbers[i]);
+        ).All(sum =&gt; sum != numbers[i]);
 
         return numbers[Range(25, input.Length).First(Mismatch)];
     }
 
     public object PartTwo(string input) {
         var d = (long)PartOne(input);
-        var lines = input.Split("\n").Select(long.Parse).ToList();
+        var lines = input.Split(&quot;\n&quot;).Select(long.Parse).ToList();
 
         foreach (var j in Range(0, lines.Count)) {
             var s = lines[j];
             foreach (var k in Range(j + 1, lines.Count)) {
                 s += lines[k];
-                if (s > d) {
+                if (s &gt; d) {
                     break;
                 } else if (s == d) {
                     var range = lines.GetRange(j, k - j + 1);

@@ -284,19 +284,19 @@ using System.Linq;
 
 namespace AdventOfCode.Y2017.Day04;
 
-[ProblemName("High-Entropy Passphrases")]
+[ProblemName(&quot;High-Entropy Passphrases&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string lines) =>
-        ValidLineCount(lines, word => word);
+    public object PartOne(string lines) =&gt;
+        ValidLineCount(lines, word =&gt; word);
 
-    public object PartTwo(string lines) =>
-        ValidLineCount(lines, word => string.Concat(word.OrderBy(ch => ch)));
+    public object PartTwo(string lines) =&gt;
+        ValidLineCount(lines, word =&gt; string.Concat(word.OrderBy(ch =&gt; ch)));
 
-    int ValidLineCount(string lines, Func<string, string> normalizer) =>
-        lines.Split('\n').Where(line => IsValidLine(line.Split(' '), normalizer)).Count();
+    int ValidLineCount(string lines, Func&lt;string, string&gt; normalizer) =&gt;
+        lines.Split(&#039;\n&#039;).Where(line =&gt; IsValidLine(line.Split(&#039; &#039;), normalizer)).Count();
 
-    bool IsValidLine(string[] words, Func<string, string> normalizer) =>
+    bool IsValidLine(string[] words, Func&lt;string, string&gt; normalizer) =&gt;
         words.Select(normalizer).Distinct().Count() == words.Count();
 }
 </code></pre></div>
