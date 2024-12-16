@@ -15,13 +15,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/a11y-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js"></script>
-    <title>Advent of Code 2017/5 'A Maze of Twisty Trampolines, All Alike'' in C# by encse</title>
+    <title>Advent of Code 2024/16 'Reindeer Maze'' in C# by encse</title>
 
     <head>
-        <meta property="og:title" content="Advent of Code 2017/5 'A Maze of Twisty Trampolines, All Alike' in C# by encse<">
-        <meta property="og:description" content="C# solution to the 'A Maze of Twisty Trampolines, All Alike' Advent of Code problem.">
-        <meta property="og:image" content="https://aoc.csokavar.hu/2017/5//illustration.jpeg">
-        <meta property="og:url" content="https://aoc.csokavar.hu/2017/5/">
+        <meta property="og:title" content="Advent of Code 2024/16 'Reindeer Maze' in C# by encse<">
+        <meta property="og:description" content="C# solution to the 'Reindeer Maze' Advent of Code problem.">
+        <meta property="og:image" content="https://aoc.csokavar.hu/2024/16//illustration.jpeg">
+        <meta property="og:url" content="https://aoc.csokavar.hu/2024/16/">
         <meta property="og:type" content="website">
       </head>
 
@@ -250,11 +250,11 @@
     <div id="top-nav">
         <div id="year-picker"><nav class="dropdown">
             <input type="checkbox" id="dropdown-toggle" class="dropdown-toggle">
-            <span class="current"><label id="dropdown-label" for="dropdown-toggle">2017</label></span>
+            <span class="current"><label id="dropdown-label" for="dropdown-toggle">2024</label></span>
             <div class="dropdown-content"><a href="/2015/25/">2015</a><a href="/2016/25/">2016</a><a href="/2017/25/">2017</a><a href="/2018/25/">2018</a><a href="/2019/25/">2019</a><a href="/2020/25/">2020</a><a href="/2021/25/">2021</a><a href="/2022/25/">2022</a><a href="/2023/25/">2023</a><a href="/2024/16/">2024</a></div>
         </nav>
      </div>
-        <div id="day-picker"><span><a href="/2017/1">01</a></span><span><a href="/2017/2">02</a></span><span><a href="/2017/3">03</a></span><span><a href="/2017/4">04</a></span><span class="current"><a href="/2017/5">05</a></span><span><a href="/2017/6">06</a></span><span><a href="/2017/7">07</a></span><span><a href="/2017/8">08</a></span><span><a href="/2017/9">09</a></span><span><a href="/2017/10">10</a></span><span><a href="/2017/11">11</a></span><span><a href="/2017/12">12</a></span><span><a href="/2017/13">13</a></span><span><a href="/2017/14">14</a></span><span><a href="/2017/15">15</a></span><span><a href="/2017/16">16</a></span><span><a href="/2017/17">17</a></span><span><a href="/2017/18">18</a></span><span><a href="/2017/19">19</a></span><span><a href="/2017/20">20</a></span><span><a href="/2017/21">21</a></span><span><a href="/2017/22">22</a></span><span><a href="/2017/23">23</a></span><span><a href="/2017/24">24</a></span><span><a href="/2017/25">25</a></span></div>
+        <div id="day-picker"><span><a href="/2024/1">01</a></span><span><a href="/2024/2">02</a></span><span><a href="/2024/3">03</a></span><span><a href="/2024/4">04</a></span><span><a href="/2024/5">05</a></span><span><a href="/2024/6">06</a></span><span><a href="/2024/7">07</a></span><span><a href="/2024/8">08</a></span><span><a href="/2024/9">09</a></span><span><a href="/2024/10">10</a></span><span><a href="/2024/11">11</a></span><span><a href="/2024/12">12</a></span><span><a href="/2024/13">13</a></span><span><a href="/2024/14">14</a></span><span><a href="/2024/15">15</a></span><span class="current"><a href="/2024/16">16</a></span></div>
     </div>
     <div class="main">
         <div class="header-container">
@@ -264,8 +264,8 @@
 
             <div class="header-title">
                 <p class="text">Advent of Code</p>
-                <h2 id="problem-id">2017/5</h2>
-                <h2 id="problem-name">A Maze of Twisty Trampolines, All Alike</h2>
+                <h2 id="problem-id">2024/16</h2>
+                <h2 id="problem-name">Reindeer Maze</h2>
                 <p class="text">in C#</p>
                 <p class="text"></p>
                 <p class="text"><em>by <a style="text-decoration: underline"
@@ -275,36 +275,124 @@
         </div>
 
         <div class="content">
-            <div id="notes"><p>An urgent interrupt arrives from the CPU: it&#39;s trapped in a maze of jump instructions, and it would like assistance from any programs with spare cycles to help find the exit.</p>
-<p>The message includes a list of the offsets for each jump. Jumps are relative: <code>-1</code> moves to the previous instruction, and <code>2</code> skips the next one. Start at the first instruction in the list. The goal is to follow the jumps until one leads <em>outside</em> the list.</p>
-<p>Read the <a href="https://adventofcode.com/2017/day/5">full puzzle</a>.</p>
+            <div id="notes"><p>It&#39;s time again for the <a href="/2015/day/14">Reindeer Olympics</a>! This year, the big event is the <em>Reindeer Maze</em>, where the Reindeer compete for the <em>lowest score</em>.</p>
+<p>You and The Historians arrive to search for the Chief right as the event is about to start. It wouldn&#39;t hurt to watch a little, right?</p>
+<p><em>Visit the website for the full story and <a href="https://adventofcode.com/2024/day/16">full puzzle</a> description.</em></p>
+<p>I spent hell a lot of time on this one. I’m not sure why, because I had a good understanding of what to do for both parts. <code>Part 1</code> went reasonably well: I quickly implemented a priority queue-based approach to find the shortest path from the <code>start</code> state to the <code>goal</code>.</p>
+<p>For <code>Part 2</code>, I initially tried a few dead ends, but I found the right direction after about half an hour. The idea is to split the problem into two halves. First, we compute the optimal distances from every tile and direction to the goal node. This can be found in the <code>DistancesTo</code> function below. It is similar to how I implemented Part 1, using a priority queue, but I needed to walk backwards instead of forward.</p>
+<p>Once I have the distances, I can start an other round, now working forward from the start position and using a flood-fill-like algorithm to discover the optimal positions. This is easy to do with the distance map as a guide. I can maintain the remaining score along the path, and I just need to check if the distance from a potential next state equals to the score I still have to use. This logic can be found in the <code>FindBestSpots</code> function.</p>
 </div>
-            <div id="code-container"><pre class="hljs language-csharp"><code>﻿using System;
+            <div id="code-container"><pre class="hljs language-csharp"><code>namespace AdventOfCode.Y2024.Day16;
+
+using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
+using System.Numerics;
+using Map = System.Collections.Generic.Dictionary<System.Numerics.Complex, char>;
+using State = (System.Numerics.Complex pos, System.Numerics.Complex dir);
 
-namespace AdventOfCode.Y2017.Day05;
-
-[ProblemName("A Maze of Twisty Trampolines, All Alike")]
+[ProblemName("Reindeer Maze")]
 class Solution : Solver {
-    
-    public object PartOne(string input) => GetStepCount(input, x => x + 1);
 
-    public object PartTwo(string input) => GetStepCount(input, x => x < 3 ? x + 1 : x - 1);
+    static readonly Complex North = -Complex.ImaginaryOne;
+    static readonly Complex South = Complex.ImaginaryOne;
+    static readonly Complex West = -1;
+    static readonly Complex East = 1;
+    static readonly Complex[] Dirs = { North, East, West, South };
 
-    int GetStepCount(string input, Func<int, int> update) {
-        var numbers = input.Split('\n').Select(int.Parse).ToArray();
-        var i = 0;
-        var stepCount = 0;
-        while (i < numbers.Length && i >= 0) {
-            var jmp = numbers[i];
-            numbers[i] = update(numbers[i]);
-            i += jmp;
-            stepCount++;
-        }
-        return stepCount;
+    public object PartOne(string input) => FindDistance(GetMap(input));
+    public object PartTwo(string input) => FindBestSpots(GetMap(input));
+
+    int FindDistance(Map map) {
+        var dist = DistancesTo(map, Goal(map));
+        return dist[Start(map)];
     }
-}
-</code></pre></div>
+
+    // determines the number tiles that are on one of the shortest paths in the race.
+    int FindBestSpots(Map map) {
+        var dist = DistancesTo(map, Goal(map));
+        var start = Start(map);
+
+        // flood fill algorithm determines the best spots by following the shortest paths 
+        // using the distance map as guideline.
+
+        var q = new PriorityQueue<State, int>();
+        q.Enqueue(start, dist[start]);
+        var bestSpots = new HashSet<State> { start };
+
+        while (q.TryDequeue(out var state, out var remainingScore)) {
+            foreach (var (next, score) in Steps(map, state, forward: true)) {
+                if (bestSpots.Contains(next)) {
+                    continue;
+                }
+                var nextScore = remainingScore - score;
+                if (dist[next] == nextScore) {
+                    bestSpots.Add(next);
+                    q.Enqueue(next, nextScore);
+                }
+            }
+        }
+        return bestSpots.DistinctBy(state => state.pos).Count();
+    }
+
+    Dictionary<State, int> DistancesTo(Map map, Complex goal) {
+        var res = new Dictionary<State, int>();
+
+        // a flood fill algorithm, works backwards from the goal, and 
+        // computes the distances between any location in the map and the goal
+        var q = new PriorityQueue<State, int>();
+        foreach (var dir in Dirs) {
+            q.Enqueue((goal, dir), 0);
+            res[(goal, dir)] = 0;
+        }
+
+        while (q.TryDequeue(out var state, out var totalScore)) {
+            if (totalScore != res[state]) {
+                continue;
+            }
+            foreach (var (next, score) in Steps(map, state, forward: false)) {
+                var nextCost = totalScore + score;
+                if (res.ContainsKey(next) && res[next] < nextCost) {
+                    continue;
+                }
+
+                res[next] = nextCost;
+                q.Enqueue(next, nextCost);
+            }
+        }
+        return res;
+    }
+
+
+    // returns the possible next or previous states and the associated costs for a given state.
+    // in forward mode we scan the possible states from the start state towards the goal.
+    // in backward mode we are working backwards from the goal to the start.
+    IEnumerable<(State, int cost)> Steps(Map map, State state, bool forward) {
+        foreach (var dir in Dirs) {
+            if (dir == state.dir) {
+                var pos = forward ? state.pos + dir : state.pos - dir;
+                if (map.GetValueOrDefault(pos) != '#') {
+                    yield return ((pos, dir), 1);
+                }
+            } else if (dir != -state.dir) {
+                yield return ((state.pos, dir), 1000);
+            }
+        }
+    }
+
+    // store the points in a dictionary so that we can iterate over them and 
+    // to easily deal with points outside the area using GetValueOrDefault
+    Map GetMap(string input) {
+        var map = input.Split("\n");
+        return (
+            from y in Enumerable.Range(0, map.Length)
+            from x in Enumerable.Range(0, map[0].Length)
+            select new KeyValuePair<Complex, char>(Complex.ImaginaryOne * y + x, map[y][x])
+        ).ToDictionary();
+    }
+    Complex Goal(Map map) => map.Keys.Single(k => map[k] == 'E');
+    State Start(Map map) => (map.Keys.Single(k => map[k] == 'S'), East);
+}</code></pre></div>
             <div id="code-location"> <p>Please ☆ my <a href="https://github.com/encse/adventofcode/">repo</a> if you like it!</p></div>
         </div>
 
