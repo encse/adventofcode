@@ -17,7 +17,6 @@ class Solution : Solver {
     static readonly Complex South = Complex.ImaginaryOne;
     static readonly Complex West = -1;
     static readonly Complex East = 1;
-    static readonly Complex[] Dirs = { North, East, West, South };
 
     public object PartOne(string input) => FindBestScore(GetMap(input));
     public object PartTwo(string input) => FindBestSpots(GetMap(input));
@@ -46,12 +45,12 @@ class Solution : Solver {
     }
 
     Dictionary<State, int> Dijkstra(Map map, Complex goal) {
-        // Dijkstra algorithm; works backwards from the goal returns the
-        // distances to all tiles and directions.
+        // Dijkstra algorithm; works backwards from the goal, returns the
+        // distances to _all_ tiles and directions.
         var dist = new Dictionary<State, int>();
 
         var q = new PriorityQueue<State, int>();
-        foreach (var dir in Dirs) {
+        foreach (var dir in new[]{North, East, West, South}) {
             q.Enqueue((goal, dir), 0);
             dist[(goal, dir)] = 0;
         }
@@ -73,7 +72,7 @@ class Solution : Solver {
     // in forward mode we scan the possible states from the start state towards the goal.
     // in backward mode we are working backwards from the goal to the start.
     IEnumerable<(State, int cost)> Steps(Map map, State state, bool forward) {
-        foreach (var dir in Dirs) {
+        foreach (var dir in new[]{North, East, West, South}) {
             if (dir == state.dir) {
                 var pos = forward ? state.pos + dir : state.pos - dir;
                 if (map.GetValueOrDefault(pos) != '#') {
@@ -92,7 +91,7 @@ class Solution : Solver {
         return (
             from y in Enumerable.Range(0, map.Length)
             from x in Enumerable.Range(0, map[0].Length)
-            select new KeyValuePair<Complex, char>(Complex.ImaginaryOne * y + x, map[y][x])
+            select new KeyValuePair<Complex, char>(x + y * South, map[y][x])
         ).ToDictionary();
     }
     Complex Goal(Map map) => map.Keys.Single(k => map[k] == 'E');
