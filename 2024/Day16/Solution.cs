@@ -36,15 +36,15 @@ class Solution : Solver {
         q.Enqueue(start, dist[start]);
         var bestSpots = new HashSet<State> { start };
 
-        while (q.TryDequeue(out var state, out var totalScore)) {
+        while (q.TryDequeue(out var state, out var remainingScore)) {
             foreach (var (next, score) in Steps(map, state, forward: true)) {
                 if (bestSpots.Contains(next)) {
                     continue;
                 }
-
-                if (dist[next] + score == totalScore) {
+                var nextScore = remainingScore - score;
+                if (dist[next] == nextScore) {
                     bestSpots.Add(next);
-                    q.Enqueue(next, dist[next]);
+                    q.Enqueue(next, nextScore);
                 }
             }
         }
