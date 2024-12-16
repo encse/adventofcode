@@ -275,11 +275,11 @@
         </div>
 
         <div class="content">
-            <div id="notes"><p>It&#39;s time again for the <a href="/2015/day/14">Reindeer Olympics</a>! This year, the big event is the <em>Reindeer Maze</em>, where the Reindeer compete for the <em>lowest score</em>.</p>
+            <div id="notes"><p>It&#39;s time again for the <em>Reindeer Olympics</em>! This year, the big event is the <em>Reindeer Maze</em>, where the Reindeer compete for the <em>lowest score</em>.</p>
 <p>You and The Historians arrive to search for the Chief right as the event is about to start. It wouldn&#39;t hurt to watch a little, right?</p>
 <p><em>Visit the website for the full story and <a href="https://adventofcode.com/2024/day/16">full puzzle</a> description.</em></p>
-<p>I spent hell a lot of time on this one. I’m not sure why, because I had a good understanding of what to do for both parts. <code>Part 1</code> went reasonably well: I quickly used a priority based approach to find the shortest path from the <code>start</code> state to the <code>goal</code>.</p>
-<p>For <code>Part 2</code>, I initially tried a few dead ends, because I overcomplicate things as usual. But I found the right direction after about half an hour. The idea is to split the problem into two halves. First, we compute the optimal distances from every tile and direction to the goal node. This can be found using <em>Dijskstra&#39;s algorithm</em>.</p>
+<p>I spent hell a lot of time on this one. I’m not sure why, because I had a good understanding of what to do for both parts. <code>Part 1</code> went reasonably well: I quickly used a priority queue based approach to find the shortest path from the <code>start</code> state to the <code>goal</code>.</p>
+<p>For <code>Part 2</code>, I tried a few dead ends, because I overcomplicate things as usual. But I found the right direction after about half an hour. The idea is to split the problem into two halves. First, we compute the optimal distances from every tile and direction to the goal node. This can be found using <em>Dijskstra&#39;s algorithm</em>.</p>
 <p>Once I have the distances, I can start an other round, now working forward from the start position and using a flood-fill-like algorithm to discover the positions on the shortest path. This is easy to do with the distance map as a guide. I maintain the &#39;remaining score&#39; along the path, and just need to check if the distance from a potential next state equals to the score I still have to use. This logic can be found in the <code>FindBestSpots</code> function.</p>
 </div>
             <div id="code-container"><pre class="hljs language-csharp"><code>namespace AdventOfCode.Y2024.Day16;
