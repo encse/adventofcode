@@ -5,8 +5,8 @@ You and The Historians arrive to search for the Chief right as the event is abou
 
 _Visit the website for the full story and [full puzzle](https://adventofcode.com/2024/day/16) description._
 
-I spent hell a lot of time on this one. I’m not sure why, because I had a good understanding of what to do for both parts. `Part 1` went reasonably well: I quickly implemented a priority queue-based approach to find the shortest path from the `start` state to the `goal`.
+I spent hell a lot of time on this one. I’m not sure why, because I had a good understanding of what to do for both parts. `Part 1` went reasonably well: I quickly used a priority based approach to find the shortest path from the `start` state to the `goal`.
 
-For `Part 2`, I initially tried a few dead ends, but I found the right direction after about half an hour. The idea is to split the problem into two halves. First, we compute the optimal distances from every tile and direction to the goal node. This can be found in the `DistancesTo` function below. It is similar to how I implemented Part 1, using a priority queue, but I needed to walk backwards instead of forward.
+For `Part 2`, I initially tried a few dead ends, because I overcomplicate things as usual. But I found the right direction after about half an hour. The idea is to split the problem into two halves. First, we compute the optimal distances from every tile and direction to the goal node. This can be found using _Dijskstra's algorithm_.
 
-Once I have the distances, I can start an other round, now working forward from the start position and using a flood-fill-like algorithm to discover the optimal positions. This is easy to do with the distance map as a guide. I can maintain the remaining score along the path, and I just need to check if the distance from a potential next state equals to the score I still have to use. This logic can be found in the `FindBestSpots` function.
+Once I have the distances, I can start an other round, now working forward from the start position and using a flood-fill-like algorithm to discover the positions on the shortest path. This is easy to do with the distance map as a guide. I maintain the 'remaining score' along the path, and just need to check if the distance from a potential next state equals to the score I still have to use. This logic can be found in the `FindBestSpots` function.
