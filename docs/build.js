@@ -113,6 +113,18 @@ function generateDayPicker(year, day, yearToDays) {
     }
     return res;
 }
+
+function escapeHtml(st) {
+    const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return st.replace(/[&<>"']/g, (char) => map[char]);
+}
+
 const template = loadTemplate('docs/template.html');
 const redirectTemplate = loadTemplate('docs/redirect_template.html')
 
@@ -150,7 +162,7 @@ for (const { year, day, name, notes, code, illustration } of findReadmes('.')) {
         'day-picker': generateDayPicker(year, day, yearToDays),
         'current-year': `${currentYear}`,
         notes,
-        code,
+        code: escapeHtml(code),
     });
     const dst = `build/${year}/${day}`;
     fs.mkdirSync(dst, { recursive: true });
