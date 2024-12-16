@@ -301,7 +301,6 @@ class Solution : Solver {
     static readonly Complex South = Complex.ImaginaryOne;
     static readonly Complex West = -1;
     static readonly Complex East = 1;
-    static readonly Complex[] Dirs = { North, East, West, South };
 
     public object PartOne(string input) =&gt; FindBestScore(GetMap(input));
     public object PartTwo(string input) =&gt; FindBestSpots(GetMap(input));
@@ -330,12 +329,12 @@ class Solution : Solver {
     }
 
     Dictionary&lt;State, int&gt; Dijkstra(Map map, Complex goal) {
-        // Dijkstra algorithm; works backwards from the goal returns the
-        // distances to all tiles and directions.
+        // Dijkstra algorithm; works backwards from the goal, returns the
+        // distances to _all_ tiles and directions.
         var dist = new Dictionary&lt;State, int&gt;();
 
         var q = new PriorityQueue&lt;State, int&gt;();
-        foreach (var dir in Dirs) {
+        foreach (var dir in new[]{North, East, West, South}) {
             q.Enqueue((goal, dir), 0);
             dist[(goal, dir)] = 0;
         }
@@ -357,7 +356,7 @@ class Solution : Solver {
     // in forward mode we scan the possible states from the start state towards the goal.
     // in backward mode we are working backwards from the goal to the start.
     IEnumerable&lt;(State, int cost)&gt; Steps(Map map, State state, bool forward) {
-        foreach (var dir in Dirs) {
+        foreach (var dir in new[]{North, East, West, South}) {
             if (dir == state.dir) {
                 var pos = forward ? state.pos + dir : state.pos - dir;
                 if (map.GetValueOrDefault(pos) != &#039;#&#039;) {
@@ -376,7 +375,7 @@ class Solution : Solver {
         return (
             from y in Enumerable.Range(0, map.Length)
             from x in Enumerable.Range(0, map[0].Length)
-            select new KeyValuePair&lt;Complex, char&gt;(Complex.ImaginaryOne * y + x, map[y][x])
+            select new KeyValuePair&lt;Complex, char&gt;(x + y * South, map[y][x])
         ).ToDictionary();
     }
     Complex Goal(Map map) =&gt; map.Keys.Single(k =&gt; map[k] == &#039;E&#039;);
