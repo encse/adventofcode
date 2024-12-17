@@ -3,6 +3,11 @@ const path = require('path');
 const marked = require('marked');
 
 
+function media(dir){
+    const files = fs.readdirSync(dir);
+    return files.filter(file => path.extname(file).toLowerCase() === '.gif').map(file => path.join(dir, file));
+}
+
 function* findReadmes(dir) {
     const entries = fs.readdirSync(dir, { withFileTypes: true });
 
@@ -37,6 +42,7 @@ function* findReadmes(dir) {
                         }
                     }
 
+                    
                     yield {
                         year,
                         day,
@@ -45,6 +51,7 @@ function* findReadmes(dir) {
                         notes: marked.parse(lines.join('\n')),
                         code: fs.readFileSync(solutionPath, 'utf8'),
                         illustration: fs.existsSync(illustrationPath) ? illustrationPath : 'docs/elf.jpeg',
+                        media: media(fullPath)
                     };
                 }
             }
@@ -153,7 +160,7 @@ fs.writeFileSync(path.join('build', 'index.html'), filledRedirectTemplate);
 
 const currentYear = new Date().getFullYear();
 // Iterate over readme.md files and print filled templates
-for (const { year, day, name, notes, code, illustration } of findReadmes('.')) {
+for (const { year, day, name, notes, code, illustration, media } of findReadmes('.')) {
     const filledHtml = fillTemplate(template, {
         url: `https://aoc.csokavar.hu/${year}/${day}/`,
         'problem-id': `${year}/${day}`,
@@ -168,5 +175,8 @@ for (const { year, day, name, notes, code, illustration } of findReadmes('.')) {
     fs.mkdirSync(dst, { recursive: true });
     fs.writeFileSync(path.join(dst, 'index.html'), filledHtml);
     fs.copyFileSync(illustration, path.join(dst, 'illustration.jpeg'));
+    for(let file of media) {
+        fs.copyFileSync(file, path.join(dst, path.basename(file)));
+    }
 }
 

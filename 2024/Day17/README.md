@@ -20,3 +20,7 @@ _lowest few bits_ of the input. Then the input gets shifted by a small amount, a
 There is _some interconnection_ between the consecutive numbers, so one cannot just calculate the result independently 
 for each. But I was able to come up with a _recursive solution_ that generates the input _backwards_. Once we know the 
 higher bits, we can try all combinations for the next 3 bits, and so on down to the first bit.
+
+As an added bonus I implemented (part of) the emulator in [VIC-20 BASIC](https://hu.wikipedia.org/wiki/Commodore_VIC-20). This is how it runs the second sample that prints out its own source code.
+
+![vic20.gif](vic20.gif)
