@@ -57,10 +57,12 @@ class Solution : Solver {
             }
         }
     }
+    
     (long[] state, long[] program) Parse(string input) {
         var blocks = input.Split("\n\n").Select(ParseNums).ToArray();
         return (blocks[0], blocks[1]);
     }
+    
     long[] ParseNums(string st) =>
         Regex.Matches(st, @"\d+", RegexOptions.Multiline)
             .Select(m => long.Parse(m.Value))
