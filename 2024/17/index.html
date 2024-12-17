@@ -216,6 +216,10 @@
             /* hyphens: auto; */
         }
 
+        .content img {
+            width: 70%;
+        }
+
 
         @media (max-width: 1024px) {
             .main {
@@ -290,6 +294,8 @@ but smile when I read the problem description in the morning. </p>
 <p>There is <em>some interconnection</em> between the consecutive numbers, so one cannot just calculate the result independently 
 for each. But I was able to come up with a <em>recursive solution</em> that generates the input <em>backwards</em>. Once we know the 
 higher bits, we can try all combinations for the next 3 bits, and so on down to the first bit.</p>
+<p>As an added bonus I implemented (part of) the emulator in <a href="https://hu.wikipedia.org/wiki/Commodore_VIC-20">VIC-20 BASIC</a>. This is how it runs the second sample that prints out its own source code.</p>
+<p><img src="vic20.gif" alt="vic20.gif"></p>
 </div>
             <div id="code-container"><pre class="hljs language-csharp"><code>namespace AdventOfCode.Y2024.Day17;
 
