@@ -15,13 +15,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/a11y-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js"></script>
-    <title>Advent of Code 2019/10 'Monitoring Station'' in C# by encse</title>
+    <title>Advent of Code 2024/17 'Chronospatial Computer'' in C# by encse</title>
 
     <head>
-        <meta property="og:title" content="Advent of Code 2019/10 'Monitoring Station' in C# by encse">
-        <meta property="og:description" content="C# solution to the 'Monitoring Station' Advent of Code problem.">
-        <meta property="og:image" content="https://aoc.csokavar.hu/2019/10//illustration.jpeg">
-        <meta property="og:url" content="https://aoc.csokavar.hu/2019/10/">
+        <meta property="og:title" content="Advent of Code 2024/17 'Chronospatial Computer' in C# by encse">
+        <meta property="og:description" content="C# solution to the 'Chronospatial Computer' Advent of Code problem.">
+        <meta property="og:image" content="https://aoc.csokavar.hu/2024/17//illustration.jpeg">
+        <meta property="og:url" content="https://aoc.csokavar.hu/2024/17/">
         <meta property="og:type" content="website">
       </head>
 
@@ -250,11 +250,11 @@
     <div id="top-nav">
         <div id="year-picker"><nav class="dropdown">
             <input type="checkbox" id="dropdown-toggle" class="dropdown-toggle">
-            <span class="current"><label id="dropdown-label" for="dropdown-toggle">2019</label></span>
+            <span class="current"><label id="dropdown-label" for="dropdown-toggle">2024</label></span>
             <div class="dropdown-content"><a href="/2015/25/">2015</a><a href="/2016/25/">2016</a><a href="/2017/25/">2017</a><a href="/2018/25/">2018</a><a href="/2019/25/">2019</a><a href="/2020/25/">2020</a><a href="/2021/25/">2021</a><a href="/2022/25/">2022</a><a href="/2023/25/">2023</a><a href="/2024/17/">2024</a></div>
         </nav>
      </div>
-        <div id="day-picker"><span><a href="/2019/1">01</a></span><span><a href="/2019/2">02</a></span><span><a href="/2019/3">03</a></span><span><a href="/2019/4">04</a></span><span><a href="/2019/5">05</a></span><span><a href="/2019/6">06</a></span><span><a href="/2019/7">07</a></span><span><a href="/2019/8">08</a></span><span><a href="/2019/9">09</a></span><span class="current"><a href="/2019/10">10</a></span><span><a href="/2019/11">11</a></span><span><a href="/2019/12">12</a></span><span><a href="/2019/13">13</a></span><span><a href="/2019/14">14</a></span><span><a href="/2019/15">15</a></span><span><a href="/2019/16">16</a></span><span><a href="/2019/17">17</a></span><span><a href="/2019/18">18</a></span><span><a href="/2019/19">19</a></span><span><a href="/2019/20">20</a></span><span><a href="/2019/21">21</a></span><span><a href="/2019/22">22</a></span><span><a href="/2019/23">23</a></span><span><a href="/2019/24">24</a></span><span><a href="/2019/25">25</a></span></div>
+        <div id="day-picker"><span><a href="/2024/1">01</a></span><span><a href="/2024/2">02</a></span><span><a href="/2024/3">03</a></span><span><a href="/2024/4">04</a></span><span><a href="/2024/5">05</a></span><span><a href="/2024/6">06</a></span><span><a href="/2024/7">07</a></span><span><a href="/2024/8">08</a></span><span><a href="/2024/9">09</a></span><span><a href="/2024/10">10</a></span><span><a href="/2024/11">11</a></span><span><a href="/2024/12">12</a></span><span><a href="/2024/13">13</a></span><span><a href="/2024/14">14</a></span><span><a href="/2024/15">15</a></span><span><a href="/2024/16">16</a></span><span class="current"><a href="/2024/17">17</a></span></div>
     </div>
     <div class="main">
         <div class="header-container">
@@ -264,8 +264,8 @@
 
             <div class="header-title">
                 <p class="text">Advent of Code</p>
-                <h2 id="problem-id">2019/10</h2>
-                <h2 id="problem-name">Monitoring Station</h2>
+                <h2 id="problem-id">2024/17</h2>
+                <h2 id="problem-name">Chronospatial Computer</h2>
                 <p class="text">in C#</p>
                 <p class="text"></p>
                 <p class="text"><em>by <a style="text-decoration: underline"
@@ -275,101 +275,92 @@
         </div>
 
         <div class="content">
-            <div id="notes"><p>You fly into the asteroid belt and reach the Ceres monitoring station.  The Elves here have an emergency: they&#39;re having trouble tracking all of the asteroids and can&#39;t be sure they&#39;re safe.</p>
-<p>The Elves would like to build a new monitoring station in a nearby area of space; they hand you a map of all of the asteroids in that region (your puzzle input).</p>
-<p>Read the <a href="https://adventofcode.com/2019/day/10">full puzzle</a>.</p>
+            <div id="notes"><p>The Historians push the button on their strange device, but this time, you all just feel like you&#39;re <em>falling</em>.</p>
+<p>&quot;Situation critical&quot;, the device announces in a familiar voice. &quot;Bootstrapping process failed. Initializing debugger....&quot;</p>
+<p><em>Visit the website for the full story and <a href="https://adventofcode.com/2024/day/17">full puzzle</a> description.</em></p>
+<p>I&#39;m not a big fan of <em>disassembly</em> tasks, but they come up almost every year. The first part of the problem, which 
+I <em>actually</em> liked, was to write an interpreter for an elvish computer (i.e. one with a weird instruction set). This 
+is really easy to do with a simple for loop and switching on the different opcodes.</p>
+<p>The second half was a bit harder, as I had to understand what&#39;s going on in the program. We had to generate inputs that 
+would force the program to print out its own source.  Well, a <em>quine</em> is a computer program that takes no input and 
+produces a copy of its own source code as its only output. Although our program was not a real quine, I couldn&#39;t help 
+but smile when I read the problem description in the morning. </p>
+<p>Fortunately, the algorithm was not that complicated once I realized that the <em>next output number</em> depends only on the 
+<em>lowest few bits</em> of the input. Then the input gets shifted by a small amount, and this continues until the end. </p>
+<p>There is <em>some interconnection</em> between the consecutive numbers, so one cannot just calculate the result independently 
+for each. But I was able to come up with a <em>recursive solution</em> that generates the input <em>backwards</em>. Once we know the 
+higher bits, we can try all combinations for the next 3 bits, and so on down to the first bit.</p>
 </div>
-            <div id="code-container"><pre class="hljs language-csharp"><code>using System;
+            <div id="code-container"><pre class="hljs language-csharp"><code>namespace AdventOfCode.Y2024.Day17;
+
 using System.Collections.Generic;
 using System.Linq;
-using AsteroidsByDir = System.Collections.Generic.Dictionary&lt;
-(int drow, int dcol), System.Collections.Generic.List&lt;(int irow, int icol)&gt;
-&gt;;
+using System.Text.RegularExpressions;
 
-namespace AdventOfCode.Y2019.Day10;
-
-[ProblemName(&quot;Monitoring Station&quot;)]
+[ProblemName(&quot;Chronospatial Computer&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) =&gt; SelectStationPosition(input).asteroidsByDir.Count;
-
-    public object PartTwo(string input) {
-        var asteroid = Destroy(input).ElementAt(199);
-        return (asteroid.icol * 100 + asteroid.irow);
+    enum Opcode {
+        Adv, Bxl, Bst, Jnz, Bxc, Out, Bdv, Cdv
     }
 
-    IEnumerable&lt;(int irow, int icol)&gt; Destroy(string input) {
-        var (station, asteroidsByDir) = SelectStationPosition(input);
+    public object PartOne(string input) =&gt; Run(input);
+    public object PartTwo(string input) =&gt; GenerateA(Parse(input).program.ToList()).Min();
 
-        foreach (var dir in asteroidsByDir.Keys.ToArray()) {
-            asteroidsByDir[dir] = asteroidsByDir[dir]
-                .OrderBy(a =&gt; Math.Abs(a.irow - station.irow) + Math.Abs(a.icol - station.icol))
-                .ToList();
+    string Run(string input) {
+        var (state, program) = Parse(input);
+        var combo = (long op) =&gt; op &lt; 4 ? (int)op : (int)state[op - 4];
+        var res = new List&lt;int&gt;();
+        for (var ip = 0; ip &lt; program.Length; ip += 2) {
+            switch ((Opcode)program[ip], program[ip + 1]) {
+                case (Opcode.Adv, var op): state[0] = state[0] &gt;&gt; combo(op); break;
+                case (Opcode.Bdv, var op): state[1] = state[0] &gt;&gt; combo(op); break;
+                case (Opcode.Cdv, var op): state[2] = state[0] &gt;&gt; combo(op); break;
+                case (Opcode.Bxl, var op): state[1] = state[1] ^ op; break;
+                case (Opcode.Bst, var op): state[1] = combo(op) % 8; break;
+                case (Opcode.Jnz, var op): ip = state[0] == 0 ? ip : (int)op - 2; break;
+                case (Opcode.Bxc, var op): state[1] = state[1] ^ state[2]; break;
+                case (Opcode.Out, var op): res.Add(combo(op) % 8); break;
+            }
+        }
+        return string.Join(&quot;,&quot;, res);
+    }
+
+    /*
+        Determines register A for the given output. The search works recursively and in reverse order, 
+        starting from the last number to be printed and ending with the first.
+    */
+    IEnumerable&lt;long&gt; GenerateA(List&lt;long&gt; output) {
+        if (!output.Any()) {
+            yield return 0;
+            yield break;
         }
 
-        foreach (var dir in Rotate(asteroidsByDir.Keys)) {
-            if (asteroidsByDir.ContainsKey(dir)) {
-                var asteroid = asteroidsByDir[dir].First();
-                asteroidsByDir[dir].RemoveAt(0);
-
-                yield return asteroid;
-
-                if (!asteroidsByDir[dir].Any()) {
-                    asteroidsByDir.Remove(dir);
+        foreach (var ah in GenerateA(output[1..])) {
+            for (var al = 0; al &lt; 8; al++) {
+                var a = ah * 8 + al;
+                long b = a % 8;
+                b = b ^ 3;
+                var c = a &gt;&gt; (int)b;
+                b = b ^ c;
+                b = b ^ 5;
+                if (output[0] == b % 8) {
+                    yield return a;
                 }
             }
         }
     }
-
-    IEnumerable&lt;(int drow, int dcol)&gt; Rotate(IEnumerable&lt;(int drow, int dcol)&gt; dirs) {
-        var ordered = dirs.OrderBy(dir =&gt; -Math.Atan2(dir.dcol, dir.drow)).ToList();
-        for (var i = 0; ; i++) {
-            yield return ordered[i % ordered.Count];
-        }
+    
+    (long[] state, long[] program) Parse(string input) {
+        var blocks = input.Split(&quot;\n\n&quot;).Select(ParseNums).ToArray();
+        return (blocks[0], blocks[1]);
     }
-
-    ((int irow, int icol) station, AsteroidsByDir asteroidsByDir) SelectStationPosition(string input) {
-
-        var res = ((0, 0), asteroidsByDir: new AsteroidsByDir());
-        var asteroids = Asteroids(input);
-
-        foreach (var station in asteroids) {
-            var asteroidsByDir = new AsteroidsByDir();
-            foreach (var asteroid in asteroids) {
-                if (station != asteroid) {
-                    var (rowDir, colDir) = (asteroid.irow - station.irow, asteroid.icol - station.icol);
-                    var gcd = Math.Abs(Gcd(rowDir, colDir));
-                    var dir = (rowDir / gcd, colDir / gcd);
-
-                    if (!asteroidsByDir.ContainsKey(dir)) {
-                        asteroidsByDir[dir] = new List&lt;(int irow, int icol)&gt;();
-                    }
-                    asteroidsByDir[dir].Add(asteroid);
-                }
-            }
-            if (asteroidsByDir.Count &gt; res.asteroidsByDir.Count) {
-                res = (station, asteroidsByDir);
-            }
-        }
-
-        return res;
-    }
-
-    List&lt;(int irow, int icol)&gt; Asteroids(string input) {
-        var map = input.Split(&quot;\n&quot;);
-        var (crow, ccol) = (map.Length, map[0].Length);
-
-        return (
-            from irow in Enumerable.Range(0, crow)
-            from icol in Enumerable.Range(0, ccol)
-            where map[irow][icol] == &#039;#&#039;
-            select (irow, icol)
-        ).ToList();
-    }
-
-   int Gcd(int a, int b) =&gt; b == 0 ? a : Gcd(b, a % b);
-}
-</code></pre></div>
+    
+    long[] ParseNums(string st) =&gt;
+        Regex.Matches(st, @&quot;\d+&quot;, RegexOptions.Multiline)
+            .Select(m =&gt; long.Parse(m.Value))
+            .ToArray();
+}</code></pre></div>
             <div id="code-location"> <p>Please ☆ my <a href="https://github.com/encse/adventofcode/">repo</a> if you like it!</p></div>
         </div>
 
