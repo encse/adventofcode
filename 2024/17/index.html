@@ -294,7 +294,8 @@ but smile when I read the problem description in the morning. </p>
 <p>There is <em>some interconnection</em> between the consecutive numbers, so one cannot just calculate the result independently 
 for each. But I was able to come up with a <em>recursive solution</em> that generates the input <em>backwards</em>. Once we know the 
 higher bits, we can try all combinations for the next 3 bits, and so on down to the first bit.</p>
-<p>As an added bonus I implemented (part of) the emulator in <a href="https://hu.wikipedia.org/wiki/Commodore_VIC-20">VIC-20 BASIC</a>. This is how it runs the second sample that prints out its own source code.</p>
+<p>As an added bonus I implemented (part of) the emulator in <a href="https://hu.wikipedia.org/wiki/Commodore_VIC-20">VIC-20 BASIC</a>. 
+This is how it runs the second sample that prints out its own source code.</p>
 <p><img src="vic20.gif" alt="vic20.gif"></p>
 </div>
             <div id="code-container"><pre class="hljs language-csharp"><code>namespace AdventOfCode.Y2024.Day17;
@@ -310,63 +311,62 @@ class Solution : Solver {
         Adv, Bxl, Bst, Jnz, Bxc, Out, Bdv, Cdv
     }
 
-    public object PartOne(string input) =&gt; Run(input);
-    public object PartTwo(string input) =&gt; GenerateA(Parse(input).program.ToList()).Min();
-
-    string Run(string input) {
+    public object PartOne(string input) {
         var (state, program) = Parse(input);
-        var combo = (long op) =&gt; op &lt; 4 ? (int)op : (int)state[op - 4];
-        var res = new List&lt;int&gt;();
-        for (var ip = 0; ip &lt; program.Length; ip += 2) {
-            switch ((Opcode)program[ip], program[ip + 1]) {
-                case (Opcode.Adv, var op): state[0] = state[0] &gt;&gt; combo(op); break;
-                case (Opcode.Bdv, var op): state[1] = state[0] &gt;&gt; combo(op); break;
-                case (Opcode.Cdv, var op): state[2] = state[0] &gt;&gt; combo(op); break;
+        return string.Join(&quot;,&quot;, Run(state, program));
+    } 
+    public object PartTwo(string input) {
+        var (_, program) = Parse(input);
+        return GenerateA(program, program).Min();
+    }
+
+    List&lt;long&gt; Run(List&lt;long&gt; state, List&lt;long&gt; program) {
+        var combo = (int op) =&gt; op &lt; 4 ? op : state[op - 4];
+        var res = new List&lt;long&gt;();
+        for (var ip = 0; ip &lt; program.Count; ip += 2) {
+            switch ((Opcode)program[ip], (int)program[ip + 1]) {
+                case (Opcode.Adv, var op): state[0] = state[0] &gt;&gt; (int)combo(op); break;
+                case (Opcode.Bdv, var op): state[1] = state[0] &gt;&gt; (int)combo(op); break;
+                case (Opcode.Cdv, var op): state[2] = state[0] &gt;&gt; (int)combo(op); break;
                 case (Opcode.Bxl, var op): state[1] = state[1] ^ op; break;
                 case (Opcode.Bst, var op): state[1] = combo(op) % 8; break;
-                case (Opcode.Jnz, var op): ip = state[0] == 0 ? ip : (int)op - 2; break;
+                case (Opcode.Jnz, var op): ip = state[0] == 0 ? ip : op - 2; break;
                 case (Opcode.Bxc, var op): state[1] = state[1] ^ state[2]; break;
                 case (Opcode.Out, var op): res.Add(combo(op) % 8); break;
             }
         }
-        return string.Join(&quot;,&quot;, res);
+        return res;
     }
 
     /*
-        Determines register A for the given output. The search works recursively and in reverse order, 
-        starting from the last number to be printed and ending with the first.
+        Determines register A for the given output. The search works recursively and in 
+        reverse order, starting from the last number to be printed and ending with the first.
     */
-    IEnumerable&lt;long&gt; GenerateA(List&lt;long&gt; output) {
+    IEnumerable&lt;long&gt; GenerateA(List&lt;long&gt; program, List&lt;long&gt; output) {
         if (!output.Any()) {
             yield return 0;
             yield break;
         }
 
-        // this loop is pretty much the assembly code of the program reimplemented in c#
-        foreach (var ah in GenerateA(output[1..])) {
+        foreach (var ah in GenerateA(program, output[1..])) {
             for (var al = 0; al &lt; 8; al++) {
                 var a = ah * 8 + al;
-                long b = a % 8;
-                b = b ^ 3;
-                var c = a &gt;&gt; (int)b;
-                b = b ^ c;
-                b = b ^ 5;
-                if (output[0] == b % 8) {
+                if (Run([a, 0, 0], program).SequenceEqual(output)) {
                     yield return a;
                 }
             }
         }
     }
     
-    (long[] state, long[] program) Parse(string input) {
+    (List&lt;long&gt; state, List&lt;long&gt; program) Parse(string input) {
         var blocks = input.Split(&quot;\n\n&quot;).Select(ParseNums).ToArray();
         return (blocks[0], blocks[1]);
     }
     
-    long[] ParseNums(string st) =&gt;
+    List&lt;long&gt; ParseNums(string st) =&gt;
         Regex.Matches(st, @&quot;\d+&quot;, RegexOptions.Multiline)
             .Select(m =&gt; long.Parse(m.Value))
-            .ToArray();
+            .ToList();
 }</code></pre></div>
             <div id="code-location"> <p>Please ☆ my <a href="https://github.com/encse/adventofcode/">repo</a> if you like it!</p></div>
         </div>
