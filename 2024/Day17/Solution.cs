@@ -43,6 +43,7 @@ class Solution : Solver {
             yield break;
         }
 
+        // this loop is pretty much the assembly code of the program reimplemented in c#
         foreach (var ah in GenerateA(output[1..])) {
             for (var al = 0; al < 8; al++) {
                 var a = ah * 8 + al;
