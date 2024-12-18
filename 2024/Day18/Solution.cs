@@ -8,8 +8,7 @@ using System.Numerics;
 [ProblemName("RAM Run")]
 class Solution : Solver {
 
-    public object PartOne(string input) =>
-        Distance(GetBlocks(input), 1024);
+    public object PartOne(string input) => Distance(GetBlocks(input).Take(1024));
 
     public object PartTwo(string input) {
         // find the first block position that will cut off the goal position
@@ -19,7 +18,7 @@ class Solution : Solver {
         var (lo, hi) = (0, blocks.Length);
         while (hi - lo > 1) {
             var m = (lo + hi) / 2;
-            if (Distance(blocks, m) == null) {
+            if (Distance(blocks.Take(m)) == null) {
                 hi = m;
             } else {
                 lo = m;
@@ -28,10 +27,10 @@ class Solution : Solver {
         return $"{blocks[lo].Real},{blocks[lo].Imaginary}";
     }
 
-    int? Distance(Complex[] blocks, int take) {
+    int? Distance(IEnumerable<Complex> blocks) {
         // our standard priority queue based path finding
         
-        var blocked = blocks.Take(take).ToHashSet();
+        var blockSet = blocks.ToHashSet();
         var size = 70;
         var goal = size + size * Complex.ImaginaryOne;
         var q = new PriorityQueue<Complex, int>();
@@ -45,7 +44,7 @@ class Solution : Solver {
                 foreach (var dir in new[] { 1, -1, Complex.ImaginaryOne, -Complex.ImaginaryOne }) {
                     var posT = pos + dir;
                     if (!seen.Contains(posT) &&
-                        !blocked.Contains(posT) &&
+                        !blockSet.Contains(posT) &&
                         0 <= posT.Imaginary && posT.Imaginary <= size &&
                         0 <= posT.Real && posT.Real <= size
                     ) {
