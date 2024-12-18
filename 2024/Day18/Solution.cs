@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Numerics;
+using AngleSharp.Common;
 
 [ProblemName("RAM Run")]
 class Solution : Solver {
@@ -30,27 +31,25 @@ class Solution : Solver {
     int? Distance(IEnumerable<Complex> blocks) {
         // our standard priority queue based path finding
         
-        var blockSet = blocks.ToHashSet();
         var size = 70;
-        var goal = size + size * Complex.ImaginaryOne;
+        var (start, goal) = (0, size + size * Complex.ImaginaryOne);
+        var blocked = blocks.Concat(start).ToHashSet();
+    
         var q = new PriorityQueue<Complex, int>();
-        q.Enqueue(0, 0);
-        var seen = new HashSet<Complex>(0);
-
+        q.Enqueue(start, 0);
         while (q.TryDequeue(out var pos, out var dist)) {
             if (pos == goal) {
                 return dist;
-            } else {
-                foreach (var dir in new[] { 1, -1, Complex.ImaginaryOne, -Complex.ImaginaryOne }) {
-                    var posT = pos + dir;
-                    if (!seen.Contains(posT) &&
-                        !blockSet.Contains(posT) &&
-                        0 <= posT.Imaginary && posT.Imaginary <= size &&
-                        0 <= posT.Real && posT.Real <= size
-                    ) {
-                        q.Enqueue(posT, dist + 1);
-                        seen.Add(posT);
-                    }
+            } 
+
+            foreach (var dir in new[] { 1, -1, Complex.ImaginaryOne, -Complex.ImaginaryOne }) {
+                var posT = pos + dir;
+                if (!blocked.Contains(posT) &&
+                    0 <= posT.Imaginary && posT.Imaginary <= size &&
+                    0 <= posT.Real && posT.Real <= size
+                ) {
+                    q.Enqueue(posT, dist + 1);
+                    blocked.Add(posT);
                 }
             }
         }
