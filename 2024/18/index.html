@@ -302,7 +302,7 @@ class Solution : Solver {
         // we can use a binary search for this
 
         var blocks = GetBlocks(input);
-        var (lo, hi) = (0, blocks.Length - 1);
+        var (lo, hi) = (0, blocks.Length);
         while (hi - lo &gt; 1) {
             var m = (lo + hi) / 2;
             if (Distance(blocks, m) == null) {
