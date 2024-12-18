@@ -15,13 +15,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/a11y-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js"></script>
-    <title>Advent of Code 2021/22 'Reactor Reboot'' in C# by encse</title>
+    <title>Advent of Code 2024/18 'RAM Run'' in C# by encse</title>
 
     <head>
-        <meta property="og:title" content="Advent of Code 2021/22 'Reactor Reboot' in C# by encse">
-        <meta property="og:description" content="C# solution to the 'Reactor Reboot' Advent of Code problem.">
-        <meta property="og:image" content="https://aoc.csokavar.hu/2021/22//illustration.jpeg">
-        <meta property="og:url" content="https://aoc.csokavar.hu/2021/22/">
+        <meta property="og:title" content="Advent of Code 2024/18 'RAM Run' in C# by encse">
+        <meta property="og:description" content="C# solution to the 'RAM Run' Advent of Code problem.">
+        <meta property="og:image" content="https://aoc.csokavar.hu/2024/18//illustration.jpeg">
+        <meta property="og:url" content="https://aoc.csokavar.hu/2024/18/">
         <meta property="og:type" content="website">
       </head>
 
@@ -254,11 +254,11 @@
     <div id="top-nav">
         <div id="year-picker"><nav class="dropdown">
             <input type="checkbox" id="dropdown-toggle" class="dropdown-toggle">
-            <span class="current"><label id="dropdown-label" for="dropdown-toggle">2021</label></span>
+            <span class="current"><label id="dropdown-label" for="dropdown-toggle">2024</label></span>
             <div class="dropdown-content"><a href="/2015/25/">2015</a><a href="/2016/25/">2016</a><a href="/2017/25/">2017</a><a href="/2018/25/">2018</a><a href="/2019/25/">2019</a><a href="/2020/25/">2020</a><a href="/2021/25/">2021</a><a href="/2022/25/">2022</a><a href="/2023/25/">2023</a><a href="/2024/18/">2024</a></div>
         </nav>
      </div>
-        <div id="day-picker"><span><a href="/2021/1">01</a></span><span><a href="/2021/2">02</a></span><span><a href="/2021/3">03</a></span><span><a href="/2021/4">04</a></span><span><a href="/2021/5">05</a></span><span><a href="/2021/6">06</a></span><span><a href="/2021/7">07</a></span><span><a href="/2021/8">08</a></span><span><a href="/2021/9">09</a></span><span><a href="/2021/10">10</a></span><span><a href="/2021/11">11</a></span><span><a href="/2021/12">12</a></span><span><a href="/2021/13">13</a></span><span><a href="/2021/14">14</a></span><span><a href="/2021/15">15</a></span><span><a href="/2021/16">16</a></span><span><a href="/2021/17">17</a></span><span><a href="/2021/18">18</a></span><span><a href="/2021/19">19</a></span><span><a href="/2021/20">20</a></span><span><a href="/2021/21">21</a></span><span class="current"><a href="/2021/22">22</a></span><span><a href="/2021/23">23</a></span><span><a href="/2021/24">24</a></span><span><a href="/2021/25">25</a></span></div>
+        <div id="day-picker"><span><a href="/2024/1">01</a></span><span><a href="/2024/2">02</a></span><span><a href="/2024/3">03</a></span><span><a href="/2024/4">04</a></span><span><a href="/2024/5">05</a></span><span><a href="/2024/6">06</a></span><span><a href="/2024/7">07</a></span><span><a href="/2024/8">08</a></span><span><a href="/2024/9">09</a></span><span><a href="/2024/10">10</a></span><span><a href="/2024/11">11</a></span><span><a href="/2024/12">12</a></span><span><a href="/2024/13">13</a></span><span><a href="/2024/14">14</a></span><span><a href="/2024/15">15</a></span><span><a href="/2024/16">16</a></span><span><a href="/2024/17">17</a></span><span class="current"><a href="/2024/18">18</a></span></div>
     </div>
     <div class="main">
         <div class="header-container">
@@ -268,8 +268,8 @@
 
             <div class="header-title">
                 <p class="text">Advent of Code</p>
-                <h2 id="problem-id">2021/22</h2>
-                <h2 id="problem-name">Reactor Reboot</h2>
+                <h2 id="problem-id">2024/18</h2>
+                <h2 id="problem-name">RAM Run</h2>
                 <p class="text">in C#</p>
                 <p class="text"></p>
                 <p class="text"><em>by <a style="text-decoration: underline"
@@ -279,83 +279,77 @@
         </div>
 
         <div class="content">
-            <div id="notes"><p>Operating at these extreme ocean depths has overloaded the submarine&#39;s reactor; it needs to be rebooted.</p>
-<p>The reactor core is made up of a large 3-dimensional grid made up entirely of cubes, one cube per integer 3-dimensional coordinate (<code>x,y,z</code>). Each cube can be either <em>on</em> or <em>off</em>; at the start of the reboot process, they are all <em>off</em>. (Could it be an old model of a reactor you&#39;ve seen <a href="/2020/day/17">before</a>?)</p>
-<p>Read the <a href="https://adventofcode.com/2021/day/22">full puzzle</a>.</p>
+            <div id="notes"><p>You and The Historians look a lot more pixelated than you remember. You&#39;re <a href="/2017/day/2">inside a computer</a> at the North Pole!</p>
+<p>Just as you&#39;re about to check out your surroundings, a program runs up to you. &quot;This region of memory isn&#39;t safe! The User misunderstood what a <a href="https://en.wikipedia.org/wiki/Pushdown_automaton">pushdown automaton</a> is and their algorithm is pushing whole <em>bytes</em> down on top of us! Run!&quot;</p>
+<p><em>Visit the website for the full story and <a href="https://adventofcode.com/2024/day/18">full puzzle</a> description.</em></p>
+<p>We got a simple path finding problem for today. I implemented a <em>binary search</em> for the second part.</p>
 </div>
-            <div id="code-container"><pre class="hljs language-csharp"><code>using System;
+            <div id="code-container"><pre class="hljs language-csharp"><code>namespace AdventOfCode.Y2024.Day18;
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Numerics;
 
-namespace AdventOfCode.Y2021.Day22;
-
-[ProblemName(&quot;Reactor Reboot&quot;)]
+[ProblemName(&quot;RAM Run&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) =&gt; ActiveCubesInRange(input, 50);
-    public object PartTwo(string input) =&gt; ActiveCubesInRange(input, int.MaxValue);
+    public object PartOne(string input) =&gt;
+        Distance(GetBlocks(input), 1024);
 
-    public long ActiveCubesInRange(string input, int range) {
-        var cmds = Parse(input);
+    public object PartTwo(string input) {
+        // find the first block position that will cut off the goal position
+        // we can use a binary search for this
 
-        // Recursive approach
-
-        // If we can determine the number of active cubes in subregions
-        // we can compute the effect of the i-th cmd as well:
-        long activeCubesAfterIcmd(int icmd, Region region) {
-
-            if (region.IsEmpty || icmd &lt; 0) {
-                return 0; // empty is empty
+        var blocks = GetBlocks(input);
+        var (lo, hi) = (0, blocks.Length - 1);
+        while (hi - lo &gt; 1) {
+            var m = (lo + hi) / 2;
+            if (Distance(blocks, m) == null) {
+                hi = m;
             } else {
-                var intersection = region.Intersect(cmds[icmd].region);
-                var activeInRegion = activeCubesAfterIcmd(icmd - 1, region);
-                var activeInIntersection = activeCubesAfterIcmd(icmd - 1, intersection);
-                var activeOutsideIntersection = activeInRegion - activeInIntersection;
-
-                // outside the intersection is unaffected, the rest is either on or off:
-                return cmds[icmd].turnOff ? activeOutsideIntersection : activeOutsideIntersection + intersection.Volume;
+                lo = m;
             }
         }
-
-        return activeCubesAfterIcmd(
-            cmds.Length - 1,
-            new Region(
-                new Segment(-range, range),
-                new Segment(-range, range),
-                new Segment(-range, range)));
+        return $&quot;{blocks[lo].Real},{blocks[lo].Imaginary}&quot;;
     }
 
-    Cmd[] Parse(string input) {
-        var res = new List&lt;Cmd&gt;();
-        foreach (var line in input.Split(&quot;\n&quot;)) {
-            var turnOff = line.StartsWith(&quot;off&quot;);
-            // get all the numbers with a regexp:
-            var m = Regex.Matches(line, &quot;-?[0-9]+&quot;).Select(m =&gt; int.Parse(m.Value)).ToArray();
-            res.Add(new Cmd(turnOff, new Region(new Segment(m[0], m[1]), new Segment(m[2], m[3]), new Segment(m[4], m[5]))));
+    int? Distance(Complex[] blocks, int take) {
+        // our standard priority queue based path finding
+        
+        var blocked = blocks.Take(take).ToHashSet();
+        var size = 70;
+        var goal = size + size * Complex.ImaginaryOne;
+        var q = new PriorityQueue&lt;Complex, int&gt;();
+        q.Enqueue(0, 0);
+        var seen = new HashSet&lt;Complex&gt;(0);
+
+        while (q.TryDequeue(out var pos, out var dist)) {
+            if (pos == goal) {
+                return dist;
+            } else {
+                foreach (var dir in new[] { 1, -1, Complex.ImaginaryOne, -Complex.ImaginaryOne }) {
+                    var posT = pos + dir;
+                    if (!seen.Contains(posT) &amp;&amp;
+                        !blocked.Contains(posT) &amp;&amp;
+                        0 &lt;= posT.Imaginary &amp;&amp; posT.Imaginary &lt;= size &amp;&amp;
+                        0 &lt;= posT.Real &amp;&amp; posT.Real &lt;= size
+                    ) {
+                        q.Enqueue(posT, dist + 1);
+                        seen.Add(posT);
+                    }
+                }
+            }
         }
-        return res.ToArray();
+        return null;
     }
-}
 
-record Cmd(bool turnOff, Region region);
-
-record Segment(int from, int to) {
-    public bool IsEmpty =&gt; from &gt; to;
-    public long Length =&gt; IsEmpty ? 0 : to - from + 1;
-
-    public Segment Intersect(Segment that) =&gt;
-        new Segment(Math.Max(this.from, that.from), Math.Min(this.to, that.to));
-}
-
-record Region(Segment x, Segment y, Segment z) {
-    public bool IsEmpty =&gt; x.IsEmpty || y.IsEmpty || z.IsEmpty;
-    public long Volume =&gt; x.Length * y.Length * z.Length;
-
-    public Region Intersect(Region that) =&gt;
-        new Region(this.x.Intersect(that.x), this.y.Intersect(that.y), this.z.Intersect(that.z));
-}
-</code></pre></div>
+    Complex[] GetBlocks(string input) =&gt; (
+        from line in input.Split(&quot;\n&quot;)
+        let nums = Regex.Matches(line, @&quot;\d+&quot;).Select(m =&gt; int.Parse(m.Value)).ToArray()
+        select nums[0] + nums[1] * Complex.ImaginaryOne
+    ).ToArray();
+}</code></pre></div>
             <div id="code-location"> <p>Please ☆ my <a href="https://github.com/encse/adventofcode/">repo</a> if you like it!</p></div>
         </div>
 
