@@ -294,8 +294,7 @@ using System.Numerics;
 [ProblemName(&quot;RAM Run&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) =&gt;
-        Distance(GetBlocks(input), 1024);
+    public object PartOne(string input) =&gt; Distance(GetBlocks(input).Take(1024));
 
     public object PartTwo(string input) {
         // find the first block position that will cut off the goal position
@@ -305,7 +304,7 @@ class Solution : Solver {
         var (lo, hi) = (0, blocks.Length);
         while (hi - lo &gt; 1) {
             var m = (lo + hi) / 2;
-            if (Distance(blocks, m) == null) {
+            if (Distance(blocks.Take(m)) == null) {
                 hi = m;
             } else {
                 lo = m;
@@ -314,10 +313,10 @@ class Solution : Solver {
         return $&quot;{blocks[lo].Real},{blocks[lo].Imaginary}&quot;;
     }
 
-    int? Distance(Complex[] blocks, int take) {
+    int? Distance(IEnumerable&lt;Complex&gt; blocks) {
         // our standard priority queue based path finding
         
-        var blocked = blocks.Take(take).ToHashSet();
+        var blockSet = blocks.ToHashSet();
         var size = 70;
         var goal = size + size * Complex.ImaginaryOne;
         var q = new PriorityQueue&lt;Complex, int&gt;();
@@ -331,7 +330,7 @@ class Solution : Solver {
                 foreach (var dir in new[] { 1, -1, Complex.ImaginaryOne, -Complex.ImaginaryOne }) {
                     var posT = pos + dir;
                     if (!seen.Contains(posT) &amp;&amp;
-                        !blocked.Contains(posT) &amp;&amp;
+                        !blockSet.Contains(posT) &amp;&amp;
                         0 &lt;= posT.Imaginary &amp;&amp; posT.Imaginary &lt;= size &amp;&amp;
                         0 &lt;= posT.Real &amp;&amp; posT.Real &lt;= size
                     ) {
