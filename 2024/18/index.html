@@ -290,6 +290,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Numerics;
+using AngleSharp.Common;
 
 [ProblemName(&quot;RAM Run&quot;)]
 class Solution : Solver {
@@ -316,27 +317,25 @@ class Solution : Solver {
     int? Distance(IEnumerable&lt;Complex&gt; blocks) {
         // our standard priority queue based path finding
         
-        var blockSet = blocks.ToHashSet();
         var size = 70;
-        var goal = size + size * Complex.ImaginaryOne;
+        var (start, goal) = (0, size + size * Complex.ImaginaryOne);
+        var blocked = blocks.Concat(start).ToHashSet();
+    
         var q = new PriorityQueue&lt;Complex, int&gt;();
-        q.Enqueue(0, 0);
-        var seen = new HashSet&lt;Complex&gt;(0);
-
+        q.Enqueue(start, 0);
         while (q.TryDequeue(out var pos, out var dist)) {
             if (pos == goal) {
                 return dist;
-            } else {
-                foreach (var dir in new[] { 1, -1, Complex.ImaginaryOne, -Complex.ImaginaryOne }) {
-                    var posT = pos + dir;
-                    if (!seen.Contains(posT) &amp;&amp;
-                        !blockSet.Contains(posT) &amp;&amp;
-                        0 &lt;= posT.Imaginary &amp;&amp; posT.Imaginary &lt;= size &amp;&amp;
-                        0 &lt;= posT.Real &amp;&amp; posT.Real &lt;= size
-                    ) {
-                        q.Enqueue(posT, dist + 1);
-                        seen.Add(posT);
-                    }
+            } 
+
+            foreach (var dir in new[] { 1, -1, Complex.ImaginaryOne, -Complex.ImaginaryOne }) {
+                var posT = pos + dir;
+                if (!blocked.Contains(posT) &amp;&amp;
+                    0 &lt;= posT.Imaginary &amp;&amp; posT.Imaginary &lt;= size &amp;&amp;
+                    0 &lt;= posT.Real &amp;&amp; posT.Real &lt;= size
+                ) {
+                    q.Enqueue(posT, dist + 1);
+                    blocked.Add(posT);
                 }
             }
         }
