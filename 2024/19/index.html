@@ -319,11 +319,9 @@ class Solution : Solver {
         cache.GetOrAdd(pattern, (pattern) =&gt; 
             pattern switch {
                 &quot;&quot; =&gt; 1,
-                _  =&gt; (
-                    from towel in towels
-                    where pattern.StartsWith(towel)
-                    select MatchCount(towels, pattern[towel.Length..], cache)
-                ).Sum()
+                _  =&gt;  towels
+                    .Where(pattern.StartsWith)
+                    .Sum(towel =&gt; MatchCount(towels, pattern[towel.Length ..], cache))
             }
         );
 }</code></pre></div>
