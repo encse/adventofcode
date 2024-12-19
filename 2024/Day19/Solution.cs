@@ -29,11 +29,9 @@ class Solution : Solver {
         cache.GetOrAdd(pattern, (pattern) => 
             pattern switch {
                 "" => 1,
-                _  => (
-                    from towel in towels
-                    where pattern.StartsWith(towel)
-                    select MatchCount(towels, pattern[towel.Length..], cache)
-                ).Sum()
+                _  =>  towels
+                    .Where(pattern.StartsWith)
+                    .Sum(towel => MatchCount(towels, pattern[towel.Length ..], cache))
             }
         );
 }
