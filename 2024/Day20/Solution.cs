@@ -13,29 +13,26 @@ class Solution : Solver {
 
     int Solve(string input, int cheat) {
         var path = GetPath(input);
+        var indices = Enumerable.Range(0, path.Length).ToArray();
 
-        // this nested loop is 6x times faster then the same thing with LINQ  ¯\_(ツ)_/¯
-        var res = 0;
-        for (var i = 0; i < path.Length; i++) {
-            for (var j = i + 1; j < path.Length; j++) {
-                var dist = Manhattan(path[i], path[j]);
+        // sum up the worthy cheats for each index along the path
+        var cheatsFromI = (int i) => (
+            from j in indices[0..i]
+                let dist = Manhattan(path[i], path[j])
+                let saving = i - (j + dist)
+            where dist <= cheat && saving >= 100
+            select 1
+        ).Sum();
 
-                // the index of an element in the path equals to its distance 
-                // from the finish line
-
-                var saving = j - (i + dist);
-                if (dist <= cheat && saving >= 100) {
-                    res++;
-                }
-            }
-        }
-        return res;
+        // parallel is gold today, it gives us an 3-4x boost
+        return indices.AsParallel().Select(cheatsFromI).Sum();
     }
 
     int Manhattan(Complex a, Complex b) =>
         (int)(Math.Abs(a.Imaginary - b.Imaginary) + Math.Abs(a.Real - b.Real));
 
-    // follow the path from start to finish, supposed that there is a single track in the input
+    // follow the path from finish to start, supposed that there is a single track in the input
+    // the index of a position in the returned array equals to its distance from the finish
     Complex[] GetPath(string input) {
         var lines = input.Split("\n");
         var map = (
@@ -44,19 +41,18 @@ class Solution : Solver {
             select new KeyValuePair<Complex, char>(x + y * Complex.ImaginaryOne, lines[y][x])
         ).ToDictionary();
 
+        Complex[] dirs = [-1, 1, Complex.ImaginaryOne, -Complex.ImaginaryOne];
+
         var start = map.Keys.Single(k => map[k] == 'S');
         var goal = map.Keys.Single(k => map[k] == 'E');
 
-        var (prev, cur, dir) = ((Complex?)null, start, Complex.ImaginaryOne);
+        var (prev, cur) = ((Complex?)null, goal);
+        var res = new List<Complex> { cur };
 
-        var res = new List<Complex> { start };
-        while (cur != goal) {
-            if (map[cur + dir] == '#' || cur + dir == prev) {
-                dir *= Complex.ImaginaryOne;
-            } else {
-                (prev, cur) = (cur, cur + dir);
-                res.Add(cur);
-            }
+        while (cur != start) {
+            var dir = dirs.Single(dir => map[cur + dir] != '#' && cur + dir != prev);
+            (prev, cur) = (cur, cur + dir);
+            res.Add(cur);
         }
         return res.ToArray();
     }
