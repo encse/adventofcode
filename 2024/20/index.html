@@ -281,8 +281,7 @@
         <div class="content">
             <div id="notes"><p>The Historians are quite pixelated again. This time, a massive, black building looms over you - you&#39;re <em>right outside</em> the CPU!</p>
 <p>While The Historians get to work, a nearby program sees that you&#39;re idle and challenges you to a <em>race</em>. Apparently, you&#39;ve arrived just in time for the frequently-held <em>race condition</em> festival!</p>
-<p><em>Visit the website for the full story and <a href="https://adventofcode.com/2024/day/20">full puzzle</a> description.</em></p>
-<p>Here is your corrected text with improved grammar and flow:  </p>
+<p><em>Visit the website for the full story and <a href="https://adventofcode.com/2024/day/20">full puzzle</a> description.</em> </p>
 <p>The problem included a small but crucial hint: <em>there is only a single path from the start to the end</em>. Moreover, there are no dead ends in the input; it&#39;s just a single, continuous trace. </p>
 <p>I created a function that returns the points of the track in from finish to start. This way, the index of an item in the array corresponds to its distance to the finish line. Then, I go over the path. For each position, the number of possible cheats is calculated by checking what happens if we are trying to make a shortcut to any other positions that is closer to the finish line. </p>
 <p>There are a number of cases to consider:</p>
