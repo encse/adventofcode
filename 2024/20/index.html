@@ -279,9 +279,19 @@
         </div>
 
         <div class="content">
-            <div id="notes"><p>The Historians are quite pixelated again. This time, a massive, black building looms over you - you&#39;re <a href="/2017/day/24">right outside</a> the CPU!</p>
+            <div id="notes"><p>The Historians are quite pixelated again. This time, a massive, black building looms over you - you&#39;re <em>right outside</em> the CPU!</p>
 <p>While The Historians get to work, a nearby program sees that you&#39;re idle and challenges you to a <em>race</em>. Apparently, you&#39;ve arrived just in time for the frequently-held <em>race condition</em> festival!</p>
 <p><em>Visit the website for the full story and <a href="https://adventofcode.com/2024/day/20">full puzzle</a> description.</em></p>
+<p>Here is your corrected text with improved grammar and flow:  </p>
+<p>The problem included a small but crucial hint: <em>there is only a single path from the start to the end</em>. Moreover, there are no dead ends in the input; it&#39;s just a single, continuous trace. </p>
+<p>I created a function that returns the points of the track in from finish to start. This way, the index of an item in the array corresponds to its distance to the finish line. Then, I go over the path. For each position, the number of possible cheats is calculated by checking what happens if we are trying to make a shortcut to any other positions that is closer to the finish line. </p>
+<p>There are a number of cases to consider:</p>
+<ul>
+<li>the target position is too far away. This happens when its Manhattan distance is greater than the allowed <em>cheat</em> limit</li>
+<li>the target is within range, but the saving is less than 100</li>
+<li>the target is within range, and the saving is at least 100</li>
+</ul>
+<p>We need to determine the number of good cheats for each position add them up. I used Parallel LINQ here, as the regular sequential one took significantly more time.</p>
 </div>
             <div id="code-container"><pre class="hljs language-csharp"><code>namespace AdventOfCode.Y2024.Day20;
 
@@ -298,29 +308,26 @@ class Solution : Solver {
 
     int Solve(string input, int cheat) {
         var path = GetPath(input);
+        var indices = Enumerable.Range(0, path.Length).ToArray();
 
-        // this nested loop is 6x times faster then the same thing with LINQ  ¯\_(ツ)_/¯
-        var res = 0;
-        for (var i = 0; i &lt; path.Length; i++) {
-            for (var j = i + 1; j &lt; path.Length; j++) {
-                var dist = Manhattan(path[i], path[j]);
+        // sum up the worthy cheats for each index along the path
+        var cheatsFromI = (int i) =&gt; (
+            from j in indices[0..i]
+                let dist = Manhattan(path[i], path[j])
+                let saving = i - (j + dist)
+            where dist &lt;= cheat &amp;&amp; saving &gt;= 100
+            select 1
+        ).Sum();
 
-                // the index of an element in the path equals to its distance 
-                // from the finish line
-
-                var saving = j - (i + dist);
-                if (dist &lt;= cheat &amp;&amp; saving &gt;= 100) {
-                    res++;
-                }
-            }
-        }
-        return res;
+        // parallel is gold today, it gives us an 3-4x boost
+        return indices.AsParallel().Select(cheatsFromI).Sum();
     }
 
     int Manhattan(Complex a, Complex b) =&gt;
         (int)(Math.Abs(a.Imaginary - b.Imaginary) + Math.Abs(a.Real - b.Real));
 
-    // follow the path from start to finish, supposed that there is a single track in the input
+    // follow the path from finish to start, supposed that there is a single track in the input
+    // the index of a position in the returned array equals to its distance from the finish
     Complex[] GetPath(string input) {
         var lines = input.Split(&quot;\n&quot;);
         var map = (
@@ -329,19 +336,18 @@ class Solution : Solver {
             select new KeyValuePair&lt;Complex, char&gt;(x + y * Complex.ImaginaryOne, lines[y][x])
         ).ToDictionary();
 
+        Complex[] dirs = [-1, 1, Complex.ImaginaryOne, -Complex.ImaginaryOne];
+
         var start = map.Keys.Single(k =&gt; map[k] == &#039;S&#039;);
         var goal = map.Keys.Single(k =&gt; map[k] == &#039;E&#039;);
 
-        var (prev, cur, dir) = ((Complex?)null, start, Complex.ImaginaryOne);
+        var (prev, cur) = ((Complex?)null, goal);
+        var res = new List&lt;Complex&gt; { cur };
 
-        var res = new List&lt;Complex&gt; { start };
-        while (cur != goal) {
-            if (map[cur + dir] == &#039;#&#039; || cur + dir == prev) {
-                dir *= Complex.ImaginaryOne;
-            } else {
-                (prev, cur) = (cur, cur + dir);
-                res.Add(cur);
-            }
+        while (cur != start) {
+            var dir = dirs.Single(dir =&gt; map[cur + dir] != &#039;#&#039; &amp;&amp; cur + dir != prev);
+            (prev, cur) = (cur, cur + dir);
+            res.Add(cur);
         }
         return res.ToArray();
     }
