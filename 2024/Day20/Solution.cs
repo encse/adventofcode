@@ -31,8 +31,8 @@ class Solution : Solver {
     int Manhattan(Complex a, Complex b) =>
         (int)(Math.Abs(a.Imaginary - b.Imaginary) + Math.Abs(a.Real - b.Real));
 
-    // follow the path from finish to start, supposed that there is a single track in the input
-    // the index of a position in the returned array equals to its distance from the finish
+    // Follow the path from finish to start, supposed that there is a single track in the input.
+    // The index of a position in the returned array equals to its distance from the finish
     Complex[] GetPath(string input) {
         var lines = input.Split("\n");
         var map = (
