@@ -15,13 +15,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/a11y-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js"></script>
-    <title>Advent of Code 2016/21 'Scrambled Letters and Hash'' in C# by encse</title>
+    <title>Advent of Code 2024/20 'Race Condition'' in C# by encse</title>
 
     <head>
-        <meta property="og:title" content="Advent of Code 2016/21 'Scrambled Letters and Hash' in C# by encse">
-        <meta property="og:description" content="C# solution to the 'Scrambled Letters and Hash' Advent of Code problem.">
-        <meta property="og:image" content="https://aoc.csokavar.hu/2016/21//illustration.jpeg">
-        <meta property="og:url" content="https://aoc.csokavar.hu/2016/21/">
+        <meta property="og:title" content="Advent of Code 2024/20 'Race Condition' in C# by encse">
+        <meta property="og:description" content="C# solution to the 'Race Condition' Advent of Code problem.">
+        <meta property="og:image" content="https://aoc.csokavar.hu/2024/20//illustration.jpeg">
+        <meta property="og:url" content="https://aoc.csokavar.hu/2024/20/">
         <meta property="og:type" content="website">
       </head>
 
@@ -254,11 +254,11 @@
     <div id="top-nav">
         <div id="year-picker"><nav class="dropdown">
             <input type="checkbox" id="dropdown-toggle" class="dropdown-toggle">
-            <span class="current"><label id="dropdown-label" for="dropdown-toggle">2016</label></span>
+            <span class="current"><label id="dropdown-label" for="dropdown-toggle">2024</label></span>
             <div class="dropdown-content"><a href="/2015/25/">2015</a><a href="/2016/25/">2016</a><a href="/2017/25/">2017</a><a href="/2018/25/">2018</a><a href="/2019/25/">2019</a><a href="/2020/25/">2020</a><a href="/2021/25/">2021</a><a href="/2022/25/">2022</a><a href="/2023/25/">2023</a><a href="/2024/20/">2024</a></div>
         </nav>
      </div>
-        <div id="day-picker"><span><a href="/2016/1">01</a></span><span><a href="/2016/2">02</a></span><span><a href="/2016/3">03</a></span><span><a href="/2016/4">04</a></span><span><a href="/2016/5">05</a></span><span><a href="/2016/6">06</a></span><span><a href="/2016/7">07</a></span><span><a href="/2016/8">08</a></span><span><a href="/2016/9">09</a></span><span><a href="/2016/10">10</a></span><span><a href="/2016/11">11</a></span><span><a href="/2016/12">12</a></span><span><a href="/2016/13">13</a></span><span><a href="/2016/14">14</a></span><span><a href="/2016/15">15</a></span><span><a href="/2016/16">16</a></span><span><a href="/2016/17">17</a></span><span><a href="/2016/18">18</a></span><span><a href="/2016/19">19</a></span><span><a href="/2016/20">20</a></span><span class="current"><a href="/2016/21">21</a></span><span><a href="/2016/22">22</a></span><span><a href="/2016/23">23</a></span><span><a href="/2016/24">24</a></span><span><a href="/2016/25">25</a></span></div>
+        <div id="day-picker"><span><a href="/2024/1">01</a></span><span><a href="/2024/2">02</a></span><span><a href="/2024/3">03</a></span><span><a href="/2024/4">04</a></span><span><a href="/2024/5">05</a></span><span><a href="/2024/6">06</a></span><span><a href="/2024/7">07</a></span><span><a href="/2024/8">08</a></span><span><a href="/2024/9">09</a></span><span><a href="/2024/10">10</a></span><span><a href="/2024/11">11</a></span><span><a href="/2024/12">12</a></span><span><a href="/2024/13">13</a></span><span><a href="/2024/14">14</a></span><span><a href="/2024/15">15</a></span><span><a href="/2024/16">16</a></span><span><a href="/2024/17">17</a></span><span><a href="/2024/18">18</a></span><span><a href="/2024/19">19</a></span><span class="current"><a href="/2024/20">20</a></span></div>
     </div>
     <div class="main">
         <div class="header-container">
@@ -268,8 +268,8 @@
 
             <div class="header-title">
                 <p class="text">Advent of Code</p>
-                <h2 id="problem-id">2016/21</h2>
-                <h2 id="problem-name">Scrambled Letters and Hash</h2>
+                <h2 id="problem-id">2024/20</h2>
+                <h2 id="problem-name">Race Condition</h2>
                 <p class="text">in C#</p>
                 <p class="text"></p>
                 <p class="text"><em>by <a style="text-decoration: underline"
@@ -279,151 +279,73 @@
         </div>
 
         <div class="content">
-            <div id="notes"><p>The computer system you&#39;re breaking into uses a weird scrambling function to store its passwords. It shouldn&#39;t be much trouble to create your own scrambled password so you can add it to the system; you just have to implement the scrambler.</p>
-<p>The scrambling function is a series of operations (the exact list is provided in your puzzle input). Starting with the password to be scrambled, apply each operation in succession to the string. The individual operations behave as follows:</p>
-<p>Read the <a href="https://adventofcode.com/2016/day/21">full puzzle</a>.</p>
+            <div id="notes"><p>The Historians are quite pixelated again. This time, a massive, black building looms over you - you&#39;re <a href="/2017/day/24">right outside</a> the CPU!</p>
+<p>While The Historians get to work, a nearby program sees that you&#39;re idle and challenges you to a <em>race</em>. Apparently, you&#39;ve arrived just in time for the frequently-held <em>race condition</em> festival!</p>
+<p><em>Visit the website for the full story and <a href="https://adventofcode.com/2024/day/20">full puzzle</a> description.</em></p>
 </div>
-            <div id="code-container"><pre class="hljs language-csharp"><code>using System;
+            <div id="code-container"><pre class="hljs language-csharp"><code>namespace AdventOfCode.Y2024.Day20;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
+using System.Numerics;
 
-namespace AdventOfCode.Y2016.Day21;
-
-[ProblemName(&quot;Scrambled Letters and Hash&quot;)]
+[ProblemName(&quot;Race Condition&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) =&gt; string.Join(&quot;&quot;, Parse(input)(&quot;abcdefgh&quot;));
+    public object PartOne(string input) =&gt; Solve(input, 2);
+    public object PartTwo(string input) =&gt; Solve(input, 20);
 
-    public object PartTwo(string input) {
-        var scramble = Parse(input);
-        return string.Join(&quot;&quot;, Permutations(&quot;abcdefgh&quot;.ToArray()).First(p =&gt; scramble(p).SequenceEqual(&quot;fbgdceah&quot;)));
-    }
+    int Solve(string input, int cheat) {
+        var path = GetPath(input);
 
-   IEnumerable&lt;T[]&gt; Permutations&lt;T&gt;(T[] rgt) {
-       
-        IEnumerable&lt;T[]&gt; PermutationsRec(int i) {
-            if (i == rgt.Length) {
-                yield return rgt.ToArray();
-            }
+        // this nested loop is 6x times faster then the same thing with LINQ  ¯\_(ツ)_/¯
+        var res = 0;
+        for (var i = 0; i &lt; path.Length; i++) {
+            for (var j = i + 1; j &lt; path.Length; j++) {
+                var dist = Manhattan(path[i], path[j]);
 
-            for (var j = i; j &lt; rgt.Length; j++) {
-                (rgt[i], rgt[j]) = (rgt[j], rgt[i]);
-                foreach (var perm in PermutationsRec(i + 1)) {
-                    yield return perm;
+                // the index of an element in the path equals to its distance 
+                // from the finish line
+
+                var saving = j - (i + dist);
+                if (dist &lt;= cheat &amp;&amp; saving &gt;= 100) {
+                    res++;
                 }
-                (rgt[i], rgt[j]) = (rgt[j], rgt[i]);
             }
         }
-
-        return PermutationsRec(0);
+        return res;
     }
-    
-    Func&lt;IEnumerable&lt;char&gt;, IEnumerable&lt;char&gt;&gt; Parse(string input) {
-        var steps = (
-            from line in input.Split(&#039;\n&#039;)
-            select
-                Match(line, @&quot;swap position (\d+) with position (\d+)&quot;, m =&gt; {
-                    var x = int.Parse(m[0]);
-                    var y = int.Parse(m[1]);
-                    return chars =&gt; SwapPosition(chars, x, y);
-                }) ??
-                Match(line, @&quot;swap letter (\w) with letter (\w)&quot;, m =&gt; {
-                    var chX = m[0][0];
-                    var chY = m[1][0];
-                    return (chars) =&gt; SwapLetter(chars, chX, chY);
-                }) ??
-                Match(line, @&quot;rotate left (\d+) step&quot;, m =&gt; {
-                    var x = int.Parse(m[0]);
-                    return chars =&gt; RotateLeft(chars, x);
-                }) ??
-                Match(line, @&quot;rotate right (\d+) step&quot;, m =&gt; {
-                    var x = int.Parse(m[0]);
-                    return chars =&gt; RotateRight(chars, x);
-                }) ??
-                Match(line, @&quot;rotate based on position of letter (\w)&quot;, m =&gt; {
-                    var chX = m[0][0];
-                    return chars =&gt; RotateBasedOnPosition(chars, chX);
-                }) ??
-                Match(line, @&quot;reverse positions (\d+) through (\d+)&quot;, m =&gt; {
-                    var x = int.Parse(m[0]);
-                    var y = int.Parse(m[1]);
-                    return chars =&gt; Reverse(chars, x, y);
-                }) ??
-                Match(line, @&quot;move position (\d+) to position (\d+)&quot;, m =&gt; {
-                    var x = int.Parse(m[0]);
-                    var y = int.Parse(m[1]);
-                    return chars =&gt; MovePosition(chars, x, y);
-                }) ??
-                throw new Exception(&quot;Cannot parse &quot; + line)
-            ).ToArray();
 
-        return chars =&gt; {
-            var charsArray = chars.ToArray();
-            foreach (var step in steps) {
-                step(charsArray);
+    int Manhattan(Complex a, Complex b) =&gt;
+        (int)(Math.Abs(a.Imaginary - b.Imaginary) + Math.Abs(a.Real - b.Real));
+
+    // follow the path from start to finish, supposed that there is a single track in the input
+    Complex[] GetPath(string input) {
+        var lines = input.Split(&quot;\n&quot;);
+        var map = (
+            from y in Enumerable.Range(0, lines.Length)
+            from x in Enumerable.Range(0, lines[0].Length)
+            select new KeyValuePair&lt;Complex, char&gt;(x + y * Complex.ImaginaryOne, lines[y][x])
+        ).ToDictionary();
+
+        var start = map.Keys.Single(k =&gt; map[k] == &#039;S&#039;);
+        var goal = map.Keys.Single(k =&gt; map[k] == &#039;E&#039;);
+
+        var (prev, cur, dir) = ((Complex?)null, start, Complex.ImaginaryOne);
+
+        var res = new List&lt;Complex&gt; { start };
+        while (cur != goal) {
+            if (map[cur + dir] == &#039;#&#039; || cur + dir == prev) {
+                dir *= Complex.ImaginaryOne;
+            } else {
+                (prev, cur) = (cur, cur + dir);
+                res.Add(cur);
             }
-            return charsArray;
-        };
-    }
-
-    Action&lt;char[]&gt; Match(string stm, string pattern, Func&lt;string[], Action&lt;char[]&gt;&gt; a) {
-        var match = Regex.Match(stm, pattern);
-        if (match.Success) {
-            return a(match.Groups.Cast&lt;Group&gt;().Skip(1).Select(g =&gt; g.Value).ToArray());
-        } else {
-            return null;
         }
+        return res.ToArray();
     }
-
-    void SwapPosition(char[] chars, int x, int y) {
-        (chars[x], chars[y]) = (chars[y], chars[x]);
-    }
-
-    void SwapLetter(char[] chars, char chX, char chY) {
-        for (var i = 0; i &lt; chars.Length; i++) {
-            chars[i] = chars[i] == chX ? chY : chars[i] == chY ? chX : chars[i];
-        }
-    }
-
-    void RotateBasedOnPosition(char[] chars, char chX) {
-        var i = Array.IndexOf(chars, chX);
-        RotateRight(chars, i &gt;= 4 ? i + 2 : i + 1);
-    }
-
-    void RotateLeft(char[] chars, int t) {
-        t %= chars.Length;
-        Reverse(chars, 0, t - 1);
-        Reverse(chars, t, chars.Length - 1);
-        Reverse(chars, 0, chars.Length - 1);
-    }
-
-    void RotateRight(char[] chars, int t) {
-        t %= chars.Length;
-        Reverse(chars, 0, chars.Length - 1);
-        Reverse(chars, 0, t - 1);
-        Reverse(chars, t, chars.Length - 1);
-    }
-
-    void Reverse(char[] chars, int x, int y) {
-        while (x &lt; y) {
-            (chars[x], chars[y]) = (chars[y], chars[x]);
-            x++;
-            y--;
-        }
-    }
-
-    void MovePosition(char[] chars, int x, int y) {
-        var d = x &lt; y ? 1 : -1;
-
-        var ch = chars[x];
-        for (int i = x + d; i != y + d; i += d) {
-            chars[i - d] = chars[i];
-        }
-        chars[y] = ch;
-    }
-}
-</code></pre></div>
+}</code></pre></div>
             <div id="code-location"> <p>Please ☆ my <a href="https://github.com/encse/adventofcode/">repo</a> if you like it!</p></div>
         </div>
 
