@@ -282,15 +282,18 @@
             <div id="notes"><p>The Historians are quite pixelated again. This time, a massive, black building looms over you - you&#39;re <em>right outside</em> the CPU!</p>
 <p>While The Historians get to work, a nearby program sees that you&#39;re idle and challenges you to a <em>race</em>. Apparently, you&#39;ve arrived just in time for the frequently-held <em>race condition</em> festival!</p>
 <p><em>Visit the website for the full story and <a href="https://adventofcode.com/2024/day/20">full puzzle</a> description.</em> </p>
-<p>The problem included a small but crucial hint: <em>there is only a single path from the start to the end</em>. Moreover, there are no dead ends in the input; it&#39;s just a single, continuous trace. The definition of <em>cheating</em> was super hard to understand. I have to admit that instead, I used my intuition and give a more simple definition: in cheat mode you can step to any cell within the distance of 2 (or 20 for the second part).</p>
-<p>I created a function that returns the points of the track in from finish to start. This way, the index of an item in the array corresponds to its distance to the finish line. Then, I go over the path. For each position, the number of possible cheats is calculated by checking what happens if we are trying to make a shortcut to any other positions that is closer to the finish line. </p>
+<p>The problem included a small but crucial hint: <em>there is only a single path from the start to the end</em>. Moreover, there are no dead ends in the input; it&#39;s just a single, continuous trace.</p>
+<p>The definition of <em>cheating</em> was super hard to understand. I have to admit that instead, I used my intuition and used a more simple definition: in cheat mode you can step to any cell within the distance of 2 (or 20 for the second part). This really worked.</p>
+<p>I created a function that returns the points of the track from finish to start. This way, the <em>index</em> of an item in the array corresponds to its distance to the finish line.</p>
+<p>Then, I go over the path. For each position, the number of possible cheats is calculated by checking what happens if we are trying to make a shortcut to any other positions around. </p>
 <p>There are a number of cases to consider:</p>
 <ul>
 <li>the target position is too far away. This happens when its Manhattan distance is greater than the allowed <em>cheat</em> limit</li>
-<li>the target is within range, but the saving is less than 100</li>
+<li>the target is within range, but actually further from the finish when we are (the saving is negative).</li>
+<li>the target is within range, closer to the finish, but the saving is still less than 100</li>
 <li>the target is within range, and the saving is at least 100</li>
 </ul>
-<p>We need to determine the number of good cheats for each position add them up. I used Parallel LINQ here, as the regular sequential one took significantly more time.</p>
+<p>We need to determine the number of good cheats for each position <em>add</em> them up. I used Parallel LINQ here, as the regular sequential one took significantly more time.</p>
 </div>
             <div id="code-container"><pre class="hljs language-csharp"><code>namespace AdventOfCode.Y2024.Day20;
 
