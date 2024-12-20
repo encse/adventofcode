@@ -5,7 +5,7 @@ While The Historians get to work, a nearby program sees that you're idle and cha
 
 _Visit the website for the full story and [full puzzle](https://adventofcode.com/2024/day/20) description._ 
 
-The problem included a small but crucial hint: _there is only a single path from the start to the end_. Moreover, there are no dead ends in the input; it's just a single, continuous trace. 
+The problem included a small but crucial hint: _there is only a single path from the start to the end_. Moreover, there are no dead ends in the input; it's just a single, continuous trace. The definition of _cheating_ was super hard to understand. I have to admit that instead, I used my intuition and give a more simple definition: in cheat mode you can step to any cell within the distance of 2 (or 20 for the second part).
 
 I created a function that returns the points of the track in from finish to start. This way, the index of an item in the array corresponds to its distance to the finish line. Then, I go over the path. For each position, the number of possible cheats is calculated by checking what happens if we are trying to make a shortcut to any other positions that is closer to the finish line. 
 
