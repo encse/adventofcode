@@ -284,7 +284,7 @@
 <p><em>Visit the website for the full story and <a href="https://adventofcode.com/2024/day/20">full puzzle</a> description.</em> </p>
 <p>The problem included a small but crucial hint: <em>there is only a single path from the start to the end</em>. Moreover, there are no dead ends in the input; it&#39;s just a single, continuous trace.</p>
 <p>The definition of <em>cheating</em> was super hard to understand. I have to admit that instead, I used my intuition and used a more simple definition: in cheat mode you can step to any cell within the distance of 2 (or 20 for the second part). This really worked.</p>
-<p>I created a function that returns the points of the track from finish to start. This way, the <em>index</em> of an item in the array corresponds to its distance to the finish line.</p>
+<p>I created a function that returns the points of the track in finish to start order. This way, the <em>index</em> of an item in the array corresponds to its distance to the finish line.</p>
 <p>Then, I go over the path. For each position, the number of possible cheats is calculated by checking what happens if we are trying to make a shortcut to any other positions around. </p>
 <p>There are a number of cases to consider:</p>
 <ul>
