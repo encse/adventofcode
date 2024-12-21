@@ -5,19 +5,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using AngleSharp.Common;
-using Cache = System.Collections.Concurrent.ConcurrentDictionary<(char, System.Numerics.Complex, int, System.Numerics.Complex), (long, System.Numerics.Complex)>;
+using Cache = System.Collections.Concurrent.ConcurrentDictionary<(char, System.Numerics.Complex, int, System.Numerics.Complex), (long, string, System.Numerics.Complex)>;
 
 
 [ProblemName("Keypad Conundrum")]
 class Solution : Solver {
 
     public object PartOne(string input) {
-        return input.Split("\n").Sum(line => Solve2(line, 2));
+        return input.Split("\n").Sum(line => Solve2(line, 2).Item1);
     }
     public object PartTwo(string input) {
-        // 24: 156944425344350 low
-        // 25: 400827838993176 high
-        return input.Split("\n").Sum(line => Solve2(line, 24));
+        return input.Split("\n").Sum(line => Solve2(line, 25).Item1);
     }
 
     static readonly Complex Left = -1;
@@ -25,39 +23,46 @@ class Solution : Solver {
     static readonly Complex Up = Complex.ImaginaryOne;
     static readonly Complex Down = -Complex.ImaginaryOne;
 
-    long Solve2(string line, int depth) {
+    (long, string) Solve2(string line, int depth) {
         var keypad1 = ParseKeypad("789\n456\n123\n 0A");
         var keypad2 = ParseKeypad(" ^A\n<v>");
 
         Cache cache = new Cache();
         var res = long.MaxValue;
+        var st = "";
         foreach (var plan in Encode(line, keypad1, keypad1['A'])) {
-            var (length, _) = EncodeString(plan, keypad2, depth, cache, keypad2['A']);
-            res = Math.Min(res, length);
+            var (length, stT, _) = EncodeString(plan, keypad2, depth, cache, keypad2['A']);
+            if (length < res) {
+                res = Math.Min(res, length);
+                st = stT;
+            }
         }
-        return res * int.Parse(line.Substring(0, line.Length - 1));
+        return (res * int.Parse(line.Substring(0, line.Length - 1)), st);
     }
 
-    (long, Complex) EncodeString(string st, Dictionary<char, Complex> keypad2, int depth, Cache cache, Complex top) {
+    (long, string, Complex) EncodeString(string st, Dictionary<char, Complex> keypad2, int depth, Cache cache, Complex top) {
         if (depth == 0) {
-            return (st.Length, top);
+            return (st.Length, st, top);
         } else {
             var length = 0L;
-            var pos = depth == 1 ? top : keypad2['A'];
-            var originalTop  = top;
+            var pos = keypad2['A']; ; //depth == 1 ? top : keypad2['A'];
+            var originalTop = top;
+            var resSt = "";
             foreach (var step in st) {
                 long cost;
-                (cost, top) = EncodeKey(step, pos, keypad2, depth, cache, top);
+                string stT;
+                (cost, stT, top) = EncodeKey(step, pos, keypad2, depth, cache, top);
                 length += cost;
+                resSt += stT;
                 pos = keypad2[step];
             }
             if (depth == 1) {
-                top = st.Length == 1  ? originalTop : keypad2[st[^1]];
+                top = st.Length == 1 ? originalTop : keypad2[st[^1]];
             }
-            return (length, top);
+            return (length, resSt, top);
         }
     }
-    (long, Complex) EncodeKey(char ch, Complex pos, Dictionary<char, Complex> keypad2, int depth, Cache cache, Complex top) {
+    (long, string, Complex) EncodeKey(char ch, Complex pos, Dictionary<char, Complex> keypad2, int depth, Cache cache, Complex top) {
         var key = (ch, pos, depth, top);
         if (cache.ContainsKey(key)) {
             return cache[key];
@@ -75,8 +80,12 @@ class Solution : Solver {
 
         var resCost = long.MaxValue;
         var resTop = Complex.Infinity;
+        var resSt = "";
 
-        var toEncode = "";
+        string toEncode = "";
+      
+
+        toEncode = "";
         if (pos + dy * Up != keypad2[' ']) {
             if (dy < 0) {
                 toEncode += new string('v', Math.Abs(dy));
@@ -89,14 +98,18 @@ class Solution : Solver {
                 toEncode += new string('>', Math.Abs(dx));
             }
             toEncode += "A";
-            var (cost, topT) = EncodeString(toEncode, keypad2, depth - 1, cache, top);
+            var (cost, stT, topT) = EncodeString(toEncode, keypad2, depth - 1, cache, top);
 
             if (cost < resCost) {
                 resCost = cost;
                 resTop = topT;
+                resSt = stT;
             }
         }
 
+
+ 
+        toEncode = "";
         if (pos + dx * Right != keypad2[' ']) {
             if (dx < 0) {
                 toEncode += new string('<', Math.Abs(dx));
@@ -111,15 +124,17 @@ class Solution : Solver {
             }
             toEncode += "A";
 
-             var (cost, topT) = EncodeString(toEncode, keypad2, depth - 1, cache, top);
+            var (cost, stT, topT) = EncodeString(toEncode, keypad2, depth - 1, cache, top);
 
             if (cost < resCost) {
                 resCost = cost;
                 resTop = topT;
+                resSt = stT;
             }
         }
+        resSt = "";
 
-        cache[key] = (resCost, resTop);
+        cache[key] = (resCost, resSt, resTop);
         return cache[key];
     }
 
