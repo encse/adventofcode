@@ -11,6 +11,19 @@ using Cache = System.Collections.Concurrent.ConcurrentDictionary<(char, System.N
 [ProblemName("Keypad Conundrum")]
 class Solution : Solver {
 
+/*
+                _________ _______ 
+        |\     /|\__   __/(  ____ )
+        | )   ( |   ) (   | (    )|
+        | | _ | |   | |   | (____)|
+        | |( )| |   | |   |  _____)
+        | || || |   | |   | (      
+        | () () |___) (___| )      
+        (_______)\_______/|/       
+                           
+*/                           
+
+    
     public object PartOne(string input) {
         return input.Split("\n").Sum(line => Solve2(line, 2).Item1);
     }
