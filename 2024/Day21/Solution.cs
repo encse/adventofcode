@@ -2,25 +2,22 @@ namespace AdventOfCode.Y2024.Day21;
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Text;
 using System.Numerics;
-using System.Security.AccessControl;
 using AngleSharp.Common;
-using AdventOfCode.Y2021.Day11;
-using System.Security.Cryptography;
+using Cache = System.Collections.Concurrent.ConcurrentDictionary<(char, System.Numerics.Complex, int, System.Numerics.Complex), (long, System.Numerics.Complex)>;
+
 
 [ProblemName("Keypad Conundrum")]
 class Solution : Solver {
 
     public object PartOne(string input) {
-        return input.Split("\n").Sum(Solve);
+        return input.Split("\n").Sum(line => Solve2(line, 2));
     }
-
     public object PartTwo(string input) {
-        return 0;
+        // 24: 156944425344350 low
+        // 25: 400827838993176 high
+        return input.Split("\n").Sum(line => Solve2(line, 24));
     }
 
     static readonly Complex Left = -1;
@@ -28,109 +25,106 @@ class Solution : Solver {
     static readonly Complex Up = Complex.ImaginaryOne;
     static readonly Complex Down = -Complex.ImaginaryOne;
 
-    int Solve(string line) {
+    long Solve2(string line, int depth) {
         var keypad1 = ParseKeypad("789\n456\n123\n 0A");
         var keypad2 = ParseKeypad(" ^A\n<v>");
 
-        Console.WriteLine("========");
-        // var q = "<v<A>>^AvA^A<vA<AA>>^AAvA<^A>AAvA^A<vA>^AA<A>A<v<A>A>^AAAvA<^A>A";
-        // Console.WriteLine(q);
-        // q = Decode(q, keypad2);
-        // Console.WriteLine(q);
-        // q = Decode(q, keypad2);
-        // Console.WriteLine(q);
-        // q = Decode(q, keypad1);
-        // Console.WriteLine(q);
-
-        // Console.WriteLine();
-
-        var xs = Encode(line, keypad1, keypad1['A']).ToList();
-        var ys = xs.SelectMany(x => Encode(x, keypad2, keypad2['A'])).ToList();
-        foreach (var y in ys) {
-            Console.WriteLine(Decode(Decode(y, keypad2), keypad1));
+        Cache cache = new Cache();
+        var res = long.MaxValue;
+        foreach (var plan in Encode(line, keypad1, keypad1['A'])) {
+            var (length, _) = EncodeString(plan, keypad2, depth, cache, keypad2['A']);
+            res = Math.Min(res, length);
         }
-
-        var cache = new Dictionary<(Complex, string), string> ();
-
-        var z = ys.Select(y => Mikkamakka(keypad2['A'], y, keypad2, cache)).MinBy(z => z.Length);
-
-        Console.WriteLine(Decode(Decode(Decode(z, keypad2), keypad2), keypad1));
-        return z.Length * int.Parse(line[0..^1]);
+        return res * int.Parse(line.Substring(0, line.Length - 1));
     }
 
-    
-
-    string Mikkamakka(Complex pos, string st, Dictionary<char, Complex> keypad, Dictionary<(Complex, string), string> cache) {
-        if (st == "") {
-            return "";
-        }
-        var key = (pos, st);
-        if (!cache.ContainsKey(key)) {
-
-            var target = keypad[st[0]];
-
-            var dy = (int)(target.Imaginary - pos.Imaginary);
-            var dx = (int)(target.Real - pos.Real);
-
-            var res1 = "";
-            if (pos + dy * Up != keypad[' ']) {
-                if (dy < 0) {
-                    res1 += new string('v', Math.Abs(dy));
-                } else if (dy > 0) {
-                    res1 += new string('^', Math.Abs(dy));
-                }
-                if (dx < 0) {
-                    res1 += new string('<', Math.Abs(dx));
-                } else if (dx > 0) {
-                    res1 += new string('>', Math.Abs(dx));
-                }
-                res1 += "A";
-                res1 += Mikkamakka(target, st[1..], keypad, cache);
+    (long, Complex) EncodeString(string st, Dictionary<char, Complex> keypad2, int depth, Cache cache, Complex top) {
+        if (depth == 0) {
+            return (st.Length, top);
+        } else {
+            var length = 0L;
+            var pos = depth == 1 ? top : keypad2['A'];
+            var originalTop  = top;
+            foreach (var step in st) {
+                long cost;
+                (cost, top) = EncodeKey(step, pos, keypad2, depth, cache, top);
+                length += cost;
+                pos = keypad2[step];
             }
-            var res2 = "";
-            if (pos + dx * Right != keypad[' ']) {
-                if (dx < 0) {
-                    res2 += new string('<', Math.Abs(dx));
-                } else if (dx > 0) {
-                    res2 += new string('>', Math.Abs(dx));
-                }
+            if (depth == 1) {
+                top = st.Length == 1  ? originalTop : keypad2[st[^1]];
+            }
+            return (length, top);
+        }
+    }
+    (long, Complex) EncodeKey(char ch, Complex pos, Dictionary<char, Complex> keypad2, int depth, Cache cache, Complex top) {
+        var key = (ch, pos, depth, top);
+        if (cache.ContainsKey(key)) {
+            return cache[key];
+        }
 
-                if (dy < 0) {
-                    res2 += new string('v', Math.Abs(dy));
-                } else if (dy > 0) {
-                    res2 += new string('^', Math.Abs(dy));
-                }
+        if (depth == 0) {
+            throw new Exception();
+        }
 
-                res2 += "A";
-                res2 += Mikkamakka(target, st[1..], keypad, cache);
+
+        var target = keypad2[ch];
+
+        var dy = (int)(target.Imaginary - pos.Imaginary);
+        var dx = (int)(target.Real - pos.Real);
+
+        var resCost = long.MaxValue;
+        var resTop = Complex.Infinity;
+
+        var toEncode = "";
+        if (pos + dy * Up != keypad2[' ']) {
+            if (dy < 0) {
+                toEncode += new string('v', Math.Abs(dy));
+            } else if (dy > 0) {
+                toEncode += new string('^', Math.Abs(dy));
+            }
+            if (dx < 0) {
+                toEncode += new string('<', Math.Abs(dx));
+            } else if (dx > 0) {
+                toEncode += new string('>', Math.Abs(dx));
+            }
+            toEncode += "A";
+            var (cost, topT) = EncodeString(toEncode, keypad2, depth - 1, cache, top);
+
+            if (cost < resCost) {
+                resCost = cost;
+                resTop = topT;
+            }
+        }
+
+        if (pos + dx * Right != keypad2[' ']) {
+            if (dx < 0) {
+                toEncode += new string('<', Math.Abs(dx));
+            } else if (dx > 0) {
+                toEncode += new string('>', Math.Abs(dx));
             }
 
-            cache[key] = res1 == "" ? res2 : res2 == "" ? res1 : res1.Length < res2.Length ? res1 : res2;
+            if (dy < 0) {
+                toEncode += new string('v', Math.Abs(dy));
+            } else if (dy > 0) {
+                toEncode += new string('^', Math.Abs(dy));
+            }
+            toEncode += "A";
+
+             var (cost, topT) = EncodeString(toEncode, keypad2, depth - 1, cache, top);
+
+            if (cost < resCost) {
+                resCost = cost;
+                resTop = topT;
+            }
         }
+
+        cache[key] = (resCost, resTop);
         return cache[key];
     }
 
 
-    string Decode(string st, Dictionary<char, Complex> keymap) {
-        var res = "";
-        var pos = keymap['A'];
-        foreach (var ch in st) {
-            if (ch == '^') {
-                pos += Up;
-            } else if (ch == 'v') {
-                pos += Down;
-            } else if (ch == '<') {
-                pos += Left;
-            } else if (ch == '>') {
-                pos += Right;
-            } else if (ch == 'A') {
-                res += keymap.Single(kvp => kvp.Value == pos).Key;
-            }
-        }
-        return res;
-    }
 
-  
     IEnumerable<string> Encode(string st, Dictionary<char, Complex> keymap, Complex pos) {
         if (st == "") {
             yield return "";
