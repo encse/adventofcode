@@ -15,7 +15,7 @@ Then, I go over the path. For each position, the number of possible cheats is ca
 
 There are a number of cases to consider:
 - the target position is too far away. This happens when its Manhattan distance is greater than the allowed _cheat_ limit
-- the target is within range, but actually further from the finish when we are (the saving is negative).
+- the target is within range, but actually further away from the finish than we are (the saving is negative).
 - the target is within range, closer to the finish, but the saving is still less than 100
 - the target is within range, and the saving is at least 100
 
