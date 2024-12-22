@@ -288,215 +288,91 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using System.Numerics;
-using AngleSharp.Common;
-using Cache = System.Collections.Concurrent.ConcurrentDictionary&lt;(char, System.Numerics.Complex, int, System.Numerics.Complex), (long, string, System.Numerics.Complex)&gt;;
 
+using Cache = System.Collections.Concurrent.ConcurrentDictionary&lt;(char currentKey, char nextKey, int depth), long&gt;;
+using Keypad = System.Collections.Generic.Dictionary&lt;Vec2, char&gt;;
+record struct Vec2(int x, int y);
 
 [ProblemName(&quot;Keypad Conundrum&quot;)]
 class Solution : Solver {
 
-/*
-                _________ _______ 
-        |\     /|\__   __/(  ____ )
-        | )   ( |   ) (   | (    )|
-        | | _ | |   | |   | (____)|
-        | |( )| |   | |   |  _____)
-        | || || |   | |   | (      
-        | () () |___) (___| )      
-        (_______)\_______/|/       
-                           
-*/                           
-
-    
-    public object PartOne(string input) {
-        return input.Split(&quot;\n&quot;).Sum(line =&gt; Solve2(line, 2).Item1);
-    }
-    public object PartTwo(string input) {
-        return input.Split(&quot;\n&quot;).Sum(line =&gt; Solve2(line, 25).Item1);
-    }
-
-    static readonly Complex Left = -1;
-    static readonly Complex Right = 1;
-    static readonly Complex Up = Complex.ImaginaryOne;
-    static readonly Complex Down = -Complex.ImaginaryOne;
-
-    (long, string) Solve2(string line, int depth) {
+    public object PartOne(string input) =&gt; Solve(input, 2);
+    public object PartTwo(string input) =&gt; Solve(input, 25);
+    long Solve(string input, int depth) {
         var keypad1 = ParseKeypad(&quot;789\n456\n123\n 0A&quot;);
         var keypad2 = ParseKeypad(&quot; ^A\n&lt;v&gt;&quot;);
+        var keypads = Enumerable.Repeat(keypad2, depth).Prepend(keypad1).ToArray();
 
-        Cache cache = new Cache();
-        var res = long.MaxValue;
-        var st = &quot;&quot;;
-        foreach (var plan in Encode(line, keypad1, keypad1[&#039;A&#039;])) {
-            var (length, stT, _) = EncodeString(plan, keypad2, depth, cache, keypad2[&#039;A&#039;]);
-            if (length &lt; res) {
-                res = Math.Min(res, length);
-                st = stT;
-            }
+        var cache = new Cache();
+        var res = 0L;
+
+        foreach (var line in input.Split(&quot;\n&quot;)) {
+            var num = int.Parse(line[..^1]);
+            res += num * EncodeKeys(line, keypads, cache);
         }
-        return (res * int.Parse(line.Substring(0, line.Length - 1)), st);
+        return res;
     }
 
-    (long, string, Complex) EncodeString(string st, Dictionary&lt;char, Complex&gt; keypad2, int depth, Cache cache, Complex top) {
-        if (depth == 0) {
-            return (st.Length, st, top);
+    // Determines the length of the shortest sequence that is needed to enter the given 
+    // keys. An empty keypad array means that the sequence is simply entered by a human 
+    // and no further encoding is needed. Otherwise the sequence is entered by a robot
+    // which needs to be programmed. In practice this means that the keys are encoded 
+    // using the robots keypad (the first keypad), generating an other sequence of keys.
+    // This other sequence is then recursively encoded using the rest of the keypads.
+    long EncodeKeys(string keys, Keypad[] keypads, Cache cache) {
+        if (keypads.Length == 0) {
+            return keys.Length;
         } else {
+            // invariant: the robot starts and finishes by pointing at the &#039;A&#039; key
+            var currentKey = &#039;A&#039;;
             var length = 0L;
-            var pos = keypad2[&#039;A&#039;]; ; //depth == 1 ? top : keypad2[&#039;A&#039;];
-            var originalTop = top;
-            var resSt = &quot;&quot;;
-            foreach (var step in st) {
-                long cost;
-                string stT;
-                (cost, stT, top) = EncodeKey(step, pos, keypad2, depth, cache, top);
-                length += cost;
-                resSt += stT;
-                pos = keypad2[step];
+
+            foreach (var nextKey in keys) {
+                length += EncodeKey(currentKey, nextKey, keypads, cache);
+                // while the sequence is entered the current key changes accordingly
+                currentKey = nextKey;
             }
-            if (depth == 1) {
-                top = st.Length == 1 ? originalTop : keypad2[st[^1]];
-            }
-            return (length, resSt, top);
+
+            // at the end the current key should be reset to &#039;A&#039;
+            Debug.Assert(currentKey == &#039;A&#039;, &quot;The robot should point at the &#039;A&#039; key&quot;);
+            return length;
         }
     }
-    (long, string, Complex) EncodeKey(char ch, Complex pos, Dictionary&lt;char, Complex&gt; keypad2, int depth, Cache cache, Complex top) {
-        var key = (ch, pos, depth, top);
-        if (cache.ContainsKey(key)) {
-            return cache[key];
-        }
+    long EncodeKey(char currentKey, char nextKey, Keypad[] keypads, Cache cache) =&gt;
+       cache.GetOrAdd((currentKey, nextKey, keypads.Length), _ =&gt; {
+           var keypad = keypads[0];
 
-        if (depth == 0) {
-            throw new Exception();
-        }
+           var currentPos = keypad.Single(kvp =&gt; kvp.Value == currentKey).Key;
+           var nextPos = keypad.Single(kvp =&gt; kvp.Value == nextKey).Key;
 
+           var dy = nextPos.y - currentPos.y;
+           var vert = new string(dy &lt; 0 ? &#039;v&#039; : &#039;^&#039;, Math.Abs(dy));
 
-        var target = keypad2[ch];
+           var dx = nextPos.x - currentPos.x;
+           var horiz = new string(dx &lt; 0 ? &#039;&lt;&#039; : &#039;&gt;&#039;, Math.Abs(dx));
 
-        var dy = (int)(target.Imaginary - pos.Imaginary);
-        var dx = (int)(target.Real - pos.Real);
+           var cost = long.MaxValue;
+           // we can usually go vertical first then horizontal or vica versa,
+           // but we should check for the extra condition and don&#039;t position
+           // the robot over the &#039; &#039; key:
+           if (keypad[new Vec2(currentPos.x, nextPos.y)] != &#039; &#039;) {
+               cost = Math.Min(cost, EncodeKeys($&quot;{vert}{horiz}A&quot;, keypads[1..], cache));
+           }
 
-        var resCost = long.MaxValue;
-        var resTop = Complex.Infinity;
-        var resSt = &quot;&quot;;
+           if (keypad[new Vec2(nextPos.x, currentPos.y)] != &#039; &#039;) {
+               cost = Math.Min(cost, EncodeKeys($&quot;{horiz}{vert}A&quot;, keypads[1..], cache));
+           }
+           return cost;
+       });
 
-        string toEncode = &quot;&quot;;
-      
-
-        toEncode = &quot;&quot;;
-        if (pos + dy * Up != keypad2[&#039; &#039;]) {
-            if (dy &lt; 0) {
-                toEncode += new string(&#039;v&#039;, Math.Abs(dy));
-            } else if (dy &gt; 0) {
-                toEncode += new string(&#039;^&#039;, Math.Abs(dy));
-            }
-            if (dx &lt; 0) {
-                toEncode += new string(&#039;&lt;&#039;, Math.Abs(dx));
-            } else if (dx &gt; 0) {
-                toEncode += new string(&#039;&gt;&#039;, Math.Abs(dx));
-            }
-            toEncode += &quot;A&quot;;
-            var (cost, stT, topT) = EncodeString(toEncode, keypad2, depth - 1, cache, top);
-
-            if (cost &lt; resCost) {
-                resCost = cost;
-                resTop = topT;
-                resSt = stT;
-            }
-        }
-
-
- 
-        toEncode = &quot;&quot;;
-        if (pos + dx * Right != keypad2[&#039; &#039;]) {
-            if (dx &lt; 0) {
-                toEncode += new string(&#039;&lt;&#039;, Math.Abs(dx));
-            } else if (dx &gt; 0) {
-                toEncode += new string(&#039;&gt;&#039;, Math.Abs(dx));
-            }
-
-            if (dy &lt; 0) {
-                toEncode += new string(&#039;v&#039;, Math.Abs(dy));
-            } else if (dy &gt; 0) {
-                toEncode += new string(&#039;^&#039;, Math.Abs(dy));
-            }
-            toEncode += &quot;A&quot;;
-
-            var (cost, stT, topT) = EncodeString(toEncode, keypad2, depth - 1, cache, top);
-
-            if (cost &lt; resCost) {
-                resCost = cost;
-                resTop = topT;
-                resSt = stT;
-            }
-        }
-        resSt = &quot;&quot;;
-
-        cache[key] = (resCost, resSt, resTop);
-        return cache[key];
-    }
-
-
-
-    IEnumerable&lt;string&gt; Encode(string st, Dictionary&lt;char, Complex&gt; keymap, Complex pos) {
-        if (st == &quot;&quot;) {
-            yield return &quot;&quot;;
-            yield break;
-        }
-
-
-        var target = keymap[st[0]];
-
-        var dy = (int)(target.Imaginary - pos.Imaginary);
-        var dx = (int)(target.Real - pos.Real);
-
-        if (pos + dy * Up != keymap[&#039; &#039;]) {
-            var res = &quot;&quot;;
-            if (dy &lt; 0) {
-                res += new string(&#039;v&#039;, Math.Abs(dy));
-            } else if (dy &gt; 0) {
-                res += new string(&#039;^&#039;, Math.Abs(dy));
-            }
-            if (dx &lt; 0) {
-                res += new string(&#039;&lt;&#039;, Math.Abs(dx));
-            } else if (dx &gt; 0) {
-                res += new string(&#039;&gt;&#039;, Math.Abs(dx));
-            }
-            res += &quot;A&quot;;
-            foreach (var resT in Encode(st[1..], keymap, target)) {
-                yield return res + resT;
-            }
-        }
-
-        if (pos + dx * Right != keymap[&#039; &#039;]) {
-            var res = &quot;&quot;;
-            if (dx &lt; 0) {
-                res += new string(&#039;&lt;&#039;, Math.Abs(dx));
-            } else if (dx &gt; 0) {
-                res += new string(&#039;&gt;&#039;, Math.Abs(dx));
-            }
-
-            if (dy &lt; 0) {
-                res += new string(&#039;v&#039;, Math.Abs(dy));
-            } else if (dy &gt; 0) {
-                res += new string(&#039;^&#039;, Math.Abs(dy));
-            }
-
-            res += &quot;A&quot;;
-            foreach (var resT in Encode(st[1..], keymap, target)) {
-                yield return res + resT;
-            }
-        }
-
-    }
-
-    Dictionary&lt;char, Complex&gt; ParseKeypad(string keypad) {
+    Keypad ParseKeypad(string keypad) {
         var lines = keypad.Split(&quot;\n&quot;);
         return (
             from y in Enumerable.Range(0, lines.Length)
             from x in Enumerable.Range(0, lines[0].Length)
-            select new KeyValuePair&lt;char, Complex&gt;(lines[y][x], x + y * Down)
+            select new KeyValuePair&lt;Vec2, char&gt;(new Vec2(x, -y), lines[y][x])
         ).ToDictionary();
     }
 }</code></pre></div>
