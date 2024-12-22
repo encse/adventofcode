@@ -2,29 +2,18 @@ namespace AdventOfCode.Y2024.Day21;
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using AngleSharp.Common;
-using Cache = System.Collections.Concurrent.ConcurrentDictionary<(char, System.Numerics.Complex, int),  long>;
-using Keypad = System.Collections.Generic.Dictionary<char, System.Numerics.Complex>;
+using Cache = System.Collections.Concurrent.ConcurrentDictionary<(char, char, int),  long>;
+using Keypad = System.Collections.Generic.Dictionary<System.Numerics.Complex, char>;
+record struct Vec2(long x, long y);
 
 
 [ProblemName("Keypad Conundrum")]
 class Solution : Solver {
 
-/*
-                _________ _______ 
-        |\     /|\__   __/(  ____ )
-        | )   ( |   ) (   | (    )|
-        | | _ | |   | |   | (____)|
-        | |( )| |   | |   |  _____)
-        | || || |   | |   | (      
-        | () () |___) (___| )      
-        (_______)\_______/|/       
-                           
-*/                           
-
-    
     public object PartOne(string input) {
         return input.Split("\n").Sum(line => Solve2(line, 2));
     }
@@ -48,35 +37,36 @@ class Solution : Solver {
         if (keypads.Length == 0) {
             return st.Length;
         } else {
+
+            // the robot starts and finishes by pointing to 'A' key
+            var currentKey = 'A';
             var length = 0L;
-            var pos = keypads[0]['A']; 
-            foreach (var step in st) {
-                long cost;
-                cost = EncodeKey(step, pos, keypads, cache);
-                length += cost;
-                pos = keypads[0][step];
+            foreach (var nextKey in st) {
+                length += EncodeKey(currentKey, nextKey, keypads, cache);
+                currentKey = nextKey;
             }
-            
+            Debug.Assert(st.Last() == 'A', "The robot should point to the 'A' key");
             return length;
         }
     }
-    long EncodeKey(char ch, Complex pos, Keypad[] keypads,  Cache cache) {
-        return cache.GetOrAdd((ch, pos, keypads.Length), _ => {
-            var target = keypads[0][ch];
+    long EncodeKey(char currentKey, char nextKey, Keypad[] keypads,  Cache cache) {
+        return cache.GetOrAdd((currentKey, nextKey, keypads.Length), _ => {
+            var currentPos = keypads[0].Single(kvp => kvp.Value == currentKey).Key;
+            var nextPos = keypads[0].Single(kvp => kvp.Value == nextKey).Key;
 
-            var dy = (int)(target.Imaginary - pos.Imaginary);
-            var dx = (int)(target.Real - pos.Real);
+            var dy = (int)(nextPos.Imaginary - currentPos.Imaginary);
+            var dx = (int)(nextPos.Real - currentPos.Real);
 
             var vert = new string(dy < 0 ? 'v' : '^', Math.Abs(dy));
             var horiz = new string(dx < 0 ? '<' : '>', Math.Abs(dx));
 
             var cost = long.MaxValue;
 
-            if (pos + dy * Up != keypads[0][' ']) {
+            if (keypads[0][currentPos + dy * Up] != ' ') {
                 cost = Math.Min(cost, EncodeString($"{vert}{horiz}A", keypads[1..], cache));
             }
     
-            if (pos + dx * Right != keypads[0][' ']) {
+            if (keypads[0][currentPos + dx * Right] != ' ') {
                 cost = Math.Min(cost, EncodeString($"{horiz}{vert}A", keypads[1..], cache));
             }
             return cost;
@@ -88,7 +78,7 @@ class Solution : Solver {
         return (
             from y in Enumerable.Range(0, lines.Length)
             from x in Enumerable.Range(0, lines[0].Length)
-            select new KeyValuePair<char, Complex>(lines[y][x], x + y * Down)
+            select new KeyValuePair<Complex, char>(x + y * Down, lines[y][x])
         ).ToDictionary();
     }
 }
