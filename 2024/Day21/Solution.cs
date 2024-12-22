@@ -44,7 +44,7 @@ class Solution : Solver {
         return res * int.Parse(line.Substring(0, line.Length - 1));
     }
 
-    long EncodeString(string st, Span<Keypad> keypads, Cache cache) {
+    long EncodeString(string st, Keypad[] keypads, Cache cache) {
         if (keypads.Length == 0) {
             return st.Length;
         } else {
@@ -60,66 +60,28 @@ class Solution : Solver {
             return length;
         }
     }
-    long EncodeKey(char ch, Complex pos, Span<Keypad> keypads,  Cache cache) {
-        var key = (ch, pos, keypads.Length);
-        if (cache.ContainsKey(key)) {
-            return cache[key];
-        }
+    long EncodeKey(char ch, Complex pos, Keypad[] keypads,  Cache cache) {
+        return cache.GetOrAdd((ch, pos, keypads.Length), _ => {
+            var target = keypads[0][ch];
 
-        var target = keypads[0][ch];
+            var dy = (int)(target.Imaginary - pos.Imaginary);
+            var dx = (int)(target.Real - pos.Real);
 
-        var dy = (int)(target.Imaginary - pos.Imaginary);
-        var dx = (int)(target.Real - pos.Real);
-        
-        var resCost = long.MaxValue;
+            var vert = new string(dy < 0 ? 'v' : '^', Math.Abs(dy));
+            var horiz = new string(dx < 0 ? '<' : '>', Math.Abs(dx));
 
-        if (pos + dy * Up != keypads[0][' ']) {
-            string toEncode = "";
-            if (dy < 0) {
-                toEncode += new string('v', Math.Abs(dy));
-            } else if (dy > 0) {
-                toEncode += new string('^', Math.Abs(dy));
+            var cost = long.MaxValue;
+
+            if (pos + dy * Up != keypads[0][' ']) {
+                cost = Math.Min(cost, EncodeString($"{vert}{horiz}A", keypads[1..], cache));
             }
-            if (dx < 0) {
-                toEncode += new string('<', Math.Abs(dx));
-            } else if (dx > 0) {
-                toEncode += new string('>', Math.Abs(dx));
+    
+            if (pos + dx * Right != keypads[0][' ']) {
+                cost = Math.Min(cost, EncodeString($"{horiz}{vert}A", keypads[1..], cache));
             }
-            toEncode += "A";
-            var cost = EncodeString(toEncode, keypads[1..], cache);
-
-            if (cost < resCost) {
-                resCost = cost;
-            }
-        }
- 
-        if (pos + dx * Right != keypads[0][' ']) {
-            string toEncode = "";
-            if (dx < 0) {
-                toEncode += new string('<', Math.Abs(dx));
-            } else if (dx > 0) {
-                toEncode += new string('>', Math.Abs(dx));
-            }
-
-            if (dy < 0) {
-                toEncode += new string('v', Math.Abs(dy));
-            } else if (dy > 0) {
-                toEncode += new string('^', Math.Abs(dy));
-            }
-            toEncode += "A";
-
-            var cost = EncodeString(toEncode, keypads[1..], cache);
-
-            if (cost < resCost) {
-                resCost = cost;
-            }
-        }
-
-        cache[key] = resCost;
-        return cache[key];
+            return cost;
+        });
     }
-
-
 
     Keypad ParseKeypad(string keypad) {
         var lines = keypad.Split("\n");
