@@ -13,7 +13,9 @@ record struct Vec2(int x, int y);
 class Solution : Solver {
 
     public object PartOne(string input) => Solve(input, 2);
+
     public object PartTwo(string input) => Solve(input, 25);
+    
     long Solve(string input, int depth) {
         var keypad1 = ParseKeypad("789\n456\n123\n 0A");
         var keypad2 = ParseKeypad(" ^A\n<v>");
