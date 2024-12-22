@@ -26,36 +26,22 @@ class Solution : Solver {
 
     
     public object PartOne(string input) {
-        return input.Split("\n").Sum(line => Solve2(line, 2).Item1);
+        return input.Split("\n").Sum(line => Solve2(line, 2));
     }
     public object PartTwo(string input) {
-        return input.Split("\n").Sum(line => Solve2(line, 25).Item1);
+        return input.Split("\n").Sum(line => Solve2(line, 25));
     }
 
-    static readonly Complex Left = -1;
     static readonly Complex Right = 1;
     static readonly Complex Up = Complex.ImaginaryOne;
     static readonly Complex Down = -Complex.ImaginaryOne;
 
-    (long, string) Solve2(string line, int depth) {
+    long Solve2(string line, int depth) {
         var keypad1 = ParseKeypad("789\n456\n123\n 0A");
         var keypad2 = ParseKeypad(" ^A\n<v>");
-
-        var keypads = new List<Keypad>();
-        for(var i =0;i<depth;i++) {
-            keypads.Add(keypad2);
-        }
-        
-        Cache cache = new Cache();
-        var res = long.MaxValue;
-        var st = "";
-        foreach (var plan in Encode(line, keypad1, keypad1['A'])) {
-            var length = EncodeString(plan, keypads.ToArray(), cache);
-            if (length < res) {
-                res = Math.Min(res, length);
-            }
-        }
-        return (res * int.Parse(line.Substring(0, line.Length - 1)), st);
+        var keypads = Enumerable.Repeat(keypad2, depth).Prepend(keypad1).ToArray();
+        var res = EncodeString(line, keypads,  new Cache());
+        return res * int.Parse(line.Substring(0, line.Length - 1));
     }
 
     long EncodeString(string st, Span<Keypad> keypads, Cache cache) {
@@ -84,9 +70,8 @@ class Solution : Solver {
 
         var dy = (int)(target.Imaginary - pos.Imaginary);
         var dx = (int)(target.Real - pos.Real);
-
+        
         var resCost = long.MaxValue;
-        var resTop = Complex.Infinity;
 
         if (pos + dy * Up != keypads[0][' ']) {
             string toEncode = "";
@@ -135,59 +120,8 @@ class Solution : Solver {
     }
 
 
-    IEnumerable<string> Encode(string st, Dictionary<char, Complex> keymap, Complex pos) {
-        if (st == "") {
-            yield return "";
-            yield break;
-        }
 
-
-        var target = keymap[st[0]];
-
-        var dy = (int)(target.Imaginary - pos.Imaginary);
-        var dx = (int)(target.Real - pos.Real);
-
-        if (pos + dy * Up != keymap[' ']) {
-            var res = "";
-            if (dy < 0) {
-                res += new string('v', Math.Abs(dy));
-            } else if (dy > 0) {
-                res += new string('^', Math.Abs(dy));
-            }
-            if (dx < 0) {
-                res += new string('<', Math.Abs(dx));
-            } else if (dx > 0) {
-                res += new string('>', Math.Abs(dx));
-            }
-            res += "A";
-            foreach (var resT in Encode(st[1..], keymap, target)) {
-                yield return res + resT;
-            }
-        }
-
-        if (pos + dx * Right != keymap[' ']) {
-            var res = "";
-            if (dx < 0) {
-                res += new string('<', Math.Abs(dx));
-            } else if (dx > 0) {
-                res += new string('>', Math.Abs(dx));
-            }
-
-            if (dy < 0) {
-                res += new string('v', Math.Abs(dy));
-            } else if (dy > 0) {
-                res += new string('^', Math.Abs(dy));
-            }
-
-            res += "A";
-            foreach (var resT in Encode(st[1..], keymap, target)) {
-                yield return res + resT;
-            }
-        }
-
-    }
-
-    Dictionary<char, Complex> ParseKeypad(string keypad) {
+    Keypad ParseKeypad(string keypad) {
         var lines = keypad.Split("\n");
         return (
             from y in Enumerable.Range(0, lines.Length)
