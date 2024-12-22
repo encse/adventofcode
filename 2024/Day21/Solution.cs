@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using AngleSharp.Common;
-using Cache = System.Collections.Concurrent.ConcurrentDictionary<(char, System.Numerics.Complex, int, System.Numerics.Complex), (long, string, System.Numerics.Complex)>;
+using Cache = System.Collections.Concurrent.ConcurrentDictionary<(char, System.Numerics.Complex, int),  long>;
 
 
 [ProblemName("Keypad Conundrum")]
@@ -44,39 +44,32 @@ class Solution : Solver {
         var res = long.MaxValue;
         var st = "";
         foreach (var plan in Encode(line, keypad1, keypad1['A'])) {
-            var (length, stT, _) = EncodeString(plan, keypad2, depth, cache, keypad2['A']);
+            var length = EncodeString(plan, keypad2, depth, cache);
             if (length < res) {
                 res = Math.Min(res, length);
-                st = stT;
             }
         }
         return (res * int.Parse(line.Substring(0, line.Length - 1)), st);
     }
 
-    (long, string, Complex) EncodeString(string st, Dictionary<char, Complex> keypad2, int depth, Cache cache, Complex top) {
+    long EncodeString(string st, Dictionary<char, Complex> keypad2, int depth, Cache cache) {
         if (depth == 0) {
-            return (st.Length, st, top);
+            return st.Length;
         } else {
             var length = 0L;
-            var pos = keypad2['A']; ; //depth == 1 ? top : keypad2['A'];
-            var originalTop = top;
-            var resSt = "";
+            var pos = keypad2['A']; 
             foreach (var step in st) {
                 long cost;
-                string stT;
-                (cost, stT, top) = EncodeKey(step, pos, keypad2, depth, cache, top);
+                cost = EncodeKey(step, pos, keypad2, depth, cache);
                 length += cost;
-                resSt += stT;
                 pos = keypad2[step];
             }
-            if (depth == 1) {
-                top = st.Length == 1 ? originalTop : keypad2[st[^1]];
-            }
-            return (length, resSt, top);
+            
+            return length;
         }
     }
-    (long, string, Complex) EncodeKey(char ch, Complex pos, Dictionary<char, Complex> keypad2, int depth, Cache cache, Complex top) {
-        var key = (ch, pos, depth, top);
+    long EncodeKey(char ch, Complex pos, Dictionary<char, Complex> keypad2, int depth, Cache cache) {
+        var key = (ch, pos, depth);
         if (cache.ContainsKey(key)) {
             return cache[key];
         }
@@ -93,13 +86,9 @@ class Solution : Solver {
 
         var resCost = long.MaxValue;
         var resTop = Complex.Infinity;
-        var resSt = "";
 
-        string toEncode = "";
-      
-
-        toEncode = "";
         if (pos + dy * Up != keypad2[' ']) {
+            string toEncode = "";
             if (dy < 0) {
                 toEncode += new string('v', Math.Abs(dy));
             } else if (dy > 0) {
@@ -111,19 +100,15 @@ class Solution : Solver {
                 toEncode += new string('>', Math.Abs(dx));
             }
             toEncode += "A";
-            var (cost, stT, topT) = EncodeString(toEncode, keypad2, depth - 1, cache, top);
+            var cost = EncodeString(toEncode, keypad2, depth - 1, cache);
 
             if (cost < resCost) {
                 resCost = cost;
-                resTop = topT;
-                resSt = stT;
             }
         }
-
-
  
-        toEncode = "";
         if (pos + dx * Right != keypad2[' ']) {
+            string toEncode = "";
             if (dx < 0) {
                 toEncode += new string('<', Math.Abs(dx));
             } else if (dx > 0) {
@@ -137,17 +122,14 @@ class Solution : Solver {
             }
             toEncode += "A";
 
-            var (cost, stT, topT) = EncodeString(toEncode, keypad2, depth - 1, cache, top);
+            var cost = EncodeString(toEncode, keypad2, depth - 1, cache);
 
             if (cost < resCost) {
                 resCost = cost;
-                resTop = topT;
-                resSt = stT;
             }
         }
-        resSt = "";
 
-        cache[key] = (resCost, resSt, resTop);
+        cache[key] = resCost;
         return cache[key];
     }
 
