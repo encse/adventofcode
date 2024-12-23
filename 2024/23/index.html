@@ -15,13 +15,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/a11y-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js"></script>
-    <title>Advent of Code 2017/24 'Electromagnetic Moat'' in C# by encse</title>
+    <title>Advent of Code 2024/23 'LAN Party'' in C# by encse</title>
 
     <head>
-        <meta property="og:title" content="Advent of Code 2017/24 'Electromagnetic Moat' in C# by encse">
-        <meta property="og:description" content="C# solution to the 'Electromagnetic Moat' Advent of Code problem.">
-        <meta property="og:image" content="https://aoc.csokavar.hu/2017/24//illustration.jpeg">
-        <meta property="og:url" content="https://aoc.csokavar.hu/2017/24/">
+        <meta property="og:title" content="Advent of Code 2024/23 'LAN Party' in C# by encse">
+        <meta property="og:description" content="C# solution to the 'LAN Party' Advent of Code problem.">
+        <meta property="og:image" content="https://aoc.csokavar.hu/2024/23//illustration.jpeg">
+        <meta property="og:url" content="https://aoc.csokavar.hu/2024/23/">
         <meta property="og:type" content="website">
       </head>
 
@@ -254,11 +254,11 @@
     <div id="top-nav">
         <div id="year-picker"><nav class="dropdown">
             <input type="checkbox" id="dropdown-toggle" class="dropdown-toggle">
-            <span class="current"><label id="dropdown-label" for="dropdown-toggle">2017</label></span>
+            <span class="current"><label id="dropdown-label" for="dropdown-toggle">2024</label></span>
             <div class="dropdown-content"><a href="/2015/25/">2015</a><a href="/2016/25/">2016</a><a href="/2017/25/">2017</a><a href="/2018/25/">2018</a><a href="/2019/25/">2019</a><a href="/2020/25/">2020</a><a href="/2021/25/">2021</a><a href="/2022/25/">2022</a><a href="/2023/25/">2023</a><a href="/2024/23/">2024</a></div>
         </nav>
      </div>
-        <div id="day-picker"><span><a href="/2017/1">01</a></span><span><a href="/2017/2">02</a></span><span><a href="/2017/3">03</a></span><span><a href="/2017/4">04</a></span><span><a href="/2017/5">05</a></span><span><a href="/2017/6">06</a></span><span><a href="/2017/7">07</a></span><span><a href="/2017/8">08</a></span><span><a href="/2017/9">09</a></span><span><a href="/2017/10">10</a></span><span><a href="/2017/11">11</a></span><span><a href="/2017/12">12</a></span><span><a href="/2017/13">13</a></span><span><a href="/2017/14">14</a></span><span><a href="/2017/15">15</a></span><span><a href="/2017/16">16</a></span><span><a href="/2017/17">17</a></span><span><a href="/2017/18">18</a></span><span><a href="/2017/19">19</a></span><span><a href="/2017/20">20</a></span><span><a href="/2017/21">21</a></span><span><a href="/2017/22">22</a></span><span><a href="/2017/23">23</a></span><span class="current"><a href="/2017/24">24</a></span><span><a href="/2017/25">25</a></span></div>
+        <div id="day-picker"><span><a href="/2024/1">01</a></span><span><a href="/2024/2">02</a></span><span><a href="/2024/3">03</a></span><span><a href="/2024/4">04</a></span><span><a href="/2024/5">05</a></span><span><a href="/2024/6">06</a></span><span><a href="/2024/7">07</a></span><span><a href="/2024/8">08</a></span><span><a href="/2024/9">09</a></span><span><a href="/2024/10">10</a></span><span><a href="/2024/11">11</a></span><span><a href="/2024/12">12</a></span><span><a href="/2024/13">13</a></span><span><a href="/2024/14">14</a></span><span><a href="/2024/15">15</a></span><span><a href="/2024/16">16</a></span><span><a href="/2024/17">17</a></span><span><a href="/2024/18">18</a></span><span><a href="/2024/19">19</a></span><span><a href="/2024/20">20</a></span><span><a href="/2024/21">21</a></span><span><a href="/2024/22">22</a></span><span class="current"><a href="/2024/23">23</a></span></div>
     </div>
     <div class="main">
         <div class="header-container">
@@ -268,8 +268,8 @@
 
             <div class="header-title">
                 <p class="text">Advent of Code</p>
-                <h2 id="problem-id">2017/24</h2>
-                <h2 id="problem-name">Electromagnetic Moat</h2>
+                <h2 id="problem-id">2024/23</h2>
+                <h2 id="problem-name">LAN Party</h2>
                 <p class="text">in C#</p>
                 <p class="text"></p>
                 <p class="text"><em>by <a style="text-decoration: underline"
@@ -279,60 +279,70 @@
         </div>
 
         <div class="content">
-            <div id="notes"><p>The CPU itself is a large, black building surrounded by a bottomless pit. Enormous metal tubes extend outward from the side of the building at regular intervals and descend down into the void. There&#39;s no way to cross, but you need to get inside.</p>
-<p>No way, of course, other than building a <em>bridge</em> out of the magnetic components strewn about nearby.</p>
-<p>Read the <a href="https://adventofcode.com/2017/day/24">full puzzle</a>.</p>
+            <div id="notes"><p>As The Historians wander around a secure area at Easter Bunny HQ, you come across posters for a <a href="https://en.wikipedia.org/wiki/LAN_party">LAN party</a> scheduled for today! Maybe you can find it; you connect to a nearby <em>datalink port</em> and download a map of the local network (your puzzle input).</p>
+<p>The network map provides a list of every <em>connection between two computers</em>. For example:</p>
+<p><em>Visit the website for the full story and <a href="https://adventofcode.com/2024/day/23">full puzzle</a> description.</em></p>
+<p>We tackled a graph algorithm problem today, where we had to find maximal cliques in an undirected graph. The literature provides <a href="https://en.wikipedia.org/wiki/Bron%E2%80%93Kerbosch_algorithm">efficient algorithms</a> for this problem, but our graph is not too large, so we can use a straightforward &quot;poor man&#39;s&quot; strategy as well. </p>
+<p>I started by creating <em>seed</em> components containing nodes that start with &#39;<em>t</em>&#39;. Then, I proceeded to <em>grow</em> these components by adding a single node to them in all possible ways. First, I identify the neighbors of each <em>t</em> node, followed by the triples which is required to solve Part 1. In Part 2, this process is continued until a single maximal component remains.</p>
 </div>
-            <div id="code-container"><pre class="hljs language-csharp"><code>using System;
+            <div id="code-container"><pre class="hljs language-csharp"><code>namespace AdventOfCode.Y2024.Day23;
+
+using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
+using Graph = System.Collections.Generic.Dictionary&lt;string, System.Collections.Generic.HashSet&lt;string&gt;&gt;;
+using Component = string;
 
-namespace AdventOfCode.Y2017.Day24;
-
-[ProblemName(&quot;Electromagnetic Moat&quot;)]
+[ProblemName(&quot;LAN Party&quot;)]
 class Solution : Solver {
-
-    public object PartOne(string input) =&gt; StrongestBridge(input, (a, b) =&gt; a.strength - b.strength);
-    public object PartTwo(string input) =&gt; StrongestBridge(input, (a, b) =&gt; a.CompareTo(b));
-
-    int StrongestBridge(string input, Func&lt;(int length, int strength), (int length, int strength), int&gt; compare) {
-
-        (int length, int strength) fold(int pinIn, HashSet&lt;Component&gt; components) {
-            var strongest = (0, 0);
-            foreach (var component in components.ToList()) {
-                var pinOut =
-                    pinIn == component.pinA ? component.pinB :
-                    pinIn == component.pinB ? component.pinA :
-                     -1;
-
-                if (pinOut != -1) {
-                    components.Remove(component);
-                    var curr = fold(pinOut, components);
-                    (curr.length, curr.strength) = (curr.length + 1, curr.strength + component.pinA + component.pinB);
-                    strongest = compare(curr, strongest) &gt; 0 ? curr : strongest;
-                    components.Add(component);
-                }
-            }
-            return strongest;
-        }
-        return fold(0, Parse(input)).strength;
+    public object PartOne(string input) {
+        var g = GetGraph(input);
+        var components = GetSeed(g);
+        components = Grow(g, components);
+        components = Grow(g, components);
+        return components.Count;
     }
 
-    HashSet&lt;Component&gt; Parse(string input) {
-        var components = new HashSet&lt;Component&gt;();
-        foreach (var line in input.Split(&#039;\n&#039;)) {
-            var parts = line.Split(&#039;/&#039;);
-            components.Add(new Component { pinA = int.Parse(parts[0]), pinB = int.Parse(parts[1]) });
+    public object PartTwo(string input) {
+        var g = GetGraph(input);
+        var components = GetSeed(g);
+        while (components.Count &gt; 1) {
+            components = Grow(g, components);
         }
-        return components;
+        return components.Single();
     }
-}
 
-class Component {
-    public int pinA;
-    public int pinB;
-}
-</code></pre></div>
+    HashSet&lt;Component&gt; GetSeed(Graph g) =&gt; g.Keys.Where(k=&gt;k.StartsWith(&quot;t&quot;)).ToHashSet();
+    
+    HashSet&lt;Component&gt; Grow(Graph g, HashSet&lt;Component&gt; components) =&gt; (
+        from c in components
+        let members = Members(c)
+        from neighbour in members.SelectMany(m =&gt; g[m]).Distinct()
+        where !members.Contains(neighbour)
+        where members.All(m =&gt; g[neighbour].Contains(m))
+        select Extend(c, neighbour)
+    ).ToHashSet();
+
+    IEnumerable&lt;string&gt; Members(Component c) =&gt; 
+        c.Split(&quot;,&quot;);
+    Component Extend(Component c, string item) =&gt; 
+        string.Join(&quot;,&quot;, Members(c).Append(item).OrderBy(x=&gt;x));
+
+    Graph GetGraph(string input) {
+        var edges = 
+            from line in input.Split(&quot;\n&quot;)
+            let nodes = line.Split(&quot;-&quot;)
+            from edge in new []{(nodes[0], nodes[1]), (nodes[1], nodes[0])}
+            select (From: edge.Item1, To: edge.Item2);
+
+       return (
+            from e in edges
+            group e by e.From into g
+            select (g.Key, g.Select(e =&gt; e.To).ToHashSet())
+        ).ToDictionary();
+    }
+}</code></pre></div>
             <div id="code-location"> <p>Please ☆ my <a href="https://github.com/encse/adventofcode/">repo</a> if you like it!</p></div>
         </div>
 
