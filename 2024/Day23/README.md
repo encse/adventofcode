@@ -7,4 +7,4 @@ _Visit the website for the full story and [full puzzle](https://adventofcode.com
 
 We tackled a graph algorithm problem today, where we had to find maximal cliques in an undirected graph. The literature provides [efficient algorithms](https://en.wikipedia.org/wiki/Bron%E2%80%93Kerbosch_algorithm) for this problem, but our graph is not too large, so we can use a straightforward "poor man's" strategy as well. 
 
-I started by creating _seed_ components containing nodes that start with '_t_'. Then, I proceeded to _grow_ these components by adding a single node to them in all possible ways. First, I identify the neighbors of each _t_ node, followed by the triples which is required to solve Part 1. In Part 2, this process is continued until a single maximal component remains.
+I started with the _seed_ components, that is single element components for each node that starts with '_t_'. Then, I proceeded to _grow_ these components by adding a single node to them in all possible ways. I can put this in a loop, to get components with size 2, 3, 4, etc. _Part 1_ asks for the number of components that have 3 nodes. _Part 2_ asks for the one that cannot be grown anymore. 
