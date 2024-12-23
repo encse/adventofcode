@@ -283,7 +283,7 @@
 <p>The network map provides a list of every <em>connection between two computers</em>. For example:</p>
 <p><em>Visit the website for the full story and <a href="https://adventofcode.com/2024/day/23">full puzzle</a> description.</em></p>
 <p>We tackled a graph algorithm problem today, where we had to find maximal cliques in an undirected graph. The literature provides <a href="https://en.wikipedia.org/wiki/Bron%E2%80%93Kerbosch_algorithm">efficient algorithms</a> for this problem, but our graph is not too large, so we can use a straightforward &quot;poor man&#39;s&quot; strategy as well. </p>
-<p>I started with the <em>seed</em> components, that is single element components for each node that starts with &#39;<em>t</em>&#39;. Then, I proceeded to <em>grow</em> these components by adding a single node to them in all possible ways. I can put this in a loop, to get components with size 2, 3, 4, etc. <em>Part 1</em> asks for the number of components that have 3 nodes. <em>Part 2</em> asks for the one that cannot be grown anymore. </p>
+<p>I started with the <em>seed</em> components, that is single element components for each node. Then, I proceeded to <em>grow</em> these components by adding a single node to them in all possible ways. I can put this in a loop, to get components with size 2, 3, 4, etc. <em>Part 1</em> asks for the number of components that have 3 nodes and have at least one node starting with &#39;t&#39;. <em>Part 2</em> asks for the biggest component that cannot be grown anymore. </p>
 </div>
             <div id="code-container"><pre class="hljs language-csharp"><code>namespace AdventOfCode.Y2024.Day23;
 
@@ -301,7 +301,7 @@ class Solution : Solver {
         var components = GetSeed(g);
         components = Grow(g, components);
         components = Grow(g, components);
-        return components.Count;
+        return components.Count(c =&gt; Members(c).Any(m=&gt;m.StartsWith(&quot;t&quot;)));
     }
 
     public object PartTwo(string input) {
@@ -313,10 +313,10 @@ class Solution : Solver {
         return components.Single();
     }
 
-    HashSet&lt;Component&gt; GetSeed(Graph g) =&gt; g.Keys.Where(k=&gt;k.StartsWith(&quot;t&quot;)).ToHashSet();
+    HashSet&lt;Component&gt; GetSeed(Graph g) =&gt; g.Keys.ToHashSet();
     
     HashSet&lt;Component&gt; Grow(Graph g, HashSet&lt;Component&gt; components) =&gt; (
-        from c in components
+        from c in components.AsParallel()
         let members = Members(c)
         from neighbour in members.SelectMany(m =&gt; g[m]).Distinct()
         where !members.Contains(neighbour)
