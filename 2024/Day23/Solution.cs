@@ -14,7 +14,7 @@ class Solution : Solver {
         var components = GetSeed(g);
         components = Grow(g, components);
         components = Grow(g, components);
-        return components.Count;
+        return components.Count(c => Members(c).Any(m=>m.StartsWith("t")));
     }
 
     public object PartTwo(string input) {
@@ -26,10 +26,10 @@ class Solution : Solver {
         return components.Single();
     }
 
-    HashSet<Component> GetSeed(Graph g) => g.Keys.Where(k=>k.StartsWith("t")).ToHashSet();
+    HashSet<Component> GetSeed(Graph g) => g.Keys.ToHashSet();
     
     HashSet<Component> Grow(Graph g, HashSet<Component> components) => (
-        from c in components
+        from c in components.AsParallel()
         let members = Members(c)
         from neighbour in members.SelectMany(m => g[m]).Distinct()
         where !members.Contains(neighbour)
