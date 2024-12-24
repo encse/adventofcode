@@ -5,7 +5,10 @@ const marked = require('marked');
 
 function media(dir){
     const files = fs.readdirSync(dir);
-    return files.filter(file => path.extname(file).toLowerCase() === '.gif' || path.extname(file).toLowerCase() === '.png' ).map(file => path.join(dir, file));
+    return files.filter(file => 
+        path.extname(file).toLowerCase() === '.gif' || 
+        path.extname(file).toLowerCase() === '.png' 
+    ).map(file => path.join(dir, file));
 }
 
 function* findReadmes(dir) {

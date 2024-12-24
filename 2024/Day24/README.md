@@ -1,5 +1,5 @@
 ## --- Day 24: Crossed Wires ---
-You and The Historians arrive at the edge of a [large grove](/2022/day/23) somewhere in the jungle. After the last incident, the Elves installed a small device that monitors the fruit. While The Historians search the grove, one of them asks if you can take a look at the monitoring device; apparently, it's been malfunctioning recently.
+You and The Historians arrive at the edge of a _large grove_ somewhere in the jungle. After the last incident, the Elves installed a small device that monitors the fruit. While The Historians search the grove, one of them asks if you can take a look at the monitoring device; apparently, it's been malfunctioning recently.
 
 The device seems to be trying to produce a number through some boolean logic gates. Each gate has two inputs and one output. The gates all operate on values that are either <em>true</em> (<code>1</code>) or <em>false</em> (<code>0</code>).
 
@@ -17,5 +17,5 @@ Which are chained one after the other like this:
 
 I took the images from [build-electronic-circuits.com](https://www.build-electronic-circuits.com/full-adder/).
 
-I implemented this logic in my 'fix' method. I start with the output x01 and y01 and try to identify the gates for the individual steps. Where I found an error, I manually checked my input to figure out what went wrong. I had just two different
+I implemented this logic in my 'fix' method. I start with the inputs x01 and y01 and try to identify the gates for the individual steps. Where I found an error, I manually checked my input to figure out what went wrong. I had just two different
 kind of errors which can be corrected by the fixer.
