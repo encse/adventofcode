@@ -297,49 +297,64 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Circuit = System.Collections.Generic.Dictionary&lt;string, Gate&gt;;
 
-record struct Rule(string in1, string in2, string kind, string output);
+record struct Gate(string in1, string kind, string in2);
 
 [ProblemName(&quot;Crossed Wires&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
-        var gate = Parse(input);
-        var bits = gate.Keys.Where(k =&gt; k.StartsWith(&quot;z&quot;)).OrderByDescending(x =&gt; x).ToArray();
+        var (inputs, circuit) = Parse(input);
+        
+        var outputs = from label in circuit.Keys where label.StartsWith(&quot;z&quot;) select label; 
+
         var res = 0L;
-        foreach (var b in bits) {
-            res = res * 2 + gate[b]();
+        foreach (var label in outputs.OrderByDescending(label=&gt;label)) {
+            res = res * 2 + Evaluate(label, circuit, inputs);
         }
         return res;
     }
 
-    public object PartTwo(string input) {
-        var swaps = Fix(ParseRules(input.Split(&quot;\n\n&quot;)[1]));
-        return string.Join(&quot;,&quot;, swaps.OrderBy(x =&gt; x));
+    int Evaluate(string label, Circuit circuit, Dictionary&lt;string, int&gt; inputs) {
+        if (inputs.TryGetValue(label, out var res)) {
+            return res;
+        } else {
+            return circuit[label] switch {
+                Gate(var in1, &quot;AND&quot;, var in2) =&gt; Evaluate(in1, circuit, inputs) &amp; Evaluate(in2, circuit, inputs),
+                Gate(var in1, &quot;OR&quot;, var in2)  =&gt; Evaluate(in1, circuit, inputs) | Evaluate(in2, circuit, inputs),
+                Gate(var in1, &quot;XOR&quot;, var in2) =&gt; Evaluate(in1, circuit, inputs) ^ Evaluate(in2, circuit, inputs),
+                _ =&gt; throw new Exception(circuit[label].ToString()),
+            };
+        }
     }
 
-    // the rules should define a full adder for two 44 bit numbers
+    public object PartTwo(string input) {
+        var circuit = Parse(input).circuit;
+        return string.Join(&quot;,&quot;, Fix(circuit).OrderBy(label =&gt; label));
+    }
+
+    // the circuit should define a full adder for two 44 bit numbers
     // this fixer is specific to my input.
-    IEnumerable&lt;string&gt; Fix(List&lt;Rule&gt; rules) {
-        var cin = Output(rules, &quot;x00&quot;, &quot;AND&quot;, &quot;y00&quot;);
+    IEnumerable&lt;string&gt; Fix(Circuit circuit) {
+        var cin = Output(circuit, &quot;x00&quot;, &quot;AND&quot;, &quot;y00&quot;);
         for (var i = 1; i &lt; 45; i++) {
             var x = $&quot;x{i:D2}&quot;;
             var y = $&quot;y{i:D2}&quot;;
             var z = $&quot;z{i:D2}&quot;;
 
-            var xor1 = Output(rules, x, &quot;XOR&quot;, y);
-            var and1 = Output(rules, x, &quot;AND&quot;, y);
-
-            var and2 = Output(rules, cin, &quot;AND&quot;, xor1);
-            var xor2 = Output(rules, cin, &quot;XOR&quot;, xor1);
+            var xor1 = Output(circuit, x, &quot;XOR&quot;, y);
+            var and1 = Output(circuit, x, &quot;AND&quot;, y);
+            var xor2 = Output(circuit, cin, &quot;XOR&quot;, xor1);
+            var and2 = Output(circuit, cin, &quot;AND&quot;, xor1);
 
             if (xor2 == null &amp;&amp; and2 == null) {
-                return Swap(rules, xor1, and1);
+                return SwapAndFix(circuit, xor1, and1);
             }
 
-            var carry = Output(rules, and1, &quot;OR&quot;, and2);
+            var carry = Output(circuit, and1, &quot;OR&quot;, and2);
             if (xor2 != z) {
-                return Swap(rules,z,xor2);
+                return SwapAndFix(circuit, z, xor2);
             } else {
                 cin = carry;
             }
@@ -347,54 +362,35 @@ class Solution : Solver {
         return [];
     }
 
-    string Output(IEnumerable&lt;Rule&gt; rules, string x, string gate, string y) =&gt; 
-        rules.SingleOrDefault(rule =&gt; 
-            (rule.in1 == x &amp;&amp; rule.kind == gate &amp;&amp; rule.in2 == y) || 
-            (rule.in1 == y &amp;&amp; rule.kind == gate &amp;&amp; rule.in2 == x) 
-        ).output;
-
-    IEnumerable&lt;string&gt; Swap(List&lt;Rule&gt; rules, string out1, string out2) {
-        rules = rules.Select(rule =&gt; 
-            rule.output == out1 ? rule with {output = out2} :
-            rule.output == out2 ? rule with {output = out1} :
-            rule  
-        ).ToList();
-
-        return Fix(rules).Concat([out1, out2]);
+    IEnumerable&lt;string&gt; SwapAndFix(Circuit circuit, string out1, string out2) {
+        (circuit[out1], circuit[out2]) = (circuit[out2], circuit[out1]); 
+        return Fix(circuit).Concat([out1, out2]);
     }
 
-     List&lt;Rule&gt; ParseRules(string input) =&gt; input
-        .Split(&quot;\n&quot;)
-        .Select(line =&gt; {
-            var parts = line.Split(&quot; &quot;);
-            return new Rule(in1: parts[0], in2: parts[2], kind: parts[1], output: parts[4]);
-        })
-        .ToList();
-    Dictionary&lt;string, Gate&gt; Parse(string input) {
+    string Output(Circuit circuit, string x, string kind, string y) =&gt; 
+        circuit.SingleOrDefault(pair =&gt; 
+            (pair.Value.in1 == x &amp;&amp; pair.Value.kind == kind &amp;&amp; pair.Value.in2 == y) || 
+            (pair.Value.in1 == y &amp;&amp; pair.Value.kind == kind &amp;&amp; pair.Value.in2 == x) 
+        ).Key;
 
-        var res = new Dictionary&lt;string, Gate&gt;();
+    (Dictionary&lt;string, int&gt; inputs, Circuit circuit) Parse(string input) {
+        var inputs = new Dictionary&lt;string, int&gt;();
+        var circuit = new Circuit();
 
         var blocks = input.Split(&quot;\n\n&quot;);
 
         foreach (var line in blocks[0].Split(&quot;\n&quot;)) {
             var parts = line.Split(&quot;: &quot;);
-            res.Add(parts[0], () =&gt; int.Parse(parts[1]));
+            inputs.Add(parts[0], int.Parse(parts[1]));
         }
 
         foreach (var line in blocks[1].Split(&quot;\n&quot;)) {
             var parts = Regex.Matches(line, &quot;[a-zA-z0-9]+&quot;).Select(m =&gt; m.Value).ToArray();
-            Gate gate = (parts[0], parts[1], parts[2]) switch {
-                (var in1, &quot;AND&quot;, var in2) =&gt; () =&gt; res[in1]() &amp; res[in2](),
-                (var in1, &quot;OR&quot;, var in2) =&gt; () =&gt; res[in1]() | res[in2](),
-                (var in1, &quot;XOR&quot;, var in2) =&gt; () =&gt; res[in1]() ^ res[in2](),
-                _ =&gt; throw new Exception(),
-            };
-            res.Add(parts[3], gate);
+            circuit.Add(parts[3], new Gate(in1: parts[0], kind: parts[1], in2: parts[2]));
         }
-        return res;
+        return (inputs, circuit);
     }
 
-    delegate int Gate();
 }</code></pre></div>
             <div id="code-location"> <p>Please ☆ my <a href="https://github.com/encse/adventofcode/">repo</a> if you like it!</p></div>
         </div>
