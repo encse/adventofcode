@@ -15,13 +15,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/a11y-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js"></script>
-    <title>Advent of Code 2020/16 'Ticket Translation'' in C# by encse</title>
+    <title>Advent of Code 2024/24 'Crossed Wires'' in C# by encse</title>
 
     <head>
-        <meta property="og:title" content="Advent of Code 2020/16 'Ticket Translation' in C# by encse">
-        <meta property="og:description" content="C# solution to the 'Ticket Translation' Advent of Code problem.">
-        <meta property="og:image" content="https://aoc.csokavar.hu/2020/16//illustration.jpeg">
-        <meta property="og:url" content="https://aoc.csokavar.hu/2020/16/">
+        <meta property="og:title" content="Advent of Code 2024/24 'Crossed Wires' in C# by encse">
+        <meta property="og:description" content="C# solution to the 'Crossed Wires' Advent of Code problem.">
+        <meta property="og:image" content="https://aoc.csokavar.hu/2024/24//illustration.jpeg">
+        <meta property="og:url" content="https://aoc.csokavar.hu/2024/24/">
         <meta property="og:type" content="website">
       </head>
 
@@ -254,11 +254,11 @@
     <div id="top-nav">
         <div id="year-picker"><nav class="dropdown">
             <input type="checkbox" id="dropdown-toggle" class="dropdown-toggle">
-            <span class="current"><label id="dropdown-label" for="dropdown-toggle">2020</label></span>
+            <span class="current"><label id="dropdown-label" for="dropdown-toggle">2024</label></span>
             <div class="dropdown-content"><a href="/2015/25/">2015</a><a href="/2016/25/">2016</a><a href="/2017/25/">2017</a><a href="/2018/25/">2018</a><a href="/2019/25/">2019</a><a href="/2020/25/">2020</a><a href="/2021/25/">2021</a><a href="/2022/25/">2022</a><a href="/2023/25/">2023</a><a href="/2024/24/">2024</a></div>
         </nav>
      </div>
-        <div id="day-picker"><span><a href="/2020/1">01</a></span><span><a href="/2020/2">02</a></span><span><a href="/2020/3">03</a></span><span><a href="/2020/4">04</a></span><span><a href="/2020/5">05</a></span><span><a href="/2020/6">06</a></span><span><a href="/2020/7">07</a></span><span><a href="/2020/8">08</a></span><span><a href="/2020/9">09</a></span><span><a href="/2020/10">10</a></span><span><a href="/2020/11">11</a></span><span><a href="/2020/12">12</a></span><span><a href="/2020/13">13</a></span><span><a href="/2020/14">14</a></span><span><a href="/2020/15">15</a></span><span class="current"><a href="/2020/16">16</a></span><span><a href="/2020/17">17</a></span><span><a href="/2020/18">18</a></span><span><a href="/2020/19">19</a></span><span><a href="/2020/20">20</a></span><span><a href="/2020/21">21</a></span><span><a href="/2020/22">22</a></span><span><a href="/2020/23">23</a></span><span><a href="/2020/24">24</a></span><span><a href="/2020/25">25</a></span></div>
+        <div id="day-picker"><span><a href="/2024/1">01</a></span><span><a href="/2024/2">02</a></span><span><a href="/2024/3">03</a></span><span><a href="/2024/4">04</a></span><span><a href="/2024/5">05</a></span><span><a href="/2024/6">06</a></span><span><a href="/2024/7">07</a></span><span><a href="/2024/8">08</a></span><span><a href="/2024/9">09</a></span><span><a href="/2024/10">10</a></span><span><a href="/2024/11">11</a></span><span><a href="/2024/12">12</a></span><span><a href="/2024/13">13</a></span><span><a href="/2024/14">14</a></span><span><a href="/2024/15">15</a></span><span><a href="/2024/16">16</a></span><span><a href="/2024/17">17</a></span><span><a href="/2024/18">18</a></span><span><a href="/2024/19">19</a></span><span><a href="/2024/20">20</a></span><span><a href="/2024/21">21</a></span><span><a href="/2024/22">22</a></span><span><a href="/2024/23">23</a></span><span class="current"><a href="/2024/24">24</a></span></div>
     </div>
     <div class="main">
         <div class="header-container">
@@ -268,8 +268,8 @@
 
             <div class="header-title">
                 <p class="text">Advent of Code</p>
-                <h2 id="problem-id">2020/16</h2>
-                <h2 id="problem-name">Ticket Translation</h2>
+                <h2 id="problem-id">2024/24</h2>
+                <h2 id="problem-name">Crossed Wires</h2>
                 <p class="text">in C#</p>
                 <p class="text"></p>
                 <p class="text"><em>by <a style="text-decoration: underline"
@@ -279,106 +279,123 @@
         </div>
 
         <div class="content">
-            <div id="notes"><p>As you&#39;re walking to yet another connecting flight, you realize that one of the legs of your re-routed trip coming up is on a high-speed train. However, the train ticket you were given is in a language you don&#39;t understand. You should probably figure out what it says before you get to the train station after the next flight.</p>
-<p>Unfortunately, you can&#39;t actually <em>read</em> the words on the ticket. You can, however, read the numbers, and so you figure out <em>the fields these tickets must have</em> and <em>the valid ranges</em> for values in those fields.</p>
-<p>Read the <a href="https://adventofcode.com/2020/day/16">full puzzle</a>.</p>
+            <div id="notes"><p>You and The Historians arrive at the edge of a <a href="/2022/day/23">large grove</a> somewhere in the jungle. After the last incident, the Elves installed a small device that monitors the fruit. While The Historians search the grove, one of them asks if you can take a look at the monitoring device; apparently, it&#39;s been malfunctioning recently.</p>
+<p>The device seems to be trying to produce a number through some boolean logic gates. Each gate has two inputs and one output. The gates all operate on values that are either <em>true</em> (<code>1</code>) or <em>false</em> (<code>0</code>).</p>
+<p><em>Visit the website for the full story and <a href="https://adventofcode.com/2024/day/24">full puzzle</a> description.</em></p>
+<p>The first half of the problem was a familiar logic circuit evaluator, we have done this before. I really liked the second part, although I don&#39;t have a super generic solution for it. I generated a graph from my input using Graphviz, then realized that the circuit tries to implement a full adder.</p>
+<p>A single full adder consists of two half adders:</p>
+<p><img src="halfadder.png" alt="half adder"></p>
+<p>Which are chained one after the other like this:</p>
+<p><img src="adder.png" alt="full adder"></p>
+<p>I took the images from <a href="https://www.build-electronic-circuits.com/full-adder/">build-electronic-circuits.com</a>.</p>
+<p>I implemented this logic in my &#39;fix&#39; method. I start with the output x01 and y01 and try to identify the gates for the individual steps. Where I found an error, I manually checked my input to figure out what went wrong. I had just two different
+kind of errors which can be corrected by the fixer.</p>
 </div>
-            <div id="code-container"><pre class="hljs language-csharp"><code>using System;
-using System.Linq;
+            <div id="code-container"><pre class="hljs language-csharp"><code>namespace AdventOfCode.Y2024.Day24;
+
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace AdventOfCode.Y2020.Day16;
+record struct Rule(string in1, string in2, string kind, string output);
 
-record Field(string name, Func&lt;int, bool&gt; isValid);
-record Problem(Field[] fields, int[][] tickets);
-
-[ProblemName(&quot;Ticket Translation&quot;)]
+[ProblemName(&quot;Crossed Wires&quot;)]
 class Solution : Solver {
 
-    Field[] FieldCandidates(IEnumerable&lt;Field&gt; fields, params int[] values) =&gt;
-        fields.Where(field =&gt; values.All(field.isValid)).ToArray();
-
     public object PartOne(string input) {
-        var problem = Parse(input);
-        // add the values that cannot be associated with any of the fields
-        return (
-            from ticket in problem.tickets 
-            from value in ticket 
-            where !FieldCandidates(problem.fields, value).Any() 
-            select value
-        ).Sum();
-    }
-
-    public object PartTwo(string input) {
-
-        var problem = Parse(input);
-        // keep valid tickets only
-        var tickets = (
-            from ticket in problem.tickets 
-            where ticket.All(value =&gt; FieldCandidates(problem.fields, value).Any()) 
-            select ticket
-        ).ToArray();
-
-        // The problem is set up in a way that we can always find a column
-        // that has just one field-candidate left.
-
-        var fields = problem.fields.ToHashSet();
-        var columns = Enumerable.Range(0, fields.Count).ToHashSet();
-
-        var res = 1L;
-        while (columns.Any()) {
-            foreach (var column in columns) {
-                var valuesInColumn = (from ticket in tickets select ticket[column]).ToArray();
-                var candidates = FieldCandidates(fields, valuesInColumn);
-                if (candidates.Length == 1) {
-                    var field = candidates.Single();
-                    fields.Remove(field);
-                    columns.Remove(column);
-                    if (field.name.StartsWith(&quot;departure&quot;)) {
-                        res *= valuesInColumn.First();
-                    }
-                    break;
-                }
-            }
+        var gate = Parse(input);
+        var bits = gate.Keys.Where(k =&gt; k.StartsWith(&quot;z&quot;)).OrderByDescending(x =&gt; x).ToArray();
+        var res = 0L;
+        foreach (var b in bits) {
+            res = res * 2 + gate[b]();
         }
         return res;
     }
 
-    Problem Parse(string input) {
-        int[] parseNumbers(string line) =&gt; (      
-            from m in Regex.Matches(line, &quot;\\d+&quot;) // take the consecutive ranges of digits
-            select int.Parse(m.Value)             // convert them to numbers
-        ).ToArray();
-
-        var blocks = (
-            from block in input.Split(&quot;\n\n&quot;)     // blocks are delimited by empty lines
-            select block.Split(&quot;\n&quot;)              // convert them to lines
-        ).ToArray();
-        
-        var fields = (                          
-            from line in blocks.First()           // line &lt;- [&quot;departure location: 49-920 or 932-950&quot;, ...]
-            let bounds = parseNumbers(line)       // bounds = [49, 920, 932, 950]
-            select 
-                new Field(
-                    line.Split(&quot;:&quot;)[0],           // &quot;departure location&quot;
-                    n =&gt; 
-                        n &gt;= bounds[0] &amp;&amp; n &lt;= bounds[1] || 
-                        n &gt;= bounds[2] &amp;&amp; n &lt;= bounds[3]
-                )
-        ).ToArray();
-
-        var tickets = (                         
-            from block in blocks.Skip(1)          // ticket information is in the second and third blocks 
-            let numbers = block.Skip(1)           // skip &quot;your ticket:&quot; / &quot;nearby tickets:&quot;
-            from line in numbers                  // line &lt;- [&quot;337,687,...&quot;, &quot;223,323,...&quot;, ...]
-            select parseNumbers(line)             // [337, 687, 607]
-        ).ToArray();
-
-        return new Problem(fields, tickets);
+    public object PartTwo(string input) {
+        var swaps = Fix(ParseRules(input.Split(&quot;\n\n&quot;)[1]));
+        return string.Join(&quot;,&quot;, swaps.OrderBy(x =&gt; x));
     }
-}
-</code></pre></div>
+
+    // the rules should define a full adder for two 44 bit numbers
+    // this fixer is specific to my input.
+    IEnumerable&lt;string&gt; Fix(List&lt;Rule&gt; rules) {
+        var cin = Output(rules, &quot;x00&quot;, &quot;AND&quot;, &quot;y00&quot;);
+        for (var i = 1; i &lt; 45; i++) {
+            var x = $&quot;x{i:D2}&quot;;
+            var y = $&quot;y{i:D2}&quot;;
+            var z = $&quot;z{i:D2}&quot;;
+
+            var xor1 = Output(rules, x, &quot;XOR&quot;, y);
+            var and1 = Output(rules, x, &quot;AND&quot;, y);
+
+            var and2 = Output(rules, cin, &quot;AND&quot;, xor1);
+            var xor2 = Output(rules, cin, &quot;XOR&quot;, xor1);
+
+            if (xor2 == null &amp;&amp; and2 == null) {
+                return Swap(rules, xor1, and1);
+            }
+
+            var carry = Output(rules, and1, &quot;OR&quot;, and2);
+            if (xor2 != z) {
+                return Swap(rules,z,xor2);
+            } else {
+                cin = carry;
+            }
+        }
+        return [];
+    }
+
+    string Output(IEnumerable&lt;Rule&gt; rules, string x, string gate, string y) =&gt; 
+        rules.SingleOrDefault(rule =&gt; 
+            (rule.in1 == x &amp;&amp; rule.kind == gate &amp;&amp; rule.in2 == y) || 
+            (rule.in1 == y &amp;&amp; rule.kind == gate &amp;&amp; rule.in2 == x) 
+        ).output;
+
+    IEnumerable&lt;string&gt; Swap(List&lt;Rule&gt; rules, string out1, string out2) {
+        rules = rules.Select(rule =&gt; 
+            rule.output == out1 ? rule with {output = out2} :
+            rule.output == out2 ? rule with {output = out1} :
+            rule  
+        ).ToList();
+
+        return Fix(rules).Concat([out1, out2]);
+    }
+
+     List&lt;Rule&gt; ParseRules(string input) =&gt; input
+        .Split(&quot;\n&quot;)
+        .Select(line =&gt; {
+            var parts = line.Split(&quot; &quot;);
+            return new Rule(in1: parts[0], in2: parts[2], kind: parts[1], output: parts[4]);
+        })
+        .ToList();
+    Dictionary&lt;string, Gate&gt; Parse(string input) {
+
+        var res = new Dictionary&lt;string, Gate&gt;();
+
+        var blocks = input.Split(&quot;\n\n&quot;);
+
+        foreach (var line in blocks[0].Split(&quot;\n&quot;)) {
+            var parts = line.Split(&quot;: &quot;);
+            res.Add(parts[0], () =&gt; int.Parse(parts[1]));
+        }
+
+        foreach (var line in blocks[1].Split(&quot;\n&quot;)) {
+            var parts = Regex.Matches(line, &quot;[a-zA-z0-9]+&quot;).Select(m =&gt; m.Value).ToArray();
+            Gate gate = (parts[0], parts[1], parts[2]) switch {
+                (var in1, &quot;AND&quot;, var in2) =&gt; () =&gt; res[in1]() &amp; res[in2](),
+                (var in1, &quot;OR&quot;, var in2) =&gt; () =&gt; res[in1]() | res[in2](),
+                (var in1, &quot;XOR&quot;, var in2) =&gt; () =&gt; res[in1]() ^ res[in2](),
+                _ =&gt; throw new Exception(),
+            };
+            res.Add(parts[3], gate);
+        }
+        return res;
+    }
+
+    delegate int Gate();
+}</code></pre></div>
             <div id="code-location"> <p>Please ☆ my <a href="https://github.com/encse/adventofcode/">repo</a> if you like it!</p></div>
         </div>
 
