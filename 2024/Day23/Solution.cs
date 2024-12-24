@@ -11,22 +11,20 @@ using Component = string;
 class Solution : Solver {
     public object PartOne(string input) {
         var g = GetGraph(input);
-        var components = GetSeed(g);
+        var components = g.Keys.ToHashSet();
         components = Grow(g, components);
         components = Grow(g, components);
-        return components.Count(c => Members(c).Any(m=>m.StartsWith("t")));
+        return components.Count(c => Members(c).Any(m => m.StartsWith("t")));
     }
 
     public object PartTwo(string input) {
         var g = GetGraph(input);
-        var components = GetSeed(g);
+        var components = g.Keys.ToHashSet();
         while (components.Count > 1) {
             components = Grow(g, components);
         }
         return components.Single();
     }
-
-    HashSet<Component> GetSeed(Graph g) => g.Keys.ToHashSet();
     
     HashSet<Component> Grow(Graph g, HashSet<Component> components) => (
         from c in components.AsParallel()
