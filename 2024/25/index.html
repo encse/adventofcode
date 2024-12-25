@@ -15,13 +15,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/a11y-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js"></script>
-    <title>Advent of Code 2024/12 'Garden Groups'' in C# by encse</title>
+    <title>Advent of Code 2024/25 'Code Chronicle'' in C# by encse</title>
 
     <head>
-        <meta property="og:title" content="Advent of Code 2024/12 'Garden Groups' in C# by encse">
-        <meta property="og:description" content="C# solution to the 'Garden Groups' Advent of Code problem.">
-        <meta property="og:image" content="https://aoc.csokavar.hu/2024/12//illustration.jpeg">
-        <meta property="og:url" content="https://aoc.csokavar.hu/2024/12/">
+        <meta property="og:title" content="Advent of Code 2024/25 'Code Chronicle' in C# by encse">
+        <meta property="og:description" content="C# solution to the 'Code Chronicle' Advent of Code problem.">
+        <meta property="og:image" content="https://aoc.csokavar.hu/2024/25//illustration.jpeg">
+        <meta property="og:url" content="https://aoc.csokavar.hu/2024/25/">
         <meta property="og:type" content="website">
       </head>
 
@@ -258,7 +258,7 @@
             <div class="dropdown-content"><a href="/2015/25/">2015</a><a href="/2016/25/">2016</a><a href="/2017/25/">2017</a><a href="/2018/25/">2018</a><a href="/2019/25/">2019</a><a href="/2020/25/">2020</a><a href="/2021/25/">2021</a><a href="/2022/25/">2022</a><a href="/2023/25/">2023</a><a href="/2024/25/">2024</a></div>
         </nav>
      </div>
-        <div id="day-picker"><span><a href="/2024/1">01</a></span><span><a href="/2024/2">02</a></span><span><a href="/2024/3">03</a></span><span><a href="/2024/4">04</a></span><span><a href="/2024/5">05</a></span><span><a href="/2024/6">06</a></span><span><a href="/2024/7">07</a></span><span><a href="/2024/8">08</a></span><span><a href="/2024/9">09</a></span><span><a href="/2024/10">10</a></span><span><a href="/2024/11">11</a></span><span class="current"><a href="/2024/12">12</a></span><span><a href="/2024/13">13</a></span><span><a href="/2024/14">14</a></span><span><a href="/2024/15">15</a></span><span><a href="/2024/16">16</a></span><span><a href="/2024/17">17</a></span><span><a href="/2024/18">18</a></span><span><a href="/2024/19">19</a></span><span><a href="/2024/20">20</a></span><span><a href="/2024/21">21</a></span><span><a href="/2024/22">22</a></span><span><a href="/2024/23">23</a></span><span><a href="/2024/24">24</a></span><span><a href="/2024/25">25</a></span></div>
+        <div id="day-picker"><span><a href="/2024/1">01</a></span><span><a href="/2024/2">02</a></span><span><a href="/2024/3">03</a></span><span><a href="/2024/4">04</a></span><span><a href="/2024/5">05</a></span><span><a href="/2024/6">06</a></span><span><a href="/2024/7">07</a></span><span><a href="/2024/8">08</a></span><span><a href="/2024/9">09</a></span><span><a href="/2024/10">10</a></span><span><a href="/2024/11">11</a></span><span><a href="/2024/12">12</a></span><span><a href="/2024/13">13</a></span><span><a href="/2024/14">14</a></span><span><a href="/2024/15">15</a></span><span><a href="/2024/16">16</a></span><span><a href="/2024/17">17</a></span><span><a href="/2024/18">18</a></span><span><a href="/2024/19">19</a></span><span><a href="/2024/20">20</a></span><span><a href="/2024/21">21</a></span><span><a href="/2024/22">22</a></span><span><a href="/2024/23">23</a></span><span><a href="/2024/24">24</a></span><span class="current"><a href="/2024/25">25</a></span></div>
     </div>
     <div class="main">
         <div class="header-container">
@@ -268,8 +268,8 @@
 
             <div class="header-title">
                 <p class="text">Advent of Code</p>
-                <h2 id="problem-id">2024/12</h2>
-                <h2 id="problem-name">Garden Groups</h2>
+                <h2 id="problem-id">2024/25</h2>
+                <h2 id="problem-name">Code Chronicle</h2>
                 <p class="text">in C#</p>
                 <p class="text"></p>
                 <p class="text"><em>by <a style="text-decoration: underline"
@@ -279,142 +279,35 @@
         </div>
 
         <div class="content">
-            <div id="notes"><p>Why not search for the Chief Historian near the <em>gardener</em> and his <em>massive farm</em>? There&#39;s plenty of food, so The Historians grab something to eat while they search.</p>
-<p>You&#39;re about to settle near a complex arrangement of garden plots when some Elves ask if you can lend a hand. They&#39;d like to set up fences around each region of garden plots, but they can&#39;t figure out how much fence they need to order or how much it will cost. They hand you a map (your puzzle input) of the garden plots.</p>
-<p><em>Visit the website for the full story and <a href="https://adventofcode.com/2024/day/12">puzzle</a> description.</em></p>
-<p>One can sense that the difficulty has ramped up today with a more complex problem involving area and perimeter calculations. </p>
-<p>First we determine the connected components (regions) of plants of the same type. This is done by picking a position of the 
-garden and applying a standard flood-fill algorithm to it. The result is a <em>region</em>. As we process each region, we carefully 
-remove all affected positions and then pick an untouched position to repeat the process. In a few iterations, the entire 
-garden is associated with the correct regions. The size of the regions corresponds to the <em>area</em>  in question. This logic 
-is implemented in the <code>GetRegions</code> function below.</p>
-<p>The second part of the problem, however, is more intriguing: how do we calculate the lengths of the fences? In part 1, this is 
-relatively simple because we just iterate through each region and count the neighboring cells that belong to a different regions. 
-This tells how many fence is needed. Unfortunately, this logic doesn&#39;t work for part 2...</p>
-<p>I attempted to implement a &quot;walk-around&quot; approach, which involves finding a fence segment and tracing it like a line-following 
-robot while counting the turns. The challenge with this approach is that some regions have holes, that require fences as well 
-and I didnt want to implement hole finding.</p>
-<p>Later realized that it is probably more straightforward to collect the fence segments along straight lines scanning the garden 
-from top to bottom an right to left. This is how I solved the problem.</p>
-<p>Finally went to reddit and read the hint: the number of segments equal to the number of corners... In other words difference
-between part 1 and 2 is very small. In part 1 we are building an edge detector which becomes a corner detector in part 2. I changed
-my implementation to that. </p>
-<p>This concludes our day 12. I&#39;ll take an extra ⭐ for learning something new again.</p>
+            <div id="notes"><p>Out of ideas and time, The Historians agree that they should go back to check the <em>Chief Historian&#39;s office</em> one last time, just in case he went back there without you noticing.</p>
+<p>When you get there, you are surprised to discover that the door to his office is <em>locked</em>! You can hear someone inside, but knocking yields no response. The locks on this floor are all fancy, expensive, virtual versions of <a href="https://en.wikipedia.org/wiki/Pin_tumbler_lock">five-pin tumbler locks</a>, so you contact North Pole security to see if they can help open the door.</p>
+<p><em>Visit the website for the full story and <a href="https://adventofcode.com/2024/day/25">full puzzle</a> description.</em></p>
+<p>A simple one for the last day to ease out. I used some linq as usual.</p>
 </div>
-            <div id="code-container"><pre class="hljs language-csharp"><code>namespace AdventOfCode.Y2024.Day12;
+            <div id="code-container"><pre class="hljs language-csharp"><code>namespace AdventOfCode.Y2024.Day25;
 
 using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
-using System.Numerics;
 
-using Region = System.Collections.Generic.HashSet&lt;System.Numerics.Complex&gt;;
-
-[ProblemName(&quot;Garden Groups&quot;)]
+[ProblemName(&quot;Code Chronicle&quot;)]
 class Solution : Solver {
 
-    Complex Up = Complex.ImaginaryOne;
-    Complex Down = -Complex.ImaginaryOne;
-    Complex Left = -1;
-    Complex Right = 1;
+    public object PartOne(string input) {
+        int[] parsePattern(string[] lines) =&gt; 
+            Enumerable.Range(0, lines[0].Length).Select(x =&gt; 
+                Enumerable.Range(0, lines.Length).Count(y =&gt; lines[y][x] == &#039;#&#039;)
+            ).ToArray();
+        
+        bool match(int[] k, int[] l) =&gt; 
+            Enumerable.Range(0, k.Length).All(i =&gt; k[i] + l[i] &lt;= 7);
 
-    public object PartOne(string input) =&gt; CalculateFencePrice(input, FindEdges);
+        var patterns = input.Split(&quot;\n\n&quot;).Select(b=&gt;b.Split(&quot;\n&quot;));
+        var keys = patterns.Where(p =&gt; p[0][0] == &#039;.&#039;).Select(parsePattern).ToList();
+        var locks = patterns.Where(p =&gt; p[0][0] == &#039;#&#039;).Select(parsePattern).ToList();
 
-    public object PartTwo(string input) =&gt; CalculateFencePrice(input, FindCorners);
-
-    int CalculateFencePrice(string input, MeasurePerimeter measure){
-        var regions = GetRegions(input);
-        var res = 0;
-        foreach (var region in regions.Values.Distinct()) {
-            var perimeter = 0;
-            foreach (var pt in region) {
-                perimeter += measure(regions, pt);
-            }
-            res += region.Count() * perimeter;
-        }
-        return res;
-    }    
-   
-    delegate int MeasurePerimeter(Dictionary&lt;Complex, Region&gt; map, Complex pt);
-
-    int FindEdges(Dictionary&lt;Complex, Region&gt; map, Complex pt) {
-        var res = 0;
-        var region = map[pt];
-        foreach (var du in new[] { Right, Down, Left, Up}) {
-            // x.
-            if (map.GetValueOrDefault(pt + du) != region) {
-                res++;
-            }
-        }
-        return res;
+        return keys.Sum(k =&gt; locks.Count(l =&gt; match(l,k)));
     }
-
-    int FindCorners(Dictionary&lt;Complex, Region&gt; map, Complex pt) {
-        var res = 0;
-        var region = map[pt];
-
-        // check the 4 corner types
-        foreach (var (du, dv) in new[] { (Up, Right), (Right, Down), (Down, Left), (Left, Up) }) {
-            //  ..
-            //  x. convex corner
-            if (map.GetValueOrDefault(pt + du) != region &amp;&amp; 
-                map.GetValueOrDefault(pt + dv) != region
-            ) {
-                res++; 
-            }
-
-            //  x.
-            //  xx concave corner
-            if (map.GetValueOrDefault(pt + du) == region &amp;&amp; 
-                map.GetValueOrDefault(pt + dv) == region &amp;&amp;  
-                map.GetValueOrDefault(pt + du + dv) != region
-            ) {
-                res++;
-            }
-        }
-        return res;
-    }
-
-    // Maps the positions of plants in a garden to their corresponding regions, grouping plants 
-    // of the same type into contiguous regions.
-    Dictionary&lt;Complex, Region&gt; GetRegions(string input) {
-        var lines = input.Split(&quot;\n&quot;);
-        var garden = (
-            from y in Enumerable.Range(0, lines.Length)
-            from x in Enumerable.Range(0, lines[0].Length)
-            select new KeyValuePair&lt;Complex, char&gt;(x + y * Down, lines[y][x])
-        ).ToDictionary();
-
-        // go over the positions of the garden and use a floodfill to determine the region
-        var res = new Dictionary&lt;Complex, Region&gt;();
-        var positions = garden.Keys.ToHashSet();
-        while (positions.Any()) {
-            var pivot = positions.First();
-            var region = new Region { pivot };
-
-            var q = new Queue&lt;Complex&gt;();
-            q.Enqueue(pivot);
-
-            var plant = garden[pivot];
-
-            while (q.Any()) {
-                var point = q.Dequeue();
-                res[point] = region;
-                positions.Remove(point);
-                foreach (var dir in new[] { Up, Down, Left, Right }) {
-                    if (!region.Contains(point + dir) &amp;&amp; garden.GetValueOrDefault(point + dir) == plant) {
-                        region.Add(point + dir);
-                        q.Enqueue(point + dir);
-                    }
-                }
-            }
-        }
-        return res;
-    }
-
-}
-</code></pre></div>
+}</code></pre></div>
             <div id="code-location"> <p>Please ☆ my <a href="https://github.com/encse/adventofcode/">repo</a> if you like it!</p></div>
         </div>
 
