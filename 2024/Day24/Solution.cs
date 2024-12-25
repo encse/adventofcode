@@ -18,19 +18,19 @@ class Solution : Solver {
 
         var res = 0L;
         foreach (var label in outputs.OrderByDescending(label=>label)) {
-            res = res * 2 + Evaluate(label, circuit, inputs);
+            res = res * 2 + Eval(label, circuit, inputs);
         }
         return res;
     }
 
-    int Evaluate(string label, Circuit circuit, Dictionary<string, int> inputs) {
+    int Eval(string label, Circuit circuit, Dictionary<string, int> inputs) {
         if (inputs.TryGetValue(label, out var res)) {
             return res;
         } else {
             return circuit[label] switch {
-                Gate(var in1, "AND", var in2) => Evaluate(in1, circuit, inputs) & Evaluate(in2, circuit, inputs),
-                Gate(var in1, "OR", var in2)  => Evaluate(in1, circuit, inputs) | Evaluate(in2, circuit, inputs),
-                Gate(var in1, "XOR", var in2) => Evaluate(in1, circuit, inputs) ^ Evaluate(in2, circuit, inputs),
+                Gate(var in1, "AND", var in2) => Eval(in1, circuit, inputs) & Eval(in2, circuit, inputs),
+                Gate(var in1, "OR", var in2)  => Eval(in1, circuit, inputs) | Eval(in2, circuit, inputs),
+                Gate(var in1, "XOR", var in2) => Eval(in1, circuit, inputs) ^ Eval(in2, circuit, inputs),
                 _ => throw new Exception(circuit[label].ToString()),
             };
         }
