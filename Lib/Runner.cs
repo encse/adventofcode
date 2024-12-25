@@ -190,12 +190,10 @@ class Runner {
     }
 
     private static void WriteLine(ConsoleColor color = ConsoleColor.Gray, string text = "") {
-        Write(color, text + "\n");
+        Terminal.WriteLine(color, text);
     }
     private static void Write(ConsoleColor color = ConsoleColor.Gray, string text = "") {
-        var c = Console.ForegroundColor;
-        Console.ForegroundColor = color;
-        Console.Write(text);
-        Console.ForegroundColor = c;
+        Terminal.Write(color, text);
     }
+
 }

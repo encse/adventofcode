@@ -68,15 +68,12 @@ class SlocChart {
             rows.Insert(0, row);
         }
 
-        var c = Console.ForegroundColor;
         foreach (var row in rows) {
             foreach (var item in row) {
-                Console.ForegroundColor = item.c;
-                Console.Write(item.st);
+                Terminal.Write(item.c, item.st);
             }
             Console.WriteLine();
         }
-        Console.ForegroundColor = c;
         Console.WriteLine("");
     }
 }
