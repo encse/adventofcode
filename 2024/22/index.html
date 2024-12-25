@@ -296,7 +296,7 @@ using System.Linq;
 class Solution : Solver {
 
     public object PartOne(string input) {
-       return GetNums(input).Select(x =&gt; (long)SecretNumbers(x).Last()).Sum();
+        return GetNums(input).Select(x =&gt; (long)SecretNumbers(x).Last()).Sum();
     }
 
     public object PartTwo(string input) {
@@ -305,7 +305,7 @@ class Solution : Solver {
         var buyingOptions = new Dictionary&lt;string, int&gt;();
         foreach (var num in GetNums(input)) {
             var optionsBySeller = BuyingOptions(num);
-            foreach(var seq in optionsBySeller.Keys){
+            foreach (var seq in optionsBySeller.Keys) {
                 buyingOptions[seq] = buyingOptions.GetValueOrDefault(seq) + optionsBySeller[seq];
             }
         }
@@ -320,24 +320,24 @@ class Solution : Solver {
         // a sliding window of 5 elements over the sold bananas defines the sequence the monkey 
         // will recognize. add the first occurrence of each sequence to the buyOptions dictionary 
         // with the corresponding banana count
-        for (var i = 5;i &lt; bananasSold.Length; i++) {
-            var slice = bananasSold[(i-5) .. i];
-            var seq = string.Join(&quot;,&quot;, Diff(slice)); 
+        for (var i = 0; i &lt;= bananasSold.Length - 5; i++) {
+            var slice = bananasSold[i..(i + 5)];
+            var seq = string.Join(&quot;,&quot;, Diff(slice));
             if (!buyOptions.ContainsKey(seq)) {
                 buyOptions[seq] = slice.Last();
             }
         }
         return buyOptions;
     }
-    int[] Bananas(int seed)  =&gt; SecretNumbers(seed).Select(n =&gt; n % 10).ToArray();
+    int[] Bananas(int seed) =&gt; SecretNumbers(seed).Select(n =&gt; n % 10).ToArray();
 
     int[] Diff(IEnumerable&lt;int&gt; x) =&gt; x.Zip(x.Skip(1)).Select(p =&gt; p.Second - p.First).ToArray();
 
     IEnumerable&lt;int&gt; SecretNumbers(int seed) {
         var mixAndPrune = (int a, long b) =&gt; (int)((a ^ b) % 16777216);
-        
+
         yield return seed;
-        for(var i = 0;i&lt; 2000;i++) {
+        for (var i = 0; i &lt; 2000; i++) {
             seed = mixAndPrune(seed, seed * 64L);
             seed = mixAndPrune(seed, seed / 32L);
             seed = mixAndPrune(seed, seed * 2048L);
