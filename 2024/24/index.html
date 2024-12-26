@@ -282,10 +282,10 @@
             <div id="notes"><p>You and The Historians arrive at the edge of a <em>large grove</em> somewhere in the jungle. After the last incident, the Elves installed a small device that monitors the fruit. While The Historians search the grove, one of them asks if you can take a look at the monitoring device; apparently, it&#39;s been malfunctioning recently.</p>
 <p>The device seems to be trying to produce a number through some boolean logic gates. Each gate has two inputs and one output. The gates all operate on values that are either <em>true</em> (<code>1</code>) or <em>false</em> (<code>0</code>).</p>
 <p><em>Visit the website for the full story and <a href="https://adventofcode.com/2024/day/24">full puzzle</a> description.</em></p>
-<p>The first half of the problem was a familiar logic circuit evaluator, we have done this before. I really liked the second part, although I don&#39;t have a super generic solution for it. I generated a graph from my input using Graphviz, then realized that the circuit tries to implement a full adder.</p>
+<p>The first half of the problem was a familiar logic circuit evaluator, we have done this before. I really liked the second part, although I don&#39;t have a super generic solution for it. I generated a graph from my input using Graphviz, then realized that the circuit tries to implement a Ripple-carry adder.</p>
 <p>A single full adder consists of two half adders:</p>
 <p><img src="halfadder.png" alt="half adder"></p>
-<p>Which are chained one after the other like this:</p>
+<p>Which are chained one after the other like this to get a Ripple-carry adder:</p>
 <p><img src="adder.png" alt="full adder"></p>
 <p>I took the images from <a href="https://www.build-electronic-circuits.com/full-adder/">build-electronic-circuits.com</a>.</p>
 <p>I implemented this logic in my &#39;fix&#39; method. I start with the inputs x01 and y01 and try to identify the gates for the individual steps. Where I found an error, I manually checked my input to figure out what went wrong. I had just two different
