@@ -5,13 +5,13 @@ The device seems to be trying to produce a number through some boolean logic gat
 
 _Visit the website for the full story and [full puzzle](https://adventofcode.com/2024/day/24) description._
 
-The first half of the problem was a familiar logic circuit evaluator, we have done this before. I really liked the second part, although I don't have a super generic solution for it. I generated a graph from my input using Graphviz, then realized that the circuit tries to implement a full adder.
+The first half of the problem was a familiar logic circuit evaluator, we have done this before. I really liked the second part, although I don't have a super generic solution for it. I generated a graph from my input using Graphviz, then realized that the circuit tries to implement a Ripple-carry adder.
 
 A single full adder consists of two half adders:
 
 ![half adder](halfadder.png)
 
-Which are chained one after the other like this:
+Which are chained one after the other like this to get a Ripple-carry adder:
 
 ![full adder](adder.png)
 
