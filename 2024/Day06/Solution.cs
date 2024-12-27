@@ -5,8 +5,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Numerics;
-
-using Map = System.Collections.Generic.Dictionary<System.Numerics.Complex, char>;
+using Map = System.Collections.Immutable.ImmutableDictionary<System.Numerics.Complex, char>;
 
 [ProblemName("Guard Gallivant")]
 class Solution : Solver {
@@ -21,17 +20,11 @@ class Solution : Solver {
 
     public object PartTwo(string input) {
         var (map, start) = Parse(input);
-        var positions = Walk(map, start).positions;
-        var loops = 0;
-        // simply try a blocker in each locations visited by the guard and count the loops
-        foreach (var block in positions.Where(pos => map[pos] == '.')) {
-            map[block] = '#';
-            if (Walk(map, start).isLoop) {
-                loops++;
-            }
-            map[block] = '.';
-        }
-        return loops;
+        // try a blocker in each locations visited by the guard counting the loops
+        return Walk(map, start).positions
+                .AsParallel()
+                .Count(pos => Walk(map.SetItem(pos, '#'), start).isLoop);
+       
     }
 
     // returns the positions visited when starting from 'pos', isLoop is set if the 
@@ -61,7 +54,7 @@ class Solution : Solver {
             from y in Enumerable.Range(0, lines.Length)
             from x in Enumerable.Range(0, lines[0].Length)
             select new KeyValuePair<Complex, char>(-Up * y + x, lines[y][x])
-        ).ToDictionary();
+        ).ToImmutableDictionary();
 
         var start = map.First(x => x.Value == '^').Key;
         
