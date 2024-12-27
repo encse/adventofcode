@@ -14,7 +14,8 @@ class Solution : Solver {
     public object PartTwo(string input) {
         // create a dictionary of all buying options then select the one with the most banana:
 
-        var buyingOptions = new Dictionary<string, int>();
+        var buyingOptions = new Dictionary<(int,int,int,int), int>();
+
         foreach (var num in GetNums(input)) {
             var optionsBySeller = BuyingOptions(num);
             foreach (var seq in optionsBySeller.Keys) {
@@ -24,22 +25,21 @@ class Solution : Solver {
         return buyingOptions.Values.Max();
     }
 
-    Dictionary<string, int> BuyingOptions(int seed) {
+    Dictionary<(int,int,int,int), int> BuyingOptions(int seed) {
         var bananasSold = Bananas(seed).ToArray();
-
-        var buyOptions = new Dictionary<string, int>();
+        var buyingOptions = new Dictionary<(int,int,int,int), int>();
 
         // a sliding window of 5 elements over the sold bananas defines the sequence the monkey 
-        // will recognize. add the first occurrence of each sequence to the buyOptions dictionary 
+        // will recognize. add the first occurrence of each sequence to the buyingOptions dictionary 
         // with the corresponding banana count
-        for (var i = 0; i <= bananasSold.Length - 5; i++) {
-            var slice = bananasSold[i..(i + 5)];
-            var seq = string.Join(",", Diff(slice));
-            if (!buyOptions.ContainsKey(seq)) {
-                buyOptions[seq] = slice.Last();
+        var diff = Diff(bananasSold);
+        for (var i = 0; i < bananasSold.Length - 4; i++) {
+            var seq = (diff[i], diff[i+1], diff[i+2], diff[i+3]);
+            if (!buyingOptions.ContainsKey(seq)) {
+                buyingOptions[seq] = bananasSold[i+4];
             }
         }
-        return buyOptions;
+        return buyingOptions;
     }
     int[] Bananas(int seed) => SecretNumbers(seed).Select(n => n % 10).ToArray();
 
