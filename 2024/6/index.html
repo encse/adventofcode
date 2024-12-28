@@ -294,8 +294,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Numerics;
-
-using Map = System.Collections.Generic.Dictionary&lt;System.Numerics.Complex, char&gt;;
+using Map = System.Collections.Immutable.ImmutableDictionary&lt;System.Numerics.Complex, char&gt;;
 
 [ProblemName(&quot;Guard Gallivant&quot;)]
 class Solution : Solver {
@@ -310,17 +309,11 @@ class Solution : Solver {
 
     public object PartTwo(string input) {
         var (map, start) = Parse(input);
-        var positions = Walk(map, start).positions;
-        var loops = 0;
-        // simply try a blocker in each locations visited by the guard and count the loops
-        foreach (var block in positions.Where(pos =&gt; map[pos] == &#039;.&#039;)) {
-            map[block] = &#039;#&#039;;
-            if (Walk(map, start).isLoop) {
-                loops++;
-            }
-            map[block] = &#039;.&#039;;
-        }
-        return loops;
+        // try a blocker in each locations visited by the guard counting the loops
+        return Walk(map, start).positions
+                .AsParallel()
+                .Count(pos =&gt; Walk(map.SetItem(pos, &#039;#&#039;), start).isLoop);
+       
     }
 
     // returns the positions visited when starting from &#039;pos&#039;, isLoop is set if the 
@@ -350,7 +343,7 @@ class Solution : Solver {
             from y in Enumerable.Range(0, lines.Length)
             from x in Enumerable.Range(0, lines[0].Length)
             select new KeyValuePair&lt;Complex, char&gt;(-Up * y + x, lines[y][x])
-        ).ToDictionary();
+        ).ToImmutableDictionary();
 
         var start = map.First(x =&gt; x.Value == &#039;^&#039;).Key;
         
