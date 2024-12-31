@@ -14,17 +14,14 @@ class Solution : Solver {
     const int height = 103;
 
     // run the simulation for 100 steps and count the robots in the different quadrants.
-    public object PartOne(string input) {
-        var quadrants = Simulate(input)
-            .ElementAt(100)
-            .CountBy(GetQuadrant)
-            .Where(group =>  group.Key.x != 0 && group.Key.y != 0)
-            .Select(group => group.Value)
-            .ToArray();
-        return quadrants[0] * quadrants[1] * quadrants[2] * quadrants[3];
-    }
+    public object PartOne(string input) =>
+        Simulate(input)
+        .ElementAt(100)
+        .CountBy(GetQuadrant)
+        .Where(group =>  group.Key.x != 0 && group.Key.y != 0)
+        .Aggregate(1, (acc, group) => acc * group.Value);
 
-    // i figured that the xmas tree pattern has a long horizontal ### pattern in it
+    // I figured that the xmas tree pattern has a long horizontal ### pattern in it
     public object PartTwo(string input) =>
        Simulate(input)
         .TakeWhile(robots => !Plot(robots).Contains("#################"))
