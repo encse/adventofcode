@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Text;
 using AngleSharp.Dom;
+using System.Globalization;
 
 namespace AdventOfCode.Model;
 
@@ -97,7 +98,7 @@ class Calendar {
         foreach (var textNode in GetText(calendar)) {
             var text = textNode.Text();
             var style = textNode.ParentElement.ComputeCurrentStyle();
-            var rgbaColor = style["color"];
+            var rgbaColor = !string.IsNullOrEmpty(style["color"]) ? style["color"]: "rgba(204,204,204,1)";
             var bold = !string.IsNullOrEmpty(style["text-shadow"]);
 
             if (style["position"] == "absolute" ||
@@ -111,7 +112,7 @@ class Calendar {
 
                 var m = Regex.Match(widthSpec, "[.0-9]+");
                 if (m.Success) {
-                    var width = double.Parse(m.Value) * 1.7;
+                    var width = double.Parse(m.Value, CultureInfo.InvariantCulture) * 1.7;
                     var c = (int)Math.Round(width - text.Length, MidpointRounding.AwayFromZero);
                     if (c > 0) {
                         text += new string(' ', c);
