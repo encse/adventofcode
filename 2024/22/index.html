@@ -334,13 +334,13 @@ class Solution : Solver {
     int[] Diff(IEnumerable&lt;int&gt; x) =&gt; x.Zip(x.Skip(1)).Select(p =&gt; p.Second - p.First).ToArray();
 
     IEnumerable&lt;int&gt; SecretNumbers(int seed) {
-        var mixAndPrune = (int a, long b) =&gt; (int)((a ^ b) % 16777216);
+        var mixAndPrune = (int a, int b) =&gt; (a ^ b) &amp; 0xffffff;
 
         yield return seed;
         for (var i = 0; i &lt; 2000; i++) {
-            seed = mixAndPrune(seed, seed * 64L);
-            seed = mixAndPrune(seed, seed / 32L);
-            seed = mixAndPrune(seed, seed * 2048L);
+            seed = mixAndPrune(seed, seed &lt;&lt; 6);
+            seed = mixAndPrune(seed, seed &gt;&gt; 5);
+            seed = mixAndPrune(seed, seed &lt;&lt; 11);
             yield return seed;
         }
     }
