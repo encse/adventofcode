@@ -3,4 +3,4 @@ Santa's reindeer typically eat regular reindeer food, but they need a lot of [ma
 
 To supply enough magical energy, the expedition needs to retrieve a minimum of <em>fifty stars</em> by December 25th. Although the Elves assure you that the grove has plenty of fruit, you decide to grab any fruit you see along the way, just in case.
 
-Read the [full puzzle](https://adventofcode.com/2022/day/1).
+_Visit the website for the full story and [full puzzle](https://adventofcode.com/2022/day/1) description._

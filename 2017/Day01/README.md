@@ -3,4 +3,4 @@ The night before Christmas, one of Santa's Elves calls you in a panic. "The prin
 
 When your eyes can focus again, everything seems a lot more pixelated than before. She must have sent you inside the computer! You check the system clock: <em>25 milliseconds</em> until midnight. With that much time, you should be able to collect all <em>fifty stars</em> by December 25th.
 
-Read the [full puzzle](https://adventofcode.com/2017/day/1).
+_Visit the website for the full story and [full puzzle](https://adventofcode.com/2017/day/1) description._
