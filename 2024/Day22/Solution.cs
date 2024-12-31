@@ -46,13 +46,13 @@ class Solution : Solver {
     int[] Diff(IEnumerable<int> x) => x.Zip(x.Skip(1)).Select(p => p.Second - p.First).ToArray();
 
     IEnumerable<int> SecretNumbers(int seed) {
-        var mixAndPrune = (int a, long b) => (int)((a ^ b) % 16777216);
+        var mixAndPrune = (int a, int b) => (a ^ b) & 0xffffff;
 
         yield return seed;
         for (var i = 0; i < 2000; i++) {
-            seed = mixAndPrune(seed, seed * 64L);
-            seed = mixAndPrune(seed, seed / 32L);
-            seed = mixAndPrune(seed, seed * 2048L);
+            seed = mixAndPrune(seed, seed << 6);
+            seed = mixAndPrune(seed, seed >> 5);
+            seed = mixAndPrune(seed, seed << 11);
             yield return seed;
         }
     }
