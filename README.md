@@ -5,9 +5,7 @@
 
    I'm making a [website](https://aoc.csokavar.hu) out of this. 
    
-   A lot of effort goes into my solutions spending
-   time on presenting things in an easy to understand and elegant way. The solutions might
-   not be the most effective or shortest, but hopefully more readable.
+   A lot of effort goes into my solutions to present things in an easy to understand and elegant way. Clarity first also means less emphasis on speed, but I try to balance it until each puzzle's runtime fits into a second.
    
    The framework I'm using is freely available and it's pretty streamlined by now. You can start with the 
    https://github.com/encse/adventofcode-template repository.
