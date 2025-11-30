@@ -109,7 +109,6 @@ class Runner {
         var indent = "    ";
         Write(ConsoleColor.White, $"{indent}{solver.DayName()}: {solver.GetName()}");
         WriteLine();
-        var dir = workingDir;
         var file = Path.Combine(workingDir, "input.in");
         var refoutFile = file.Replace(".in", ".refout");
         var refout = File.Exists(refoutFile) ? File.ReadAllLines(refoutFile) : null;

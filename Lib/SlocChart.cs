@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualBasic;
 
 namespace AdventOfCode;
 
@@ -20,7 +19,6 @@ class SlocChart {
 
         Console.WriteLine($"  {year } in code lines                           total: {total} max: {max} min: {min}");
         Console.WriteLine("");
-
 
         var columns = new List<List<ColoredString>>();
 
