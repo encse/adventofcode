@@ -13,6 +13,6 @@
    Like what you see? Consider [sponsoring](https://github.com/sponsors/encse) me.
 
    ## Dependencies
-   - Based on `.NET 9` and `C# 13`. 
+   - Based on `.NET 10` and `C# 14`. 
    - `AngleSharp` is used for problem download.
    - git-crypt to store the input files in an encrypted form
