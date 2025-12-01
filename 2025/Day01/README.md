@@ -16,4 +16,4 @@ functional style with perhaps a bit too much LINQ and unortodox solutions. But
 prioritize readability over performance as usual.
 
 I’ll try using Bing and Nano Banana for the illustrations this year, along with
-the an elf figure selected from last year. We’ll see how it goes.
+an elf figure selected from last year. We’ll see how it goes.
