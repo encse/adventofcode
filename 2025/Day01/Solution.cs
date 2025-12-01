@@ -7,7 +7,7 @@ using System.Linq;
 [ProblemName("Secret Entrance")]
 class Solution : Solver {
 
-    public object PartOne(string input) => Dial(Parse(input)).Count(x => x == 0);
+    public object PartOne(string input) => Dial(Parse1(input)).Count(x => x == 0);
     public object PartTwo(string input) => Dial(Parse2(input)).Count(x => x == 0);
 
     IEnumerable<int> Dial(IEnumerable<int> rotations) {
@@ -18,7 +18,7 @@ class Solution : Solver {
         }
     }
 
-    IEnumerable<int> Parse(string input) =>
+    IEnumerable<int> Parse1(string input) =>
         from line in input.Split("\n")
         let d = line[0] == 'R' ? 1 : -1
         let a = int.Parse(line.Substring(1))
