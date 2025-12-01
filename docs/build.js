@@ -26,7 +26,7 @@ function* findReadmes(dir) {
                 // Check the directory for a readme.md file
                 const readmePath = path.join(fullPath, 'README.md');
                 const solutionPath = path.join(fullPath, 'Solution.cs');
-                const illustrationPath = path.join(fullPath, 'illustration.jpeg');
+                const illustrationPath = path.join(fullPath, 'illustration.jpg');
                 if (fs.existsSync(readmePath) && fs.existsSync(solutionPath)) {
 
                     const rawContent = fs.readFileSync(readmePath, 'utf8');
@@ -53,7 +53,7 @@ function* findReadmes(dir) {
                         name: name,
                         notes: marked.parse(lines.join('\n')),
                         code: fs.readFileSync(solutionPath, 'utf8'),
-                        illustration: fs.existsSync(illustrationPath) ? illustrationPath : 'docs/elf.jpeg',
+                        illustration: fs.existsSync(illustrationPath) ? illustrationPath : 'docs/elf.jpg',
                         media: media(fullPath)
                     };
                 }
@@ -177,7 +177,7 @@ for (const { year, day, name, notes, code, illustration, media } of findReadmes(
     const dst = `build/${year}/${day}`;
     fs.mkdirSync(dst, { recursive: true });
     fs.writeFileSync(path.join(dst, 'index.html'), filledHtml);
-    fs.copyFileSync(illustration, path.join(dst, 'illustration.jpeg'));
+    fs.copyFileSync(illustration, path.join(dst, 'illustration.jpg'));
     for(let file of media) {
         fs.copyFileSync(file, path.join(dst, path.basename(file)));
     }
