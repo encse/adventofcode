@@ -1,5 +1,6 @@
 namespace AdventOfCode.Y2025.Day01;
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,7 +13,7 @@ class Solution : Solver {
     IEnumerable<int> Dial(IEnumerable<int> rotations) {
         int pos = 50;
         foreach (var rotation in rotations) {
-            pos = (pos + rotation + 100) % 100;
+            pos = (pos + rotation) % 100;
             yield return pos;
         }
     }

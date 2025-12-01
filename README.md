@@ -1,7 +1,7 @@
-   # Advent of Code (2015-2024)
+   # Advent of Code (2015-2025)
    C# solutions to the [Advent of Code](https://adventofcode.com) problems. 
 
-   <a href="https://adventofcode.com"><img src="2024/calendar.svg" width="80%" /></a>
+   <a href="https://adventofcode.com"><img src="2025/calendar.svg" width="80%" /></a>
 
    I'm making a [website](https://aoc.csokavar.hu) out of this. 
    

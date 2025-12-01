@@ -199,6 +199,7 @@ class Calendar {
                 var text = token.Text
                     .Replace("<", "&lt;")
                     .Replace(">", "&gt;")
+                    .Replace("&", "&amp;")
                     .Replace(" ", "&#160;");
                 sb.Append($@"<tspan fill=""{token.RgbaColor}"">{text}</tspan>");
 
