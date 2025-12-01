@@ -302,7 +302,7 @@ using System.Linq;
 [ProblemName(&quot;Secret Entrance&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) =&gt; Dial(Parse(input)).Count(x =&gt; x == 0);
+    public object PartOne(string input) =&gt; Dial(Parse1(input)).Count(x =&gt; x == 0);
     public object PartTwo(string input) =&gt; Dial(Parse2(input)).Count(x =&gt; x == 0);
 
     IEnumerable&lt;int&gt; Dial(IEnumerable&lt;int&gt; rotations) {
@@ -313,7 +313,7 @@ class Solution : Solver {
         }
     }
 
-    IEnumerable&lt;int&gt; Parse(string input) =&gt;
+    IEnumerable&lt;int&gt; Parse1(string input) =&gt;
         from line in input.Split(&quot;\n&quot;)
         let d = line[0] == &#039;R&#039; ? 1 : -1
         let a = int.Parse(line.Substring(1))
@@ -325,7 +325,8 @@ class Solution : Solver {
         let a = int.Parse(line.Substring(1))
         from i in Enumerable.Range(0, a)
         select d;
-}</code></pre></div>
+}
+</code></pre></div>
             <div id="code-location"> <p>Please ☆ my <a href="https://github.com/encse/adventofcode/">repo</a> if you like it!</p></div>
         </div>
 
