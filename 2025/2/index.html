@@ -15,13 +15,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/a11y-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js"></script>
-    <title>Advent of Code 2021/11 'Dumbo Octopus'' in C# by encse</title>
+    <title>Advent of Code 2025/2 'Gift Shop'' in C# by encse</title>
 
     <head>
-        <meta property="og:title" content="Advent of Code 2021/11 'Dumbo Octopus' in C# by encse">
-        <meta property="og:description" content="C# solution to the 'Dumbo Octopus' Advent of Code problem.">
-        <meta property="og:image" content="https://aoc.csokavar.hu/2021/11//illustration.jpg">
-        <meta property="og:url" content="https://aoc.csokavar.hu/2021/11/">
+        <meta property="og:title" content="Advent of Code 2025/2 'Gift Shop' in C# by encse">
+        <meta property="og:description" content="C# solution to the 'Gift Shop' Advent of Code problem.">
+        <meta property="og:image" content="https://aoc.csokavar.hu/2025/2//illustration.jpg">
+        <meta property="og:url" content="https://aoc.csokavar.hu/2025/2/">
         <meta property="og:type" content="website">
       </head>
 
@@ -254,11 +254,11 @@
     <div id="top-nav">
         <div id="year-picker"><nav class="dropdown">
             <input type="checkbox" id="dropdown-toggle" class="dropdown-toggle">
-            <span class="current"><label id="dropdown-label" for="dropdown-toggle">2021</label></span>
+            <span class="current"><label id="dropdown-label" for="dropdown-toggle">2025</label></span>
             <div class="dropdown-content"><a href="/2015/25/">2015</a><a href="/2016/25/">2016</a><a href="/2017/25/">2017</a><a href="/2018/25/">2018</a><a href="/2019/25/">2019</a><a href="/2020/25/">2020</a><a href="/2021/25/">2021</a><a href="/2022/25/">2022</a><a href="/2023/25/">2023</a><a href="/2024/25/">2024</a><a href="/2025/2/">2025</a></div>
         </nav>
      </div>
-        <div id="day-picker"><span><a href="/2021/1">01</a></span><span><a href="/2021/2">02</a></span><span><a href="/2021/3">03</a></span><span><a href="/2021/4">04</a></span><span><a href="/2021/5">05</a></span><span><a href="/2021/6">06</a></span><span><a href="/2021/7">07</a></span><span><a href="/2021/8">08</a></span><span><a href="/2021/9">09</a></span><span><a href="/2021/10">10</a></span><span class="current"><a href="/2021/11">11</a></span><span><a href="/2021/12">12</a></span><span><a href="/2021/13">13</a></span><span><a href="/2021/14">14</a></span><span><a href="/2021/15">15</a></span><span><a href="/2021/16">16</a></span><span><a href="/2021/17">17</a></span><span><a href="/2021/18">18</a></span><span><a href="/2021/19">19</a></span><span><a href="/2021/20">20</a></span><span><a href="/2021/21">21</a></span><span><a href="/2021/22">22</a></span><span><a href="/2021/23">23</a></span><span><a href="/2021/24">24</a></span><span><a href="/2021/25">25</a></span></div>
+        <div id="day-picker"><span><a href="/2025/1">01</a></span><span class="current"><a href="/2025/2">02</a></span></div>
     </div>
     <div class="main">
         <div class="header-container">
@@ -268,8 +268,8 @@
 
             <div class="header-title">
                 <p class="text">Advent of Code</p>
-                <h2 id="problem-id">2021/11</h2>
-                <h2 id="problem-name">Dumbo Octopus</h2>
+                <h2 id="problem-id">2025/2</h2>
+                <h2 id="problem-name">Gift Shop</h2>
                 <p class="text">in C#</p>
                 <p class="text"></p>
                 <p class="text"><em>by <a style="text-decoration: underline"
@@ -279,79 +279,55 @@
         </div>
 
         <div class="content">
-            <div id="notes"><p>You enter a large cavern full of rare bioluminescent <a href="https://www.youtube.com/watch?v=eih-VSaS2g0">dumbo octopuses</a>! They seem to not like the Christmas lights on your submarine, so you turn them off for now.</p>
-<p>There are 100 octopuses arranged neatly in a 10 by 10 grid. Each octopus slowly gains <em>energy</em> over time and <em>flashes</em> brightly for a moment when its energy is full. Although your lights are off, maybe you could navigate through the cave without disturbing the octopuses if you could predict when the flashes of light will happen.</p>
-<p>Read the <a href="https://adventofcode.com/2021/day/11">full puzzle</a>.</p>
+            <div id="notes"><p>You get inside and take the elevator to its only other stop: the gift shop. &quot;Thank you for visiting the North Pole!&quot; gleefully exclaims a nearby sign. You aren&#39;t sure who is even allowed to visit the North Pole, but you know you can access the lobby through here, and from there you can access the rest of the North Pole base.</p>
+<p>As you make your way through the surprisingly extensive selection, one of the clerks recognizes you and asks for your help.</p>
+<p><em>Visit the website for the full story and <a href="https://adventofcode.com/2025/day/2">full puzzle</a> description.</em></p>
 </div>
-            <div id="code-container"><pre class="hljs language-csharp"><code>using System.Collections.Generic;
+            <div id="code-container"><pre class="hljs language-csharp"><code>namespace AdventOfCode.Y2025.Day02;
+
+using System;
 using System.Linq;
+using System.Collections.Generic;
 
-namespace AdventOfCode.Y2021.Day11;
-
-[ProblemName(&quot;Dumbo Octopus&quot;)]
+[ProblemName(&quot;Gift Shop&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) =&gt; Simulate(input).Take(100).Sum();
-    public object PartTwo(string input) =&gt; Simulate(input).TakeWhile(flash =&gt; flash != 100).Count() + 1;
+    public object PartOne(string input) =&gt; Solve(input, st =&gt; 2);
 
-    // run the simulation in an endless loop, yield flash counts in each step
-    IEnumerable&lt;int&gt; Simulate(string input) {
+    public object PartTwo(string input) =&gt; Solve(input, st =&gt; st.Length);
 
-        var map = GetMap(input);
+    long Solve(string input, Func&lt;string, int&gt; maxRepetition) =&gt; (
+        from id in GetIds(input)
+        let st = id.ToString()
+        where Enumerable.Range(2, maxRepetition(st)-1).Any(k =&gt; Periodic(st, k))
+        select id
+    ).Sum();
 
-        while (true) {
-
-            var queue = new Queue&lt;Pos&gt;();
-            var flashed = new HashSet&lt;Pos&gt;();
-
-            // increase the energy level of each octopus:
-            foreach (var key in map.Keys) {
-                map[key]++;
-                if (map[key] == 10) {
-                    queue.Enqueue(key);
-                }
+    public IEnumerable&lt;long&gt; GetIds(string input) {
+        foreach (var range in input.Split(&quot;,&quot;)) {
+            var parts = range.Split(&quot;-&quot;).Select(long.Parse).ToArray();
+            for (var i = parts[0]; i &lt;= parts[1]; i++) {
+                yield return i;
             }
-
-            // those that reach level 10 should flash, use a queue so that flashing can trigger others
-            while (queue.Any()) {
-                var pos = queue.Dequeue();
-                flashed.Add(pos);
-                foreach (var n in Neighbours(pos).Where(x =&gt; map.ContainsKey(x))) {
-                    map[n]++;
-                    if (map[n] == 10) {
-                        queue.Enqueue(n);
-                    }
-                }
-            }
-
-            // reset energy level of flashed octopuses
-            foreach (var pos in flashed) {
-                map[pos] = 0;
-            }
-
-            yield return flashed.Count;
         }
     }
 
-    // store the points in a dictionary so that we can iterate over them and 
-    // to easily deal with points outside the area using ContainsKey
-    Dictionary&lt;Pos, int&gt; GetMap(string input) {
-        var map = input.Split(&quot;\n&quot;);
-        return new Dictionary&lt;Pos, int&gt;(
-            from y in Enumerable.Range(0, map.Length)
-            from x in Enumerable.Range(0, map[0].Length)
-            select new KeyValuePair&lt;Pos, int&gt;(new Pos(x, y), map[y][x] - &#039;0&#039;)
-        );
+    // Returns true if the string consists of the same substring repeated repetitionCount times.
+    // Example: repetitionCount == 3 returns true for &quot;abcabcabc&quot;.
+    bool Periodic(string st, int repetitionCount) {
+        if (st.Length % repetitionCount != 0) {
+            return false;
+        }
+
+        int period = st.Length / repetitionCount;
+        for (int i = period; i &lt; st.Length; i += period) {
+            if (st[..period] != st[i..(i + period)]) {
+                return false;
+            }
+        }
+        return true;
     }
-
-    IEnumerable&lt;Pos&gt; Neighbours(Pos pos) =&gt;
-        from dx in new int[] { -1, 0, 1 }
-        from dy in new int[] { -1, 0, 1 }
-        where dx != 0 || dy != 0
-        select new Pos(pos.x + dx, pos.y + dy);
-
-}
-record Pos(int x, int y);</code></pre></div>
+}</code></pre></div>
             <div id="code-location"> <p>Please ☆ my <a href="https://github.com/encse/adventofcode/">repo</a> if you like it!</p></div>
         </div>
 
