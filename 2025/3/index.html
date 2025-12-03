@@ -15,13 +15,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/a11y-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js"></script>
-    <title>Advent of Code 2017/9 'Stream Processing'' in C# by encse</title>
+    <title>Advent of Code 2025/3 'Lobby'' in C# by encse</title>
 
     <head>
-        <meta property="og:title" content="Advent of Code 2017/9 'Stream Processing' in C# by encse">
-        <meta property="og:description" content="C# solution to the 'Stream Processing' Advent of Code problem.">
-        <meta property="og:image" content="https://aoc.csokavar.hu/2017/9//illustration.jpg">
-        <meta property="og:url" content="https://aoc.csokavar.hu/2017/9/">
+        <meta property="og:title" content="Advent of Code 2025/3 'Lobby' in C# by encse">
+        <meta property="og:description" content="C# solution to the 'Lobby' Advent of Code problem.">
+        <meta property="og:image" content="https://aoc.csokavar.hu/2025/3//illustration.jpg">
+        <meta property="og:url" content="https://aoc.csokavar.hu/2025/3/">
         <meta property="og:type" content="website">
       </head>
 
@@ -247,11 +247,11 @@
     <div id="top-nav">
         <div id="year-picker"><nav class="dropdown">
             <input type="checkbox" id="dropdown-toggle" class="dropdown-toggle">
-            <span class="current"><label id="dropdown-label" for="dropdown-toggle">2017</label></span>
+            <span class="current"><label id="dropdown-label" for="dropdown-toggle">2025</label></span>
             <div class="dropdown-content"><a href="/2015/25/">2015</a><a href="/2016/25/">2016</a><a href="/2017/25/">2017</a><a href="/2018/25/">2018</a><a href="/2019/25/">2019</a><a href="/2020/25/">2020</a><a href="/2021/25/">2021</a><a href="/2022/25/">2022</a><a href="/2023/25/">2023</a><a href="/2024/25/">2024</a><a href="/2025/3/">2025</a></div>
         </nav>
      </div>
-        <div id="day-picker"><span><a href="/2017/1">01</a></span><span><a href="/2017/2">02</a></span><span><a href="/2017/3">03</a></span><span><a href="/2017/4">04</a></span><span><a href="/2017/5">05</a></span><span><a href="/2017/6">06</a></span><span><a href="/2017/7">07</a></span><span><a href="/2017/8">08</a></span><span class="current"><a href="/2017/9">09</a></span><span><a href="/2017/10">10</a></span><span><a href="/2017/11">11</a></span><span><a href="/2017/12">12</a></span><span><a href="/2017/13">13</a></span><span><a href="/2017/14">14</a></span><span><a href="/2017/15">15</a></span><span><a href="/2017/16">16</a></span><span><a href="/2017/17">17</a></span><span><a href="/2017/18">18</a></span><span><a href="/2017/19">19</a></span><span><a href="/2017/20">20</a></span><span><a href="/2017/21">21</a></span><span><a href="/2017/22">22</a></span><span><a href="/2017/23">23</a></span><span><a href="/2017/24">24</a></span><span><a href="/2017/25">25</a></span></div>
+        <div id="day-picker"><span><a href="/2025/1">01</a></span><span><a href="/2025/2">02</a></span><span class="current"><a href="/2025/3">03</a></span></div>
     </div>
     <div class="main">
         <div class="header-container">
@@ -261,8 +261,8 @@
 
             <div class="header-title">
                 <p class="text">Advent of Code</p>
-                <h2 id="problem-id">2017/9</h2>
-                <h2 id="problem-name">Stream Processing</h2>
+                <h2 id="problem-id">2025/3</h2>
+                <h2 id="problem-name">Lobby</h2>
                 <p class="text">in C#</p>
                 <p class="text"></p>
                 <p class="text"><em>by <a style="text-decoration: underline"
@@ -272,60 +272,43 @@
         </div>
 
         <div class="content">
-            <div id="notes"><p>A large stream blocks your path. According to the locals, it&#39;s not safe to cross the stream at the moment because it&#39;s full of <em>garbage</em>. You look down at the stream; rather than water, you discover that it&#39;s a <em>stream of characters</em>.</p>
-<p>You sit for a while and record part of the stream (your puzzle input). The characters represent <em>groups</em> - sequences that begin with <code>{</code> and end with <code>}</code>. Within a group, there are zero or more other things, separated by commas: either another <em>group</em> or <em>garbage</em>. Since groups can contain other groups, a <code>}</code> only closes the <em>most-recently-opened unclosed group</em> - that is, they are nestable. Your puzzle input represents a single, large group which itself contains many smaller ones.</p>
-<p>Read the <a href="https://adventofcode.com/2017/day/9">full puzzle</a>.</p>
+            <div id="notes"><p>You descend a short staircase, enter the surprisingly vast lobby, and are quickly cleared by the security checkpoint. When you get to the main elevators, however, you discover that each one has a red light above it: they&#39;re all <em>offline</em>.</p>
+<p>&quot;Sorry about that,&quot; an Elf apologizes as she tinkers with a nearby control panel. &quot;Some kind of electrical surge seems to have fried them. I&#39;ll try to get them online soon.&quot;</p>
+<p><em>Visit the website for the full story and <a href="https://adventofcode.com/2025/day/3">full puzzle</a> description.</em></p>
 </div>
-            <div id="code-container"><pre class="hljs language-csharp"><code>﻿using System.Collections.Generic;
+            <div id="code-container"><pre class="hljs language-csharp"><code>namespace AdventOfCode.Y2025.Day03;
+
+using System;
 using System.Linq;
 
-namespace AdventOfCode.Y2017.Day09;
-
-[ProblemName(&quot;Stream Processing&quot;)]
+[ProblemName(&quot;Lobby&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) =&gt; BlockScores(input).Sum();
-    public object PartTwo(string input) =&gt; Classify(input).Where((x) =&gt; x.garbage).Count();
+    public object PartOne(string input) =&gt; MaxJoltSum(input, 2);
+    public object PartTwo(string input) =&gt; MaxJoltSum(input, 12);
 
-    IEnumerable&lt;int&gt; BlockScores(string input) {
-        var score = 0;
-        foreach (var ch in Classify(input).Where((x) =&gt; !x.garbage).Select(x =&gt; x.ch)) {
-            if (ch == &#039;}&#039;) {
-                score--;
-            } else if (ch == &#039;{&#039;) {
-                score++;
-                yield return score;
-            }
+    public long MaxJoltSum(string input, int batteryCount) =&gt;
+        input.Split(&quot;\n&quot;).Select(bank =&gt; MaxJolt(bank, batteryCount)).Sum();
+
+    long MaxJolt(string bank, int batteryCount) {
+        if (batteryCount == 0) {
+            return 0;
         }
-    }
-
-    IEnumerable&lt;(char ch, bool garbage)&gt; Classify(string input) {
-        var skip = false;
-        var garbage = false;
-        foreach (var ch in input) {
-            if (garbage) {
-                if (skip) {
-                    skip = false;
-                } else {
-                    if (ch == &#039;&gt;&#039;) {
-                        garbage = false;
-                    } else if (ch == &#039;!&#039;) {
-                        skip = true;
-                    } else {
-                        yield return (ch, garbage);
-                    }
-                }
-            } else {
-                if (ch == &#039;&lt;&#039;) {
-                    garbage = true;
-                } else {
-                    yield return (ch, garbage);
+        if (bank.Length &lt; batteryCount) {
+            return -1;
+        }
+        for (int jolt = 9; jolt &gt;= 0; jolt--) {
+            var index = bank.IndexOf((char)(jolt + &#039;0&#039;));
+            if (index &gt;= 0) {
+                var res = MaxJolt(bank[(index + 1)..], batteryCount - 1);
+                if (res &gt;= 0) {
+                    return jolt * (long)Math.Pow(10, batteryCount-1) + res;
                 }
             }
         }
+        throw new Exception();
     }
-}
-</code></pre></div>
+}</code></pre></div>
             <div id="code-location"> <p>Please ☆ my <a href="https://github.com/encse/adventofcode/">repo</a> if you like it!</p></div>
         </div>
 
