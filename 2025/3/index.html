@@ -278,7 +278,6 @@
 </div>
             <div id="code-container"><pre class="hljs language-csharp"><code>namespace AdventOfCode.Y2025.Day03;
 
-using System;
 using System.Linq;
 
 [ProblemName(&quot;Lobby&quot;)]
@@ -290,25 +289,17 @@ class Solution : Solver {
     public long MaxJoltSum(string input, int batteryCount) =&gt;
         input.Split(&quot;\n&quot;).Select(bank =&gt; MaxJolt(bank, batteryCount)).Sum();
 
-    // Determines the maximum possible jolt value by selecting `batteryCount` 
-    // digits in descending order from `bank` while preserving order.
     long MaxJolt(string bank, int batteryCount) {
-        if (batteryCount == 0) {
-            return 0;
+        long res = 0L;
+        for (; batteryCount &gt; 0; batteryCount--) {
+            // jump forward to the highest available digit in the bank, but keep 
+            // batteryCount digits in the suffix, so that we can select something 
+            // for those remaining batteries as well.
+            char jolt = bank[..^(batteryCount - 1)].Max();
+            bank = bank[(bank.IndexOf(jolt) + 1)..];
+            res = 10 * res + (jolt - &#039;0&#039;);
         }
-        if (bank.Length &lt; batteryCount) {
-            return -1;
-        }
-        for (int jolt = 9; jolt &gt; 0; jolt--) {
-            var index = bank.IndexOf((char)(jolt + &#039;0&#039;));
-            if (index &gt;= 0) {
-                var res = MaxJolt(bank[(index + 1)..], batteryCount - 1);
-                if (res &gt;= 0) {
-                    return jolt * (long)Math.Pow(10, batteryCount-1) + res;
-                }
-            }
-        }
-        throw new Exception();
+        return res;
     }
 }</code></pre></div>
             <div id="code-location"> <p>Please ☆ my <a href="https://github.com/encse/adventofcode/">repo</a> if you like it!</p></div>
