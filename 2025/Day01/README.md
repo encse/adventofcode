@@ -1,5 +1,6 @@
 ## --- Day 1: Secret Entrance ---
 
+<em>
 The Elves have good news and bad news.
 
 The good news is that they've discovered
@@ -10,6 +11,7 @@ so that other critical tasks can start on time.
 
 _Visit the website for the full story and
 [full puzzle](https://adventofcode.com/2025/day/1) description._
+</em>
 
 Let’s see what this shortened season brings. On the C# side, I keep using a
 functional style with perhaps a bit too much LINQ and unortodox solutions. But
