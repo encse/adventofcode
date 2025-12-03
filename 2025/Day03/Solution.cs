@@ -12,6 +12,8 @@ class Solution : Solver {
     public long MaxJoltSum(string input, int batteryCount) =>
         input.Split("\n").Select(bank => MaxJolt(bank, batteryCount)).Sum();
 
+    // Determines the maximum possible jolt value by selecting `batteryCount` 
+    // digits in descending order from `bank` while preserving order.
     long MaxJolt(string bank, int batteryCount) {
         if (batteryCount == 0) {
             return 0;
@@ -19,7 +21,7 @@ class Solution : Solver {
         if (bank.Length < batteryCount) {
             return -1;
         }
-        for (int jolt = 9; jolt >= 0; jolt--) {
+        for (int jolt = 9; jolt > 0; jolt--) {
             var index = bank.IndexOf((char)(jolt + '0'));
             if (index >= 0) {
                 var res = MaxJolt(bank[(index + 1)..], batteryCount - 1);
