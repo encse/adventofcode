@@ -293,21 +293,17 @@ class Solution : Solver {
     }
 
     public object PartTwo(string input) {
-        var (ranges, _) = Parse(input);
+        // Merge overlapping ranges into disjoint intervals. First sort ranges 
+        // by start so that any range that can extend the current one appears at 
+        // a higher index. Then we walk the list once extending ranges[i] with any 
+        // later range that overlaps with it.
+        var ranges = Parse(input).ranges.OrderBy(x =&gt; x.start).ToList();
 
-        // Merge overlapping ranges into the disjoint intervals.
-        // First sort ranges by start so that any range that can extend
-        // the current one appears at a higher index. Then we walk the list
-        // once extending ranges[i] with any later range that overlaps with it.
-        ranges = ranges.OrderBy(x =&gt; x.start).ToList();
         for (var i = 0; i &lt; ranges.Count; i++) {
             int j = i + 1;
             while (j &lt; ranges.Count) {
-                var rangeI = ranges[i];
-                var rangeJ = ranges[j];
-
-                if (rangeJ.start &lt;= rangeI.end) {
-                    ranges[i] = new Range(rangeI.start, Math.Max(rangeI.end, rangeJ.end));
+                if (ranges[j].start &lt;= ranges[i].end) {
+                    ranges[i] = new Range(ranges[i].start, Math.Max(ranges[i].end, ranges[j].end));
                     ranges.RemoveAt(j);
                 } else {
                     j++;
