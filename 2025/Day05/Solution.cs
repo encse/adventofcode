@@ -15,24 +15,16 @@ class Solution : Solver {
     }
 
     public object PartTwo(string input) {
-        // Merge overlapping ranges into disjoint intervals. First sort ranges 
-        // by start so that any range that can extend the current one appears at 
-        // a higher index. Then we walk the list once extending ranges[i] with any 
-        // later range that overlaps with it.
+        // Sort ranges by start so that potentionally overlapping ranges come after 
+        // each other. Then walk the list and make them disjoint:
         var ranges = Parse(input).ranges.OrderBy(x => x.start).ToList();
-
-        for (var i = 0; i < ranges.Count; i++) {
-            int j = i + 1;
-            while (j < ranges.Count) {
-                if (ranges[j].start <= ranges[i].end) {
-                    ranges[i] = new Range(ranges[i].start, Math.Max(ranges[i].end, ranges[j].end));
-                    ranges.RemoveAt(j);
-                } else {
-                    j++;
-                }
+        for (var i = 0; i < ranges.Count - 1; i++) {
+            if (ranges[i+1].start <= ranges[i].end) {
+                var end = Math.Max(ranges[i].end, ranges[i + 1].end);
+                ranges[i] = new Range(ranges[i].start, ranges[i+1].start - 1);
+                ranges[i+1] = new Range(ranges[i+1].start, end);
             }
         }
-
         return ranges.Sum(range => range.end - range.start + 1);
     }
 
