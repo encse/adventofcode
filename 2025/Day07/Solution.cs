@@ -6,7 +6,9 @@ using System.Linq;
 class Solution : Solver {
 
     public object PartOne(string input) => RunManifold(input).splits;
+
     public object PartTwo(string input) => RunManifold(input).timelines;
+    
     public (int splits, long timelines) RunManifold(string input) {
         // Dynamic programming over the grid:
         //
@@ -20,18 +22,18 @@ class Solution : Solver {
         var lines = input.Split("\n").Select(line => line.ToCharArray()).ToArray();
         var crow = lines.Length;
         var ccol = lines[0].Length;
-
         var splits = 0;
         var timelines = new long[ccol];
+
         for (int irow = 0; irow < crow; irow++) {
             var nextTimelines = new long[ccol];
             for (var icol = 0; icol < ccol; icol++) {
-                if (lines[irow][icol] == '^') {
+                if (lines[irow][icol] == 'S') {
+                    nextTimelines[icol] = 1;
+                } else if (lines[irow][icol] == '^') {
                     splits += timelines[icol] > 0 ? 1 : 0;
                     nextTimelines[icol - 1] += timelines[icol];
                     nextTimelines[icol + 1] += timelines[icol];
-                } else if (lines[irow][icol] == 'S') {
-                    nextTimelines[icol] = 1;
                 } else {
                     nextTimelines[icol] += timelines[icol];
                 }
