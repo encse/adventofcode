@@ -17,8 +17,8 @@ class Solution : Solver {
     public object PartTwo(string input) {
         // Sort ranges by start so that potentionally overlapping ranges come after 
         // each other. Then walk the list and make them disjoint:
-        var ranges = Parse(input).ranges.OrderBy(x => x.start).ToList();
-        for (var i = 0; i < ranges.Count - 1; i++) {
+        var ranges = Parse(input).ranges.OrderBy(x => x.start).ToArray();
+        for (var i = 0; i < ranges.Length - 1; i++) {
             if (ranges[i+1].start <= ranges[i].end) {
                 var end = Math.Max(ranges[i].end, ranges[i + 1].end);
                 ranges[i] = new Range(ranges[i].start, ranges[i+1].start - 1);
@@ -28,13 +28,13 @@ class Solution : Solver {
         return ranges.Sum(range => range.end - range.start + 1);
     }
 
-    (List<Range> ranges, long[] nums) Parse(string input) {
+    (Range[] ranges, long[] nums) Parse(string input) {
         var blocks = input.Split("\n\n");
         var ranges = (
             from line in blocks[0].Split("\n")
             let limits = line.Split("-").Select(long.Parse).ToArray()
             select new Range(limits[0], limits[1])
-        ).ToList();
+        ).ToArray();
 
         var nums = blocks[1].Split("\n").Select(long.Parse).ToArray();
         return (ranges, nums);
