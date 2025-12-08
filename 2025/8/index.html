@@ -15,13 +15,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/a11y-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js"></script>
-    <title>Advent of Code 2019/24 'Planet of Discord'' in C# by encse</title>
+    <title>Advent of Code 2025/8 'Playground'' in C# by encse</title>
 
     <head>
-        <meta property="og:title" content="Advent of Code 2019/24 'Planet of Discord' in C# by encse">
-        <meta property="og:description" content="C# solution to the 'Planet of Discord' Advent of Code problem.">
-        <meta property="og:image" content="https://aoc.csokavar.hu/2019/24//illustration.jpg">
-        <meta property="og:url" content="https://aoc.csokavar.hu/2019/24/">
+        <meta property="og:title" content="Advent of Code 2025/8 'Playground' in C# by encse">
+        <meta property="og:description" content="C# solution to the 'Playground' Advent of Code problem.">
+        <meta property="og:image" content="https://aoc.csokavar.hu/2025/8//illustration.jpg">
+        <meta property="og:url" content="https://aoc.csokavar.hu/2025/8/">
         <meta property="og:type" content="website">
       </head>
 
@@ -247,11 +247,11 @@
     <div id="top-nav">
         <div id="year-picker"><nav class="dropdown">
             <input type="checkbox" id="dropdown-toggle" class="dropdown-toggle">
-            <span class="current"><label id="dropdown-label" for="dropdown-toggle">2019</label></span>
+            <span class="current"><label id="dropdown-label" for="dropdown-toggle">2025</label></span>
             <div class="dropdown-content"><a href="/2015/25/">2015</a><a href="/2016/25/">2016</a><a href="/2017/25/">2017</a><a href="/2018/25/">2018</a><a href="/2019/25/">2019</a><a href="/2020/25/">2020</a><a href="/2021/25/">2021</a><a href="/2022/25/">2022</a><a href="/2023/25/">2023</a><a href="/2024/25/">2024</a><a href="/2025/8/">2025</a></div>
         </nav>
      </div>
-        <div id="day-picker"><span><a href="/2019/1">01</a></span><span><a href="/2019/2">02</a></span><span><a href="/2019/3">03</a></span><span><a href="/2019/4">04</a></span><span><a href="/2019/5">05</a></span><span><a href="/2019/6">06</a></span><span><a href="/2019/7">07</a></span><span><a href="/2019/8">08</a></span><span><a href="/2019/9">09</a></span><span><a href="/2019/10">10</a></span><span><a href="/2019/11">11</a></span><span><a href="/2019/12">12</a></span><span><a href="/2019/13">13</a></span><span><a href="/2019/14">14</a></span><span><a href="/2019/15">15</a></span><span><a href="/2019/16">16</a></span><span><a href="/2019/17">17</a></span><span><a href="/2019/18">18</a></span><span><a href="/2019/19">19</a></span><span><a href="/2019/20">20</a></span><span><a href="/2019/21">21</a></span><span><a href="/2019/22">22</a></span><span><a href="/2019/23">23</a></span><span class="current"><a href="/2019/24">24</a></span><span><a href="/2019/25">25</a></span></div>
+        <div id="day-picker"><span><a href="/2025/1">01</a></span><span><a href="/2025/2">02</a></span><span><a href="/2025/3">03</a></span><span><a href="/2025/4">04</a></span><span><a href="/2025/5">05</a></span><span><a href="/2025/6">06</a></span><span><a href="/2025/7">07</a></span><span class="current"><a href="/2025/8">08</a></span></div>
     </div>
     <div class="main">
         <div class="header-container">
@@ -261,8 +261,8 @@
 
             <div class="header-title">
                 <p class="text">Advent of Code</p>
-                <h2 id="problem-id">2019/24</h2>
-                <h2 id="problem-name">Planet of Discord</h2>
+                <h2 id="problem-id">2025/8</h2>
+                <h2 id="problem-name">Playground</h2>
                 <p class="text">in C#</p>
                 <p class="text"></p>
                 <p class="text"><em>by <a style="text-decoration: underline"
@@ -272,159 +272,79 @@
         </div>
 
         <div class="content">
-            <div id="notes"><p>You land on <a href="https://en.wikipedia.org/wiki/Eris_(dwarf_planet)">Eris</a>, your last stop before reaching Santa.  As soon as you do, your sensors start picking up strange life forms moving around: Eris is infested with <a href="https://www.nationalgeographic.org/thisday/sep9/worlds-first-computer-bug/">bugs</a>! With an over 24-hour roundtrip for messages between you and Earth, you&#39;ll have to deal with this problem on your own.</p>
-<p>Eris isn&#39;t a very large place; a scan of the entire area fits into a 5x5 grid (your puzzle input). The scan shows <em>bugs</em> (<code>#</code>) and <em>empty spaces</em> (<code>.</code>).</p>
-<p>Read the <a href="https://adventofcode.com/2019/day/24">full puzzle</a>.</p>
+            <div id="notes"><p>Equipped with a new understanding of teleporter maintenance, you confidently step onto the repaired teleporter pad.</p>
+<p>You rematerialize on an unfamiliar teleporter pad and find yourself in a vast underground space which contains a giant playground!</p>
+<p><em>Visit the website for the full story and <a href="https://adventofcode.com/2025/day/8">full puzzle</a> description.</em></p>
 </div>
-            <div id="code-container"><pre class="hljs language-csharp"><code>using System;
+            <div id="code-container"><pre class="hljs language-csharp"><code>namespace AdventOfCode.Y2025.Day08;
+
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 
-namespace AdventOfCode.Y2019.Day24;
+record Point(decimal x, decimal y, decimal z);
 
-record Position(int ilevel, int irow, int icol);
-
-[ProblemName(&quot;Planet of Discord&quot;)]
+[ProblemName(&quot;Playground&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
-        int[] levels = Parse(input);
-
-        var seen = new HashSet&lt;int&gt;();
-        var biodiversity = levels[0];
-        while (!seen.Contains(biodiversity)) {
-            seen.Add(biodiversity);
-            levels = Step(levels, FlatNeighbours);
-            biodiversity = levels[levels.Length &gt;&gt; 1];
+        // Apply 1000 steps of Kruskal&#039;s algorithm to the points using the specified
+        // metric, then return the product of the sizes of the three largest components.
+        var points = Parse(input);
+        var setOf = points.ToDictionary(p =&gt; p, p =&gt; new HashSet&lt;Point&gt;([p]));
+        foreach (var (a, b) in GetOrderedPairs(points).Take(1000)) {
+            if (setOf[a] != setOf[b]) {
+                Connect(a, b, setOf);
+            }
         }
-        return biodiversity;
+        return setOf.Values.Distinct()
+            .OrderByDescending(set =&gt; set.Count)
+            .Take(3)
+            .Aggregate(1, (a, b) =&gt; a * b.Count);
     }
 
     public object PartTwo(string input) {
-        int[] levels = Parse(input);
-
-        for (var i = 0; i &lt; 200; i++) {
-            levels = Step(levels, RecursiveNeighbours);
+        // Run Kruskal&#039;s algorithm on all points and return the product of the
+        // x-coordinates of the last edge added to the spanning tree.
+        var points = Parse(input);
+        var componentCount = points.Length;
+        var setOf = points.ToDictionary(p =&gt; p, p =&gt; new HashSet&lt;Point&gt;([p]));
+        var res = 0m;
+        foreach (var (a, b) in GetOrderedPairs(points).TakeWhile(_ =&gt; componentCount &gt; 1)) {
+            if (setOf[a] != setOf[b]) {
+                Connect(a, b, setOf);
+                res = a.x * b.x;
+                componentCount--;
+            }
         }
-
-        return (
-            from level in levels 
-            from pos in Positions() 
-            where pos != (2,2) &amp;&amp; HasBug(level, pos.irow, pos.icol) 
-            select 1
-        ).Count();
+        return res;
     }
 
-    int[] Parse(string input) {
-        var biodiversity = 0;
-        var m = 1;
-        foreach (var ch in input.Replace(&quot;\n&quot;, &quot;&quot;)) {
-            if (ch == &#039;#&#039;) {
-                biodiversity += m;
-            }
-            m &lt;&lt;= 1;
-        }
-        return new[] { biodiversity };
-    }
-
-    IEnumerable&lt;(int irow, int icol)&gt; Positions() {
-        for (var irow = 0; irow &lt; 5; irow++) {
-            for (var icol = 0; icol &lt; 5; icol++) {
-                yield return (irow, icol);
-            }
+    void Connect(Point a, Point b, Dictionary&lt;Point, HashSet&lt;Point&gt;&gt; setOf) {
+        setOf[a].UnionWith(setOf[b]);
+        foreach (var p in setOf[b]) {
+            setOf[p] = setOf[a];
         }
     }
 
-    bool HasBug(int biodiversity, int irow, int icol) {
-        return ((biodiversity &gt;&gt; (irow * 5 + icol)) &amp; 1) == 1;
-    }
+    IEnumerable&lt;(Point a, Point b)&gt; GetOrderedPairs(Point[] points) =&gt;
+        from a in points
+        from b in points
+        where (a.x, a.y, a.z).CompareTo((b.x, b.y, b.z)) &lt; 0
+        orderby Metric(a,b)
+        select (a, b);
 
-    int SetBug(int biodiversity, int irow, int icol) {
-        return biodiversity | (1 &lt;&lt; (irow * 5 + icol));
-    }
+    decimal Metric(Point a, Point b) =&gt;
+        (a.x - b.x) * (a.x - b.x) +
+        (a.y - b.y) * (a.y - b.y) +
+        (a.z - b.z) * (a.z - b.z);
 
-    int[] Step(int[] oldLevelsT, Func&lt;Position, IEnumerable&lt;Position&gt;&gt; neighbours) {
-        var oldLevels = oldLevelsT.ToList();
-        oldLevels.Insert(0, 0);
-        oldLevels.Add(0);
-
-        var newLevels = new List&lt;int&gt;();
-        for (var ilevel = 0; ilevel &lt; oldLevels.Count; ilevel++) {
-
-            var newLevel = 0;
-            foreach (var (irow, icol) in Positions()) {
-                var bugCount = 0;
-                foreach (var (ilevelT, irowT, icolT) in neighbours(new Position(ilevel, irow, icol))) {
-                    if (ilevelT &gt;= 0 &amp;&amp; ilevelT &lt; oldLevels.Count) {
-                        bugCount += HasBug(oldLevels[ilevelT], irowT, icolT) ? 1 : 0;
-                    }
-                }
-
-                if (!HasBug(oldLevels[ilevel], irow, icol)) {
-                    if (bugCount == 1 || bugCount == 2) {
-                        newLevel = SetBug(newLevel, irow, icol);
-                    }
-                } else {
-                    if (bugCount == 1) {
-                        newLevel = SetBug(newLevel, irow, icol);
-                    }
-                }
-            }
-            newLevels.Add(newLevel);
-        }
-
-        return newLevels.ToArray();
-    }
-
-
-    IEnumerable&lt;Position&gt; FlatNeighbours(Position pos) {
-        foreach (var (drow, dcol) in new[] { (0, 1), (0, -1), (-1, 0), (1, 0) }) {
-            var (irowT, icolT) = (pos.irow + drow, pos.icol + dcol);
-            if (icolT &gt;= 0 &amp;&amp; icolT &lt;= 4 &amp;&amp; irowT &gt;= 0 &amp;&amp; irowT &lt;= 4) {
-                yield return new Position(pos.ilevel, irowT, icolT);
-            }
-        }
-    }
-
-    IEnumerable&lt;Position&gt; RecursiveNeighbours(Position pos) {
-        var (ilevel, irow, icol) = pos;
-        foreach (var (drow, dcol) in new[] { (0, 1), (0, -1), (-1, 0), (1, 0) }) {
-            var posMin = (irow: irow + drow, icol: icol + dcol);
-            var posMax = (irow: irow + drow, icol: icol + dcol);
-            var ilevelT = ilevel;
-
-            if (posMin.irow == -1) {
-                ilevelT = ilevel - 1;
-                posMin = posMax = (1, 2);
-            } else if (posMin.irow == 5) {
-                ilevelT = ilevel - 1;
-                posMin = posMax = (3, 2);
-            } else if (posMin.icol == -1) {
-                ilevelT = ilevel - 1;
-                posMin = posMax = (2, 1);
-            } else if (posMin.icol == 5) {
-                ilevelT = ilevel - 1;
-                posMin = posMax = (2, 3);
-            } else if (posMin == (2, 2)) {
-                ilevelT = ilevel + 1;
-                if (dcol == 0) {
-                    posMin = (drow == 1 ? 0 : 4, 0);
-                    posMax = (drow == 1 ? 0 : 4, 4);
-                } else if (drow == 0) {
-                    posMin = (0, dcol == 1 ? 0 : 4);
-                    posMax = (4, dcol == 1 ? 0 : 4);
-                }
-            }
-
-            for (var irowT = posMin.irow; irowT &lt;= posMax.irow; irowT++) {
-                for (var icolT = posMin.icol; icolT &lt;= posMax.icol; icolT++) {
-                    yield return new Position(ilevelT, irowT, icolT);
-                }
-            }
-        }
-    }
-}
-</code></pre></div>
+    Point[] Parse(string input) =&gt; (
+        from line in input.Split(&quot;\n&quot;)
+        let parts = line.Split(&quot;,&quot;).Select(int.Parse).ToArray()
+        select new Point(parts[0], parts[1], parts[2])
+    ).ToArray();
+}</code></pre></div>
             <div id="code-location"> <p>Please ☆ my <a href="https://github.com/encse/adventofcode/">repo</a> if you like it!</p></div>
         </div>
 
