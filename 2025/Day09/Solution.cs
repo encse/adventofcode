@@ -2,25 +2,12 @@ namespace AdventOfCode.Y2025.Day09;
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Text;
 using System.Numerics;
-using System.Drawing;
-using System.Reflection.Metadata.Ecma335;
-using System.IO;
 
 record Segment(Complex a, Complex b);
+record Rectangle(Complex top, Complex left, Complex bottom, Complex right);
 
-
-// rossz: 1525957356 <5328; 67412> <94891; 50375>
-//        1310082477
-//        1525812304
-        // 1525991432 <94891; 50375> <5328; 67412>  too low
-        // 1525991432
-   //        1525991432
-   //        1310082477
 [ProblemName("Movie Theater")]
 class Solution : Solver {
 
@@ -29,100 +16,74 @@ class Solution : Solver {
         return (
             from p1 in points
             from p2 in points
-            select Math.Abs((p1.Real - p2.Real + 1) * (p1.Imaginary - p2.Imaginary + 1))
+            select Area(p1, p2)
         ).Max();
     }
 
-
     public object PartTwo(string input) {
-
-        // 94891; 50375
-        // 94891; 48378
+        // The input looks like a circle with a slot in the middle of it:
+        //
+        //        xxx
+        //     xxxxxxxxx
+        //    xxxxxxxxxAx
+        //             xx
+        //    xxxxxxxxxBx
+        //     xxxxxxxxx
+        //        xxx
+        //
+        // To speed things up we find the corners A and B first. Based on
+        // visual observation one of them must be a corner of the final rectangle.
+        //
+        // Then go over the 'red' points in the upper and lower halves of 
+        // the picture and find the greatest rectangle.
 
         var points = Parse(input);
+        var segments = Segments(points);
         var shape = Draw(points);
 
         var res = 0L;
-        // var p1 = 9 + 5 * Complex.ImaginaryOne;
-        // var p2 = 2 + 3 * Complex.ImaginaryOne;
+
+        var slot = Segments(points)
+            .OrderByDescending(s => Area(s.Item1, s.Item2))
+            .ThenBy(s=>s.Item1.Imaginary)
+            .Select(s => s.Item1.Real > s.Item2.Real ? s.Item1 : s.Item2)
+            .Take(2)
+            .ToArray();
+
+        var upper = from p in points where p.Imaginary >= slot[0].Imaginary select (p1: slot[0], p2: p);
+        var lower = from p in points where p.Imaginary <= slot[1].Imaginary select (p1: slot[1], p2: p);
 
         var reactanglesByArea = (
-            // from p1 in points
-            // from p1 in new []{94891 + 48378 * Complex.ImaginaryOne, 94891 + 50375 * Complex.ImaginaryOne}
-            // from p1 in new []{94891 + 50375 * Complex.ImaginaryOne}
-            from p1 in new []{94891 + 48378 * Complex.ImaginaryOne}
-            from p2 in points
-            orderby Area(p1, p2) descending
-            select (p1, p2)
+            from ps in upper.Concat(lower)
+            let p1 = ps.p1
+            let p2 = ps.p2
+            let top = Math.Min(p1.Imaginary, p2.Imaginary) * Complex.ImaginaryOne
+            let bottom = Math.Max(p1.Imaginary, p2.Imaginary) * Complex.ImaginaryOne
+            let left = Math.Min(p1.Real, p2.Real)
+            let right = Math.Max(p1.Real, p2.Real)
+            orderby Area(top+left, bottom + right) descending
+            select new Rectangle(top, left, bottom, right)
         ).ToArray();
 
-        // <94891; 48378> <3933; 33976>
-
-        var centerY = (points.Select(x=>x.Imaginary).Max() + points.Select(x=>x.Imaginary).Min())/2;
-
-        var i =0;
-        foreach (var (p1, p2) in reactanglesByArea) {
-            i++;
-            if (i%1000 == 0) {
-                Console.WriteLine(i);
-            }
-            if (Math.Sign(p1.Imaginary-centerY) != Math.Sign(p2.Imaginary - centerY)) {
-                continue;
-            }
-
-            // <9; 5> <2; 3>
-            var top = Math.Min(p1.Imaginary, p2.Imaginary);
-            var left = Math.Min(p1.Real, p2.Real);
-            var bottom = Math.Max(p1.Imaginary, p2.Imaginary);
-            var right = Math.Max(p1.Real, p2.Real);
-
-            var corners = new Complex[]{
-                left + Complex.ImaginaryOne * top,
-                right + Complex.ImaginaryOne * top,
-                right + Complex.ImaginaryOne * bottom,
-                left + Complex.ImaginaryOne * bottom,
-            };
-
-            // var shape2 = Draw(corners);
-
-            // foreach (var p in shape2) {
-            //     Console.WriteLine(p + " " + Inside(p, shape));
-            // }
-
-
-            if (corners.All(c => Inside(c, shape))) {
-
-                var qqq = points.Where(p => InRect(p, top, left, bottom, right)).ToArray();
-                if (qqq.Any()) {
-                    continue;
-                }
-                var area = Area(p1, p2);
-                Console.WriteLine("found " + p1 + " " + p2 + " " + area);
-                File.WriteAllText("2025/Day09/coords.txt", 
-                $"""
-                    {p1.Real},{p1.Imaginary}
-                    {p2.Real},{p2.Imaginary}
-                """
-                );
-                res = Area(p1, p2);
+        foreach (var r in reactanglesByArea) {
+            if (Inside(r.top + r.left, shape) && 
+                Inside(r.top + r.right, shape) && 
+                Inside(r.bottom + r.right, shape) && 
+                Inside(r.bottom + r.left, shape) &&
+                points.All(p => !InRect(p, r))
+            ) {
+                res = Area(r.top + r.left, r.bottom + r.right);
                 break;
             }
-            //  else {
-            //      res = Area(p1, p2);
-            //      Console.WriteLine(p1 + " " + p2 + " " + res + " x");
-            // }
         }
 
         return res;
-        // return (
-        //     from p1 in pointsInShape
-        //     from p2 in pointsInShape
-        //     where points.All(p => !InsideRectangle(p1, p2, p))
-        //     select Math.Abs((p1.Real - p2.Real + 1) * (p1.Imaginary - p2.Imaginary + 1))
-        // ).Max();
     }
 
 
+    IEnumerable<(Complex, Complex)> Segments(Complex[] points) {
+       return points.Zip(points.Prepend(points.Last()));
+    }
     Complex[] Parse(string input) => (
         from line in input.Split("\n")
         let parts = line.Split(",").Select(int.Parse).ToArray()
@@ -135,11 +96,13 @@ class Solution : Solver {
     }
     HashSet<Complex> Draw(Complex[] points) {
         var res = new HashSet<Complex>();
-        var lines = points.Zip(points.Prepend(points.Last())).ToArray();
-        foreach (var line in lines) {
-            var a = line.First;
-            var b = line.Second;
-            var d = Math.Sign(b.Real - a.Real) + Complex.ImaginaryOne * Math.Sign(b.Imaginary - a.Imaginary);
+        var segments = Segments(points);
+        foreach (var line in segments) {
+            var a = line.Item1;
+            var b = line.Item2;
+            var d = 
+                Math.Sign(b.Real - a.Real) + 
+                Complex.ImaginaryOne * Math.Sign(b.Imaginary - a.Imaginary);
             for (var p = a; p != b; p += d) {
                 res.Add(p);
             }
@@ -148,14 +111,19 @@ class Solution : Solver {
         return res;
     }
 
-    bool InRect(Complex position, double top, double left, double bottom, double right) {
+    bool InRect(Complex position, Rectangle r) {
         return 
-            left < position.Real && position.Real < right && 
-            top < position.Imaginary && position.Imaginary < bottom
+            r.left.Real < position.Real && position.Real < r.right.Real && 
+            r.top.Imaginary < position.Imaginary && position.Imaginary < r.bottom.Imaginary
             ;
     }
+
     // Check if position is inside the loop using ray casting algorithm
     bool Inside(Complex position, HashSet<Complex> shape) {
+        // Imagine a small elf starting from the top half of a cell and moving 
+        // to the left jumping over the borders it encounters. It needs to jump 
+        // over only 'vertically' oriented pipes leading upwards, since it runs 
+        // in the top of the row. Each jump flips the "inside" variable.
         if (shape.Contains(position)) {
             return true;
         }
@@ -163,9 +131,7 @@ class Solution : Solver {
         var inside = false;
         position -= 1;
         while (position.Real > 0) {
-            if (
-                shape.Contains(position) && shape.Contains(position + Complex.ImaginaryOne)
-            ) {
+            if (shape.Contains(position) && shape.Contains(position + Complex.ImaginaryOne)) {
                 inside = !inside;
             }
 
