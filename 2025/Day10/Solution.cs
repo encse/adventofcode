@@ -14,6 +14,8 @@ using AngleSharp.Html.Dom.Events;
 
 record Problem(int target, int[] buttons, int[] jolts);
 
+record Equation(int[] buttonIndices, int sum);
+
 [ProblemName("Factory")]
 class Solution : Solver {
 
@@ -41,16 +43,12 @@ class Solution : Solver {
 
     public object PartTwo(string input) {
         var res = 0L;
-        var i = 1;
         foreach (var p in Parse(input)) {
-            Console.WriteLine(i +  " " + p.buttons.Length + " " + p.jolts.Length);
-            i++;
+            var s = Solve(p);
+            Console.WriteLine(s);
+            res += s;
         }
-        return res;
-    }
-
-    bool TooMuch(Problem p, int[] state) {
-        return Enumerable.Range(0, state.Length).Any(i => state[i] > p.jolts[i]);
+        return 0;
     }
 
     int Xor(int[] buttons, int mask) {
@@ -66,35 +64,84 @@ class Solution : Solver {
         return res;
     }
 
-    int Solve(Problem p, int pushes, int[] state) {
-        if (pushes > 11) {
-            return int.MaxValue;
+    Dictionary<string, int> cache;
+
+    int Solve(Problem p) {
+        var equations = new List<Equation>();
+        for(int i = 0; i < p.jolts.Length; i++) {
+            var jolt = p.jolts[i];
+            var buttonIndices = new List<int>();
+            for(var buttonIndex = 0; buttonIndex < p.buttons.Length; buttonIndex++) {
+                var button = p.buttons[buttonIndex];
+                if ((button & 1 << i) != 0) {
+                    buttonIndices.Add(buttonIndex);
+                }
+            }
+            equations.Add(new Equation(buttonIndices.ToArray(), jolt));
+        }
+        Console.WriteLine(p.target + " " + equations.Count);
+
+        return SolveEquations(equations);
+    }
+
+    int SolveEquations(List<Equation> equations) {
+        // [.##.] (3) (1,3) (2) (2,3) (0,2) (0,1) {3,5,4,7}
+
+        if (equations.Count == 0) {
+            return 0;
         }
 
-        if (Array.Equals(state, p.jolts)) {
-            return pushes;
-        }
+        var res = int.MaxValue / 2;
+        var eq = equations.MinBy(eq => eq.buttonIndices.Length);
+        var q = Choose(eq.sum, eq.buttonIndices, new int[20]).ToArray();
 
-        if (Enumerable.Range(0, state.Length).Any(i => state[i] > p.jolts[i])) {
-            return int.MaxValue;
-        } 
+        foreach (var xs in q) {
 
-        var res = int.MaxValue;
-        for (int i = 0; i < p.buttons.Length; i++) {
-            var stateT = Push(state, p.buttons[i]);
-            var m = Solve(p, pushes + 1, stateT);
-            if (m < res) {
-                res = m;
+            var substitutedEquations =
+                equations.Select(eqT => Substitute(eqT, eq.buttonIndices, xs)).ToArray();
+
+            if (substitutedEquations.Any(eq => eq.sum < 0) || 
+                substitutedEquations.Any(eq => eq.sum > 0 && !eq.buttonIndices.Any())
+            ) {
+                continue;
+            }
+
+            var remainingEquations = substitutedEquations.Where(eq =>
+                eq.sum != 0 || eq.buttonIndices.Any()
+            ).ToArray();
+
+            var cur = xs.Sum() + SolveEquations(remainingEquations.ToList());
+            if (cur < res) {
+                res = cur;
             }
         }
         return res;
     }
 
-    int[] Push(int[] state, int button) {
+    Equation Substitute(Equation eq, int[] indices, int[] values) {
+        var sum = eq.sum;
+        var remainingIndices = eq.buttonIndices.ToList();
+        for (int i = 0; i < indices.Length; i++) {
+            var index = indices[i];
+            var value = values[index];
+            if (remainingIndices.Contains(index)) {
+                remainingIndices.Remove(index);
+                sum -= value;
+            }
+        }
+        return new Equation(remainingIndices.ToArray(), sum);
+    }
+
+
+    bool TooMuch(Problem p, int[] state) {
+        return Enumerable.Range(0, p.jolts.Length).Any(i => state[i] > p.jolts[i]);
+    }
+
+    int[] Push(int[] state, int button, int n) {
         var res = state.ToArray();
         for (int i = 0; i < state.Length; i++) {
             if ((button & (1 << i)) != 0) {
-                res[i]++;
+                res[i] += n;
             }
         }
         return res;
@@ -139,6 +186,22 @@ class Solution : Solver {
                         .Select(int.Parse);
             ;
             yield return new Problem(num, buttons.ToArray(), jolts.ToArray());
+        }
+    }
+
+    IEnumerable<int[]> Choose(int s, int[] indices, int[] acc) {
+        if (indices.Length == 1) {
+            acc = acc.ToArray();
+            acc[indices[0]] = s;
+            yield return acc;
+            yield break;
+        }
+        for (int i = 0; i <= s; i++) {
+            foreach (var v in Choose(s - i, indices[1..].ToArray(), acc)) {
+                var vT = v.ToArray();
+                vT[indices[0]] = i;
+                yield return vT;
+            }
         }
     }
 

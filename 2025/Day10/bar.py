@@ -265,10 +265,10 @@ if __name__ == "__main__":
                         s = np.sum(x)
                     if s < best:
                         best = s
-                        print("  x =", x, "i=", i, "sum=", s, "res=", res) 
+                        # print("  x =", x, "i=", i, "sum=", s, "res=", res) 
 
                 if i is None or np.sum(i) >= best:
                     break
-
+            print("  best:", best)
             res += best
     print(int(res))
