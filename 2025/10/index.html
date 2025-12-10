@@ -15,13 +15,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/a11y-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js"></script>
-    <title>Advent of Code 2023/21 'Step Counter'' in C# by encse</title>
+    <title>Advent of Code 2025/10 'Factory'' in C# by encse</title>
 
     <head>
-        <meta property="og:title" content="Advent of Code 2023/21 'Step Counter' in C# by encse">
-        <meta property="og:description" content="C# solution to the 'Step Counter' Advent of Code problem.">
-        <meta property="og:image" content="https://aoc.csokavar.hu/2023/21//illustration.jpg">
-        <meta property="og:url" content="https://aoc.csokavar.hu/2023/21/">
+        <meta property="og:title" content="Advent of Code 2025/10 'Factory' in C# by encse">
+        <meta property="og:description" content="C# solution to the 'Factory' Advent of Code problem.">
+        <meta property="og:image" content="https://aoc.csokavar.hu/2025/10//illustration.jpg">
+        <meta property="og:url" content="https://aoc.csokavar.hu/2025/10/">
         <meta property="og:type" content="website">
       </head>
 
@@ -247,11 +247,11 @@
     <div id="top-nav">
         <div id="year-picker"><nav class="dropdown">
             <input type="checkbox" id="dropdown-toggle" class="dropdown-toggle">
-            <span class="current"><label id="dropdown-label" for="dropdown-toggle">2023</label></span>
+            <span class="current"><label id="dropdown-label" for="dropdown-toggle">2025</label></span>
             <div class="dropdown-content"><a href="/2015/25/">2015</a><a href="/2016/25/">2016</a><a href="/2017/25/">2017</a><a href="/2018/25/">2018</a><a href="/2019/25/">2019</a><a href="/2020/25/">2020</a><a href="/2021/25/">2021</a><a href="/2022/25/">2022</a><a href="/2023/25/">2023</a><a href="/2024/25/">2024</a><a href="/2025/10/">2025</a></div>
         </nav>
      </div>
-        <div id="day-picker"><span><a href="/2023/1">01</a></span><span><a href="/2023/2">02</a></span><span><a href="/2023/3">03</a></span><span><a href="/2023/4">04</a></span><span><a href="/2023/5">05</a></span><span><a href="/2023/6">06</a></span><span><a href="/2023/7">07</a></span><span><a href="/2023/8">08</a></span><span><a href="/2023/9">09</a></span><span><a href="/2023/10">10</a></span><span><a href="/2023/11">11</a></span><span><a href="/2023/12">12</a></span><span><a href="/2023/13">13</a></span><span><a href="/2023/14">14</a></span><span><a href="/2023/15">15</a></span><span><a href="/2023/16">16</a></span><span><a href="/2023/17">17</a></span><span><a href="/2023/18">18</a></span><span><a href="/2023/19">19</a></span><span><a href="/2023/20">20</a></span><span class="current"><a href="/2023/21">21</a></span><span><a href="/2023/22">22</a></span><span><a href="/2023/23">23</a></span><span><a href="/2023/24">24</a></span><span><a href="/2023/25">25</a></span></div>
+        <div id="day-picker"><span><a href="/2025/1">01</a></span><span><a href="/2025/2">02</a></span><span><a href="/2025/3">03</a></span><span><a href="/2025/4">04</a></span><span><a href="/2025/5">05</a></span><span><a href="/2025/6">06</a></span><span><a href="/2025/7">07</a></span><span><a href="/2025/8">08</a></span><span><a href="/2025/9">09</a></span><span class="current"><a href="/2025/10">10</a></span></div>
     </div>
     <div class="main">
         <div class="header-container">
@@ -261,8 +261,8 @@
 
             <div class="header-title">
                 <p class="text">Advent of Code</p>
-                <h2 id="problem-id">2023/21</h2>
-                <h2 id="problem-name">Step Counter</h2>
+                <h2 id="problem-id">2025/10</h2>
+                <h2 id="problem-name">Factory</h2>
                 <p class="text">in C#</p>
                 <p class="text"></p>
                 <p class="text"><em>by <a style="text-decoration: underline"
@@ -272,112 +272,155 @@
         </div>
 
         <div class="content">
-            <div id="notes"><p>Let&#39;s revisit the problem description <a href="https://adventofcode.com/2023/day/21">here</a>.</p>
-<p>At first I solved this with carefully maintaining the number of different 
-tiles (the 131x131 regions that repeat indefinitely) after each step. It 
-turns out that there are only nine tile categories based on the direction 
-closest to the starting point. The elf can go straight left, up, right 
-and down and reach the next tile without obstacles. This is a special 
-property of the input.</p>
-<p>Each tile in a category can be in a few hundred different states. The 
-first one (what I call the <em>seed</em>) is the point where the elf enters the 
-tile. This can be the center of an edge or one of its corners. After 
-seeding, the tile <em>ages</em> on its own pace. Thanks to an other property of 
-the input, tiles are not affected by their neighbourhood. Aging continues 
-until a tile <em>grows</em> up, when it starts to oscillate between just two 
-states back and forth.</p>
-<p>My first solution involved a 9 by 260 matrix containing the number of 
-tiles in each state. I implemented the aging process and carefully 
-computed when to seed new tiles for each category.</p>
-<p>It turns out that if we are looking at only steps where <code>n = 131 * k + 65</code> 
-we can compute how many tiles are in each position of the matrix.
-I haven&#39;t gone through this whole process, just checked a few examples 
-until I convinced myself that each and every item in the matrix is either 
-constant or a linear or quadratic function of n.</p>
-<p>This is not that hard to see as it sounds. After some lead in at the 
-beginning, things start to work like this: in each batch of 131 steps a 
-set of center tiles and a set of corner styles is generated. 
-Always 4 center tiles come in, but corner tiles are linear in <code>n: 1,2,3...</code>
-That is the grown up population for center tiles must be linear in <code>n</code>, 
-and quadratic for the corners (can be computed using triangular numbers). </p>
-<p>If we know the active positions for each tile category and state, we
-can multiply it with the number of tiles and sum it up to get the result.
-This all means that if we reorganize the equations we get to a form of:</p>
-<pre><code>    a * n^2 + b * n + c      if n = k * 131 + 65
-</code></pre>
-<p>We just need to compute this polynom for 3 values and interpolate.
-Finally evaluate for <code>n = 26501365</code> which happens to be <code>202300 * 131 + 65</code>
-to get the final result.</p>
+            <div id="notes"><p>Just across the hall, you find a large factory. Fortunately, the Elves here have plenty of time to decorate. Unfortunately, it&#39;s because the factory machines are all offline, and none of the Elves can figure out the initialization procedure.</p>
+<p>The Elves do have the manual for the machines, but the section detailing the initialization procedure was eaten by a <a href="https://en.wikipedia.org/wiki/Shiba_Inu">Shiba Inu</a>. All that remains of the manual are some indicator light diagrams, button wiring schematics, and <a href="3">joltage</a> requirements for each machine.</p>
+<p><em>Visit the website for the full story and <a href="https://adventofcode.com/2025/day/10">full puzzle</a> description.</em></p>
 </div>
-            <div id="code-container"><pre class="hljs language-csharp"><code>namespace AdventOfCode.Y2023.Day21;
+            <div id="code-container"><pre class="hljs language-csharp"><code>namespace AdventOfCode.Y2025.Day10;
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
+using System.Text.RegularExpressions;
+using System.Text;
 using System.Numerics;
+using AdventOfCode.Model;
+using System.Security.Cryptography;
+using AngleSharp.Html.Dom.Events;
 
-[ProblemName(&quot;Step Counter&quot;)]
+record Problem(int target, int[] buttons, int[] jolts);
+
+[ProblemName(&quot;Factory&quot;)]
 class Solution : Solver {
 
-    public object PartOne(string input) =&gt; Steps(ParseMap(input)).ElementAt(64);
-    public object PartTwo(string input) {
-        // Exploiting some nice properties of the input it reduces to quadratic 
-        // interpolation over 3 points: k * 131 + 65 for k = 0, 1, 2
-        // I used the Newton method.
-        var steps = Steps(ParseMap(input)).Take(328).ToArray();
+    public object PartOne(string input) {
+        var res = 0;
+        foreach (var p in Parse(input)) {
+            var limit = 1 &lt;&lt; p.buttons.Length;
+            var tries = Enumerable.Range(0, limit).OrderBy(BitCount).ToArray();
 
-        (decimal x0, decimal y0) = (65, steps[65]);
-        (decimal x1, decimal y1) = (196, steps[196]);
-        (decimal x2, decimal y2) = (327, steps[327]);
-
-        decimal y01 = (y1 - y0) / (x1 - x0);
-        decimal y12 = (y2 - y1) / (x2 - x1);
-        decimal y012 = (y12 - y01) / (x2 - x0);
-
-        var n = 26501365;
-        return decimal.Round(y0 + y01 * (n - x0) + y012 * (n - x0) * (n - x1));
-    }
-
-    // walks around and returns the number of available positions at each step
-    IEnumerable&lt;long&gt; Steps(HashSet&lt;Complex&gt; map) {
-        var positions = new HashSet&lt;Complex&gt; { new Complex(65, 65) };
-        while(true) {
-            yield return positions.Count;
-            positions = Step(map, positions);
-        }
-    }
-    
-    HashSet&lt;Complex&gt; Step(HashSet&lt;Complex&gt; map, HashSet&lt;Complex&gt; positions) {
-        Complex[] dirs = [1, -1, Complex.ImaginaryOne, -Complex.ImaginaryOne];
-
-        var res = new HashSet&lt;Complex&gt;();
-        foreach (var pos in positions) {
-            foreach (var dir in dirs) {
-                var posT = pos + dir;
-                var tileCol = Mod(posT.Real, 131);
-                var tileRow = Mod(posT.Imaginary, 131);
-                if (map.Contains(new Complex(tileCol, tileRow))) {
-                    res.Add(posT);
+            var q = -1;
+            foreach (var n in tries) {
+                if ((Xor(p.buttons, n) ^ p.target) == 0) {
+                    q = n;
+                    break;
                 }
+            }
+            if (q == -1) {
+                throw new Exception();
+            }
+            res += BitCount(q);
+        }
+        return res;
+    }
+
+
+    public object PartTwo(string input) {
+        var res = 0L;
+        var i = 1;
+        foreach (var p in Parse(input)) {
+            Console.WriteLine(i +  &quot; &quot; + p.buttons.Length + &quot; &quot; + p.jolts.Length);
+            i++;
+        }
+        return res;
+    }
+
+    bool TooMuch(Problem p, int[] state) {
+        return Enumerable.Range(0, state.Length).Any(i =&gt; state[i] &gt; p.jolts[i]);
+    }
+
+    int Xor(int[] buttons, int mask) {
+        var res = 0;
+        var i = 0;
+        while (mask != 0) {
+            if ((mask &amp; 1) != 0) {
+                res ^= buttons[i];
+            }
+            mask &gt;&gt;= 1;
+            i++;
+        }
+        return res;
+    }
+
+    int Solve(Problem p, int pushes, int[] state) {
+        if (pushes &gt; 11) {
+            return int.MaxValue;
+        }
+
+        if (Array.Equals(state, p.jolts)) {
+            return pushes;
+        }
+
+        if (Enumerable.Range(0, state.Length).Any(i =&gt; state[i] &gt; p.jolts[i])) {
+            return int.MaxValue;
+        } 
+
+        var res = int.MaxValue;
+        for (int i = 0; i &lt; p.buttons.Length; i++) {
+            var stateT = Push(state, p.buttons[i]);
+            var m = Solve(p, pushes + 1, stateT);
+            if (m &lt; res) {
+                res = m;
             }
         }
         return res;
     }
 
-    // the double % takes care of negative numbers
-    double Mod(double n, int m) =&gt; ((n % m) + m) % m;
-
-    HashSet&lt;Complex&gt; ParseMap(string input) {
-        var lines = input.Split(&quot;\n&quot;);
-        return (
-            from irow in Enumerable.Range(0, lines.Length)
-            from icol in Enumerable.Range(0, lines[0].Length)
-            where lines[irow][icol] != &#039;#&#039;
-            select new Complex(icol, irow)
-        ).ToHashSet();
+    int[] Push(int[] state, int button) {
+        var res = state.ToArray();
+        for (int i = 0; i &lt; state.Length; i++) {
+            if ((button &amp; (1 &lt;&lt; i)) != 0) {
+                res[i]++;
+            }
+        }
+        return res;
     }
-}
-</code></pre></div>
+
+    int BitCount(int n) {
+        int res = 0;
+        while (n != 0) {
+            n &amp;= n - 1;
+            res++;
+        }
+        return res;
+    }
+
+    // [.##.] (3) (1,3) (2) (2,3) (0,2) (0,1) {3,5,4,7}
+    IEnumerable&lt;Problem&gt; Parse(string input) {
+        var lines = input.Split(&quot;\n&quot;);
+        foreach (var line in lines) {
+            var parts = line.Split(&quot; &quot;).ToArray();
+            var num = Convert.ToInt32(
+                string.Join(&quot;&quot;,
+                    parts.First()
+                        .Replace(&quot;[&quot;, &quot;&quot;)
+                        .Replace(&quot;]&quot;, &quot;&quot;)
+                        .Replace(&#039;.&#039;, &#039;0&#039;)
+                        .Replace(&#039;#&#039;, &#039;1&#039;)
+                        .Reverse()
+                ),
+                2);
+
+            var buttons =
+                from part in parts[1..^1]
+                let digits = Regex.Matches(part, @&quot;\d&quot;).Select(m =&gt; int.Parse(m.Value))
+                let mask = (from d in digits select 1 &lt;&lt; d).Sum()
+                select mask;
+
+            var jolts =
+                    parts.Last()
+                        .Replace(&quot;{&quot;, &quot;&quot;)
+                        .Replace(&quot;}&quot;, &quot;&quot;)
+                        .Split(&quot;,&quot;)
+                        .Select(int.Parse);
+            ;
+            yield return new Problem(num, buttons.ToArray(), jolts.ToArray());
+        }
+    }
+
+}</code></pre></div>
             <div id="code-location"> <p>Please ☆ my <a href="https://github.com/encse/adventofcode/">repo</a> if you like it!</p></div>
         </div>
 
