@@ -7,7 +7,8 @@ function media(dir){
     const files = fs.readdirSync(dir);
     return files.filter(file => 
         path.extname(file).toLowerCase() === '.gif' || 
-        path.extname(file).toLowerCase() === '.png' 
+        path.extname(file).toLowerCase() === '.png' ||
+        path.extname(file).toLowerCase() === '.py' 
     ).map(file => path.join(dir, file));
 }
 
