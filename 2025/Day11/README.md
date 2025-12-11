@@ -10,4 +10,4 @@ Visit the website for the full story and [full puzzle](https://adventofcode.com/
 We got an easy dynamic programming exercise for today, a refresher after the last two days of madness. Here is my input
 rendered to an image.
 
-![graph.png](praph.png)
+![graph.png](graph.png)
