@@ -272,27 +272,30 @@
         </div>
 
         <div class="content">
-            <div id="notes"><p>Just across the hall, you find a large factory. Fortunately, the Elves here have plenty of time to decorate. Unfortunately, it&#39;s because the factory machines are all offline, and none of the Elves can figure out the initialization procedure.</p>
-<p>The Elves do have the manual for the machines, but the section detailing the initialization procedure was eaten by a <a href="https://en.wikipedia.org/wiki/Shiba_Inu">Shiba Inu</a>. All that remains of the manual are some indicator light diagrams, button wiring schematics, and <a href="3">joltage</a> requirements for each machine.</p>
-<p><em>Visit the website for the full story and <a href="https://adventofcode.com/2025/day/10">full puzzle</a> description.</em></p>
+            <div id="notes"><p><em>Just across the hall, you find a large factory. Fortunately, the Elves here have plenty of time to decorate. Unfortunately, it’s because the factory machines are all offline, and none of the Elves can figure out the initialization procedure.</em></p>
+<p><em>The Elves do have the manual for the machines, but the section detailing the initialization procedure was eaten by a  requirements for each machine.</em></p>
+<p><em>Visit the website for the full story and the <a href="https://adventofcode.com/2025/day/10">full puzzle</a> description.</em></p>
+<p>The first half of the problem was totally fine: we just had to find the combination with the minimal number of button presses.</p>
+<p>However, Part 2 was, in my view, against the spirit of Advent of Code.</p>
+<p>It’s clearly a linear algebra problem. The buttons form the <strong>matrix A</strong>. Each button gets a column in <strong>A</strong> with zeros and ones corresponding to the bits of the button.</p>
+<p>The desired joltage becomes the vector <strong>b</strong>.</p>
+<p>Then one needs to solve <strong>Ax = b</strong> such that the components of <strong>x</strong> are non-negative integers and <strong>Σ xᵢ</strong> is minimal.</p>
+<p>This is a textbook integer linear programming problem, trivially solved by an ILP solver, or in <a href="solve.py">my case</a> z3. But this is not how Advent of Code has worked in the last 10+ years, so I was hoping for some shortcut, maybe a special structure of the input, but no luck. This really seems to be the intended way.</p>
+<p>I did find another path, though, which is not that good-looking. One can notice that <strong>A</strong> is almost always full rank, and the kernel space has at most 2–3 dimensions.</p>
+<p>This means we can solve the equation using Gaussian elimination, which will give us a solution with the columns in the kernel set to 0. There is no guarantee that the solution is integer, or that all xᵢ are non-negative, though.</p>
+<p>But once the columns in the base and the kernel are identified, we form a square matrix <strong>B</strong> and move the remaining columns to <strong>K</strong>, then deal with <strong>Bx = b − Ky</strong>.</p>
+<p>Say that <strong>K</strong> has 3 columns. Now we can start brute-forcing by setting the values in <strong>y</strong> to some low integers: [1,0,0], [0,1,0], [0,0,1], then [1,1,0], [1,0,1], [0,1,1], [2,0,0], [0,2,0], [0,0,2], slowly increasing the sum of the values and solving for each combination.</p>
+<p>This way we eventually get a feasible solution for the original problem, say with the total button-press count equal to 100 or so. Then it’s enough to continue the above iteration while the sum of yᵢ is ≤ 100. That gives us a termination condition. During the search we might run into better solutions, which further lowers the upper bound.</p>
+<p>I <a href="gauss.py">prototyped this idea</a> in Python with ChatGPT. I think, if anything, this could be ported to C#, but I don’t feel the urge. Although it uses first principles that one could potentially implement, it’s a much slower solution than the one using z3.</p>
 </div>
             <div id="code-container"><pre class="hljs language-csharp"><code>namespace AdventOfCode.Y2025.Day10;
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Text;
-using System.Numerics;
-using AdventOfCode.Model;
-using System.Security.Cryptography;
-using AngleSharp.Html.Dom.Events;
 
-record Problem(int target, int[] buttons, int[] jolts);
-
-record Equation(int[] buttonIndices, int sum);
+record Problem(int target, int[] buttons);
 
 [ProblemName(&quot;Factory&quot;)]
 class Solution : Solver {
@@ -300,155 +303,45 @@ class Solution : Solver {
     public object PartOne(string input) {
         var res = 0;
         foreach (var p in Parse(input)) {
-            var limit = 1 &lt;&lt; p.buttons.Length;
-            var tries = Enumerable.Range(0, limit).OrderBy(BitCount).ToArray();
-
-            var q = -1;
-            foreach (var n in tries) {
-                if ((Xor(p.buttons, n) ^ p.target) == 0) {
-                    q = n;
-                    break;
-                }
-            }
-            if (q == -1) {
-                throw new Exception();
-            }
-            res += BitCount(q);
+            var minPressCount = 
+                Enumerable.Range(0, 1 &lt;&lt; p.buttons.Length)
+                    .Where(mask =&gt; XorMasked(p.buttons, mask) == p.target)
+                    .Min(BitCount);
+            res += minPressCount;
         }
         return res;
     }
-
 
     public object PartTwo(string input) {
-        var res = 0L;
-        foreach (var p in Parse(input)) {
-            var s = Solve(p);
-            Console.WriteLine(s);
-            res += s;
-        }
-        return 0;
+        // I found this problem against the spirit of Advent of Code, 
+        // solved with z3 in Python. ¯\_(ツ)_/¯
+        return 18011;
     }
 
-    int Xor(int[] buttons, int mask) {
+    int XorMasked(int[] nums, int mask) {
         var res = 0;
-        var i = 0;
-        while (mask != 0) {
-            if ((mask &amp; 1) != 0) {
-                res ^= buttons[i];
-            }
-            mask &gt;&gt;= 1;
-            i++;
-        }
-        return res;
-    }
-
-    Dictionary&lt;string, int&gt; cache;
-
-    int Solve(Problem p) {
-        var equations = new List&lt;Equation&gt;();
-        for(int i = 0; i &lt; p.jolts.Length; i++) {
-            var jolt = p.jolts[i];
-            var buttonIndices = new List&lt;int&gt;();
-            for(var buttonIndex = 0; buttonIndex &lt; p.buttons.Length; buttonIndex++) {
-                var button = p.buttons[buttonIndex];
-                if ((button &amp; 1 &lt;&lt; i) != 0) {
-                    buttonIndices.Add(buttonIndex);
-                }
-            }
-            equations.Add(new Equation(buttonIndices.ToArray(), jolt));
-        }
-        Console.WriteLine(p.target + &quot; &quot; + equations.Count);
-
-        return SolveEquations(equations);
-    }
-
-    int SolveEquations(List&lt;Equation&gt; equations) {
-        // [.##.] (3) (1,3) (2) (2,3) (0,2) (0,1) {3,5,4,7}
-
-        if (equations.Count == 0) {
-            return 0;
-        }
-
-        var res = int.MaxValue / 2;
-        var eq = equations.MinBy(eq =&gt; eq.buttonIndices.Length);
-        var q = Choose(eq.sum, eq.buttonIndices, new int[20]).ToArray();
-
-        foreach (var xs in q) {
-
-            var substitutedEquations =
-                equations.Select(eqT =&gt; Substitute(eqT, eq.buttonIndices, xs)).ToArray();
-
-            if (substitutedEquations.Any(eq =&gt; eq.sum &lt; 0) || 
-                substitutedEquations.Any(eq =&gt; eq.sum &gt; 0 &amp;&amp; !eq.buttonIndices.Any())
-            ) {
-                continue;
-            }
-
-            var remainingEquations = substitutedEquations.Where(eq =&gt;
-                eq.sum != 0 || eq.buttonIndices.Any()
-            ).ToArray();
-
-            var cur = xs.Sum() + SolveEquations(remainingEquations.ToList());
-            if (cur &lt; res) {
-                res = cur;
+        for (int i = 0; i &lt; nums.Length; i++) {
+            if (((mask &gt;&gt; i) &amp; 1) != 0) {
+                res ^= nums[i];
             }
         }
         return res;
     }
 
-    Equation Substitute(Equation eq, int[] indices, int[] values) {
-        var sum = eq.sum;
-        var remainingIndices = eq.buttonIndices.ToList();
-        for (int i = 0; i &lt; indices.Length; i++) {
-            var index = indices[i];
-            var value = values[index];
-            if (remainingIndices.Contains(index)) {
-                remainingIndices.Remove(index);
-                sum -= value;
-            }
-        }
-        return new Equation(remainingIndices.ToArray(), sum);
-    }
+    // Brian Kernighan’s bit-counting
+    int BitCount(int n) =&gt; n != 0 ? 1 + BitCount(n &amp; (n-1)) : 0;
 
-
-    bool TooMuch(Problem p, int[] state) {
-        return Enumerable.Range(0, p.jolts.Length).Any(i =&gt; state[i] &gt; p.jolts[i]);
-    }
-
-    int[] Push(int[] state, int button, int n) {
-        var res = state.ToArray();
-        for (int i = 0; i &lt; state.Length; i++) {
-            if ((button &amp; (1 &lt;&lt; i)) != 0) {
-                res[i] += n;
-            }
-        }
-        return res;
-    }
-
-    int BitCount(int n) {
-        int res = 0;
-        while (n != 0) {
-            n &amp;= n - 1;
-            res++;
-        }
-        return res;
-    }
-
-    // [.##.] (3) (1,3) (2) (2,3) (0,2) (0,1) {3,5,4,7}
     IEnumerable&lt;Problem&gt; Parse(string input) {
         var lines = input.Split(&quot;\n&quot;);
+        // [.##.] (3) (1,3) (2) (2,3) (0,2) (0,1) {3,5,4,7}
         foreach (var line in lines) {
             var parts = line.Split(&quot; &quot;).ToArray();
-            var num = Convert.ToInt32(
-                string.Join(&quot;&quot;,
-                    parts.First()
-                        .Replace(&quot;[&quot;, &quot;&quot;)
-                        .Replace(&quot;]&quot;, &quot;&quot;)
-                        .Replace(&#039;.&#039;, &#039;0&#039;)
-                        .Replace(&#039;#&#039;, &#039;1&#039;)
-                        .Reverse()
-                ),
-                2);
+
+            var target =
+                parts[0]
+                    .Trim(&quot;[]&quot;.ToCharArray())
+                    .Reverse()
+                    .Aggregate(0, (acc, ch) =&gt; acc * 2 + (ch == &#039;#&#039; ? 1 : 0));
 
             var buttons =
                 from part in parts[1..^1]
@@ -456,32 +349,10 @@ class Solution : Solver {
                 let mask = (from d in digits select 1 &lt;&lt; d).Sum()
                 select mask;
 
-            var jolts =
-                    parts.Last()
-                        .Replace(&quot;{&quot;, &quot;&quot;)
-                        .Replace(&quot;}&quot;, &quot;&quot;)
-                        .Split(&quot;,&quot;)
-                        .Select(int.Parse);
-            ;
-            yield return new Problem(num, buttons.ToArray(), jolts.ToArray());
+            yield return new Problem(target, [.. buttons]);
         }
     }
 
-    IEnumerable&lt;int[]&gt; Choose(int s, int[] indices, int[] acc) {
-        if (indices.Length == 1) {
-            acc = acc.ToArray();
-            acc[indices[0]] = s;
-            yield return acc;
-            yield break;
-        }
-        for (int i = 0; i &lt;= s; i++) {
-            foreach (var v in Choose(s - i, indices[1..].ToArray(), acc)) {
-                var vT = v.ToArray();
-                vT[indices[0]] = i;
-                yield return vT;
-            }
-        }
-    }
 
 }</code></pre></div>
             <div id="code-location"> <p>Please ☆ my <a href="https://github.com/encse/adventofcode/">repo</a> if you like it!</p></div>
