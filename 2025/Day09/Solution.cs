@@ -21,6 +21,10 @@ class Solution : Solver {
     public object PartTwo(string input) {
         var points = Parse(input);
         var segments = Boundary(points).ToArray();
+        // AabbCollision enables rectangles inside or outside the
+        // shape, but the input is set up in a way that big rectangles
+        // are all inside, so this loop will find the correct one for actual
+        // problems.
         return (
              from r in RectanglesOrderedByArea(points)
              where segments.All(s => !AabbCollision(r, s))
