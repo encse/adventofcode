@@ -17,10 +17,11 @@ I started to add heuristics to my solution, but of course this didn't help due t
 After the 200th read, I finally spotted my mistake and got the second star, but I got tired of the whole thing and couldn't 
 really put this into a nice form.  
 
+![shape](shape.png)
+
 At the end, I started to read the solution thread and spotted that a simple `AabbCollision` function is enough. And 
 somehow it clicked. Without the hint, I would have been on the wrong track for a much longer time for sure.
 
 But at least the final result looks good in my opinion.
 
-![shape](shape.png)
 
