@@ -9,7 +9,7 @@ record Todo(int w, int h, int[] counts);
 class Solution : Solver {
 
     public object PartOne(string input) {
-        // 🎄 🎄 🎄 rotfl
+        // 🎄 🎄 🎄 This problem was a joke by Eric. The solution is specific to the input.
         
         var blocks = input.Split("\n\n");
 
@@ -29,7 +29,7 @@ class Solution : Solver {
         foreach(var todo in todos) {
             var areaNeeded = Enumerable.Zip(todo.counts, areas).Sum(p => p.First * p.Second);
             if (areaNeeded <= todo.w * todo.h) {
-                res ++;
+                res++;
             }
         }
         return res;
