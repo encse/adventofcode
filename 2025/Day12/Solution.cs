@@ -22,10 +22,7 @@ class Solution : Solver {
         var todos = (
             from line in blocks.Last().Split("\n")
             let nums = Regex.Matches(line, @"\d+").Select(m => int.Parse(m.Value)).ToArray()
-            let w = nums[0]
-            let h = nums[1]
-            let counts = nums[2..]
-            select new Todo(w, h, counts)
+            select new Todo(nums[0], nums[1], nums[2..])
         ).ToArray();
        
         var res = 0;
