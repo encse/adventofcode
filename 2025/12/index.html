@@ -15,13 +15,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/a11y-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js"></script>
-    <title>Advent of Code 2019/15 'Oxygen System'' in C# by encse</title>
+    <title>Advent of Code 2025/12 'Christmas Tree Farm'' in C# by encse</title>
 
     <head>
-        <meta property="og:title" content="Advent of Code 2019/15 'Oxygen System' in C# by encse">
-        <meta property="og:description" content="C# solution to the 'Oxygen System' Advent of Code problem.">
-        <meta property="og:image" content="https://aoc.csokavar.hu/2019/15//illustration.jpg">
-        <meta property="og:url" content="https://aoc.csokavar.hu/2019/15/">
+        <meta property="og:title" content="Advent of Code 2025/12 'Christmas Tree Farm' in C# by encse">
+        <meta property="og:description" content="C# solution to the 'Christmas Tree Farm' Advent of Code problem.">
+        <meta property="og:image" content="https://aoc.csokavar.hu/2025/12//illustration.jpg">
+        <meta property="og:url" content="https://aoc.csokavar.hu/2025/12/">
         <meta property="og:type" content="website">
       </head>
 
@@ -247,11 +247,11 @@
     <div id="top-nav">
         <div id="year-picker"><nav class="dropdown">
             <input type="checkbox" id="dropdown-toggle" class="dropdown-toggle">
-            <span class="current"><label id="dropdown-label" for="dropdown-toggle">2019</label></span>
+            <span class="current"><label id="dropdown-label" for="dropdown-toggle">2025</label></span>
             <div class="dropdown-content"><a href="/2015/25/">2015</a><a href="/2016/25/">2016</a><a href="/2017/25/">2017</a><a href="/2018/25/">2018</a><a href="/2019/25/">2019</a><a href="/2020/25/">2020</a><a href="/2021/25/">2021</a><a href="/2022/25/">2022</a><a href="/2023/25/">2023</a><a href="/2024/25/">2024</a><a href="/2025/12/">2025</a></div>
         </nav>
      </div>
-        <div id="day-picker"><span><a href="/2019/1">01</a></span><span><a href="/2019/2">02</a></span><span><a href="/2019/3">03</a></span><span><a href="/2019/4">04</a></span><span><a href="/2019/5">05</a></span><span><a href="/2019/6">06</a></span><span><a href="/2019/7">07</a></span><span><a href="/2019/8">08</a></span><span><a href="/2019/9">09</a></span><span><a href="/2019/10">10</a></span><span><a href="/2019/11">11</a></span><span><a href="/2019/12">12</a></span><span><a href="/2019/13">13</a></span><span><a href="/2019/14">14</a></span><span class="current"><a href="/2019/15">15</a></span><span><a href="/2019/16">16</a></span><span><a href="/2019/17">17</a></span><span><a href="/2019/18">18</a></span><span><a href="/2019/19">19</a></span><span><a href="/2019/20">20</a></span><span><a href="/2019/21">21</a></span><span><a href="/2019/22">22</a></span><span><a href="/2019/23">23</a></span><span><a href="/2019/24">24</a></span><span><a href="/2019/25">25</a></span></div>
+        <div id="day-picker"><span><a href="/2025/1">01</a></span><span><a href="/2025/2">02</a></span><span><a href="/2025/3">03</a></span><span><a href="/2025/4">04</a></span><span><a href="/2025/5">05</a></span><span><a href="/2025/6">06</a></span><span><a href="/2025/7">07</a></span><span><a href="/2025/8">08</a></span><span><a href="/2025/9">09</a></span><span><a href="/2025/10">10</a></span><span><a href="/2025/11">11</a></span><span class="current"><a href="/2025/12">12</a></span></div>
     </div>
     <div class="main">
         <div class="header-container">
@@ -261,8 +261,8 @@
 
             <div class="header-title">
                 <p class="text">Advent of Code</p>
-                <h2 id="problem-id">2019/15</h2>
-                <h2 id="problem-name">Oxygen System</h2>
+                <h2 id="problem-id">2025/12</h2>
+                <h2 id="problem-name">Christmas Tree Farm</h2>
                 <p class="text">in C#</p>
                 <p class="text"></p>
                 <p class="text"><em>by <a style="text-decoration: underline"
@@ -272,64 +272,51 @@
         </div>
 
         <div class="content">
-            <div id="notes"><p>Out here in deep space, many things can go wrong. Fortunately, many of those things have indicator lights. Unfortunately, one of those lights is lit: the oxygen system for part of the ship has failed!</p>
-<p>According to the readouts, the oxygen system must have failed days ago after a rupture in oxygen tank two; that section of the ship was automatically sealed once oxygen levels went dangerously low. A single remotely-operated <em>repair droid</em> is your only option for fixing the oxygen system.</p>
-<p>Read the <a href="https://adventofcode.com/2019/day/15">full puzzle</a>.</p>
+            <div id="notes"><p><em>You&#39;re almost out of time, but there can&#39;t be much left to decorate. Although there are no stairs, elevators, escalators, tunnels, chutes, teleporters, firepoles, or conduits here that would take you deeper into the North Pole base, there <em>is</em> a ventilation duct. You jump in.</em></p>
+<p>_After bumping around for a few minutes, you emerge into a large, well-lit cavern full of Christmas trees! _</p>
+<p><em>Visit the website for the full story and <a href="https://adventofcode.com/2025/day/12">full puzzle</a> description.</em></p>
+<p>I have no words for this...</p>
 </div>
-            <div id="code-container"><pre class="hljs language-csharp"><code>using System.Collections.Generic;
-using System.Collections.Immutable;
+            <div id="code-container"><pre class="hljs language-csharp"><code>namespace AdventOfCode.Y2025.Day12;
+
+using System;
 using System.Linq;
+using System.Text.RegularExpressions;
+record Todo(int w, int h, int[] counts);
 
-namespace AdventOfCode.Y2019.Day15;
-
-[ProblemName(&quot;Oxygen System&quot;)]
+[ProblemName(&quot;Christmas Tree Farm&quot;)]
 class Solution : Solver {
 
-    enum Tile {
-        Wall = 0,
-        Empty = 1,
-        O2 = 2,
-    }
-
     public object PartOne(string input) {
-        var iicm = new ImmutableIntCodeMachine(input);
-        return Bfs(iicm).First(s =&gt; s.tile == Tile.O2).path.Count;
-    }
+        // 🎄 🎄 🎄 rotfl
+        
+        var blocks = input.Split(&quot;\n\n&quot;);
 
-    public object PartTwo(string input) {
-        var iicm = Bfs(new ImmutableIntCodeMachine(input)).First(s =&gt; s.tile == Tile.O2).iicm;
-        return Bfs(iicm).Last().path.Count;
-    }
+        var areas = (
+            from block in blocks[..^1]
+            let area = block.Count(ch =&gt; ch == &#039;#&#039;)
+            select area
+        ).ToArray();
 
-    IEnumerable&lt;(ImmutableIntCodeMachine iicm, ImmutableList&lt;int&gt; path, Tile tile)&gt; Bfs(ImmutableIntCodeMachine startIicm) {
-
-        (int dx, int dy)[] dirs = new[] { (0, -1), (0, 1), (-1, 0), (1, 0) };
-
-        var seen = new HashSet&lt;(int x, int y)&gt; { (0, 0) };
-        var q = new Queue&lt;(ImmutableIntCodeMachine iicm, ImmutableList&lt;int&gt; path, int x, int y)&gt;();
-        q.Enqueue((startIicm, ImmutableList&lt;int&gt;.Empty, 0, 0));
-        while (q.Any()) {
-            var current = q.Dequeue();
-
-            for (var i = 0; i &lt; dirs.Length; i++) {
-                var (nextX, nextY) = (current.x + dirs[i].dx, current.y + dirs[i].dy);
-
-                if (!seen.Contains((nextX, nextY))) {
-                    seen.Add((nextX, nextY));
-                    var nextPath = current.path.Add(i + 1);
-                    var (nextIicm, output) = current.iicm.Run(i + 1);
-
-                    var tile = (Tile)output.Single();
-                    if (tile != Tile.Wall) {
-                        yield return (nextIicm, nextPath, tile);
-                        q.Enqueue((nextIicm, nextPath, nextX, nextY));
-                    }
-                }
+        var todos = (
+            from line in blocks.Last().Split(&quot;\n&quot;)
+            let nums = Regex.Matches(line, @&quot;\d+&quot;).Select(m =&gt; int.Parse(m.Value)).ToArray()
+            let w = nums[0]
+            let h = nums[1]
+            let counts = nums[2..]
+            select new Todo(w, h, counts)
+        ).ToArray();
+       
+        var res = 0;
+        foreach(var todo in todos) {
+            var areaNeeded = Enumerable.Zip(todo.counts, areas).Sum(p =&gt; p.First * p.Second);
+            if (areaNeeded &lt;= todo.w * todo.h) {
+                res ++;
             }
         }
+        return res;
     }
-}
-</code></pre></div>
+}</code></pre></div>
             <div id="code-location"> <p>Please ☆ my <a href="https://github.com/encse/adventofcode/">repo</a> if you like it!</p></div>
         </div>
 
