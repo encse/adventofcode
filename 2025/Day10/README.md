@@ -16,6 +16,8 @@ It’s clearly a linear algebra problem as follows:
 
 This is a textbook integer linear programming problem, trivially solved by an ILP solver, or in [my case z3](solve.py). But this is not how Advent of Code has worked in the last 10+ years, so I was hoping for some shortcut, maybe a special structure of the input... But no luck, ILP really seems to be the intended way.
 
+## The Gaussian way
+
 I'm a purist in the sense that I don't use external dependencies in my C# solutions, so something like _OR-tools_ is out of scope. I did find another path, though, which is not that good-looking, but workable.... 
 
 One can notice that `A` is almost always full (column) rank, and the kernel space has at most 2–3 dimensions. This means we can solve the equation using Gaussian elimination, which will give us a solution with the columns in the kernel set to 0. There is no guarantee that the solution is integer, or that all `xᵢ` are non-negative, though.
@@ -28,7 +30,7 @@ This way we eventually get a feasible solution for the original problem, say wit
 
 I prototyped [this idea](gauss.py) in Python with ChatGPT. I think, if anything, this could be ported to C#, but I don’t feel the urge. Although it uses first principles that one could potentially implement, it’s a much slower solution than the one using z3.
 
-## Update
+## A recursive solution
 
 Based on the ingenious idea of [tenthmascot](https://www.reddit.com/r/adventofcode/comments/1pk87hl/2025_day_10_part_2_bifurcate_your_way_to_victory/), I could create a plain C# implementation for the problem.
 
