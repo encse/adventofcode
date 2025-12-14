@@ -321,10 +321,9 @@ class Solution : Solver {
         return res;
     }
 
+    // Implements the idea presented by tenthmascot
+    // https://www.reddit.com/r/adventofcode/comments/1pk87hl/2025_day_10_part_2_bifurcate_your_way_to_victory/
     public object PartTwo(string input) {
-        // Implements the idea presented by tenthmascot
-        // https://www.reddit.com/r/adventofcode/comments/1pk87hl/2025_day_10_part_2_bifurcate_your_way_to_victory/
-
         var res = 0;
         foreach (var p in Parse(input)) {
             res += Solve(p.joltage, SinglePresses(p), new Dictionary&lt;string, int&gt;());
