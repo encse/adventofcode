@@ -290,6 +290,11 @@
 <p>Say that <strong>K</strong> has 3 columns. Now we can start brute-forcing by setting the values in <strong>y</strong> to some low integers: <code>[1,0,0]</code>, <code>[0,1,0]</code>, <code>[0,0,1]</code>, then <code>[1,1,0]</code>, <code>[1,0,1]</code>, <code>[0,1,1]</code>, <code>[2,0,0]</code>, <code>[0,2,0]</code>, <code>[0,0,2]</code>, slowly increasing the sum of the values and solving for each combination.</p>
 <p>This way we eventually get a feasible solution for the original problem, say with the total button-press count equal to 100 or so. Then it’s enough to continue the above iteration while the sum of <code>yᵢ</code> is ≤ 100. That gives us a termination condition. During the search we might run into better solutions, which further lowers the upper bound.</p>
 <p>I prototyped <a href="gauss.py">this idea</a> in Python with ChatGPT. I think, if anything, this could be ported to C#, but I don’t feel the urge. Although it uses first principles that one could potentially implement, it’s a much slower solution than the one using z3.</p>
+<h2>Update</h2>
+<p>Based on the ingenious idea of <a href="https://www.reddit.com/r/adventofcode/comments/1pk87hl/2025_day_10_part_2_bifurcate_your_way_to_victory/">tenthmascot</a>, I could create a plain C# implementation for the problem.</p>
+<p>As he says: find all possible sets of buttons you can push so that the remaining voltages are even, 
+and divide by 2 and recurse.</p>
+<p>All credits goes to him, but I&#39;ll give an extra ⭐ to myself for learning something new again!</p>
 </div>
             <div id="code-container"><pre class="hljs language-csharp"><code>namespace AdventOfCode.Y2025.Day10;
 
@@ -298,7 +303,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-record Problem(int target, int[] buttons);
+record Problem(int[] target, int[] buttons, int[] joltage);
+
+record SinglePress(int buttonCount, int[] joltageChange);
 
 [ProblemName(&quot;Factory&quot;)]
 class Solution : Solver {
@@ -306,33 +313,80 @@ class Solution : Solver {
     public object PartOne(string input) {
         var res = 0;
         foreach (var p in Parse(input)) {
-            var minPressCount = 
-                Enumerable.Range(0, 1 &lt;&lt; p.buttons.Length)
-                    .Where(mask =&gt; XorMasked(p.buttons, mask) == p.target)
-                    .Min(BitCount);
+            var minPressCount = SinglePresses(p)
+                .Where(press =&gt; Enumerable.SequenceEqual(p.target, press.joltageChange.Select(i =&gt; i % 2)))
+                .Min(press =&gt; press.buttonCount);
             res += minPressCount;
         }
         return res;
     }
 
     public object PartTwo(string input) {
-        // I found this problem against the spirit of Advent of Code, 
-        // solved with z3 in Python. ¯\_(ツ)_/¯
-        return 18011;
-    }
+        // Implements the idea presented by tenthmascot
+        // https://www.reddit.com/r/adventofcode/comments/1pk87hl/2025_day_10_part_2_bifurcate_your_way_to_victory/
 
-    int XorMasked(int[] nums, int mask) {
         var res = 0;
-        for (int i = 0; i &lt; nums.Length; i++) {
-            if (((mask &gt;&gt; i) &amp; 1) != 0) {
-                res ^= nums[i];
-            }
+        foreach (var p in Parse(input)) {
+            res += Solve(p.joltage, SinglePresses(p), new Dictionary&lt;string, int&gt;());
         }
         return res;
     }
 
-    // Brian Kernighan’s bit-counting
-    int BitCount(int n) =&gt; n != 0 ? 1 + BitCount(n &amp; (n-1)) : 0;
+    // Collect changes in joltages when each button is pressed at most once
+    List&lt;SinglePress&gt; SinglePresses(Problem p) {
+        var presses = new List&lt;SinglePress&gt;();
+
+        foreach (var buttonMask in Enumerable.Range(0, 1 &lt;&lt; p.buttons.Length)) {
+            var joltageChange = new int[p.joltage.Length];
+            var buttonCount = 0;
+
+            for (int ibutton = 0; ibutton &lt; p.buttons.Length; ibutton++) {
+                if ((buttonMask &gt;&gt; ibutton) % 2 == 1) {
+                    buttonCount++;
+                    var button = p.buttons[ibutton];
+                    for (int ijoltage = 0; ijoltage &lt; p.joltage.Length; ijoltage++) {
+                        if ((button &gt;&gt; ijoltage) % 2 == 1) {
+                            joltageChange[ijoltage]++;
+                        }
+                    }
+                }
+            }
+            presses.Add(new SinglePress(buttonCount, joltageChange));
+        }
+        return presses;
+    }
+
+    int Solve(int[] joltages, List&lt;SinglePress&gt; singlePresses, Dictionary&lt;string, int&gt; cache) {
+
+        if (joltages.All(jolt =&gt; jolt == 0)) {
+            return 0;
+        }
+
+        var key = string.Join(&quot;-&quot;, joltages);
+        if (!cache.ContainsKey(key)) {
+            var best = 10_000_000;
+            foreach (var singlePress in singlePresses) {
+
+                var buttonCount = singlePress.buttonCount;
+                var joltageChange = singlePress.joltageChange;
+
+                var evens =
+                    Enumerable.Range(0, joltages.Length)
+                    .All(i =&gt; joltages[i] &gt;= joltageChange[i] &amp;&amp; (joltages[i] - joltageChange[i]) % 2 == 0);
+
+                if (evens) {
+                    var subProblem =
+                        Enumerable.Range(0, joltages.Length)
+                        .Select(i =&gt; (joltages[i] - joltageChange[i]) / 2)
+                        .ToArray();
+
+                    best = Math.Min(best, buttonCount + 2 * Solve(subProblem, singlePresses, cache));
+                }
+            }
+            cache[key] = best;
+        }
+        return cache[key];
+    }
 
     IEnumerable&lt;Problem&gt; Parse(string input) {
         var lines = input.Split(&quot;\n&quot;);
@@ -341,23 +395,24 @@ class Solution : Solver {
             var parts = line.Split(&quot; &quot;).ToArray();
 
             var target =
-                parts[0]
-                    .Trim(&quot;[]&quot;.ToCharArray())
-                    .Reverse()
-                    .Aggregate(0, (acc, ch) =&gt; acc * 2 + (ch == &#039;#&#039; ? 1 : 0));
+                from ch in parts[0].Trim(&quot;[]&quot;.ToCharArray())
+                select ch == &#039;#&#039; ? 1 : 0;
 
             var buttons =
                 from part in parts[1..^1]
-                let digits = Regex.Matches(part, @&quot;\d&quot;).Select(m =&gt; int.Parse(m.Value))
-                let mask = (from d in digits select 1 &lt;&lt; d).Sum()
+                let digits = Regex.Matches(part, @&quot;\d+&quot;).Select(m =&gt; int.Parse(m.Value))
+                let mask = digits.Aggregate(0, (acc, d) =&gt; acc | (1 &lt;&lt; d))
                 select mask;
 
-            yield return new Problem(target, [.. buttons]);
+            var joltage = 
+                from m in Regex.Matches(parts[^1], @&quot;\d+&quot;)
+                select int.Parse(m.Value);
+
+            yield return new Problem([.. target], [.. buttons], [.. joltage]);
         }
     }
-
-
-}</code></pre></div>
+}
+</code></pre></div>
             <div id="code-location"> <p>Please ☆ my <a href="https://github.com/encse/adventofcode/">repo</a> if you like it!</p></div>
         </div>
 
