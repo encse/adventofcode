@@ -34,7 +34,7 @@ I prototyped [this idea](gauss.py) in Python with ChatGPT. I think, if anything,
 
 Based on the ingenious idea of [tenthmascot](https://www.reddit.com/r/adventofcode/comments/1pk87hl/2025_day_10_part_2_bifurcate_your_way_to_victory/), I could create a plain C# implementation for the problem.
 
-As he says: find all possible sets of buttons you can push so that the remaining voltages are even, 
+As she says: find all possible sets of buttons you can push so that the remaining voltages are even, 
 and divide by 2 and recurse.
 
-All credits goes to him, but I'll give an extra ⭐ to myself for learning something new again!
+All credits goes to her, but I'll give an extra ⭐ to myself for learning something new again!
