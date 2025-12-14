@@ -27,3 +27,12 @@ Say that **K** has 3 columns. Now we can start brute-forcing by setting the valu
 This way we eventually get a feasible solution for the original problem, say with the total button-press count equal to 100 or so. Then it’s enough to continue the above iteration while the sum of `yᵢ` is ≤ 100. That gives us a termination condition. During the search we might run into better solutions, which further lowers the upper bound.
 
 I prototyped [this idea](gauss.py) in Python with ChatGPT. I think, if anything, this could be ported to C#, but I don’t feel the urge. Although it uses first principles that one could potentially implement, it’s a much slower solution than the one using z3.
+
+## Update
+
+Based on the ingenious idea of [tenthmascot](https://www.reddit.com/r/adventofcode/comments/1pk87hl/2025_day_10_part_2_bifurcate_your_way_to_victory/), I could create a plain C# implementation for the problem.
+
+As he says: find all possible sets of buttons you can push so that the remaining voltages are even, 
+and divide by 2 and recurse.
+
+All credits goes to him, but I'll give an extra ⭐ to myself for learning something new again!
