@@ -11,3 +11,5 @@ We got an easy dynamic programming exercise for today, a refresher after the las
 rendered to an image.
 
 ![graph.png](graph.png)
+
+I created a small [renderer](graph.html) for this. (Well, ChatGPT created the render, with my input.)
