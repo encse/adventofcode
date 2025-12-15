@@ -12,7 +12,7 @@ disjoint set representation. It's fast enough this way as well, and switching to
 
 This is how my graph looks with the spanning tree:
 
-<video src="graph.mp4" controls autoplay loop muted playsinline width="640">
+<video src="graph.mp4" controls autoplay loop muted playsinline width="100%">
 </video>
 
 I created a small [renderer](graph.html) for this. (Well, ChatGPT created the render, with my guidance.)
