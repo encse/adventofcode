@@ -1,0 +1,338 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Force Graph from Text</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+            height: 100%;
+            background: #000;
+            overflow: hidden;
+            font-family: system-ui, sans-serif;
+        }
+
+        #wrap {
+            display: grid;
+            grid-template-columns: 360px 1fr;
+            height: 100%;
+        }
+
+        #sidebar {
+            background: rgba(0, 0, 0, 0.65);
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 12px;
+            color: #ddd;
+            overflow: auto;
+        }
+
+        #graph {
+            width: 100%;
+            height: 100%;
+        }
+
+        textarea {
+            width: 100%;
+            height: 52vh;
+            resize: vertical;
+            background: rgba(20, 20, 20, 0.9);
+            color: #eee;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 10px;
+            padding: 10px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            outline: none;
+        }
+
+        .row {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            background: rgba(20, 20, 20, 0.9);
+            color: #eee;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 10px;
+            padding: 8px 10px;
+            outline: none;
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: 12px;
+        }
+
+        button {
+            background: rgba(255, 255, 255, 0.10);
+            color: #eee;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 10px;
+            padding: 8px 10px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: rgba(255, 255, 255, 0.16);
+        }
+
+        .hint {
+            color: #aaa;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        .err {
+            color: #ff8080;
+            font-size: 12px;
+            white-space: pre-wrap;
+            margin-top: 10px;
+        }
+
+        label {
+            font-size: 12px;
+            color: #bbb;
+            display: block;
+            margin-top: 10px;
+            margin-bottom: 6px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrap">
+        <div id="sidebar">
+            <div style="font-weight: 600; margin-bottom: 8px;">Graph input</div>
+
+            <textarea id="input">
+svr: aaa bbb
+aaa: fft
+fft: ccc
+bbb: tty
+tty: ccc
+ccc: ddd eee
+ddd: hub
+hub: fff
+eee: dac
+dac: fff
+fff: ggg hhh
+ggg: out
+hhh: out
+      </textarea>
+
+            <div class="row">
+                <button id="btnRender">Render</button>
+                <button id="btnFit">Fit</button>
+            </div>
+
+            <label for="root">Root for flow highlight</label>
+            <input id="root" type="text" value="svr" />
+
+            <label for="marked">Marked nodes (space-separated)</label>
+            <input id="marked" type="text" value="svr fft dac out" />
+
+            <div class="hint">
+                Format: <code>node: neighbor1 neighbor2 ...</code><br />
+                Lines starting with <code>#</code> are ignored.
+            </div>
+
+            <div id="err" class="err"></div>
+        </div>
+
+        <div id="graph"></div>
+    </div>
+
+    <script type="module">
+        import ForceGraph3D from "https://esm.sh/3d-force-graph@1.79.0";
+        import SpriteText from "https://esm.sh/three-spritetext@1.10.0";
+
+        const el = document.getElementById("graph");
+        const ta = document.getElementById("input");
+        const errEl = document.getElementById("err");
+        const markedEl = document.getElementById("marked");
+        const rootEl = document.getElementById("root");   // add <input id="root" ...>
+        const btnRender = document.getElementById("btnRender");
+        const btnFit = document.getElementById("btnFit");
+
+
+        function computeBig(nodeCount) {
+            const K = 25000;      // tune this once, then forget it
+            const min = 10;      // never smaller than this
+            const max = 8000;     // never larger than this
+            return Math.max(min, Math.min(max, K / Math.sqrt(nodeCount)));
+        }
+
+        function getMarkedSet() {
+            return new Set(markedEl.value.split(/\s+/).map(s => s.trim()).filter(Boolean));
+        }
+
+        function parseAdjacency(text) {
+            const adjacency = new Map(); // src -> [dst...]
+            const nodes = new Set();
+
+            const lines = text.split(/\r?\n/);
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (line === "" || line.startsWith("#")) continue;
+
+                const idx = line.indexOf(":");
+                if (idx === -1) throw new Error(`Line ${i + 1}: missing ":"`);
+
+                const src = line.slice(0, idx).trim();
+                if (src === "") throw new Error(`Line ${i + 1}: empty source node`);
+
+                const dsts = line.slice(idx + 1).trim().split(/\s+/).filter(Boolean);
+
+                if (!adjacency.has(src)) adjacency.set(src, []);
+                adjacency.get(src).push(...dsts);
+
+                nodes.add(src);
+                for (const d of dsts) nodes.add(d);
+            }
+
+            return { adjacency, nodes };
+        }
+
+        function buildData(parsed) {
+            const nodes = Array.from(parsed.nodes).sort().map(id => ({ id }));
+            const links = [];
+
+            for (const [src, dsts] of parsed.adjacency.entries()) {
+                for (const dst of dsts) {
+                    links.push({ source: src, target: dst, highlight: false });
+                }
+            }
+
+            return { nodes, links, adjacency: parsed.adjacency };
+        }
+
+        function reachableFrom(adjacency, root) {
+            const seen = new Set();
+            if (!root || !adjacency) return seen;
+
+            const q = [];
+            seen.add(root);
+            q.push(root);
+
+            while (q.length > 0) {
+                const cur = q.shift();
+                const nxts = adjacency.get(cur) || [];
+                for (const n of nxts) {
+                    if (!seen.has(n)) {
+                        seen.add(n);
+                        q.push(n);
+                    }
+                }
+            }
+            return seen;
+        }
+
+        function applyHighlights(data, adjacency, root) {
+            const reach = reachableFrom(adjacency, root);
+
+            // highlight links where both ends are reachable (simple + looks good)
+            for (const l of data.links) {
+                const s = (typeof l.source === "object") ? l.source.id : l.source;
+                const t = (typeof l.target === "object") ? l.target.id : l.target;
+                l.highlight = reach.has(s) && reach.has(t);
+            }
+        }
+
+        let marked = getMarkedSet();
+        let data = { nodes: [], links: [] };
+        let adjacency = new Map();
+
+
+        const SMALL = 1.2;
+        const BIG = computeBig(data.nodes.length);
+
+        // IMPORTANT: avoid TDZ by declaring Graph first, then assigning
+        let Graph;
+        Graph = ForceGraph3D()(el)
+            .backgroundColor("#000")
+            .graphData(data)
+
+            .nodeRelSize(1) // important: keep this at 1
+            .nodeVal(n => marked.has(n.id) ? BIG : SMALL)
+            .nodeColor(n => marked.has(n.id) ? "#ff9800" : "#ffeb3b")
+            .nodeOpacity(1.0)
+            .nodeLabel(n => marked.has(n.id) ? n.id : "")
+
+            .linkOpacity(0.18)
+            .linkWidth(l => l.highlight ? 1.2 : 0.6)
+            .linkColor(l => l.highlight ? "#49d7ff" : "rgba(180,180,180,0.35)")
+            .linkDirectionalParticles(l => l.highlight ? 3 : 0)
+            .linkDirectionalParticleWidth(l => l.highlight ? 2.5 : 0)
+            .linkDirectionalParticleSpeed(l => l.highlight ? 0.01 : 0)
+            .onEngineStop(() => {
+                // combine your two handlers into one (so we don't overwrite)
+                Graph.zoomToFit(600, 60);
+                setTimeout(() => Graph.zoomToFit(800, 120), 50);
+            });
+
+        Graph.nodeThreeObjectExtend(true);
+
+        Graph.nodeThreeObject(node => {
+            if (!marked.has(node.id)) return undefined;
+
+            const label = new SpriteText(node.id);
+            label.color = "#ffcc80";
+            label.textHeight = BIG * 0.015;
+            label.backgroundColor = "rgba(0,0,0,0)";
+
+            const margin = BIG * 0.015;
+            label.position.set(0, margin, 0);
+
+            return label;
+        });
+
+        function refreshStyles() {
+            marked = getMarkedSet();
+            Graph
+                .nodeVal(n => marked.has(n.id) ? BIG : SMALL)
+                .nodeColor(n => marked.has(n.id) ? "#ff9800" : "#ffeb3b")
+                .nodeLabel(n => marked.has(n.id) ? n.id : "");
+
+            // force rebuild of custom node objects so labels update
+            Graph.nodeThreeObject(Graph.nodeThreeObject());
+        }
+
+        function renderFromTextarea() {
+            errEl.textContent = "";
+
+            try {
+                const parsed = parseAdjacency(ta.value);
+                const built = buildData(parsed);
+
+                data = { nodes: built.nodes, links: built.links };
+                adjacency = built.adjacency;
+
+                const rootId = (rootEl?.value || "").trim(); // e.g. "svr"
+                applyHighlights(data, adjacency, rootId);
+
+                Graph.graphData(data);
+                refreshStyles();
+
+                // extra fit safety
+                setTimeout(() => Graph.zoomToFit(800, 120), 300);
+            } catch (e) {
+                errEl.textContent = String(e?.message ?? e);
+            }
+        }
+
+        btnRender.addEventListener("click", renderFromTextarea);
+        btnFit.addEventListener("click", () => Graph.zoomToFit(800, 120));
+        markedEl.addEventListener("change", () => { refreshStyles(); });
+        rootEl?.addEventListener("change", renderFromTextarea);
+
+        renderFromTextarea();
+    </script>
+
+</body>
+
+</html>
