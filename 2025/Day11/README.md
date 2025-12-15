@@ -7,7 +7,7 @@ Climbing down the ladder, you discover the source of the beeping: a large, toroi
 Visit the website for the full story and [full puzzle](https://adventofcode.com/2025/day/11) description.
 </em>
 
-We got an easy dynamic programming exercise for today, a refresher after the last two days of madness. Here is my input
+We got an easy dynamic programming task for today, a refresher after the last two days of madness. Here is my input
 rendered to an image.
 
 ![graph.png](graph.png)
