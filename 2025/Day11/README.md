@@ -10,6 +10,7 @@ Visit the website for the full story and [full puzzle](https://adventofcode.com/
 We got an easy dynamic programming task for today, a refresher after the last two days of madness. Here is my input
 rendered to an image.
 
-![graph.png](graph.png)
+<video src="graph.mp4" controls autoplay loop muted playsinline width="640">
+</video>
 
 I created a small [renderer](graph.html) for this. (Well, ChatGPT created the render, with my input.)
