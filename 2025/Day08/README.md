@@ -9,3 +9,9 @@ Visit the website for the full story and [full puzzle](https://adventofcode.com/
 
 I decided to go with two implementations of Kruskal's algorithm, as part one and two are different enough. I didn't use a
 disjoint set representation. It's fast enough this way as well, and switching to disjoint sets would just make the code longer.
+
+This is how my graph looks with the spanning tree:
+
+![graph.png](graph.png)
+
+I created a small [renderer](graph.html) for this. (Well, ChatGPT created the render, with my input.)
