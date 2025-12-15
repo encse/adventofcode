@@ -1,217 +1,346 @@
-
 <!doctype html>
 <html>
+
 <head>
-  <meta charset="utf-8" />
-  <title>Kruskal MST Viewer</title>
-  <style>
-    html, body {
-      margin: 0;
-      height: 100%;
-      background: #000;
-      overflow: hidden;
-      font-family: system-ui, sans-serif;
-    }
-    #wrap {
-      display: grid;
-      grid-template-columns: 360px 1fr;
-      height: 100%;
-    }
-    #sidebar {
-      padding: 12px;
-      color: #ddd;
-      background: rgba(0,0,0,0.65);
-      border-right: 1px solid rgba(255,255,255,0.08);
-    }
-    textarea {
-      width: 100%;
-      height: 55vh;
-      background: #111;
-      color: #eee;
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 8px;
-      padding: 8px;
-      font-family: ui-monospace, monospace;
-      font-size: 12px;
-    }
-    button {
-      margin-top: 10px;
-      padding: 8px 10px;
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.18);
-      color: #eee;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    button:hover { background: rgba(255,255,255,0.18); }
-    #graph { width: 100%; height: 100%; }
-    .err { color: #ff8080; white-space: pre-wrap; margin-top: 8px; }
-  </style>
+    <meta charset="utf-8" />
+    <title>Kruskal MST Viewer (async/await)</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+            height: 100%;
+            background: #000;
+            overflow: hidden;
+            font-family: system-ui, sans-serif;
+        }
+
+        #wrap {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        #sidebar {
+            width: 360px;
+            flex: 0 0 360px;
+            padding: 12px;
+            color: #ddd;
+            background: rgba(0, 0, 0, 0.65);
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+            overflow: auto;
+        }
+
+        #graph {
+            flex: 1 1 auto;
+            position: relative;
+            min-width: 0;
+            /* IMPORTANT */
+            min-height: 0;
+            /* IMPORTANT */
+        }
+
+        /* Force canvas to obey container */
+        #graph canvas {
+            display: block;
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        textarea {
+            width: 100%;
+            height: 55vh;
+            background: #111;
+            color: #eee;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            padding: 8px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: 12px;
+            line-height: 1.35;
+            outline: none;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 8px 10px;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            color: #eee;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: rgba(255, 255, 255, 0.18);
+        }
+
+
+        .err {
+            color: #ff8080;
+            white-space: pre-wrap;
+            margin-top: 8px;
+        }
+
+        .hint {
+            margin-top: 10px;
+            color: #aaa;
+            font-size: 12px;
+            line-height: 1.3;
+        }
+    </style>
 </head>
+
 <body>
-<div id="wrap">
-  <div id="sidebar">
-    <div style="font-weight:600">3D points</div>
-    <textarea id="input">
+    <div id="wrap">
+        <div id="sidebar">
+            <div style="font-weight:600">3D points</div>
+            <textarea id="input">
 27279,20893,37416
 30000,21000,36000
 26000,20000,38000
 28000,19000,37000
-    </textarea>
-    <button id="render">Render MST</button>
-    <button id="fit">Fit</button>
-    <div id="err" class="err"></div>
-  </div>
-  <div id="graph"></div>
-</div>
+      </textarea>
 
-<script type="module">
-import ForceGraph3D from "https://esm.sh/3d-force-graph@1.79.0";
+            <div class="row">
+                <button id="render">Render MST</button>
+                <button id="fit">Fit</button>
+            </div>
 
-const el = document.getElementById("graph");
-const ta = document.getElementById("input");
-const errEl = document.getElementById("err");
-const btn = document.getElementById("render");
+            <div class="hint">
+                One point per line: <code>x,y,z</code><br />
+                Builds MST with Kruskal, then fits, then animates edges while rotating camera.
+            </div>
 
-/* ---------- Parsing ---------- */
+            <div id="err" class="err"></div>
+        </div>
 
-function parsePoints(text) {
-  const pts = [];
-  const lines = text.split(/\r?\n/);
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i].trim();
-    if (!line) continue;
-    const parts = line.split(",").map(Number);
-    if (parts.length !== 3 || parts.some(Number.isNaN)) {
-      throw new Error(`Line ${i+1}: invalid coordinate`);
-    }
-    pts.push({ id: i, x: parts[0], y: parts[1], z: parts[2] });
-  }
-  return pts;
-}
+        <div id="graph"></div>
+    </div>
 
-/* ---------- Kruskal (faithful to your PartTwo) ---------- */
+    <script type="module">
+        import ForceGraph3D from "https://esm.sh/3d-force-graph@1.79.0";
 
-function metric(a, b) {
-  return (a.x-b.x)**2 + (a.y-b.y)**2 + (a.z-b.z)**2;
-}
+        const el = document.getElementById("graph");
+        const ta = document.getElementById("input");
+        const errEl = document.getElementById("err");
+        const btnRender = document.getElementById("render");
+        const btnFit = document.getElementById("fit");
 
-function kruskal(points) {
-  const parent = new Map();
-  points.forEach(p => parent.set(p.id, p.id));
+        const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+        const nextFrame = () => new Promise(resolve => requestAnimationFrame(resolve));
 
-  function find(x) {
-    while (parent.get(x) !== x) {
-      parent.set(x, parent.get(parent.get(x)));
-      x = parent.get(x);
-    }
-    return x;
-  }
+        // increments each time Render is clicked; running animations exit if stale
+        let runToken = 0;
 
-  function union(a, b) {
-    parent.set(find(b), find(a));
-  }
+        /* ---------- Parsing ---------- */
 
-  const edges = [];
-  for (let i = 0; i < points.length; i++) {
-    for (let j = i+1; j < points.length; j++) {
-      edges.push({
-        a: points[i],
-        b: points[j],
-        w: metric(points[i], points[j])
-      });
-    }
-  }
+        function parsePoints(text) {
+            const pts = [];
+            const lines = text.split(/\r?\n/);
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (line === "" || line.startsWith("#")) continue;
 
-  edges.sort((e1, e2) => e1.w - e2.w);
-
-  const mst = [];
-  for (const e of edges) {
-    if (find(e.a.id) !== find(e.b.id)) {
-      union(e.a.id, e.b.id);
-      mst.push(e);
-      if (mst.length === points.length - 1) break;
-    }
-  }
-  return mst;
-}
-
-/* ---------- Graph ---------- */
-
-const Graph = ForceGraph3D()(el)
-  .backgroundColor("#000")
-  .nodeRelSize(1)
-  .nodeVal(2)
-  .nodeColor("#ffffff")
-  .nodeOpacity(1)
-  .linkColor("#ffeb3b")     // yellow edges
-  .linkWidth(0.7)
-  .linkOpacity(1)
-  .enableNodeDrag(false)    // positions are fixed
-  .onEngineStop(() => Graph.zoomToFit(600, 80));
-
-function render() {
-  errEl.textContent = "";
-  try {
-    const points = parsePoints(ta.value);
-    const mst = kruskal(points);
-
-    const SCALE = 1000;
-
-    function computeCenter(points) {
-        let sx = 0, sy = 0, sz = 0;
-        for (const p of points) {
-            sx += p.x;
-            sy += p.y;
-            sz += p.z;
+                const parts = line.split(",").map(s => s.trim()).map(Number);
+                if (parts.length !== 3 || parts.some(Number.isNaN)) {
+                    throw new Error(`Line ${i + 1}: invalid coordinate (expected x,y,z)`);
+                }
+                pts.push({ id: i, x: parts[0], y: parts[1], z: parts[2] });
+            }
+            if (pts.length === 0) throw new Error("No points found.");
+            return pts;
         }
-        const n = points.length || 1;
-        return {
-            x: sx / n,
-            y: sy / n,
-            z: sz / n
-        };
-    }
 
-    const center = computeCenter(points);
+        /* ---------- Kruskal MST ---------- */
 
-    const nodes = points.map(p => ({
-        id: p.id,
+        function metric(a, b) {
+            const dx = a.x - b.x;
+            const dy = a.y - b.y;
+            const dz = a.z - b.z;
+            return dx * dx + dy * dy + dz * dz; // squared distance
+        }
 
-        // center + scale for rendering
-        x: (p.x - center.x) / SCALE,
-        y: (p.y - center.y) / SCALE,
-        z: (p.z - center.z) / SCALE,
+        function kruskal(points) {
+            const parent = new Map();
+            points.forEach(p => parent.set(p.id, p.id));
 
-        fx: (p.x - center.x) / SCALE,
-        fy: (p.y - center.y) / SCALE,
-        fz: (p.z - center.z) / SCALE
-    }));
+            function find(x) {
+                while (parent.get(x) !== x) {
+                    parent.set(x, parent.get(parent.get(x)));
+                    x = parent.get(x);
+                }
+                return x;
+            }
+
+            function union(a, b) {
+                parent.set(find(b), find(a));
+            }
+
+            const edges = [];
+            for (let i = 0; i < points.length; i++) {
+                for (let j = i + 1; j < points.length; j++) {
+                    edges.push({ a: points[i], b: points[j], w: metric(points[i], points[j]) });
+                }
+            }
+            edges.sort((e1, e2) => e1.w - e2.w);
+
+            const mst = [];
+            for (const e of edges) {
+                if (find(e.a.id) !== find(e.b.id)) {
+                    union(e.a.id, e.b.id);
+                    mst.push(e);
+                    if (mst.length === points.length - 1) break;
+                }
+            }
+            return mst;
+        }
+
+        function computeCenter(points) {
+            let sx = 0, sy = 0, sz = 0;
+            for (const p of points) {
+                sx += p.x;
+                sy += p.y;
+                sz += p.z;
+            }
+            const n = points.length || 1;
+            return { x: sx / n, y: sy / n, z: sz / n };
+        }
+        function syncGraphSize() {
+            const rect = el.getBoundingClientRect();
+            Graph.width(rect.width);
+            Graph.height(rect.height);
+        }
 
 
-    const links = mst.map(e => ({
-      source: e.a.id,
-      target: e.b.id
-    }));
+        /* ---------- Graph ---------- */
 
-    Graph.graphData({ nodes, links });
-    setTimeout(() => Graph.zoomToFit(600, 80), 50);
-  } catch (e) {
-    errEl.textContent = String(e.message ?? e);
-  }
-}
+        const Graph = ForceGraph3D()(el)
+            .nodeRelSize(1)
+            .nodeVal(1)
+            .nodeColor(() => "#ffffff")
+            .nodeOpacity(1)
+            .linkColor(() => "#ffeb3b")
+            .linkWidth(1)
+            .linkOpacity(1)
+            .enableNodeDrag(false)
+            // IMPORTANT: we fix node positions, so disable physics to avoid jitter/warm-up
+            .cooldownTicks(0)
+            .cooldownTime(0);
+            ;
 
-btn.addEventListener("click", render);
-render();
 
-const btnFit = document.getElementById("fit");
-btnFit.addEventListener("click", () => {
-  Graph.zoomToFit(300, 80);
-});
+        syncGraphSize();
 
-window.addEventListener("resize", () => {
-  Graph.zoomToFit(300, 80);
-});
-</script>
+        async function wait(wait_ms) {
+            return new Promise((resolve) => { 
+                setTimeout(() => {
+                    resolve();
+                }, wait_ms);
+            });
+        }
+
+        async function render() {
+            errEl.textContent = "";
+            syncGraphSize();
+            // cancel any previous run
+            const myRun = ++runToken;
+
+            try {
+                const points = parsePoints(ta.value);
+                const mst = kruskal(points);
+
+                // Visual-only transform
+                const SCALE = 1000;
+                const center = computeCenter(points);
+
+                const nodes = points.map(p => {
+                    const x = (p.x - center.x) / SCALE;
+                    const y = (p.y - center.y) / SCALE;
+                    const z = (p.z - center.z) / SCALE;
+                    return { id: p.id, x, y, z, fx: x, fy: y, fz: z };
+                });
+
+                const allLinks = mst.map(e => ({ source: e.a.id, target: e.b.id }));
+
+                Graph.graphData({ nodes: [], links: [] });
+                await wait(1000);
+                // Start with 0 links (build animation)
+                Graph.graphData({ nodes, links: [] });
+
+                // If user clicked Render again while we were fitting, stop
+                if (runToken !== myRun) return;
+
+                // Orbit around origin (we centered points)
+                const lookAt = { x: 0, y: 0, z: 0 };
+
+                // Estimate orbit radius from node extents
+                let maxR = 1;
+                for (const n of nodes) {
+                    const r = Math.sqrt(n.x * n.x + n.y * n.y + n.z * n.z);
+                    if (r > maxR) maxR = r;
+                }
+                const orbitRadius = maxR * 3.0;
+                const orbitHeight = maxR * 0.6;
+
+                // Animation parameters
+                const ROT_SPEED = 0.5;     // radians/sec
+                const EDGES_PER_SEC = 100;  // MST build speed
+
+                let angle = 0;
+                let shownEdges = 0;
+                let edgeCarry = 0;
+
+                let last = performance.now();
+
+                while (runToken === myRun) {
+                    const now = await nextFrame();
+                    const dt = (now - last) / 1000;
+                    last = now;
+
+                    // rotate camera
+                    angle += ROT_SPEED * dt;
+                    Graph.cameraPosition(
+                        {
+                            x: lookAt.x + orbitRadius * Math.cos(angle),
+                            y: lookAt.y + orbitHeight,
+                            z: lookAt.z + orbitRadius * Math.sin(angle)
+                        },
+                        lookAt,
+                        0
+                    );
+
+                    // grow MST
+                    if (shownEdges < allLinks.length) {
+                        edgeCarry += EDGES_PER_SEC * dt;
+                        const add = Math.floor(edgeCarry);
+                        if (add > 0) {
+                            edgeCarry -= add;
+                            shownEdges = Math.min(allLinks.length, shownEdges + add);
+                            Graph.graphData({ nodes, links: allLinks.slice(0, shownEdges) });
+                        }
+                    }
+
+                    // Optional: stop after MST completes (comment out to keep rotating forever)
+                    // if (shownEdges >= allLinks.length) break;
+                }
+            } catch (e) {
+                errEl.textContent = String(e?.message ?? e);
+            }
+        }
+
+        btnRender.addEventListener("click", () => { void render(); });
+
+        btnFit.addEventListener("click", () => {
+            Graph.zoomToFit(300, 80);
+        });
+
+        window.addEventListener("resize", () => {
+            Graph.zoomToFit(300, 80);
+        });
+
+        // initial render
+        void render();
+    </script>
 </body>
+
 </html>
