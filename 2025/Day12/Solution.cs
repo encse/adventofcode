@@ -8,7 +8,8 @@ using System.Text.RegularExpressions;
 class Solution : Solver {
 
     public object PartOne(string input) {
-        // 🎄 🎄 🎄 This problem was a joke by Eric. The solution is input specific.
+        // It's enough to check if the 3x3 area of the presents is less than 
+        // the area under 🎄 tree. No packing is required.
         return input.Split("\n\n").Last()
             .Split("\n")
             .Select(line => Regex.Matches(line, @"\d+").Select(m => int.Parse(m.Value)).ToArray())
