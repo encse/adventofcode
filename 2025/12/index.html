@@ -287,7 +287,8 @@ using System.Text.RegularExpressions;
 class Solution : Solver {
 
     public object PartOne(string input) {
-        // 🎄 🎄 🎄 This problem was a joke by Eric. The solution is input specific.
+        // It&#039;s enough to check if the 3x3 area of the presents is less than 
+        // the area under 🎄 tree. No packing is required.
         return input.Split(&quot;\n\n&quot;).Last()
             .Split(&quot;\n&quot;)
             .Select(line =&gt; Regex.Matches(line, @&quot;\d+&quot;).Select(m =&gt; int.Parse(m.Value)).ToArray())
