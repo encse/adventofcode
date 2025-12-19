@@ -282,36 +282,16 @@
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
-record Todo(int w, int h, int[] counts);
 
 [ProblemName(&quot;Christmas Tree Farm&quot;)]
 class Solution : Solver {
 
     public object PartOne(string input) {
-        // 🎄 🎄 🎄 This problem was a joke by Eric. The solution is specific to the input.
-        
-        var blocks = input.Split(&quot;\n\n&quot;);
-
-        var areas = (
-            from block in blocks[..^1]
-            let area = block.Count(ch =&gt; ch == &#039;#&#039;)
-            select area
-        ).ToArray();
-
-        var todos = (
-            from line in blocks.Last().Split(&quot;\n&quot;)
-            let nums = Regex.Matches(line, @&quot;\d+&quot;).Select(m =&gt; int.Parse(m.Value)).ToArray()
-            select new Todo(nums[0], nums[1], nums[2..])
-        ).ToArray();
-       
-        var res = 0;
-        foreach(var todo in todos) {
-            var areaNeeded = Enumerable.Zip(todo.counts, areas).Sum(p =&gt; p.First * p.Second);
-            if (areaNeeded &lt;= todo.w * todo.h) {
-                res++;
-            }
-        }
-        return res;
+        // 🎄 🎄 🎄 This problem was a joke by Eric. The solution is input specific.
+        return input.Split(&quot;\n\n&quot;).Last()
+            .Split(&quot;\n&quot;)
+            .Select(line =&gt; Regex.Matches(line, @&quot;\d+&quot;).Select(m =&gt; int.Parse(m.Value)).ToArray())
+            .Count(nums =&gt; nums[0] * nums[1] &gt;= 9 * nums[2..].Sum());
     }
 }</code></pre></div>
             <div id="code-location"> <p>Please ☆ my <a href="https://github.com/encse/adventofcode/">repo</a> if you like it!</p></div>
