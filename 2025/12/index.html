@@ -288,13 +288,14 @@ class Solution : Solver {
 
     public object PartOne(string input) {
         // It&#039;s enough to check if the 3x3 area of the presents is less than 
-        // the area under 🎄 tree. No packing is required.
+        // the area under 🎄 tree. No packing required.
         return input.Split(&quot;\n\n&quot;).Last()
             .Split(&quot;\n&quot;)
             .Select(line =&gt; Regex.Matches(line, @&quot;\d+&quot;).Select(m =&gt; int.Parse(m.Value)).ToArray())
             .Count(nums =&gt; nums[0] * nums[1] &gt;= 9 * nums[2..].Sum());
     }
-}</code></pre></div>
+}
+</code></pre></div>
             <div id="code-location"> <p>Please ☆ my <a href="https://github.com/encse/adventofcode/">repo</a> if you like it!</p></div>
         </div>
 
